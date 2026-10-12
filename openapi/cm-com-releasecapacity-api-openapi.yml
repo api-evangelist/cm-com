@@ -1,0 +1,88 @@
+openapi: 3.2.0
+info:
+  title: Scan Release Capacity API
+  version: '1.0'
+  description: Every operation is a `POST` request with an `application/x-www-form-urlencoded` body. Every request includes your public `apiKey` and an `HMACKey`. The `HMACKey` is calculated from the input fields; the calculation is listed on each operation as `Base64 encode - SHA256(...)`, where the fields between the brackets are concatenated. Only include optional parameters in the HMAC if you are using those parameters. A `*` after a field marks it as optional.
+servers:
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: ReleaseCapacity
+paths:
+  /releaseCapacity:
+    post:
+      summary: /releaseCapacity
+      description: 'With this functionality you can force release the reserved capacity for a reservation. Please note that this is only possible for pending reservations and will not cancel the reservation. You can use the cancelReservation endpoint for this.
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + reservationId)`'
+      operationId: releasecapacity
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - reservationId
+              - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                reservationId:
+                  type: integer
+                  description: Reservation identifier that is provided by createReservation call
+                  format: int32
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + reservationId).
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    reservationId: 1
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservationId:
+                    type: integer
+                    example: 1
+                    default: 0
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: false
+                    errorMessage: Reservation not found or already cancelled.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: Reservation not found or already cancelled.
+      deprecated: false
+      tags:
+      - ReleaseCapacity
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

@@ -1,0 +1,963 @@
+openapi: 3.2.0
+info:
+  title: Payments Gateway Apple Pay API
+  description: Common payments API
+  version: 1.27.22
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+- url: /api/v1
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: Apple Pay
+  description: Apple Pay is a mobile payment and digital wallet service that allows customers to make secure, contactless payments in stores (using NFC), within iOS apps, and on the web.
+  externalDocs:
+    url: https://www.apple.com/apple-pay/
+paths:
+  /paymentmethods/apple-pay/v1/sessions:
+    post:
+      description: 'Create/initialize an Apple Pay session. Returns a details object containing configuration needed to render the Apple Pay button on the checkout UI.
+
+        The **id** field in the response can be used in future calls as **sessionId** to reference this session.'
+      tags:
+      - Apple Pay
+      summary: Create/initialize Apple Pay session
+      operationId: createApplePaySession
+      requestBody:
+        description: Create Apple Pay Session
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppleInitialize'
+            examples:
+              standardAppleInitialize:
+                $ref: '#/components/examples/StandardAppleInitialize'
+      responses:
+        '201':
+          $ref: '#/components/responses/ApplePaySession'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/apple-pay/v1/sessions/{sessionId}/start:
+    post:
+      description: Generates a valid Apple Pay payment session by interacting with Apple Pay servers. Use the **id** field from the initialize response as **sessionId**.
+      tags:
+      - Apple Pay
+      summary: Start Apple Pay session
+      operationId: startApplePaySession
+      parameters:
+      - $ref: '#/components/parameters/SessionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartApplePaySession'
+      responses:
+        '201':
+          $ref: '#/components/responses/StartApplePaySession'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/apple-pay/v1/sessions/{sessionId}:
+    get:
+      description: Retrieve details for an existing Apple Pay session. This endpoint must be used to obtain the status for a session.
+      tags:
+      - Apple Pay
+      summary: Fetch Apple Pay session
+      operationId: getApplePaySession
+      parameters:
+      - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplePaySession'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/apple-pay/v1/sessions/{sessionId}/transactions:
+    post:
+      description: 'Authorize a transaction for an existing Apple Pay session. When the shopper selected a card, the details are returned as payment data by the Apple Pay client. The request data is passed on as-is received from the Apple device in the on authorize payment event. Modifications are not allowed.
+
+
+        This endpoint creates the actual transaction for the session. A `TRANSACTION_CREATED` webhook will be triggered if subscribed.'
+      tags:
+      - Apple Pay
+      summary: Authorize Apple Pay transaction
+      operationId: createApplePaySessionTransaction
+      parameters:
+      - $ref: '#/components/parameters/SessionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizeApplePayTransaction'
+      responses:
+        '201':
+          $ref: '#/components/responses/ApplePaySessionTransaction'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+    get:
+      description: Retrieve all transactions for an existing Apple Pay session.
+      tags:
+      - Apple Pay
+      summary: Fetch Apple Pay session transactions
+      operationId: getApplePaySessionTransactions
+      parameters:
+      - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplePaySessionTransactions'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/apple-pay/v1/sessions/{sessionId}/transactions/{transactionId}:
+    get:
+      description: Retrieve a specific transaction for an existing Apple Pay session.
+      tags:
+      - Apple Pay
+      summary: Fetch Apple Pay session transaction
+      operationId: getApplePaySessionTransaction
+      parameters:
+      - $ref: '#/components/parameters/SessionId'
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplePaySessionTransaction'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/apple-pay/v1/sessions/{sessionId}/transactions/{transactionId}/refunds:
+    post:
+      description: 'Create a refund for an existing Apple Pay transaction.
+
+
+        The **transactionId** parameter can be obtained from the `payment` field in the webhook payload sent when the transaction was created.
+
+
+        The **amount** field is required and must be a positive value, which is the amount to be refunded.'
+      tags:
+      - Apple Pay
+      summary: Create refund for transaction
+      operationId: createApplePaySessionTransactionRefund
+      parameters:
+      - $ref: '#/components/parameters/SessionId'
+      - $ref: '#/components/parameters/TransactionId'
+      requestBody:
+        description: Create Apple Pay Transaction Refund
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Refund'
+      responses:
+        '201':
+          $ref: '#/components/responses/RefundResponseWithSessionID'
+          description: ApplePay refund was created successfully.
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+    get:
+      description: Retrieve refunds for an existing Apple Pay transaction.
+      tags:
+      - Apple Pay
+      operationId: getApplePaySessionTransactionRefunds
+      summary: Fetch transaction refunds
+      parameters:
+      - $ref: '#/components/parameters/SessionId'
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          $ref: '#/components/responses/RefundsResponseWithSessionID'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    FinalStatusEvent:
+      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - FINALSTATUS
+      example: FINALSTATUS
+    Email:
+      description: The email address of the consumer.
+      type: string
+      format: email
+      example: john.doe@email.tld
+    AuthorizeApplePayTransaction:
+      type: object
+      properties:
+        token:
+          type: object
+          properties:
+            paymentData:
+              type: object
+              properties:
+                data:
+                  type: string
+                  example: xdZ+1yRWkOP9Wdp0Y/nLBzAgvnWAW/QeSd7***7lT5NSEgfrlafBVPN18cF8=
+                signature:
+                  type: string
+                  example: MIAGCSqGSIb3DQEHAqCAMIACAQExDTALBglghkgBZQMEMQswCQYDVQQGEwJVUzAeFw0xOTA1...
+                header:
+                  type: object
+                  properties:
+                    publicKeyHash:
+                      type: string
+                      example: F+0dt8ccfMBlkJWQUCQ5r8XdLNXFi67QezeGdxiaLns=
+                    ephemeralPublicKey:
+                      type: string
+                      example: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEeVc222rSH8+NvnN2o9qrewBWvFHOFmUYu1pVObDvmRBEavVWpGi3YHY628gLmu9Jq0VNdVJY5mThd49CRL4N3Q==
+                    transactionId:
+                      type: string
+                      example: 991aee4fb7f88bd9c531fdca658628239e22d0239da3069f833f062fb40ba50b
+                version:
+                  type: string
+                  example: EC_v1
+            paymentMethod:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                  example: Visa 0326
+                network:
+                  type: string
+                  example: Visa
+                type:
+                  type: string
+                  example: debit
+            transactionIdentifier:
+              type: string
+              example: 991aee4fb7f88bd9c531fdca658628239e22d0239da3069f833f062fb40ba50b
+    RefundDetailsWithSessionID:
+      allOf:
+      - $ref: '#/components/schemas/RefundDetails'
+      - type: object
+        required:
+        - sessionId
+        properties:
+          sessionId:
+            allOf:
+            - $ref: '#/components/schemas/Uuid'
+            description: Unique identifier for the session.
+            example: bcbb3733-4d3e-4a4d-9254-1ddb90e6e082
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
+    ApplePaySessionObject:
+      type: object
+      required:
+      - id
+      - reference
+      - amount
+      - currency
+      - description
+      - expiresAt
+      - language
+      - status
+      - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        description:
+          type: string
+          example: Some Apple Pay session
+        expiresAt:
+          $ref: '#/components/schemas/Datetime'
+        language:
+          $ref: '#/components/schemas/Language'
+        consumer:
+          description: Consumer details. Only returned on session creation (POST). Not available on session retrieval (GET).
+          allOf:
+          - $ref: '#/components/schemas/Consumer'
+        webhooks:
+          $ref: '#/components/schemas/TransactionWebhooks'
+        status:
+          description: The status of the transaction.
+          oneOf:
+          - $ref: '#/components/schemas/StatusOpen'
+          - $ref: '#/components/schemas/StatusSuccess'
+          - $ref: '#/components/schemas/StatusCancelled'
+          - $ref: '#/components/schemas/StatusExpired'
+          - $ref: '#/components/schemas/StatusFailure'
+          - $ref: '#/components/schemas/StatusAuthorized'
+        action:
+          description: 'Contains the details necessary to render the Apple Pay button in your own checkout page during the initialize session flow.
+
+            In consequent flows the action object will be null.
+
+            '
+          anyOf:
+          - type: 'null'
+          - type: object
+            properties:
+              applePayButton:
+                type: object
+                properties:
+                  merchantCountry:
+                    description: The ISO 3166-1 alpha-2 country code where the transaction is processed.
+                    type: string
+                    example: NL
+                  serverUrl:
+                    description: The URL to the Mobile Pay Server.
+                    type: string
+                    example: https://www.example.com/api/
+                  allowedCardNetworks:
+                    description: The supported card networks for Payment via Apple Pay.
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - VISA
+                      - MAESTRO
+                      - MASTERCARD
+                  merchantName:
+                    description: The name to display on the payment sheet.
+                    type: string
+                    example: Your Merchant
+        createdAt:
+          $ref: '#/components/schemas/Datetime'
+        returnUrl:
+          $ref: '#/components/schemas/ReturnUrl'
+    Refund:
+      description: Refund an already successfully processed payment.
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
+
+            '
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+    TransactionWebhooks:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhook'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    RefundStatus:
+      description: '* `SUCCESS`    - Refund has succeeded.
+
+        * `PENDING`    - Refund is waiting to be processed.
+
+        * `FAILURE`    - Refund has failed.
+
+        * `CANCELLED`  - Refund has been cancelled.
+
+        '
+      type: string
+      enum:
+      - SUCCESS
+      - PENDING
+      - FAILURE
+      - CANCELLED
+      example: SUCCESS
+    StartApplePaySession:
+      type: object
+      properties:
+        validationUrl:
+          description: The validation URL that is generated by the Apple device.
+          type: string
+          example: https://apple-pay-gateway-cert.apple.com/paymentservices/startSession
+        displayName:
+          description: The name to display on the payment sheet. You get this information from the initialize endpoint.
+          type: string
+          example: My merchant commercial name
+        domainName:
+          description: The domain of the website on which the session will occur. The value must match the domain from which the request is started. If there is a mismatch between this field and the domain that the Apple device determined, then the Apple Pay session will be terminated by the Apple device (with a generic error message or nothing happens).
+          type: string
+          example: https://app-domain.tld
+    Consumer:
+      allOf:
+      - $ref: '#/components/schemas/GenderlessConsumer'
+      - type: object
+        properties:
+          gender:
+            $ref: '#/components/schemas/Gender'
+    AppleInitialize:
+      type: object
+      required:
+      - reference
+      - amount
+      - description
+      - language
+      properties:
+        reference:
+          $ref: '#/components/schemas/Reference'
+        description:
+          description: 'Description of the underlying value or reason of the session.
+
+            Ultimately appears on the confirmation (statement and confirmation screen).
+
+            '
+          type: string
+          maxLength: 255
+          example: Order at yourdomain.tld
+        amount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        expiresAt:
+          allOf:
+          - $ref: '#/components/schemas/Datetime'
+          - description: ISO 8601 date and time. If left empty, the value defaults to 10 mins.
+        language:
+          $ref: '#/components/schemas/Language'
+        consumer:
+          $ref: '#/components/schemas/Consumer'
+        webhooks:
+          $ref: '#/components/schemas/SessionTransactionWebhooks'
+        returnUrl:
+          $ref: '#/components/schemas/ReturnUrl'
+    StatusAuthorized:
+      description: The transaction has been authorized.
+      type: string
+      format: enum
+      enum:
+      - AUTHORIZED
+      example: AUTHORIZED
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
+
+        '
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    StatusFailure:
+      description: The transaction has failed.
+      type: string
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    SessionTransactionWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a session or a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `TRANSACTION_CREATED` - Triggered when a new transaction is created for a session.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/TransactionCreatedEvent'
+              example: STATUS_CHANGE
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
+    StatusExpired:
+      description: The transaction has expired.
+      type: string
+      format: enum
+      enum:
+      - EXPIRED
+      example: EXPIRED
+    Currency:
+      description: ISO 4217 currency code.
+      type: string
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    RefundStatusEvent:
+      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+        '
+      type: string
+      enum:
+      - REFUND_STATUS
+      example: REFUND_STATUS
+    Gender:
+      description: The consumers gender.
+      type: string
+      format: enum
+      enum:
+      - m
+      - f
+      - 'null'
+      default: null
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
+      type: string
+      format: enum
+      enum:
+      - CANCELLED
+      example: CANCELLED
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    StatusOpen:
+      description: The transaction is open and can be paid.
+      type: string
+      format: enum
+      enum:
+      - OPEN
+      example: OPEN
+    ApplePayTransactionObject:
+      type: object
+      required:
+      - id
+      - sessionId
+      - expiresAt
+      - status
+      - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        sessionId:
+          $ref: '#/components/schemas/Uuid'
+        expiresAt:
+          $ref: '#/components/schemas/Datetime'
+        webhooks:
+          $ref: '#/components/schemas/TransactionWebhooks'
+        status:
+          description: The status of the transaction.
+          oneOf:
+          - $ref: '#/components/schemas/StatusOpen'
+          - $ref: '#/components/schemas/StatusSuccess'
+          - $ref: '#/components/schemas/StatusCancelled'
+          - $ref: '#/components/schemas/StatusExpired'
+          - $ref: '#/components/schemas/StatusFailure'
+          - $ref: '#/components/schemas/StatusAuthorized'
+        action:
+          description: Next action to be performed by merchant (or consumer) to complete the transaction. Only present when 3DS authentication is required.
+          anyOf:
+          - type: 'null'
+          - type: object
+            properties:
+              redirect:
+                type: object
+                properties:
+                  url:
+                    description: URL where consumer should be redirected to by the merchant to perform the transaction. This url is only available when a card payment has been started
+                    type: string
+                    format: url
+                    example: https://checkout.tld/3ds/v2/creditcard/123
+        createdAt:
+          $ref: '#/components/schemas/Datetime'
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentMethod'
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    TransactionWebhook:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    GenderlessConsumer:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+        phone:
+          $ref: '#/components/schemas/Phone'
+        dateOfBirth:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          example: '1990-05-23'
+          description: Date of birth in ISO 8601 format (YYYY-MM-DD).
+    TransactionCreatedEvent:
+      description: '* `TRANSACTION_CREATED` - Triggered when a new transaction is created.
+
+        '
+      type: string
+      enum:
+      - TRANSACTION_CREATED
+      example: TRANSACTION_CREATED
+    PaymentMethod:
+      description: The payment method used in the transaction.
+      type: string
+      format: enum
+      enum:
+      - creditcard
+      example: creditcard
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
+    RefundDetails:
+      description: Details of a refund.
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - reason
+      - status
+      - created
+      - updated
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/Uuid'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+        created:
+          $ref: '#/components/schemas/Datetime'
+        updated:
+          $ref: '#/components/schemas/Datetime'
+    RefundsListWithSessionID:
+      description: Details of all refunds belonging to a transaction of a session.
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundDetailsWithSessionID'
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+      type: string
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
+    Phone:
+      description: The phonenumber of the consumer (E.164 format).
+      type: string
+      maxLength: 16
+      example: '+31695613259'
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+  responses:
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+    ApplePaySession:
+      description: 'Apple Pay session details
+
+        '
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApplePaySessionObject'
+          examples:
+            initializedApplePay:
+              summary: Initialized Apple Pay session (awaiting authorization)
+              value:
+                id: bcbb3733-4d3e-4a4d-9254-1ddb90e6e082
+                reference: 5e6baea7-607c-438a-aaba-b06ce0ae7776
+                amount: 2000
+                currency: EUR
+                description: Some Apple Pay session
+                expiresAt: '2025-05-21T14:17:44.491Z'
+                language: nl
+                status: OPEN
+                action:
+                  applePayButton:
+                    merchantCountry: NL
+                    allowedCardNetworks:
+                    - VISA
+                    - MASTERCARD
+                    merchantName: Your Merchant
+                    serverUrl: https://www.example.com/api/
+                createdAt: '2025-05-11T14:17:44.491Z'
+                returnUrl: https://tradename.tld/shop/return/?purchase=PO1234666
+    ApplePaySessionTransactions:
+      description: Apple Pay transactions for a session
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - transactions
+            properties:
+              transactions:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplePayTransactionObject'
+          examples:
+            applePayTransactions:
+              summary: Apple Pay transactions for a session
+              value:
+                transactions:
+                - id: 44444444-4444-4444-4444-444444444444
+                  sessionId: bcbb3733-4d3e-4a4d-9254-1ddb90e6e082
+                  expiresAt: '2025-05-21T14:17:44.491Z'
+                  status: SUCCESS
+                  createdAt: '2025-05-11T14:17:44.491Z'
+                  paymentMethod: creditcard
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+    StartApplePaySession:
+      description: Start Apple Pay session details
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - description: Apple Pay start session response. The returned response is the opaque Apple Pay merchant session in string format. This response must be passed as-is to the Apple Pay services in the frontend.
+              type: object
+              properties:
+                displayName:
+                  type: string
+                  example: My merchant commercial name
+                domainName:
+                  type: string
+                  example: https://app-domain.tld
+                epochTimestamp:
+                  type: integer
+                  example: 1689601984961
+                expiresAt:
+                  type: integer
+                  example: 1689601984961
+                merchantIdentifier:
+                  type: string
+                  example: A25210A72D2148E13005A300DFF6435FB401C317CF84C881D9D4018F67BA7D1E
+                merchantSessionIdentifier:
+                  type: string
+                  example: SSHB12847F0ACB6478B9C1140CED6216A91_916523AAED1343F5BC5815E12BEE9250AFFDC1A17C46B0DE5A943F0F94927C24
+                nonce:
+                  type: string
+                  example: 83ds18s
+                operationalAnalyticsIdentifier:
+                  type: string
+                  example: A25210A72D2148E13005A300DFF6435FB401C317CF84C881D9D4018F67BA7D1E
+                pspId:
+                  type: string
+                  example: A25210A72D2148E13005A300DFF6435FB401C317CF84C881D9D4018F67BA7D1E
+                retries:
+                  type: integer
+                  example: 0
+                signature:
+                  type: string
+                  example: 308006092a864886f70d010702a0803080020101310d300b0609608648016503040201308006092a864886f70d0107010000a080308203e330820388a00302010202084c304149519d5436300a06082a8648ce3d040302307a312e302c06035504030c254170706c65204170706c69636174696f6e20496e746567726174696f6e204341202d20473331263024060355040b0c1d4170706c652043657274696669636174696f6e20417574686f7269747931133011060355040a0c0a4170706c6520496e632e310b3009060355040613025553301e170d3139303531383031333235375a170d3234303531363031333235375a305f3125302306035504030c1c6563632d736d702d62726f6b65722d7369676e5f5543342d50524f4431143012060355040b0c0b694f532053797374656d7331133011060355040a0c0a4170706c6520496e632e310b30090603550406130255533059301306072a8648ce3d020106082a8648ce3d03010703420004c21577edebd6c7b2218f68dd7090a1218dc7b0bd6f2c283d846095d94af4a5411b83420ed811f3407e83331f1c54c3f7eb3220d6bad5d4eff49289893e7c0f13a38202113082020d300c0603551d130101ff04023000301f0603551d2304183016801423f249c44f93e4ef27e6c4f6286c3fa2bbfd2e4b304506082b0601050507010104393037303506082b060105050730018629687474703a2f2f6f6373702e6170706c652e636f6d2f6f63737030342d6170706c65616963613330323082011d0603551d2004820114308201103082010c06092a864886f7636405013081fe3081c306082b060105050702023081b60c81b352656c69616e6365206f6e207468697320636572746966696361746520627920616e7920706172747920617373756d65732061636365707461...
+    RefundResponseWithSessionID:
+      description: Refund details
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundDetailsWithSessionID'
+    RefundsResponseWithSessionID:
+      description: Details of all refunds belonging to a transaction of a session.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundsListWithSessionID'
+    ApplePaySessionTransaction:
+      description: Apple Pay session transaction
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApplePayTransactionObject'
+          examples:
+            authorizedApplePay:
+              summary: Authorized Apple Pay transaction
+              value:
+                id: 44444444-4444-4444-4444-444444444444
+                sessionId: bcbb3733-4d3e-4a4d-9254-1ddb90e6e082
+                expiresAt: '2025-05-21T14:17:44.491Z'
+                status: AUTHORIZED
+                action:
+                  redirect:
+                    url: https://checkout.tld/3ds/v2/creditcard/44444444-4444-4444-4444-444444444444
+                createdAt: '2025-05-11T14:17:44.491Z'
+            successfulApplePay:
+              summary: Successful Apple Pay transaction
+              value:
+                id: 44444444-4444-4444-4444-444444444444
+                sessionId: bcbb3733-4d3e-4a4d-9254-1ddb90e6e082
+                expiresAt: '2025-05-21T14:17:44.491Z'
+                status: SUCCESS
+                createdAt: '2025-05-11T14:17:44.491Z'
+                paymentMethod: creditcard
+  parameters:
+    SessionId:
+      name: sessionId
+      description: ID received in the initialize session response, used to reference the session in subsequent calls.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    TransactionId:
+      name: transactionId
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/TransactionId'
+  examples:
+    StandardAppleInitialize:
+      summary: Standard Apple initialize
+      value:
+        reference: 5e6baea7-607c-438a-aaba-b06ce0ae7776
+        description: Some Apple Pay session
+        amount: 2000
+        currency: EUR
+        expiresAt: '2025-05-21T14:17:44.491Z'
+        language: nl
+        consumer:
+          address:
+            countryCode: NL
+          email: john.doe@email.tld
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234666
+        webhooks:
+        - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+          - TRANSACTION_CREATED
+          - REFUND_STATUS
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 Client Credentials Grant.
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/authorization/oauth2/token
+          scopes: {}

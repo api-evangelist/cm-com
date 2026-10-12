@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-tts-voice-schema.json",
+  "title": "Tts Voice",
+  "description": "Model describing a TTS voice that's supported by the Voice TTS server.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-tts-v1-openapi.yml#/components/schemas/ApiTtsVoice",
+  "type": "object",
+  "properties": {
+    "language": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "ISO-639 language code and ISO-3166 country code."
+    },
+    "gender": {
+      "$ref": "#/$defs/ApiGender"
+    },
+    "voiceNumber": {
+      "type": "integer",
+      "description": "The voice number, used to indentify this voice.",
+      "format": "int32"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The display name of the current TTS voice."
+    },
+    "isPremium": {
+      "type": "boolean",
+      "description": "Whether or not this is a premium TTS voice, meaning extra surcharges will be invoices for it's use."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiGender": {
+      "title": "Gender",
+      "enum": [
+        "Male",
+        "Female"
+      ],
+      "type": "string",
+      "description": "Available genders for TTS voices."
+    }
+  }
+}

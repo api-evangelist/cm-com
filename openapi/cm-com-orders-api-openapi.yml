@@ -1,0 +1,522 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: ticketing@cm.com
+    name: CM.com Ticketing
+    url: https://www.cm.com
+  description: Integrate your own systems with CM.com Ticketing.
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  termsOfService: https://www.cm.com/terms-of-service/
+  title: External Ticketing Orders API
+  version: '0.1'
+servers:
+- url: /ticketing/v1
+tags:
+- name: Orders
+paths:
+  /events/{event_id}/orders:
+    get:
+      description: Returns the orders of an event, optionally filtered by status, product, sales origin or completion time.
+      operationId: ListOrders
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Number of items to skip (default 0)
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Page size (default 100)
+        in: query
+        name: take
+        schema:
+          type: integer
+      - description: Only return orders with this status
+        in: query
+        name: status
+        schema:
+          enum:
+          - COMPLETED
+          - CANCELED
+          - REFUNDED
+          - RELEASED
+          - PENDING
+          type: string
+      - description: Only return orders that contain this product (UUID). Repeat the parameter to match orders containing any of several products
+        in: query
+        name: product_id
+        schema:
+          items:
+            type: string
+          type: array
+      - description: 'Only return orders created through this sales origin: `SHOP` (the online shop), `BACKOFFICE` or `PARTNER_API` (orders created through this API)'
+        in: query
+        name: sales_origin
+        schema:
+          type: string
+      - description: Only return orders completed at or after this time (RFC 3339)
+        in: query
+        name: completed_at_from
+        schema:
+          type: string
+      - description: Only return orders completed at or before this time (RFC 3339)
+        in: query
+        name: completed_at_to
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.listResponse-handler_orderListItem'
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: invalid query parameter
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: List orders
+      tags:
+      - Orders
+    post:
+      description: Creates an order for an event. There are two ways to use it. With `complete=true` the order is completed immediately, using the `payment_method` and `delivery_method` in the same request. With `complete=false` (the default) the order is created with status `PENDING` and reserves the requested tickets; you then finish it with `PUT /events/{event_id}/orders/{order_id}/complete`, or release the tickets with `PUT /events/{event_id}/orders/{order_id}/cancel`. The response has the same shape as `GET /events/{event_id}/orders/{order_id}`. Use `external_batch_id` to store your own reference for the order.
+      operationId: CreateOrder
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.createOrderRequest'
+              description: Order payload
+              summary: request
+        description: Order payload
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.viewOrderResponse'
+          description: Created
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: product_out_of_stock / product_not_enabled
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: Create order
+      tags:
+      - Orders
+  /events/{event_id}/orders/{order_id}:
+    get:
+      description: 'Returns the details of one order: its status, the customer''s details (name, contact details, address, organisation and date of birth; custom fields are not included), the payment method, the tickets that were ordered and the consents the customer gave.'
+      operationId: ViewOrder
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Order ID (UUID)
+        in: path
+        name: order_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.viewOrderResponse'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found / order_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: View order
+      tags:
+      - Orders
+  /events/{event_id}/orders/{order_id}/cancel:
+    put:
+      description: Cancels an order that is still `PENDING` and makes the tickets it reserved available again. This endpoint does not refund or cancel completed orders; to cancel individual tickets of a completed order, use the customer product cancel endpoint. Canceling an order that is already canceled returns `409`.
+      operationId: CancelOrder
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Order ID (UUID)
+        in: path
+        name: order_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.viewOrderResponse'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found / order_not_found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: order_already_canceled
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: Cancel order
+      tags:
+      - Orders
+  /events/{event_id}/orders/{order_id}/complete:
+    put:
+      description: Completes an order that was created with `complete=false` and is still `PENDING`. If you leave out `payment_method` it defaults to `FREE`, and if you leave out `delivery_method` it defaults to `NONE`. Completing an order that is already completed returns `409`.
+      operationId: CompleteOrder
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Order ID (UUID)
+        in: path
+        name: order_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.completeOrderRequest'
+              description: Complete order payload
+              summary: request
+        description: Complete order payload
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.viewOrderResponse'
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: invalid request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found / order_not_found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: order_already_completed
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: Complete order
+      tags:
+      - Orders
+components:
+  schemas:
+    handler.listResponse-handler_orderListItem:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/handler.orderListItem'
+          type: array
+          uniqueItems: false
+        links:
+          properties:
+            first:
+              type: string
+            last:
+              type: string
+            next:
+              type: string
+            prev:
+              type: string
+            self:
+              type: string
+          type: object
+        page_size:
+          type: integer
+        total_items:
+          type: integer
+      type: object
+    handler.viewOrderResponse:
+      properties:
+        batch_id:
+          type: string
+        canceled_at:
+          type: string
+        completed_at:
+          type: string
+        consents:
+          items:
+            $ref: '#/components/schemas/handler.viewOrderConsent'
+          type: array
+          uniqueItems: false
+        currency_id:
+          type: string
+        customer_data:
+          $ref: '#/components/schemas/handler.viewOrderCustomerData'
+        download_url:
+          type: string
+        external_batch_id:
+          type: string
+        is_guest_list_order:
+          type: boolean
+        payment_method:
+          type: string
+        personalized_at:
+          type: string
+        refunded_at:
+          type: string
+        requested_language_id:
+          type: string
+        status:
+          type: string
+        tickets:
+          items:
+            $ref: '#/components/schemas/handler.viewOrderTicket'
+          type: array
+          uniqueItems: false
+        total_balance:
+          type: number
+        uuid:
+          type: string
+      type: object
+    handler.viewOrderTicket:
+      properties:
+        amount:
+          type: integer
+        cancellations:
+          type: integer
+        name:
+          additionalProperties:
+            type: string
+          type: object
+        product_price_incl_vat:
+          type: number
+        product_type:
+          type: string
+        uuid:
+          type: string
+      type: object
+    handler.orderListItem:
+      properties:
+        batch_id:
+          type: string
+        external_batch_id:
+          type: string
+        status:
+          type: string
+        uuid:
+          type: string
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+    handler.viewOrderCustomerData:
+      properties:
+        address_line_1:
+          type: string
+        address_line_1_building_number:
+          type: string
+        city:
+          type: string
+        country_code:
+          type: string
+        date_of_birth:
+          description: YYYY-MM-DD
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        gender:
+          type: string
+        last_name:
+          type: string
+        mobile:
+          type: string
+        organisation_name:
+          type: string
+        position_name:
+          type: string
+        uuid:
+          type: string
+        zipcode:
+          type: string
+      type: object
+    handler.createOrderRequest:
+      properties:
+        complete:
+          type: boolean
+        customer_data:
+          $ref: '#/components/schemas/handler.createOrderCustomerData'
+        delivery_method:
+          enum:
+          - NONE
+          - EMAIL
+          type: string
+        external_batch_id:
+          type: string
+        payment_method:
+          enum:
+          - FREE
+          - EXTERNAL_PAYMENT
+          type: string
+        tickets:
+          items:
+            $ref: '#/components/schemas/handler.createOrderTicket'
+          type: array
+          uniqueItems: false
+      type: object
+    handler.createOrderCustomerData:
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        language:
+          description: Language the customer prefers to be addressed in, as an ISO 639-1 code (for example EN or NL)
+          type: string
+        last_name:
+          type: string
+        mobile:
+          type: string
+      type: object
+    handler.viewOrderConsent:
+      properties:
+        is_accepted:
+          type: boolean
+        name:
+          type: string
+        uuid:
+          type: string
+      type: object
+    handler.completeOrderRequest:
+      properties:
+        delivery_method:
+          enum:
+          - NONE
+          - EMAIL
+          type: string
+        mark_as_scanned:
+          type: boolean
+        payment_method:
+          enum:
+          - FREE
+          - EXTERNAL_PAYMENT
+          type: string
+      type: object
+    handler.createOrderTicket:
+      properties:
+        amount:
+          type: integer
+        product_id:
+          type: string
+      type: object
+  securitySchemes:
+    SystemTokenAuth:
+      description: Send your organisation's system token in this header.
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID
+      type: apiKey
+externalDocs:
+  description: ''
+  url: ''

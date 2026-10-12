@@ -1,0 +1,920 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Transaction API
+  version: '1.0'
+  description: 'Operations tagged Transaction across 3 of this provider''s published API definitions: cm-com-verification-iban-verification-v1-openapi.yml, cm-com-verification-identity-hub-v1-openapi.yml, cm-com-verification-idin-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com/ibancheck/v1.0
+- url: https://api.cm.com/identity-hub/v1
+- url: https://api.cm.com/idin/v1.0
+tags:
+- name: Transaction
+paths:
+  /transaction:
+    post:
+      operationId: create_transaction
+      tags:
+      - Transaction
+      summary: Create transaction
+      description: Start an IBAN Verification request
+      requestBody:
+        description: Start
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful transaction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        default:
+          description: Any non-compliant request will return an error object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    servers:
+    - url: https://api.cm.com/ibancheck/v1.0
+  /status:
+    post:
+      operationId: get_status
+      tags:
+      - Transaction
+      summary: Get transaction status
+      description: After the user has returned to you via your `merchant_return_url`, you retrieve the `transaction_id` from the trxid parameter. You should check that both the `entrance_code` and the `transaction_id` match your expectations for that consumer, before you make this status call.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        default:
+          description: Any non-compliant request will return an error object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    servers:
+    - url: https://api.cm.com/ibancheck/v1.0
+  /transactions:
+    post:
+      operationId: postTransactions
+      summary: Create transaction
+      description: Create a new transaction. The response contains the transaction id and a hosted URL that the end-user can be redirected to in order to complete the transaction.
+      tags:
+      - Transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+      responses:
+        '201':
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTransactionResponse'
+              examples:
+                created:
+                  $ref: '#/components/examples/transaction-created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - JWT: []
+      x-operation-id-source: normalized
+      x-operation-id-original: create_transaction
+    servers:
+    - url: https://api.cm.com/identity-hub/v1
+  /transactions/{id}:
+    get:
+      operationId: get_transaction
+      summary: Get transaction
+      description: Retrieve a transaction by its id. When the transaction is successful, the `data` and `unavailableFields` properties are included in the response. `rawData` will be included when available.
+      tags:
+      - Transaction
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The UUID of the transaction.
+        schema:
+          type: string
+          format: uuid
+          examples:
+          - b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+      responses:
+        '200':
+          description: Transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse_2'
+              examples:
+                created:
+                  $ref: '#/components/examples/transaction-state-created'
+                started:
+                  $ref: '#/components/examples/transaction-state-started'
+                success:
+                  $ref: '#/components/examples/transaction-state-success'
+                failed:
+                  $ref: '#/components/examples/transaction-state-failed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - JWT: []
+    servers:
+    - url: https://api.cm.com/identity-hub/v1
+components:
+  schemas:
+    StatusRequest:
+      title: StatusRequest
+      allOf:
+      - $ref: '#/components/schemas/TokenizedRequest'
+      - title: StatusRequestParameters
+        required:
+        - merchant_reference
+        - transaction_id
+        type: object
+        properties:
+          transaction_id:
+            $ref: '#/components/schemas/TransactionID'
+          merchant_reference:
+            maxLength: 35
+            pattern: ^[a-zA-Z0-9]+$
+            type: string
+            description: The private reference of the transaction
+    IssuerID:
+      pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$
+      type: string
+      description: An identifier for the bank.
+      examples:
+      - RABONL2U
+    TransactionID:
+      maxLength: 16
+      minLength: 16
+      pattern: ^[0-9]+$
+      type: string
+      description: 'A token for this transaction. You should store this with your session data, so that at any point, you can make a callback to the CM api and retrieve the status and/or results. Note that it is not guaranteed that your user will return to you via your merchant_return_url. A connection might be dropped, a user might accidentally close a window, or they might trigger the back button and return that way. This id is the only way you can retrieve any information in that case.
+
+        '
+    MerchantToken:
+      type: string
+      description: a UUID string that is unique and private to you as a merchant. Do not share this key, keep it safe. Example 3c01abeb-b031-4fea-9f2d-c55c283cd78e
+      format: uuid
+      examples:
+      - 3c01abeb-b031-4fea-9f2d-c55c283cd78e
+    StatusResponse:
+      title: The results of the information requested.
+      type: object
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/TransactionID'
+        status:
+          type: string
+          description: 'If the status is `open`, then the information was not yet available. Please try again after a few more seconds. If the status is `success` then you can expect the requested information to be present. A status of cancelled means that the user has cancelled the flow.
+
+            '
+          examples:
+          - success
+          enum:
+          - open
+          - success
+          - cancelled
+          - failure
+          - expired
+        issuer_id:
+          $ref: '#/components/schemas/IssuerID'
+        name:
+          maxLength: 200
+          type: string
+          examples:
+          - A. van Dijk
+        iban:
+          maxLength: 20
+          pattern: ^NL[0-9]{2}[A-Z-a-z0-9]{4}[0-9]{10}$
+          type: string
+          examples:
+          - NL45INGB0000012345
+      description: Note that not all information that was requested is guaranteed to be available from the bank and present in the response.
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that a bank is not available or that the system is offline, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here then in production mode.
+        code:
+          type: integer
+          format: int32
+          description: Low level and/or internal error code describing the error.
+    TransactionRequest:
+      title: Transaction request
+      allOf:
+      - $ref: '#/components/schemas/TokenizedRequest'
+      - required:
+        - entrance_code
+        - merchant_return_url
+        type: object
+        properties:
+          entrance_code:
+            maxLength: 40
+            minLength: 1
+            pattern: ^[a-zA-Z0-9]+$
+            type: string
+            description: 'This is a token that will allow you to rejoin the user to his session when he returns. It can be a maximum of 40 characters and should only contain the characters a-z, A-Z and 0-9. It should only be valid once and needs to be random enough (best use a cryptographically secure random generator), to avoid the possibility of replay attacks.
+
+              '
+          merchant_return_url:
+            maxLength: 512
+            type: string
+            description: 'The place where the bank should redirect the user to at the end of the flow. The bank will append two query parameters to this url when returning the user to you, `trxid` and `ec`. The latter will contain the value of entranceCode, trxid is the `transaction_id` that you will receive in this request.
+
+              '
+    TransactionResponse:
+      title: Transaction response
+      required:
+      - issuer_authentication_url
+      - merchant_reference
+      - transaction_id
+      type: object
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/TransactionID'
+        issuer_authentication_url:
+          maxLength: 512
+          type: string
+          description: 'The location where you should forward the customer to. They will begin their bank authentication here.
+
+            '
+          examples:
+          - https://myserver/callback
+        merchant_reference:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]+$
+          type: string
+          description: An internal reference id for accounting purposes
+    TokenizedRequest:
+      title: TokenRequestParameters
+      required:
+      - merchant_token
+      type: object
+      properties:
+        merchant_token:
+          $ref: '#/components/schemas/MerchantToken'
+    TransactionState:
+      type: string
+      description: "Possible transaction states:\n\n * `created` - The transaction has been created but the end-user has not started the flow yet.\n * `started` - The end-user has selected a method and started the transaction.\n * `success` - The transaction has been completed successfully.\n * `failed` - The transaction could not be completed.\n"
+      enum:
+      - created
+      - started
+      - success
+      - failed
+      examples:
+      - success
+    ErrorResponse_2:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
+        message:
+          type: string
+          description: Description of the error that occurred.
+          examples:
+          - The return url field is required
+    Locale:
+      type: string
+      enum:
+      - nl-NL
+      - en-US
+      - fr-FR
+      - de-DE
+      - hu-HU
+      - it-IT
+      - ja-JP
+      - pl-PL
+      - pt-PT
+      - ro-RO
+      - sk-SK
+      - es-ES
+      examples:
+      - en-US
+    CreateTransactionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The UUID of the created transaction.
+          examples:
+          - b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+        url:
+          type: string
+          format: url
+          description: The hosted URL the end-user should be redirected to in order to complete the transaction.
+          examples:
+          - https://www.cm.com/app/identity-hub/session/aQ9pX3vN7wL2kB4mR8sT6yU0iO5cF1eH
+      required:
+      - id
+      - url
+    RequestedField:
+      type: string
+      description: "Requested field description:\n\n * `givenName` - The end-user's given name(s).\n * `middleName` - The end-user's middle name(s).\n * `familyName` - The end-user's family name.\n * `gender` - The end-user's gender.\n * `birthdate` - The end-user's date of birth.\n * `email` - The end-user's email address.\n * `phoneNumber` - The end-user's phone number.\n * `address` - The end-user's address.\n * `nationality` - The end-user's nationality.\n * `identifier` - A stable user identifier that is unique per identification method. Not available for all methods.\n"
+      enum:
+      - givenName
+      - middleName
+      - familyName
+      - gender
+      - birthdate
+      - email
+      - phoneNumber
+      - address
+      - nationality
+      - identifier
+      examples:
+      - givenName
+    CreateTransactionRequest:
+      type: object
+      properties:
+        returnUrl:
+          type: string
+          format: url
+          maxLength: 255
+          description: The URL the end-user will be redirected to after completing the transaction. The `transactionId` and `state` are appended as query parameters, e.g. `https://example.com/transaction/return?transactionId=b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b&state=success`.
+          examples:
+          - https://example.com/transaction/return
+        callbackUrl:
+          type: string
+          format: url
+          maxLength: 255
+          description: Updates regarding the transaction will be sent to the callback URL. It must begin with `https://`. See the [Transaction state](#tag/Callbacks/operation/callback_transaction_state) callback for the payload that is sent.
+          examples:
+          - https://example.com/transaction/callback
+        locale:
+          $ref: '#/components/schemas/Locale'
+          default: en-US
+          description: "Supported locales for the hosted transaction UI:\n  * `nl-NL` - Dutch\n  * `en-US` - English\n  * `fr-FR` - French\n  * `de-DE` - German\n  * `hu-HU` - Hungarian\n  * `it-IT` - Italian\n  * `ja-JP` - Japanese\n  * `pl-PL` - Polish\n  * `pt-PT` - Portuguese\n  * `ro-RO` - Romanian\n  * `sk-SK` - Slovakian\n  * `es-ES` - Spanish\n"
+        requestedFields:
+          type: array
+          minItems: 1
+          description: The list of fields to collect from the end-user during the transaction. The collected values are returned via the `data` property once the transaction is successful.
+          items:
+            $ref: '#/components/schemas/RequestedField'
+          examples:
+          - - givenName
+            - familyName
+            - birthdate
+            - identifier
+      required:
+      - returnUrl
+      - requestedFields
+    TransactionResponse_2:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The UUID of the transaction.
+          examples:
+          - b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+        state:
+          description: The current state of the transaction.
+          oneOf:
+          - $ref: '#/components/schemas/TransactionState'
+        method:
+          type:
+          - string
+          - 'null'
+          description: The identification method used by the end-user. `null` until the end-user has selected a method. The set of available methods depends on the account's contract.
+          examples:
+          - idin
+        methodType:
+          type:
+          - string
+          - 'null'
+          description: The type of the selected method (e.g. `basic` or `full` for ID Scan). `null` when not applicable, not all methods have multiple types.
+          examples:
+          - full
+        data:
+          type:
+          - object
+          - 'null'
+          description: 'The collected transaction data. Only present when `state` is `success`. Fields that were requested but could not be provided by the selected identification method are omitted here and listed in `unavailableFields`.
+
+            '
+          properties:
+            givenName:
+              type:
+              - string
+              - 'null'
+              description: The end-user's given name(s).
+              examples:
+              - John
+            middleName:
+              type:
+              - string
+              - 'null'
+              description: The end-user's middle name(s).
+              examples:
+              - Robert
+            familyName:
+              type:
+              - string
+              - 'null'
+              description: The end-user's family name.
+              examples:
+              - Doe
+            gender:
+              type:
+              - string
+              - 'null'
+              description: The end-user's gender.
+              examples:
+              - male
+            birthdate:
+              type:
+              - string
+              - 'null'
+              format: date
+              description: The end-user's date of birth in `YYYY-MM-DD` format.
+              examples:
+              - '1980-01-31'
+            email:
+              type:
+              - string
+              - 'null'
+              format: email
+              description: The end-user's email address.
+              examples:
+              - john.doe@example.com
+            phoneNumber:
+              type:
+              - string
+              - 'null'
+              description: The end-user's phone number in E.164 format.
+              examples:
+              - '+31612345678'
+            address:
+              type:
+              - string
+              - 'null'
+              description: The end-user's address.
+              examples:
+              - Konijnenberg 30, 4825 BD Breda, Netherlands
+            nationality:
+              type:
+              - string
+              - 'null'
+              description: The end-user's nationality.
+              examples:
+              - Dutch
+            identifier:
+              type:
+              - string
+              - 'null'
+              description: A stable user identifier that is unique per identification method (e.g. the iDIN BIN). Not available for all methods.
+              examples:
+              - NLINGB3x4u89498qe4tqjvdaj0
+        unavailableFields:
+          type:
+          - array
+          - 'null'
+          description: The fields that were requested but could not be provided by the identification method used. Only present when `state` is `success`.
+          items:
+            $ref: '#/components/schemas/RequestedField'
+          examples:
+          - - nationality
+        rawData:
+          description: 'The raw, unprocessed response from the underlying identification method. Its structure depends on the method used and is not normalised. Included whenever available, typically once the transaction''s state is `success` or `failed`.
+
+            '
+      required:
+      - id
+      - state
+      - method
+      - methodType
+    IssuerID_2:
+      pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$
+      type: string
+      description: 'An identifier for the bank. Used as the value of the <option> in bank selector dropdowns. The end user selects a value and iDIN will direct the end user to that bank, so that the user can identify himself.
+
+        '
+      examples:
+      - RABONL2U
+    TransactionStatus:
+      type: string
+      description: 'If the status is `open`, then the information was not yet available. Please try again after a few more seconds. If the status is `success` then you can expect the requested information to be present. Please note that personal information will only be returned on the first occurrence of a `success` status. A status of `cancelled` means that the user has cancelled the flow.
+
+        '
+      examples:
+      - success
+      enum:
+      - open
+      - success
+      - cancelled
+      - failure
+      - expired
+    TransactionID_2:
+      maxLength: 16
+      minLength: 16
+      pattern: ^[0-9]{16}$
+      type: string
+      description: 'A token for this transaction. You should store this with your session data, so that at any point, you can make a callback to the iDIN api and retrieve the status and/or results. Note that it is not guaranteed that your user will return to you via your merchant_return_url. A connection might be dropped, a user might accidentally close a window, or he might trigger the back button and return that way. This id is the only way you can retrieve any information in that case.
+
+        '
+    StatusResponse_2:
+      title: The results of the information requested.
+      type: object
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/TransactionID_2'
+        transaction_reference:
+          $ref: '#/components/schemas/TransactionReference'
+        issuer_id:
+          $ref: '#/components/schemas/IssuerID_2'
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+        bin:
+          maxLength: 256
+          minLength: 6
+          pattern: ^[a-zA-Z]{6,6}.*$
+          type: string
+          description: When identity was requested, this will be a consistent identifier for this user. You can use this to connect with another account of the user. If identity was not requested, then this will be equal to the transient_id.
+          examples:
+          - NLINGB3x4u89498qe4tqjvdaj0
+        transient_id:
+          maxLength: 256
+          minLength: 6
+          pattern: ^TRANS.{1,251}$
+          type: string
+          description: When identity was not requested, this will be a transient identifier for this user. It will be different for each request, but confirms that the person is known to the bank.
+          examples:
+          - TRANS3x4u89498qe4tqjvdaj0
+        name:
+          type: object
+          properties:
+            gender:
+              type: string
+              examples:
+              - female
+              enum:
+              - male
+              - female
+              - unspecified
+            initials:
+              maxLength: 20
+              type: string
+              examples:
+              - A
+            last_name:
+              maxLength: 200
+              type: string
+              examples:
+              - Dijk
+            last_name_prefix:
+              maxLength: 10
+              type: string
+              examples:
+              - van
+        address:
+          type: object
+          properties:
+            street:
+              maxLength: 43
+              type: string
+              examples:
+              - Dijklaan
+            house_number:
+              pattern: ^[0-9]{1,5}$
+              type: string
+              examples:
+              - '1'
+            house_number_suffix:
+              type: string
+              examples:
+              - b
+            postal_code:
+              pattern: ^[0-9]{4}[a-zA-Z]{2}$
+              type: string
+              examples:
+              - 0000AA
+            city:
+              maxLength: 24
+              type: string
+              examples:
+              - Amsterdam
+            country:
+              maxLength: 2
+              type: string
+              examples:
+              - NL
+        age:
+          type: object
+          properties:
+            date_of_birth:
+              type: string
+              format: date
+              examples:
+              - 1970-01-01
+            18y_or_older:
+              type: boolean
+              examples:
+              - true
+        telephone_number:
+          maxLength: 20
+          pattern: ^[0-9 ()+-]{1,20}$
+          type: string
+          examples:
+          - '+31612345678'
+        email_address:
+          maxLength: 255
+          type: string
+          format: email
+          examples:
+          - no_reply@example.com
+      description: Note that not all information that was requested is guaranteed to be available from the bank and present in the response.
+    ErrorResponse_3:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that a bank is not available or that the system is offline, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here then in production mode.
+        code:
+          type: integer
+          format: int32
+          description: Low level and/or internal error code describing the error.
+      description: 'Whenever an error occurs, you are expected to show the message to the user
+
+        and to give the user the option of trying again. Errors can happen for a variety of reasons,
+
+        but a common reason is because the issuer the user chose is temporarily not available.
+
+        '
+    TransactionRequest_2:
+      title: Transaction request
+      description: 'Use one or more of identity, name, address, date_of_birth and 18y_or_older to request information
+
+        '
+      allOf:
+      - $ref: '#/components/schemas/TokenizedRequest'
+      - required:
+        - entrance_code
+        - issuer_id
+        - merchant_return_url
+        type: object
+        properties:
+          identity:
+            type: boolean
+            description: 'Retrieve an identifying token (bin) with the bank for this consumer that is consistent across multiple
+
+              sessions. When false returns a transient_id that will differ per transaction.
+
+              '
+          name:
+            type: boolean
+            description: Retrieve the name information associated with this consumer
+          gender:
+            type: boolean
+            description: Retrieve the gender of this consumer
+          address:
+            type: boolean
+            description: Retrieve address information associated with this consumer
+          date_of_birth:
+            type: boolean
+            description: Retrieve the birthdate of the user
+          18y_or_older:
+            type: boolean
+            description: Retrieve if this user is known to be 18 years or older.
+          email_address:
+            type: boolean
+            description: Retrieve the email address associated with this consumer.
+          telephone_number:
+            type: boolean
+            description: Retrieve the telephone number associated with this consumer.
+          issuer_id:
+            $ref: '#/components/schemas/IssuerID_2'
+          entrance_code:
+            maxLength: 40
+            minLength: 1
+            pattern: ^[a-zA-Z0-9]+$
+            type: string
+            description: 'This is a token that will allow you to rejoin the user to his session when he returns. It can be a maximum of 40 characters and should only contain the characters a-z, A-Z and 0-9. It should only be valid once and needs to be random enough (best use a cryptographically secure random generator) to avoid the possibility of replay attacks.
+
+              '
+          merchant_return_url:
+            maxLength: 512
+            type: string
+            description: 'The URL the bank should redirect the user to at the end of the flow. The bank will append two query parameters to this URL when returning the user to you, `trxid` and `ec`. The latter will contain the value of entrance_code, trxid is the `transaction_id` that you will receive in this request.
+
+              '
+          language:
+            maxLength: 2
+            minLength: 2
+            type: string
+            description: 'The 2 character language code in which to return the results. Can be either ''nl'' or ''en'' for Dutch or English. This is a preferred language, not all banks support all languages.
+
+              '
+            examples:
+            - nl
+            enum:
+            - en
+            - nl
+          transaction_reference:
+            maxLength: 255
+            type: string
+            description: 'A custom reference you can provide that we will add to the transaction, making it possible for you to distinguish transactions.
+
+              '
+            examples:
+            - 7defa5c6-7651-45cd-9016-f9027dc4dda9
+    TransactionReference:
+      maxLength: 255
+      type: string
+      description: 'The optional custom reference you provided when creating the transaction. If not provided, will return null.
+
+        '
+      examples:
+      - 7defa5c6-7651-45cd-9016-f9027dc4dda9
+    TransactionResponse_3:
+      title: Transaction response
+      required:
+      - issuer_authentication_url
+      - merchant_reference
+      - transaction_id
+      type: object
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/TransactionID_2'
+        issuer_authentication_url:
+          maxLength: 512
+          type: string
+          description: 'The location with the issuing bank to which you should now forward the customer
+
+            '
+          examples:
+          - https://issuerserver/transaction
+        merchant_reference:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]+$
+          type: string
+          description: A reference id for accounting purposes
+        transaction_reference:
+          $ref: '#/components/schemas/TransactionReference'
+  examples:
+    transaction-state-created:
+      summary: State created (end-user has not started yet)
+      value:
+        id: b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+        state: created
+        method: null
+        methodType: null
+    transaction-state-failed:
+      summary: State failed
+      value:
+        id: b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+        state: failed
+        method: id-scan
+        methodType: basic
+    transaction-state-started:
+      summary: State started (end-user has selected a method)
+      value:
+        id: b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+        state: started
+        method: idin
+        methodType: null
+    transaction-state-success:
+      summary: State success with collected data
+      value:
+        id: b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+        state: success
+        method: idin
+        methodType: full
+        data:
+          givenName: John
+          familyName: Doe
+          birthdate: '1980-01-31'
+          identifier: NLINGB3x4u89498qe4tqjvdaj0
+        unavailableFields:
+        - nationality
+        rawData:
+          status: success
+          name:
+            initials: J.
+            last_name: Doe
+          age:
+            date_of_birth: '1980-01-31'
+    transaction-created:
+      summary: Transaction created
+      value:
+        id: b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+        url: https://www.cm.com/app/identity-hub/session/aQ9pX3vN7wL2kB4mR8sT6yU0iO5cF1eH
+  responses:
+    InternalServerError:
+      description: Errors related to the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+          example:
+            status: 500
+            message: Internal Server Error
+    Unauthorized:
+      description: Errors related to the authorization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+          example:
+            status: 401
+            message: Unauthorized
+    BadRequest:
+      description: Errors related to the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+          example:
+            status: 400
+            message: The return url field is required
+    NotFound:
+      description: The requested transaction could not be found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse_2'
+          example:
+            status: 404
+            message: Not Found
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp` in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key ID of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '
+    HMAC:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Used on callbacks sent by Identity Hub to your `callbackUrl`. The header contains the HMAC-SHA256 signature of the request body, calculated with your client secret as the secret key, prefixed with `HMAC `:
+
+
+        ```
+
+        Authorization: HMAC MIi9ZMyar2v+o7H7LD7oNolO5LrTJaC+8uKvYUGqJvM=
+
+        ```
+
+        '
+x-refined-from:
+- cm-com-verification-iban-verification-v1-openapi.yml
+- cm-com-verification-identity-hub-v1-openapi.yml
+- cm-com-verification-idin-v1-openapi.yml

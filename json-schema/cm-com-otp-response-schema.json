@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-otp-response-schema.json",
+  "title": "OTP Response",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-otp-v2-openapi.yml#/components/schemas/OtpResponse",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The identifier for the code. Use this in combination with the received code to verify the code.",
+      "readOnly": true
+    },
+    "channel": {
+      "type": "string",
+      "description": "The channel used to send the code.",
+      "enum": [
+        "email",
+        "push",
+        "rcs",
+        "sms",
+        "voice",
+        "whatsapp"
+      ]
+    },
+    "verified": {
+      "type": "boolean",
+      "description": "Indicates if the code is verified. Once a code has been successfully validated, it cannot be validated again.",
+      "default": false,
+      "readOnly": true
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "The date the OTP was created.",
+      "format": "date-time",
+      "readOnly": true
+    },
+    "expiresAt": {
+      "type": "string",
+      "description": "The date the OTP will expire.",
+      "format": "date-time",
+      "readOnly": true
+    }
+  }
+}

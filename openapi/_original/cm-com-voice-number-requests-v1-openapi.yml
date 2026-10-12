@@ -1,0 +1,1521 @@
+# x-archived-from: cm-com-voice-number-requests-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: Phone Number Request API
+  version: v1
+servers:
+- url: https://api.cm.com
+paths:
+  /voice-phonenumberrequestapi/v1/{accountGuid}/numberrequests:
+    get:
+      tags:
+      - Number Requests
+      summary: Get Number Requests
+      description: Get all number request orders for the given Account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: skip
+        in: query
+        description: Amount of items being skipped.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+        example: 0
+      - name: take
+        in: query
+        description: Amount of items being retrieved.
+        schema:
+          type: integer
+          format: int32
+          default: 30
+        example: 30
+      - name: q
+        in: query
+        description: Search for order ID.
+        schema:
+          type: string
+          default: ''
+      - name: statuses
+        in: query
+        description: Filter on given statusses.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-CM-PAGINATION-SKIP:
+              description: The amount of items that have been skipped
+              schema:
+                type: number
+            X-CM-PAGINATION-TAKE:
+              description: The amount of items that have been taken
+              schema:
+                type: number
+            X-CM-PAGINATION-TOTAL:
+              description: The total amount of available items
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiNumberRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    post:
+      tags:
+      - Number Requests
+      summary: Create Number Request
+      description: "This endpoint allows you to request one or more phone numbers for use in our platform. The prices bound to purchasing new numbers can be found in the voice management App.\r\n\r\nIf the requested numbers are directly available, they will be immediately assigned to the specified voice account. If they are not directly available, your order may take some time to complete. We will keep you informed on the status of your order via the supplied email address and (if given) via the supplied callback URL."
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: Request data for new phone number ranges
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCreateNumberRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiCreateNumberRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiCreateNumberRequest'
+      responses:
+        '200':
+          description: If the numbers are not directly assignable, the `id`, `start`, `validFrom` and `validTo` fields will be null.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPhoneNumberRange'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/{accountGuid}/numberrequests/{orderId}:
+    get:
+      tags:
+      - Number Requests
+      summary: Get Number Request
+      description: Get a specific phone number request based on the given order ID.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the number request order, this can be found in your confirmation email or the Voice Management App.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiNumberRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/numberrequests/statuses:
+    get:
+      tags:
+      - Number Requests
+      summary: Get Number Request Statuses
+      description: A phone number request goes through a set of predefined statuses during its lifespan. With this request you can retrieve all possible statuses.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiNumberRequestOrderStatus'
+  /voice-phonenumberrequestapi/v1/numberrequests/{countryCode}/requirements:
+    get:
+      tags:
+      - Number Requests
+      summary: Get Country Requirements
+      description: "Because of different rules and regulation in different countries, we may need additional information (for example documents) after your request has been created. The required information will be checked by our support staff. Necessary documents can later be requested via email. With this endpoint you can retrieve the additional information based on the country related to the request.\r\n\r\nIf the response contains only an empty array, it means the country that the request is bound to does not require any information."
+      parameters:
+      - name: countryCode
+        in: path
+        description: Country code to retrieve the required fields for in ISO 3166 alpha-2 format.
+        required: true
+        schema:
+          type: string
+        example: NL
+      - name: numberType
+        in: query
+        description: Optional type of phone number to filter requirements on
+        schema:
+          $ref: '#/components/schemas/ApiNumberType'
+        example: Local
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRequirement'
+  /voice-phonenumberrequestapi/v1/numberrequests/restrictions:
+    get:
+      tags:
+      - Number Requests
+      summary: Get Request Restrictions
+      description: Get restrictions on the number request for the given country code and number type combination. (e.g. maximum amount of numbers per request, supported range sizes)
+      parameters:
+      - name: CountryCode
+        in: query
+        description: The country code in ISO 3166-1 alpha-2 format.
+        schema:
+          type: string
+          example: NL
+        example: NL
+      - name: NumberType
+        in: query
+        description: The phone number type (Local, National, TollFree).
+        schema:
+          $ref: '#/components/schemas/ApiNumberType'
+        example: Local
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiRequestRestrictions'
+  /voice-phonenumberrequestapi/v1/{accountGuid}/numberrequests/availability:
+    get:
+      tags:
+      - Number Requests
+      summary: Get Availability
+      description: Check the availability of phone numbers based on the provided request details.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: Quantity
+        in: query
+        description: The quantity of numbers to check availability for.
+        schema:
+          type: integer
+          format: int32
+          example: 25
+        example: 25
+      - name: RangeSize
+        in: query
+        description: "The size of the range to check availability for. **Only required if a range of numbers is requested.\r\nRequires number ranges to be supported. See the order restrictions endpoint for the allowed ranges**"
+        schema:
+          type: integer
+          format: int32
+          example: 10
+        example: 10
+      - name: CountryCode
+        in: query
+        description: The country code in ISO 3166-1 alpha-2 format.
+        schema:
+          type: string
+          example: NL
+        example: NL
+      - name: NumberType
+        in: query
+        description: The type of the number, either Local, National, or TollFree.
+        schema:
+          $ref: '#/components/schemas/ApiNumberType'
+        example: Local
+      - name: AreaCode
+        in: query
+        description: "The area code to check availability for. Required when city is not provided.\r\nIf the city is also provided, this will be used in combination with city."
+        schema:
+          type: string
+          example: '76'
+        example: '76'
+      - name: City
+        in: query
+        description: "City to check availability for. Required when area code is not provided.\r\nIf the area code is also provided, this will be used in combination with area code."
+        schema:
+          type: string
+          example: Amsterdam
+        example: Amsterdam
+      - name: Region
+        in: query
+        description: The region the city is located in (only required for Nanpa).
+        schema:
+          type: string
+          example: Alabama
+        example: Alabama
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAvailableNumbers'
+        '401':
+          description: Unauthorized
+  /voice-phonenumberrequestapi/v1/numberrequests/locale-options:
+    get:
+      tags:
+      - Number Requests
+      summary: Get Locale Options
+      description: Get locale options when requesting numbers for a specific country.
+      parameters:
+      - name: CountryCode
+        in: query
+        description: The country code in ISO 3166-1 alpha-2 format.
+        schema:
+          type: string
+          example: NL
+        example: NL
+      - name: NanpaCity
+        in: query
+        description: City to filter regions on when requesting NANPA numbers, the result will contain only regions that have numbers available in this city.
+        schema:
+          type: string
+          example: Los Angeles
+        example: Los Angeles
+      - name: NanpaRegion
+        in: query
+        description: Region to filter cities on when requesting NANPA numbers, the result will contain only cities that have numbers available in this region.
+        schema:
+          type: string
+          example: California
+        example: California
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiLocaleOptions'
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests:
+    get:
+      tags:
+      - Porting Requests
+      summary: Get Porting Requests
+      description: Get all porting request orders for the given Account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: skip
+        in: query
+        description: Amount of items being skipped.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+        example: 0
+      - name: take
+        in: query
+        description: Amount of items being retrieved.
+        schema:
+          type: integer
+          format: int32
+          default: 30
+        example: 30
+      - name: q
+        in: query
+        description: Search for order ID.
+        schema:
+          type: string
+          default: ''
+      - name: statuses
+        in: query
+        description: Filter on given statusses.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-CM-PAGINATION-SKIP:
+              description: The amount of items that have been skipped
+              schema:
+                type: number
+            X-CM-PAGINATION-TAKE:
+              description: The amount of items that have been taken
+              schema:
+                type: number
+            X-CM-PAGINATION-TOTAL:
+              description: The total amount of available items
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    post:
+      tags:
+      - Porting Requests
+      summary: Create Porting Request
+      description: "This endpoint allows you to request one or more phone numbers to be ported from your current number provider, to CM.com.\r\n\r\nAfter your porting request has been created, we will keep you informed on the status of your order via the supplied email address and (if given) via the supplied callback URL. If your porting request has been completed, the phone numbers will be directly available for use inside our platform."
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: CM.Voice.PhoneNumberRequestApi.Models.Api.PortingRequest.ApiCreatePortingRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCreatePortingRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiCreatePortingRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiCreatePortingRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}:
+    get:
+      tags:
+      - Porting Requests
+      summary: Get Porting Request
+      description: Get a specific porting request based on the given order ID.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order, this can be found in your confirmation email or the Voice Management App.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/portingrequests/statuses:
+    get:
+      tags:
+      - Porting Requests
+      summary: Get Porting Request Statuses
+      description: A phone porting request goes through a set of predefined statuses during its lifespan. With this request you can retrieve all possible statuses to check the current status of your request based on the status ID.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPortingRequestOrderStatus'
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}/perform:
+    post:
+      tags:
+      - Porting Requests
+      summary: Perform Porting Request
+      description: "**IMPORTANT NOTE: Performing a porting is only possible for dutch numbers.**\n\r\n\r This endpoint allows you to perform (and thus complete) your porting request, once its status is set to `Ready to be ported`. After calling this endpoint, the order will be finalized and the phone numbers coupled to the given porting request will be activated on our platform."
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order, this can be found in your confirmation email or the Voice Management App.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}/cancel:
+    post:
+      tags:
+      - Porting Requests
+      summary: Cancel Porting Request
+      description: This endpoint allows you to cancel an ongoing porting request, once its status is set to `Ready to be ported`. After calling this endpoint, the ongoing order process will be stopped.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order, this can be found in your confirmation email or the Voice Management App.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}/documents:
+    post:
+      tags:
+      - Porting Requests
+      summary: Upload Porting Request Document
+      description: Upload a document (LoA, Telco Invoice, etc.) for a porting request
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Document upload information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiUploadPortingRequestDocument'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiUploadPortingRequestDocument'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiUploadPortingRequestDocument'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestDocument'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}/documents/{documentType}:
+    delete:
+      tags:
+      - Porting Requests
+      summary: Delete Porting Request Document
+      description: Delete a document from a porting request
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order.
+        required: true
+        schema:
+          type: string
+      - name: documentType
+        in: path
+        description: Type of document to delete (LoA, TelcoInvoice, Other)
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/regulations/country-requirements:
+    get:
+      tags:
+      - Regulations
+      summary: Get Number Request Requirements
+      description: Retrieve all rules and regulations, ordered by country and phone number type. Be aware that every request also requires contact information (first & last name, email address), company representative contact information (first & last name, phone number) and company information (name, registration number, address).
+      parameters:
+      - name: CountryCodes
+        in: query
+        description: Country codes to filter on, separated by a comma. (ISO 3166-1 alpha-2 format)
+        schema:
+          type: string
+          example: NL,BE
+        example: NL,BE
+      - name: PhoneNumberTypes
+        in: query
+        description: Phone number types to filter on, separated by a comma.
+        schema:
+          type: string
+          example: Local,National,TollFree
+        example: Local,National,TollFree
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRequirementsPerCountry'
+  /voice-phonenumberrequestapi/v1/{countryCode}/requiredfields:
+    get:
+      tags:
+      - Requests
+      summary: Get Required Fields
+      description: "Because of different rules and regulations in different countries, we may need certain additional information along with your request depending on the country related to the request. These required fields can be fetched with this endpoint, together with an example value describing the format in which it should be supplied.\r\n\r\nIf the response contains only an empty array, it means the country that the request is bound to does not require any required fields to be added."
+      parameters:
+      - name: countryCode
+        in: path
+        description: Country code to retrieve the required fields for in ISO 3166 alpha-2 format.
+        required: true
+        schema:
+          type: string
+        example: NL
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRequiredField'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberrequestapi/v1/blocked-countries:
+    get:
+      tags:
+      - Requests
+      summary: Get Blocked Countries
+      description: Get a list of countries that are currently unavailable for phone number requests and phone number porting.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiBlockedCountry'
+components:
+  schemas:
+    ApiAvailableNumbers:
+      title: Available Numbers
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: The amount of number blocks.
+          format: int32
+          example: 25
+        rangeSize:
+          type: integer
+          description: The size of the number blocks.
+          format: int32
+          example: 10
+        countryCode:
+          type: string
+          description: The country code in ISO 3166-1 alpha-2 format.
+          nullable: true
+          example: NL
+        numberType:
+          type: string
+          description: The phone number type (Local, National, TollFree).
+          nullable: true
+          example: Local
+        areaCode:
+          type: string
+          description: The area code.
+          nullable: true
+          example: '76'
+        city:
+          type: string
+          description: The city or town.
+          nullable: true
+          example: Amsterdam
+        region:
+          type: string
+          description: The region or state, only for NANPA.
+          nullable: true
+          example: Alabama
+        hasAvailableNumbers:
+          type: boolean
+          description: If true, the phone numbers to request are available
+          example: true
+        immediatelyAvailable:
+          type: boolean
+          description: If true, the numbers are available for immediate provisioning, otherwise there may be a delay
+          example: false
+      additionalProperties: false
+      description: Result of checking for number availability
+    ApiBlockedCountry:
+      title: Blocked Country
+      type: object
+      properties:
+        code:
+          type: string
+          description: The country code (ISO 2-char)
+          nullable: true
+        name:
+          type: string
+          description: English name of the country.
+          nullable: true
+        reason:
+          type: string
+          description: The reason why the country is blocked. Can be null.
+          nullable: true
+      additionalProperties: false
+      description: Country that is blocked for number requests and porting requests.
+    ApiCountryRequirement:
+      title: Country Requirement
+      type: object
+      properties:
+        key:
+          type: string
+          description: Unique key for this requirement.
+          nullable: true
+        description:
+          type: string
+          description: Description of the requirement.
+          nullable: true
+        type:
+          type: string
+          description: The type of requirement.
+          nullable: true
+        resourceLink:
+          type: string
+          description: Download link to the resource that is needed for this requirement.
+          nullable: true
+        isForReseller:
+          type: boolean
+          description: This requirement ONLY applies to resellers.
+      additionalProperties: false
+      description: Requirement for requests (under a number type and country combination)
+    ApiCreateNumberRequest:
+      title: Create Number Request
+      type: object
+      properties:
+        companyProfileGuid:
+          type: string
+          description: Unique identifier of the company profile that will be operating the requested numbers.
+          format: uuid
+          example: 11111111-1111-1111-1111-111111111111
+        quantity:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          description: The quantity of numbers to be requested.
+          format: int32
+          example: 25
+        rangeSize:
+          type: integer
+          description: "The size of the range to be requested. **Only required if a range of numbers is requested.\r\nRequires number ranges to be supported. See the order restrictions endpoint for the allowed ranges**"
+          format: int32
+          example: 10
+        numberType:
+          $ref: '#/components/schemas/ApiNumberType'
+        areaCode:
+          type: string
+          description: "The area code to request numbers for. Required when city is not provided.\r\nIf the city is also provided, this will be used in combination with city."
+          nullable: true
+          example: '76'
+        city:
+          type: string
+          description: "City to request numbers for. Required when area code is not provided.\r\nIf the area code is also provided, this will be used in combination with area code."
+          nullable: true
+          example: Amsterdam
+        region:
+          type: string
+          description: Region to request numbers for. Only required for NANPA.
+          nullable: true
+          example: Alabama
+        comment:
+          maxLength: 500
+          type: string
+          description: Additional comment for customers to for example add a distribution group or IP address.
+          nullable: true
+          example: Room for extra comments or requests regarding this phone number request
+        callbackUrl:
+          type: string
+          description: URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire number request order including the updated status.
+          nullable: true
+          example: https://www.example.com
+      additionalProperties: false
+      description: Request model for requesting new phone numbers.
+    ApiCreatePortingRequest:
+      title: Create Porting Request
+      required:
+      - providerCompanyName
+      type: object
+      properties:
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiPortingPhoneNumber'
+          description: Phone numbers to be ported over.
+          nullable: true
+        providerCompanyName:
+          minLength: 1
+          type: string
+          description: Company name of the current number provider.
+          example: T-Mobile
+        preferredPortingDateTime:
+          type: string
+          description: '**Only used for porting non-dutch numbers.** Preferred date and time to port the phone number(s) in UTC time. Will be picked up between 6:00 and 20:00 UTC time. Should be null when the porting request should be handled as soon as possible.'
+          format: date-time
+          nullable: true
+        companyProfileGuid:
+          type: string
+          description: Unique identifier of the company profile that will be operating the ported numbers.
+          format: uuid
+        comment:
+          maxLength: 500
+          type: string
+          description: Additional comment for customers to for example add a distribution group or IP address.
+          nullable: true
+          example: Room for extra comments or requests regarding this phone number request
+        callbackUrl:
+          type: string
+          description: URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire porting request order including the updated status.
+          nullable: true
+          example: https://www.example.com
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiUploadPortingRequestDocument'
+          description: Optional documents to upload with the porting request (LoA, Telco Invoice, etc.)
+          nullable: true
+      additionalProperties: false
+      description: A porting requests that allows you to port you phone numbers from your current provider to the CM.com platform.
+    ApiLocaleOptions:
+      title: Locale Options
+      type: object
+      properties:
+        countryCode:
+          type: string
+          description: The country code in ISO 3166-1 alpha-2 format.
+          nullable: true
+          example: NL
+        nanpaCity:
+          type: string
+          description: City to filter regions on when requesting NANPA numbers, the result will contain only regions that have numbers available in this city.
+          nullable: true
+          example: Los Angeles
+        nanpaRegion:
+          type: string
+          description: Region to filter cities on when requesting NANPA numbers, the result will contain only cities that have numbers available in this region.
+          nullable: true
+          example: California
+        cities:
+          type: array
+          items:
+            type: string
+          description: List of cities to choose from for requesting a number
+          nullable: true
+        regions:
+          type: array
+          items:
+            type: string
+          description: List of regions to choose from for requesting a number, only for NANPA
+          nullable: true
+      additionalProperties: false
+      description: Locale options when requesting numbers for a specific country and number type
+    ApiNumberRequest:
+      title: Number Request
+      type: object
+      properties:
+        companyProfileGuid:
+          type: string
+          description: Unique identifier of the company profile that will be operating the requested numbers.
+          format: uuid
+          example: 11111111-1111-1111-1111-111111111111
+        quantity:
+          type: integer
+          description: The requested quantity. **Only required if no requested ranges are supplied.**
+          format: int32
+          example: 25
+        rangeSize:
+          type: integer
+          description: The size of the range to be requested. **Only required if number blocks are supported. See the order restrictions endpoint for allowed ranges**
+          format: int32
+        countryCode:
+          type: string
+          description: The country code in ISO 3166-1 alpha-2 format.
+          nullable: true
+          example: NL
+        numberType:
+          type: string
+          description: The type of the number, either Local, National, or TollFree.
+          nullable: true
+          example: Local
+        areaCode:
+          type: string
+          description: The area code (prefix) of the requested numbers.
+          nullable: true
+          example: '76'
+        city:
+          type: string
+          description: "City to request numbers for. Required when area code is not provided.\r\nIf the area code is also provided, this will be used in combination with area code."
+          nullable: true
+          example: Breda
+        region:
+          type: string
+          description: Region to request numbers for. Only required for NANPA.
+          nullable: true
+          example: Alabama
+        comment:
+          type: string
+          description: Additional comment for customers to for example add a distribution group or IP address.
+          nullable: true
+          example: Room for extra comments or requests regarding this phone number request
+        callbackUrl:
+          type: string
+          description: URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire number request order including the updated status.
+          nullable: true
+          example: https://www.example.com
+      additionalProperties: false
+      description: Request model for requesting new phone numbers.
+    ApiNumberRequestOrder:
+      title: Number Request Order
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          format: uuid
+          example: 11111111-1111-1111-1111-111111111111
+        orderId:
+          type: integer
+          description: The order id
+          format: int32
+          example: 250101001
+        createdOn:
+          type: string
+          description: Date and time of creation
+          format: date-time
+          example: '2025-01-01T00:00:00'
+        requestData:
+          $ref: '#/components/schemas/ApiNumberRequest'
+        status:
+          type: string
+          description: The status key of the phone number request
+          nullable: true
+          example: InProgress
+        comment:
+          type: string
+          description: Optional comment describing the reason for the current status of the phone number request
+          nullable: true
+          example: Your request is currently in progress.
+      additionalProperties: false
+      description: Request model for a phone number request order
+    ApiNumberRequestOrderStatus:
+      title: Number Request Order Status
+      type: object
+      properties:
+        key:
+          type: string
+          description: Status key
+          nullable: true
+          example: InProgress
+        displayValue:
+          type: string
+          description: The value to display
+          nullable: true
+          example: In Progress
+      additionalProperties: false
+      description: The status of a phone numbers request order
+    ApiNumberType:
+      title: Number Type
+      enum:
+      - Local
+      - National
+      - TollFree
+      type: string
+      description: Phone number type
+    ApiPhoneNumberRange:
+      title: Phone Number Range
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the phone number range.
+          nullable: true
+          example: 11111111-1111-1111-1111-111111111111
+        start:
+          type: integer
+          description: The starting phone number in a range.
+          format: int64
+          nullable: true
+          example: 311234567890
+        size:
+          type: integer
+          description: The size of the range.
+          format: int32
+          example: 10
+        countryCode:
+          type: string
+          description: The country code in ISO 3166-1 alpha-2 format.
+          nullable: true
+          example: NL
+        voiceAccountGuid:
+          type: string
+          description: Unique identifier of the Voice Account.
+          nullable: true
+          example: 11111111-1111-1111-1111-111111111111
+        validFrom:
+          type: string
+          description: Date and time the range is assigned to, and in use by the Voice Account.
+          format: date-time
+          nullable: true
+          example: '2025-01-01T00:00:00'
+        validTo:
+          type: string
+          description: Date and time the range is no longer assigned to, nor in use by the Voice Account.
+          format: date-time
+          nullable: true
+          example: '2025-01-01T00:00:00'
+        orderId:
+          type: string
+          description: Unique identifier of the order in which the range was requested.
+          nullable: true
+          example: '250101001'
+      additionalProperties: false
+      description: Details of a phone number range.
+    ApiPortingPhoneNumber:
+      title: Porting Phone Number
+      type: object
+      properties:
+        phoneNumber:
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+          description: The (first) phone number to be ported.
+          format: int64
+          example: 31765727000
+        lastPhoneNumber:
+          type: integer
+          description: When a range of phone numbers are being ported, this number should be the last number in the range. If you are porting a single number, this value can be left empty.
+          format: int64
+          nullable: true
+          example: 31765727009
+      additionalProperties: false
+      description: Phone number to be ported
+    ApiPortingRequest:
+      title: Porting Request
+      type: object
+      properties:
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiPortingPhoneNumber'
+          description: Phone numbers to be ported over.
+          nullable: true
+        providerCompanyName:
+          type: string
+          description: Company name of the current number provider.
+          nullable: true
+          example: T-Mobile
+        preferredPortingDateTime:
+          type: string
+          description: '**Only used for porting non-dutch numbers.** Preferred date and time to port the phone number(s) in UTC time. Will be picked up between 6:00 and 20:00 UTC time. Should be null when the porting request should be handled as soon as possible.'
+          format: date-time
+          nullable: true
+        companyProfileGuid:
+          type: string
+          description: Unique identifier of the company profile that will be operating the ported numbers.
+          format: uuid
+        comment:
+          type: string
+          description: Additional comment for customers to for example add a distribution group or IP address.
+          nullable: true
+          example: Room for extra comments or requests regarding this phone number request
+        callbackUrl:
+          type: string
+          description: URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire porting request order including the updated status.
+          nullable: true
+          example: https://www.example.com
+      additionalProperties: false
+      description: A porting requests that allows you to port you phone numbers from your current provider to the CM.com platform.
+    ApiPortingRequestDocument:
+      title: Porting Request Document
+      type: object
+      properties:
+        documentType:
+          type: string
+          description: Type of document (LoA, TelcoInvoice, Other)
+          nullable: true
+          example: LoA
+        documentGuid:
+          type: string
+          description: Unique identifier of the document
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        uploadedAt:
+          type: string
+          description: Date and time when the document was uploaded
+          format: date-time
+        status:
+          type: string
+          description: Current status of the document (Pending, Approved, Rejected)
+          nullable: true
+          example: Pending
+        approvedAt:
+          type: string
+          description: Date and time when the document was approved (if applicable)
+          format: date-time
+          nullable: true
+        rejectionReason:
+          type: string
+          description: Reason for rejection if the document was rejected
+          nullable: true
+          example: Document is not legible
+        fileName:
+          type: string
+          description: Original filename of the document
+          nullable: true
+          example: letter_of_authorization.pdf
+      additionalProperties: false
+      description: Represents a document associated with a porting request
+    ApiPortingRequestOrder:
+      title: Porting Request Order
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          format: uuid
+        orderId:
+          type: string
+          description: The order id
+          nullable: true
+        createdOn:
+          type: string
+          description: Date and time of creation
+          format: date-time
+        portingData:
+          $ref: '#/components/schemas/ApiPortingRequest'
+        firstPossibleDate:
+          type: string
+          description: Date and time of the first possible date on which the porting can be performed
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ApiPortingRequestOrderStatus'
+        statusReason:
+          type: string
+          description: Optional comment describing the reason for the current status of the porting request
+          nullable: true
+        errorDetails:
+          type: string
+          description: Optional error details showing the details of why a porting request has been blocked automatically
+          nullable: true
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiPortingRequestDocument'
+          description: Documents associated with this porting request (LoA, Telco Invoice, etc.)
+          nullable: true
+      additionalProperties: false
+      description: Order for porting request retrieved from administration api
+    ApiPortingRequestOrderStatus:
+      title: Porting Request Order Status
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier
+          format: int32
+        key:
+          type: string
+          description: Status key
+          nullable: true
+        displayValue:
+          type: string
+          description: The value to display
+          nullable: true
+      additionalProperties: false
+      description: The status of a porting request
+    ApiRequestRestrictions:
+      title: Request Restrictions
+      type: object
+      properties:
+        countryCode:
+          type: string
+          description: The country code in ISO 3166-1 alpha-2 format.
+          nullable: true
+          example: NL
+        numberType:
+          type: string
+          description: The phone number type (Local, National, TollFree).
+          nullable: true
+          example: Local
+        supportedRangeSizes:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: Supported range sizes for number requests
+          nullable: true
+          example:
+          - 1
+          - 10
+          - 100
+          - 1000
+        maxNumbersPerRequest:
+          type: integer
+          description: The maximum amount of numbers that can be requested in a single request, can be null if there is no limit
+          format: int32
+          nullable: true
+          example: 1000
+      additionalProperties: false
+      description: Restrictions for number requests
+    ApiRequiredField:
+      title: Required Field
+      type: object
+      properties:
+        field:
+          type: string
+          description: The name of the required field.
+          nullable: true
+          example: btw_number
+        exampleValue:
+          type: string
+          description: Example value that shows the format we expect the value of the field to be in.
+          nullable: true
+          example: BE0999999999
+      additionalProperties: false
+      description: A country specific required field containing additional required information for either a number or porting request.
+    ApiRequirement:
+      title: Requirement
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key of the requirement.
+          nullable: true
+          example: proof_of_company_address
+        type:
+          $ref: '#/components/schemas/ApiRequirementType'
+        downloadLink:
+          type: string
+          description: URL where the requirement can be downloaded if it's a document that needs to be signed (Type = 4).
+          nullable: true
+          example: https://api.cm.com/resources/v2/public/00000000-0000-0000-0000-000000000000/content
+        isForReseller:
+          type: boolean
+          description: Determines whether the requirement is specifically for resellers
+      additionalProperties: false
+      description: A country specific rule or regulation that a request must meet. This can for example be a certain document that must be provided.
+    ApiRequirementType:
+      title: Requirement Type
+      enum:
+      - Document
+      - CompanyRule
+      - NumberRule
+      - SignedDocument
+      type: string
+      description: The type of the requirement where `1` = document, `2` = requirement for a company, `3` = requirement for a number request and `4` = signed document..
+    ApiRequirementsPerCountry:
+      title: Requirements Per Country
+      type: object
+      properties:
+        countryCode:
+          type: string
+          description: The country code (2 letters, ISO 3166).
+          nullable: true
+        countryName:
+          type: string
+          description: The English country name.
+          nullable: true
+        requirementsPerNumberType:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiRequirementsPerNumberType'
+          description: List of requirements, ordered by phone number type.
+          nullable: true
+      additionalProperties: false
+      description: All requirements for a single country, ordered by number type.
+    ApiRequirementsPerNumberType:
+      title: Requirements Per Number Type
+      type: object
+      properties:
+        numberType:
+          type: string
+          description: The phone number type (Local, National, TollFree).
+          nullable: true
+        requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiCountryRequirement'
+          description: List of requirements for this phone number type.
+          nullable: true
+      additionalProperties: false
+      description: All requirements for a specific number type. (under a specific country)
+    ApiUploadPortingRequestDocument:
+      title: Upload Porting Request Document
+      required:
+      - documentGuid
+      - documentType
+      type: object
+      properties:
+        documentType:
+          minLength: 1
+          type: string
+          description: Type of document (LoA, TelcoInvoice, Other)
+          example: LoA
+        documentGuid:
+          minLength: 1
+          type: string
+          description: Unique identifier of the document from the documents API
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+      additionalProperties: false
+      description: Document upload information for porting requests
+    ContractTermination:
+      title: Contract Termination
+      enum:
+      - Default
+      - EarlyTermination
+      - NoTermination
+      type: string
+      description: When a porting request contract needs to be terminated
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

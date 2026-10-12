@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-sip-account-threshold-rule-schema.json",
+  "title": "Sip Account Threshold Rule",
+  "description": "Represents a sip account threshold rule request",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-sip-thresholds-v1-openapi.yml#/components/schemas/ApiSipAccountThresholdRule",
+  "required": [
+    "threshold"
+  ],
+  "type": "object",
+  "properties": {
+    "emailAddresses": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string",
+        "format": "email"
+      },
+      "description": "List of email addresses that will be notified when cost threshold is surpassed"
+    },
+    "phoneNumbers": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "List of phone numbers that will be notified when cost threshold is surpassed"
+    },
+    "guid": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unique identifier for a given threshold rule",
+      "format": "uuid"
+    },
+    "voiceAccountGuid": {
+      "type": "string",
+      "description": "The unique identifier of the Voice Account which this SIP Account is part of.",
+      "format": "uuid"
+    },
+    "sipAccountGuid": {
+      "type": "string",
+      "description": "The unique identifier of the SIP Account which the rule applies to",
+      "format": "uuid"
+    },
+    "threshold": {
+      "minimum": 25,
+      "type": "number",
+      "description": "Decimal value representing the cost threshold in the currency of the sip account",
+      "format": "double"
+    },
+    "blockAccountOnThreshold": {
+      "type": "boolean",
+      "description": "Boolean value whether or not to block the SIP account when the threshold is surpassed"
+    },
+    "notificationSentOn": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Last time when a notification has been sent due to the threshold being passed. Null if threshold has never been passed",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

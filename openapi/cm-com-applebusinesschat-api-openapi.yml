@@ -1,0 +1,282 @@
+openapi: 3.2.0
+info:
+  title: Channels Apple Business Chat API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: AppleBusinessChat
+paths:
+  /channels/v1/accounts/{accountId}/abc/{channelRequestId}/account:
+    get:
+      tags:
+      - AppleBusinessChat
+      summary: Gets the account asynchronous
+      operationId: AppleBusinessChat_GetAbcAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
+    post:
+      tags:
+      - AppleBusinessChat
+      summary: Add an abc account
+      operationId: AppleBusinessChat_AddAbcAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Created
+  /channels/v1/accounts/{accountId}/abc/{channelRequestId}/account/forminput:
+    get:
+      tags:
+      - AppleBusinessChat
+      summary: Gets the account form input asynchronous
+      operationId: AppleBusinessChat_GetAbcAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+  /channels/v1/accounts/{accountId}/abc/{channelRequestId}/account/{abcAccountId}/forminput:
+    put:
+      tags:
+      - AppleBusinessChat
+      summary: Adds the account form input asynchronous
+      operationId: AppleBusinessChat_AddAbcAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: abcAccountId
+        in: path
+        description: The abc account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
+components:
+  schemas:
+    CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount:
+      required:
+      - id
+      - channelRequestId
+      - accountId
+      - isPending
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+  requestBodies:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

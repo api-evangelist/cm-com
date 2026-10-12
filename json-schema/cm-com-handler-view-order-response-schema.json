@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-handler-view-order-response-schema.json",
+  "title": "handler.viewOrderResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-live-event-ticketing-v1-openapi.yml#/components/schemas/handler.viewOrderResponse",
+  "properties": {
+    "batch_id": {
+      "type": "string"
+    },
+    "canceled_at": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string"
+    },
+    "consents": {
+      "items": {
+        "$ref": "#/$defs/handler.viewOrderConsent"
+      },
+      "type": "array",
+      "uniqueItems": false
+    },
+    "currency_id": {
+      "type": "string"
+    },
+    "customer_data": {
+      "$ref": "#/$defs/handler.viewOrderCustomerData"
+    },
+    "download_url": {
+      "type": "string"
+    },
+    "external_batch_id": {
+      "type": "string"
+    },
+    "is_guest_list_order": {
+      "type": "boolean"
+    },
+    "payment_method": {
+      "type": "string"
+    },
+    "personalized_at": {
+      "type": "string"
+    },
+    "refunded_at": {
+      "type": "string"
+    },
+    "requested_language_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "tickets": {
+      "items": {
+        "$ref": "#/$defs/handler.viewOrderTicket"
+      },
+      "type": "array",
+      "uniqueItems": false
+    },
+    "total_balance": {
+      "type": "number"
+    },
+    "uuid": {
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "handler.viewOrderConsent": {
+      "properties": {
+        "is_accepted": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "handler.viewOrderCustomerData": {
+      "properties": {
+        "address_line_1": {
+          "type": "string"
+        },
+        "address_line_1_building_number": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "date_of_birth": {
+          "description": "YYYY-MM-DD",
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "mobile": {
+          "type": "string"
+        },
+        "organisation_name": {
+          "type": "string"
+        },
+        "position_name": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "zipcode": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "handler.viewOrderTicket": {
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "cancellations": {
+          "type": "integer"
+        },
+        "name": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "product_price_incl_vat": {
+          "type": "number"
+        },
+        "product_type": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

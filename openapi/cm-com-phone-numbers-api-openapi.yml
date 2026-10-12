@@ -1,0 +1,730 @@
+openapi: 3.2.0
+info:
+  title: Channels Phone Numbers API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: Phone Numbers
+paths:
+  /channels/v1/accounts/{accountId}/phonenumbers:
+    get:
+      tags:
+      - Phone Numbers
+      summary: Get all available phone numbers (paginated)
+      operationId: PhoneNumbers_GetPhoneNumbersAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The search query.
+        required: false
+        schema:
+          type: string
+      - name: country
+        in: query
+        description: The country to limit the result set to.
+        required: false
+        schema:
+          type: string
+      - name: isOwned
+        in: query
+        description: If set, filters the result to only numbers owned by the account.
+        required: false
+        schema:
+          type: boolean
+      - name: isShortcode
+        in: query
+        description: If set, filters the result to being a shortcode (true) or not (false).
+        required: false
+        schema:
+          type: boolean
+      - name: isShared
+        in: query
+        description: If set, filters the result to being shared (true) or not (false).
+        required: false
+        schema:
+          type: boolean
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse'
+  /channels/v1/accounts/{accountId}/phonenumbers/{phoneNumberId}:
+    get:
+      tags:
+      - Phone Numbers
+      summary: Get a phone number by id
+      operationId: PhoneNumbers_GetPhoneNumberAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: phoneNumberId
+        in: path
+        description: The phone number id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse'
+    delete:
+      tags:
+      - Phone Numbers
+      summary: Cancel a dedicated phone number
+      operationId: PhoneNumbers_CancelPhoneNumberAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: phoneNumberId
+        in: path
+        description: The phone number identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/phonenumbers/numbertypes:
+    get:
+      tags:
+      - Phone Numbers
+      summary: Get all available number types (paginated)
+      operationId: PhoneNumbers_GetNumberTypesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: numberTypeId
+        in: query
+        description: The number type identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: currency
+        in: query
+        description: The currency.
+        required: false
+        schema:
+          type: string
+      - name: country
+        in: query
+        description: The country.
+        required: false
+        schema:
+          type: string
+      - name: category
+        in: query
+        description: The category.
+        required: false
+        schema:
+          type: string
+      - name: purpose
+        in: query
+        description: The purpose.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse'
+  /channels/v1/accounts/{accountId}/phonenumbers/requests:
+    get:
+      tags:
+      - Phone Numbers
+      summary: Get all dedicated phone number requests (paginated)
+      operationId: PhoneNumbers_GetPhoneNumberRequestsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: country
+        in: query
+        description: If set, filters the result on country.
+        required: false
+        schema:
+          type: string
+      - name: isActive
+        in: query
+        description: If set, filters the result on active state
+        required: false
+        schema:
+          type: boolean
+      - name: isPending
+        in: query
+        description: If set, filters the result on pending state.
+        required: false
+        schema:
+          type: boolean
+      - name: isCancelled
+        in: query
+        description: If set, filters the result on cancelled state.
+        required: false
+        schema:
+          type: boolean
+      - name: q
+        in: query
+        description: The search query.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestBase'
+    post:
+      tags:
+      - Phone Numbers
+      summary: Request a dedicated phone number
+      operationId: PhoneNumbers_AddPhoneNumberRequestAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: numberTypeId
+        in: query
+        description: The number type identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodicity
+        in: query
+        description: The periodicity.
+        required: true
+        schema:
+          type: string
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+      - name: currency
+        in: query
+        description: The currency.
+        required: false
+        schema:
+          type: string
+      - name: simulate
+        in: query
+        description: if set to true [simulate].
+        required: false
+        schema:
+          type: boolean
+      - name: asIncomingOrderFlow
+        in: query
+        description: if set to true [as incoming order flow].
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestResponse'
+  /channels/v1/accounts/{accountId}/phonenumbers/requests/{requestId}:
+    get:
+      tags:
+      - Phone Numbers
+      summary: Gets a phone number request by id
+      operationId: PhoneNumbers_GetPhoneNumberRequestAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: requestId
+        in: path
+        description: The number request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestResponse'
+components:
+  schemas:
+    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
+      type: object
+      properties:
+        type:
+          enum:
+          - UNKNOWN
+          - PROCESSING
+          - ACTION_REQUIRED
+          type: string
+        descriptionKey:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestResponse:
+      required:
+      - id
+      - accountId
+      - numberType
+      - subscriptionPeriodicity
+      - price
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        phoneNumberId:
+          type: string
+        phoneNumber:
+          type: string
+        numberType:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse'
+        subscriptionPeriodicity:
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+          type: string
+        price:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Pricing.ApiSubscriptionPrice'
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        reasonForRejection:
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        channelState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelState'
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse:
+      required:
+      - id
+      - purpose
+      - country
+      - category
+      - noticePeriodDays
+      - keywordNoticePeriodDays
+      - numberRequestProcessingDays
+      - requiredCapability
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        purpose:
+          type: array
+          items:
+            type: string
+        country:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        productPricing:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Pricing.ApiProductPricing'
+        noticePeriodDays:
+          format: int32
+          type: integer
+        keywordNoticePeriodDays:
+          format: int32
+          type: integer
+        numberRequestProcessingDays:
+          format: int32
+          type: integer
+        requiredCapability:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestBase:
+      required:
+      - id
+      - accountId
+      - numberType
+      - subscriptionPeriodicity
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        phoneNumberId:
+          type: string
+        phoneNumber:
+          type: string
+        numberType:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse'
+        subscriptionPeriodicity:
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        channelState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelState'
+    CM.Platform.Channels.Models.Pricing.ApiSubscriptionPrice:
+      required:
+      - currency
+      - price
+      - setupFee
+      - isCountryFallback
+      type: object
+      properties:
+        currency:
+          type: string
+        price:
+          format: double
+          type: number
+        setupFee:
+          format: double
+          type: number
+        isOverride:
+          type: boolean
+        isEuroCurrencyFallback:
+          type: boolean
+        isCountryFallback:
+          type: boolean
+        pricePlanId:
+          format: int32
+          type: integer
+        periodicity:
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse:
+      required:
+      - id
+      - numberType
+      - number
+      - isShared
+      type: object
+      properties:
+        id:
+          type: string
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        numberType:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse'
+        number:
+          type: string
+        isShared:
+          type: boolean
+        ownedSinceUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Pricing.ApiProductPricing:
+      required:
+      - currencyIsoCode
+      - supportsMonthlySubscription
+      - monthlyPricePlanId
+      - supportsYearlySubscription
+      - yearlyPricePlanId
+      - isCountryFallback
+      type: object
+      properties:
+        currencyIsoCode:
+          type: string
+        supportsMonthlySubscription:
+          type: boolean
+        monthlyPrice:
+          format: double
+          type: number
+        monthlySetupFee:
+          format: double
+          type: number
+        monthlyPricePlanId:
+          format: int32
+          type: integer
+        monthlyPricingActiveSinceUtc:
+          format: date-time
+          type: string
+        supportsYearlySubscription:
+          type: boolean
+        yearlyPrice:
+          format: double
+          type: number
+        yearlySetupFee:
+          format: double
+          type: number
+        yearlyPricePlanId:
+          format: int32
+          type: integer
+        yearlyPricingActiveSinceUtc:
+          format: date-time
+          type: string
+        isOverride:
+          type: boolean
+        isCountryFallback:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ApiChannelState:
+      required:
+      - isPending
+      - requestState
+      type: object
+      properties:
+        customRequestFormIsPending:
+          type: boolean
+        isPending:
+          type: boolean
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
+      type: object
+      properties:
+        stages:
+          type: array
+          items:
+            type: string
+        current:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiRequestState:
+      type: object
+      properties:
+        completeness:
+          format: int32
+          type: integer
+        nextStage:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
+        progression:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
+        hasPendingOrder:
+          type: boolean
+        hasEligibleOrder:
+          type: boolean
+        hasMissingOrder:
+          type: boolean
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

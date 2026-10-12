@@ -1,0 +1,845 @@
+openapi: 3.2.0
+info:
+  title: Company Profiles Company Profile API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Company Profile
+paths:
+  /voice-companyprofilesapi/v1/{accountGuid}/companyprofiles:
+    get:
+      tags:
+      - Company Profile
+      summary: Get Company Profiles
+      description: Get all company profiles for the given Account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: IncludeDeleted
+        in: query
+        description: Whether deleted profiles should be included in the result. Defaults to `false`.
+        schema:
+          type: boolean
+          example: false
+        example: false
+      - name: q
+        in: query
+        schema:
+          type: string
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-CM-PAGINATION-SKIP:
+              description: The amount of items that have been skipped
+              schema:
+                type: number
+            X-CM-PAGINATION-TAKE:
+              description: The amount of items that have been taken
+              schema:
+                type: number
+            X-CM-PAGINATION-TOTAL:
+              description: The total amount of available items
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiCompanyProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoiceCompanyprofilesapiV1ByAccountGuidCompanyprofiles
+      x-operation-id-source: derived
+    post:
+      tags:
+      - Company Profile
+      summary: Create Company Profile
+      description: Create a new company profile that allows you to request new phone numbers.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: New company profile to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCompanyProfile'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiCompanyProfile'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiCompanyProfile'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCompanyProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: postVoiceCompanyprofilesapiV1ByAccountGuidCompanyprofiles
+      x-operation-id-source: derived
+  /voice-companyprofilesapi/v1/{accountGuid}/companyprofiles/{companyProfileGuid}:
+    get:
+      tags:
+      - Company Profile
+      summary: Get Company Profile
+      description: Get a specific company profile based on its unique identifier.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: companyProfileGuid
+        in: path
+        description: Unique identifier of the company profile.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCompanyProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoiceCompanyprofilesapiV1ByAccountGuidCompanyprofilesByCompanyProfileGuid
+      x-operation-id-source: derived
+    put:
+      tags:
+      - Company Profile
+      summary: Update Company Profile
+      description: Update an existing company profile. ***Please note*** that changes you make to your profile may result in your profile having to be revalidated. To check if this is indeed the case, you can call the `Check Update Consequences` endpoint described below.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: companyProfileGuid
+        in: path
+        description: Unique identifier of the company profile.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The updated company profile
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateCompanyProfile'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateCompanyProfile'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateCompanyProfile'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCompanyProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: putVoiceCompanyprofilesapiV1ByAccountGuidCompanyprofilesByCompanyProfileGuid
+      x-operation-id-source: derived
+    delete:
+      tags:
+      - Company Profile
+      summary: Delete Company Profile
+      description: Delete the company profile with the given unique identifier.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: companyProfileGuid
+        in: path
+        description: Unique identifier of the company profile.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: deleteVoiceCompanyprofilesapiV1ByAccountGuidCompanyprofilesByCompanyProfileGuid
+      x-operation-id-source: derived
+  /voice-companyprofilesapi/v1/companyprofiles/statuses:
+    get:
+      tags:
+      - Company Profile
+      summary: Get Company Profile Statuses
+      description: A company profile can be assigned multiple statuses. With this request you can retrieve all possible statuses.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiCompanyProfileStatus'
+      operationId: getVoiceCompanyprofilesapiV1CompanyprofilesStatuses
+      x-operation-id-source: derived
+  /voice-companyprofilesapi/v1/requiredfields/validate/{countryCode}:
+    post:
+      tags:
+      - Company Profile
+      summary: Validate Required Fields
+      description: 'For some countries, we require additional information to be supplied with your company profile. This additional information is called `RequiredFields` in your company profile.
+
+
+        With this endpoint you can check if the required fields you want to submit are complete and valid before you submit them in your company profile. If a required field is invalid, the response of this request will also tell you the reason.'
+      parameters:
+      - name: countryCode
+        in: path
+        description: Country code to validate the required fields for
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The required fields to check
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+          text/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+          application/*+json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRequiredFieldValidationResult'
+      operationId: postVoiceCompanyprofilesapiV1RequiredfieldsValidateByCountryCode
+      x-operation-id-source: derived
+  /voice-companyprofilesapi/v1/address/validate/{countryCode}:
+    post:
+      tags:
+      - Company Profile
+      summary: Validate Street Number & Postal Code combination
+      description: Validate your street number and postal code combination for a specific country.
+      parameters:
+      - name: countryCode
+        in: path
+        description: Country code for validating the street number and postal code combination
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: CM.Voice.CompanyProfilesApi.Models.Api.ApiStreetNumberAndPostalCodeValidationRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiStreetNumberAndPostalCodeValidationRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiStreetNumberAndPostalCodeValidationRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiStreetNumberAndPostalCodeValidationRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiStreetNumberAndPostalCodeValidationResult'
+      operationId: postVoiceCompanyprofilesapiV1AddressValidateByCountryCode
+      x-operation-id-source: derived
+  /voice-companyprofilesapi/v1/{accountGuid}/companyprofiles/{companyProfileGuid}/update-consequences:
+    post:
+      tags:
+      - Company Profile
+      summary: Check Update Consequences
+      description: Some changes to your company profile will result in your profile having to be revalidated, such as a change in your company address. With this endpoint you can check what the possible concequences are of the update you want to perform, to make sure you don't accidentally invalidate your profile.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: companyProfileGuid
+        in: path
+        description: Unique identifier of the company profile.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The updated company profile
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateCompanyProfile'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateCompanyProfile'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateCompanyProfile'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCompanyProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: postVoiceCompanyprofilesapiV1ByAccountGuidCompanyprofilesByCompanyProfileGuidUpdateConsequences
+      x-operation-id-source: derived
+components:
+  schemas:
+    ApiStreetNumberAndPostalCodeValidationRequest:
+      title: Street Number And Postal Code Validation Request
+      type: object
+      properties:
+        streetNumber:
+          maxLength: 10
+          type:
+          - string
+          - 'null'
+          description: Street number of the company address
+        streetNumberExt:
+          maxLength: 255
+          type:
+          - string
+          - 'null'
+          description: Extra information about the street number. E.g. apartment or suite
+        postalCode:
+          maxLength: 12
+          type:
+          - string
+          - 'null'
+          description: Postal code of the company address
+      additionalProperties: false
+      description: API request model for validating street number and postal code combination
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ApiCompanyProfile:
+      title: Company Profile
+      required:
+      - city
+      - companyCountryCode
+      - companyName
+      - contactFirstName
+      - contactLastName
+      - emailAddresses
+      - phoneNumberCountryCode
+      - phoneNumberTypes
+      - postalCode
+      - profileName
+      - registrationNumber
+      - representativeFirstName
+      - representativeLastName
+      - street
+      - streetNumber
+      type: object
+      properties:
+        guid:
+          type: string
+          description: Unique identifier of the company profile.
+          format: uuid
+        voiceAccountGuid:
+          type: string
+          description: Unique identifier of the Logical Account or Voice Account.
+          format: uuid
+        profileName:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: 'The name of the company profile. This name does not have to be equal to your company name, it''s just to make
+
+            this profile more easily identifiable in our tooling. If the company has multiple branches, this profile
+
+            can be named ''Amsterdam Office'' for example.'
+        companyName:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: The name of the company that will be using the phone numbers requested with this profile.
+        registrationNumber:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Business register number of the company (e.g. KVK number for Dutch companies).
+        representativeFirstName:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: First name of company’s representative that is authorized to sign contracts for the company.
+        representativeLastName:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Last name of company’s representative that is authorized to sign contracts for the company
+        representativePhoneNumber:
+          maxLength: 20
+          minLength: 6
+          type:
+          - string
+          - 'null'
+          description: Phone number of company’s representative that is authorized to sign contracts for the company
+        companyCountryCode:
+          maxLength: 2
+          minLength: 2
+          type: string
+          description: Country code of the company address in ISO 3166-1 alpha-2 format.
+        requiredFields:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          description: 'Depending on the country of the company address, we might require additional information that needs to be
+
+            supplied with the API call. See the `Verify Required Fields` endpoint documentation for more information.'
+        region:
+          maxLength: 100
+          type:
+          - string
+          - 'null'
+          description: Region of the company address.
+        city:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: City of the company address.
+        postalCode:
+          maxLength: 12
+          minLength: 1
+          type: string
+          description: Postal code of the company address.
+        street:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: Street of the company address.
+        streetNumber:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: Street number of the company address.
+        streetNumberExt:
+          maxLength: 255
+          type:
+          - string
+          - 'null'
+          description: Extra information about the street number. E.g. apartment or suite.
+        phoneNumberCountryCode:
+          maxLength: 2
+          minLength: 2
+          type: string
+          description: 'The country code of the country this company profile will request numbers for. For example, if you supply
+
+            `NL`, you will only be able to request Dutch phone numbers with this profile.'
+        phoneNumberTypes:
+          minItems: 1
+          type: array
+          items:
+            minLength: 1
+            type: string
+          description: The types of phone numbers this profile is able to request. This can be `LOCAL`, `NATIONAL` and `TOLLFREE`.
+        contactFirstName:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: 'First name of the person that CM.com will be able to contact regarding this profile. This contact can be about
+
+            the approval status of your profile or a request for additional information.'
+        contactLastName:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: 'Last name of the person that CM.com will be able to contact regarding this profile. This contact can be about
+
+            the approval status of your profile or a request for additional information.'
+        emailAddresses:
+          minItems: 1
+          type: array
+          items:
+            type: string
+            format: email
+          description: 'One or more email addresses that CM.com will be able to contact regarding this profile. This contact can be about
+
+            the approval status of your profile or a request for additional information.'
+        callbackUrl:
+          type:
+          - string
+          - 'null'
+          description: 'URL that we''ll send a POST request to when the status of the request has been updated. The body of this post
+
+            request will contain the entire company profile, including the updated status.'
+        documents:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiDocument'
+          description: List of documents that are legaly required for us to be able to request phone numbers.
+        deletedOn:
+          type:
+          - string
+          - 'null'
+          description: UTC DateTime on which the current profile was deleted. Can be null if the profile is still active.
+          format: date-time
+        statusKey:
+          type:
+          - string
+          - 'null'
+          description: The current approval status of the company profile.
+        statusComment:
+          type:
+          - string
+          - 'null'
+          description: Optional comment on the current approval status of the profile.
+      additionalProperties: false
+      description: 'A company profile that represents a company with a physical address that can be used for requesting new phone
+
+        numbers within the CM.com Voice platform.'
+    ApiCompanyProfileStatus:
+      title: Company Profile Status
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: Status key
+        displayValue:
+          type:
+          - string
+          - 'null'
+          description: The English value of the status
+      additionalProperties: false
+      description: Approval status of a company profile
+    ApiStreetNumberAndPostalCodeValidationResult:
+      title: Street Number And Postal Code Validation Result
+      type: object
+      properties:
+        isValid:
+          type: boolean
+          description: Whether or not the given value is valid.
+      additionalProperties: false
+      description: Validation information for Street number and Postal Code
+    ApiUpdateCompanyProfile:
+      title: Update Company Profile
+      type: object
+      properties:
+        profileName:
+          type:
+          - string
+          - 'null'
+          description: 'The name of the company profile. This name does not have to be equal to your company name, it''s just to make
+
+            this profile more easily identifiable in our tooling. If the company has multiple branches, this profile
+
+            can be named ''Amsterdam Office'' for example.'
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company that will be using the phone numbers requested with this profile.
+        registrationNumber:
+          type:
+          - string
+          - 'null'
+          description: Business register number of the company (e.g. KVK number for Dutch companies).
+        representativeFirstName:
+          type:
+          - string
+          - 'null'
+          description: First name of company’s representative that is authorized to sign contracts for the company.
+        representativeLastName:
+          type:
+          - string
+          - 'null'
+          description: Last name of company’s representative that is authorized to sign contracts for the company
+        representativePhoneNumber:
+          type:
+          - string
+          - 'null'
+          description: Phone number of company’s representative that is authorized to sign contracts for the company
+        requiredFields:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          description: 'Depending on the country of the company address, we might require additional information that needs to be
+
+            supplied with the API call. See the `Verify Required Fields` endpoint documentation for more information.'
+        phoneNumberCountryCode:
+          type:
+          - string
+          - 'null'
+          description: 'The country code of the country this company profile will request numbers for. For example, if you supply
+
+            `NL`, you will only be able to request Dutch phone numbers with this profile.'
+        phoneNumberTypes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The types of phone numbers this profile is able to request. This can be `LOCAL`, `NATIONAL` and `TOLLFREE`.
+        contactFirstName:
+          type:
+          - string
+          - 'null'
+          description: 'First name of the person that CM.com will be able to contact regarding this profile. This contact can be about
+
+            the approval status of your profile or a request for additional information.'
+        contactLastName:
+          type:
+          - string
+          - 'null'
+          description: 'Last name of the person that CM.com will be able to contact regarding this profile. This contact can be about
+
+            the approval status of your profile or a request for additional information.'
+        emailAddresses:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: 'One or more email addresses that CM.com will be able to contact regarding this profile. This contact can be about
+
+            the approval status of your profile or a request for additional information.'
+        callbackUrl:
+          type:
+          - string
+          - 'null'
+          description: 'URL that we''ll send a POST request to when the status of the request has been updated. The body of this post
+
+            request will contain the entire company profile, including the updated status.'
+        documents:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiDocument'
+          description: List of documents that are legaly required for us to be able to request phone numbers.
+      additionalProperties: false
+      description: Update model for a company profile.
+    ApiRequiredFieldValidationResult:
+      title: Required Field Validation Result
+      type: object
+      properties:
+        field:
+          type:
+          - string
+          - 'null'
+          description: The key of the required field to which this validation result applies.
+        isValid:
+          type: boolean
+          description: Whether or not the given value is valid.
+        invalidReason:
+          type:
+          - string
+          - 'null'
+          description: When the given value is invalid, this field gives an explanation on why its validation failed.
+      additionalProperties: false
+      description: Validation information for required fields.
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    ApiDocument:
+      title: Document
+      type: object
+      properties:
+        requirementKey:
+          type:
+          - string
+          - 'null'
+          description: The key of the requirement which this document represents.
+        documentGuid:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the document in the Voice Documents API.
+          format: uuid
+        approved:
+          type: boolean
+          description: Whether or not the document was approved by CM.com.
+        approvalComment:
+          type:
+          - string
+          - 'null'
+          description: 'Additional information on the documents approval status, should only be filled in when the document has been
+
+            denied.'
+      additionalProperties: false
+      description: 'A document that''s required by rules and regulations of a specific country for requesting and operating phone
+
+        numbers.'
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

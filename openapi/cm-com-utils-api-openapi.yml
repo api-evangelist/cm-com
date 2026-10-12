@@ -1,0 +1,420 @@
+openapi: 3.2.0
+info:
+  title: Payments Gateway Utils API
+  description: Common payments API
+  version: 1.27.22
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+- url: /api/v1
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: Utils
+  description: Utility endpoints for health checks and other functionalities.
+paths:
+  /health:
+    head:
+      operationId: headHealthCheck
+      security: []
+      description: Health check status endpoint to check the API's operational status.
+      tags:
+      - Utils
+      summary: Check API health status
+      responses:
+        '200':
+          description: API is operational and healthy
+        '503':
+          description: API is currently fully or partially unavailable. All or some services is/are not working properly.
+        4XX:
+          $ref: '#/components/responses/UserError'
+  /paymentmethods/library/cse:
+    get:
+      operationId: getCSELibrary
+      tags:
+      - Utils
+      description: This endpoint is for documentation purposes. When you call this endpoint the response contains an URL specific to your account. This url can be used to access the Client-Side Encryption library. This is a JavaScript library made to be used in the front-end. The library must be used to encrypt the Card Details of your consumer in their browser.The library MUST NOT be cached since the encryption keys are rotated automatically.
+      summary: Get Client-Side Encryption library
+      responses:
+        '200':
+          description: Client side encryption libraries for BanContact and Credit Card transactions
+          headers:
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientSideEncryption'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+webhooks:
+  transactionEvent:
+    post:
+      operationId: createTransactionEvent
+      summary: Webhook event for a transaction
+      description: 'Webhook that will be called if requested in the initial create transaction request.
+
+
+        Implement this webhook when you want to receive a notification when a given event occurs. This will give you the advantage of not having to poll the payment method specific `GET` endpoint for status updates.'
+      tags:
+      - Utils
+      requestBody:
+        description: Transaction event
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionEvent'
+            examples:
+              statusChanged:
+                summary: Payment status change event
+                value:
+                  transaction: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+                  event: STATUS_CHANGE
+                  reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+                  createdAt: '2006-01-02T15:04:05Z'
+              refundUpdated:
+                summary: Refund status change event
+                value:
+                  transaction: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+                  event: REFUND_STATUS
+                  reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+                  createdAt: '2006-01-02T15:04:05Z'
+                  refundID: 193cb243-283a-4760-9c56-8a6444d588b7
+              chargebackUpdated:
+                summary: Chargeback status change event
+                value:
+                  transaction: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+                  event: CHARGEBACK_STATUS
+                  reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+                  createdAt: '2006-01-02T15:04:05Z'
+                  chargebackID: 193cb243-283a-4760-9c56-8a6444d588b7
+      responses:
+        '200':
+          description: The webhook has been received.
+  iDEALQRPaymentEvent:
+    post:
+      operationId: createiDEALQRPaymentEvent
+      summary: Webhook event for a transaction for an iDEAL-QR payment
+      description: 'Webhook that will be called if requested in the initial create transaction request.
+
+
+        Implement this webhook when you want to receive a notification when a given event occurs. This will give you the advantage of not having to poll the payment method specific `GET` endpoint for status updates.'
+      tags:
+      - Utils
+      requestBody:
+        description: Transaction event
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/iDEALQRPaymentEvent'
+            examples:
+              statusChanged:
+                summary: Payment status change event
+                value:
+                  transaction: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+                  event: QR_PAYMENT_CREATED
+                  reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+                  createdAt: '2006-01-02T15:04:05Z'
+                  payment: 193cb243-283a-4760-9c56-8a6444d588b2
+      responses:
+        '200':
+          description: The webhook has been received.
+  bancontactPaymentEvent:
+    post:
+      operationId: createBancontactPaymentEvent
+      summary: Webhook event for a BanContact payment
+      description: 'Webhook that will be called if requested in the initial create transaction request.
+
+
+        Implement this webhook when you want to receive a notification when a new payment is created for a BanContact order. This will give you the advantage of not having to poll the payment method specific `GET` endpoint for status updates.'
+      tags:
+      - Utils
+      requestBody:
+        description: Transaction event
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BancontactPaymentEvent'
+            examples:
+              paymentCreated:
+                summary: Payment created event
+                value:
+                  transaction: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+                  event: PAYMENT_CREATED
+                  reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+                  createdAt: '2006-01-02T15:04:05Z'
+                  payment: 193cb243-283a-4760-9c56-8a6444d588b2
+      responses:
+        '200':
+          description: The webhook has been received.
+  sessionEvent:
+    post:
+      operationId: createSessionEvent
+      summary: Webhook event for a session-based payment (Google Pay, Apple Pay)
+      description: 'Webhook that will be called if requested in the initial create session request.
+
+
+        Implement this webhook when you want to receive a notification when a given event occurs on a
+
+        session-based payment flow. Unlike the standard transaction event, this payload uses a `sessionID`
+
+        to identify the session and a `transactionID` to identify the individual transaction within it.'
+      tags:
+      - Utils
+      requestBody:
+        description: Session event
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionEvent'
+            examples:
+              sessionCreated:
+                summary: Transaction created within a session
+                value:
+                  sessionID: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+                  transactionID: 193cb243-283a-4760-9c56-8a6444d588b2
+                  event: TRANSACTION_CREATED
+                  reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+                  createdAt: '2006-01-02T15:04:05Z'
+              statusChanged:
+                summary: Session transaction status change
+                value:
+                  sessionID: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+                  transactionID: 193cb243-283a-4760-9c56-8a6444d588b2
+                  event: STATUS_CHANGE
+                  reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+                  createdAt: '2006-01-02T15:04:05Z'
+              refundUpdated:
+                summary: Session transaction status change
+                value:
+                  sessionID: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+                  transactionID: 193cb243-283a-4760-9c56-8a6444d588b2
+                  event: REFUND_STATUS
+                  reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+                  createdAt: '2006-01-02T15:04:05Z'
+                  refundID: 193cb243-283a-4760-9c56-8a6444d588b7
+      responses:
+        '200':
+          description: The webhook has been received.
+components:
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+  schemas:
+    iDEALQRPaymentEvent:
+      allOf:
+      - $ref: '#/components/schemas/TransactionEvent'
+      - type: object
+        properties:
+          event:
+            $ref: '#/components/schemas/TransactionWebhookQREvents'
+          payment:
+            $ref: '#/components/schemas/Uuid'
+            description: Unique identifier for an iDEAL-QR payment.
+      description: Event send by CM.com after a change on an iDEAL-QR transaction.
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    ClientSideEncryption:
+      description: Client side encryption libraries per payment method.
+      type: object
+      properties:
+        bancontact:
+          $ref: '#/components/schemas/ClientSideEncryptionElement'
+        creditcard:
+          $ref: '#/components/schemas/ClientSideEncryptionElement'
+    TransactionWebhookBancontactEvents:
+      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
+
+        * `PAYMENT_CREATED` - When a new payment is created for the BanContact order.
+
+        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
+
+        * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      - PAYMENT_CREATED
+      - REFUND_STATUS
+      - FINALSTATUS
+      example: STATUS_CHANGE
+    TransactionWebhookQREvents:
+      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
+
+        * `QR_PAYMENT_CREATED` - When a new payment is created using the qr code.
+
+        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      - QR_PAYMENT_CREATED
+      - REFUND_STATUS
+      example: STATUS_CHANGE
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    TransactionWebhookEvent:
+      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
+
+        * `PAYMENT_CREATED` - When a new payment is created for the transaction.
+
+        * `TRANSACTION_CREATED` - When a new transaction is created for a session (used by Google Pay and Apple Pay).
+
+        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
+
+        * `CHARGEBACK_STATUS` - Invoke webhook when a transaction receives an update on one of its chargebacks.
+
+        * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      - PAYMENT_CREATED
+      - TRANSACTION_CREATED
+      - REFUND_STATUS
+      - CHARGEBACK_STATUS
+      - FINALSTATUS
+      example: STATUS_CHANGE
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    BancontactPaymentEvent:
+      allOf:
+      - $ref: '#/components/schemas/TransactionEvent'
+      - type: object
+        properties:
+          event:
+            $ref: '#/components/schemas/TransactionWebhookBancontactEvents'
+          payment:
+            $ref: '#/components/schemas/Uuid'
+            description: Unique identifier for a BanContact payment.
+      description: Event sent by CM.com after a payment is created on a BanContact transaction.
+    ClientSideEncryptionElement:
+      type: object
+      properties:
+        cseUrl:
+          description: The URL that contains the script to encrypt the user payment data in your site.
+          type: string
+          example: https://app-domain.tld/libraries/ps/cse/80117cdb-be80-425f-954d-9696102efa60
+        upstream:
+          type: string
+          example: ps
+    SessionEvent:
+      description: 'Event sent by CM.com for session-based payment flows (Google Pay, Apple Pay). In this model a session groups one or more payment transactions: `sessionID` identifies the checkout session (order) and `transactionID` identifies the individual payment within it.'
+      type: object
+      required:
+      - sessionID
+      - event
+      - reference
+      - createdAt
+      properties:
+        sessionID:
+          allOf:
+          - $ref: '#/components/schemas/Uuid'
+          description: Unique identifier for the session. Present for `TRANSACTION_CREATED`, `STATUS_CHANGE`, and `PAYMENT_CREATED` events.
+        event:
+          $ref: '#/components/schemas/TransactionWebhookEvent'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        createdAt:
+          $ref: '#/components/schemas/Datetime'
+          description: Time when the event occurred.
+        transactionID:
+          allOf:
+          - $ref: '#/components/schemas/Uuid'
+          description: 'Unique identifier for the payment transaction within the session. Present for `TRANSACTION_CREATED`, `STATUS_CHANGE`, and `PAYMENT_CREATED` events.        '
+    TransactionEvent:
+      description: Event send by CM.com after a change on a transaction.
+      type: object
+      required:
+      - transaction
+      - event
+      - reference
+      - createdAt
+      properties:
+        transaction:
+          $ref: '#/components/schemas/TransactionId'
+        event:
+          $ref: '#/components/schemas/TransactionWebhookEvent'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        createdAt:
+          $ref: '#/components/schemas/Datetime'
+          description: Time when the event occurred.
+        refundID:
+          $ref: '#/components/schemas/Uuid'
+          description: Unique identifier of the refund the event relates to. Only present on `REFUND_STATUS` events.
+        chargebackID:
+          $ref: '#/components/schemas/Uuid'
+          description: Unique identifier of the chargeback the event relates to. Only present on `CHARGEBACK_STATUS` events.
+  responses:
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 Client Credentials Grant.
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/authorization/oauth2/token
+          scopes: {}

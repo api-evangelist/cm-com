@@ -1,0 +1,270 @@
+openapi: 3.2.0
+info:
+  title: Email Gateway Dns Verify API
+  version: '1.0'
+  description: Send transactional and marketing emails, manage domains, suppressions, webhooks, and more.
+servers:
+- url: https://api.cm.com
+  description: Production
+tags:
+- name: DnsVerify
+paths:
+  /email/configuration/v1/dns/accounts/{logicalAccountId}/verify:
+    post:
+      summary: Verify DNS records
+      tags:
+      - DnsVerify
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: domain
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainValidityResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainValidityResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainValidityResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_3
+      security:
+      - ProductToken: []
+  /email/configuration/v1/dns/accounts/{logicalAccountId}/verify/{capability}:
+    post:
+      summary: Verify DNS capability
+      tags:
+      - DnsVerify
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: capability
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - sending
+          - receiving
+          - all
+      - name: domain
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainValidityResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainValidityResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainValidityResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_19
+      security:
+      - ProductToken: []
+components:
+  schemas:
+    Configuration_DnsEntry:
+      required:
+      - host
+      - purpose
+      - type
+      - value
+      type: object
+      properties:
+        host:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        isValid:
+          type: boolean
+        type:
+          type:
+          - string
+          - 'null'
+        purpose:
+          type:
+          - string
+          - 'null'
+          description: Either sending (CNAME records) or receiving (the MX record).
+        priority:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: MX preference. Null for non-MX records.
+        status:
+          type: integer
+          format: int32
+          description: 1 not verified yet, 2 verified, 3 verification ran and failed.
+      additionalProperties: false
+    Configuration_DomainValidityResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+        dnsEntries:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_DnsEntry'
+      additionalProperties: false
+    Configuration_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-PRODUCTTOKEN
+      description: Your CM.com product token. Find it in the Email Gateway App → Settings → Integration.

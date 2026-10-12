@@ -1,0 +1,162 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Sign Identification API
+  description: 'Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via this link. This will grant you access to the sandbox environment.
+
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Identification
+  description: ''
+paths:
+  /dossiers/{dossierId}/invitees/{inviteeId}/identifications:
+    parameters:
+    - $ref: '#/components/parameters/DossierId'
+    - $ref: '#/components/parameters/InviteeId'
+    get:
+      operationId: list_identifications
+      summary: Get identifications
+      description: Retrieve the identification methods and results per invitee.
+      tags:
+      - Identification
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentificationResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    IdentificationMethod:
+      type: string
+      enum:
+      - idin
+      - iban
+      - otp_sms
+      - otp_email
+      - otp_whatsapp
+      - otp_voice
+      - qualified
+      examples:
+      - idin
+      description: Additional user identification is required. When you select `qualified` it cannot be used with other identification methods. Please note that this is only available when configured for your account.
+    IdentificationResult:
+      title: Identification
+      type: object
+      properties:
+        identificationMethod:
+          $ref: '#/components/schemas/IdentificationMethod'
+          description: The result of the identification
+        status:
+          type: string
+          enum:
+          - open
+          - success
+          - expired
+          - cancelled
+          - failed
+          description: The identification status
+          examples:
+          - success
+        result:
+          type: object
+          description: The result of the identification. Fields will change depending on the identification method, available data or status.
+          additionalProperties: true
+          examples:
+          - transactionId: '123456789123456789'
+            issuerId: ABNANL2A
+            status: success
+            bin: CMBANL9Z3xOcyYKUhR8s0mS+tbkNO2xF2/U/Ns3eIyMOWYWmOZeUGw8StPKPhAdRTyN1XWne1rgJQA
+            name:
+              gender: male
+              initials: A
+              firstName: Andre
+              lastName: Dijk
+              lastNamePrefix: van
+            age:
+              dateOfBirth: '1974-01-31'
+              18yOrOlder: true
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+  parameters:
+    DossierId:
+      name: dossierId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a dossier
+
+        '
+      example: 22470767-904e-4553-9586-d7ed4f2b330e
+    InviteeId:
+      name: inviteeId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a single invitee
+
+        '
+      example: c4b5020f-a092-4516-b890-81a635ebe470
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

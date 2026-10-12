@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-culture-view-schema.json",
+  "title": "CultureView",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-halo-core-v1-openapi.yml#/components/schemas/CultureView",
+  "type": "object",
+  "required": [
+    "code",
+    "name"
+  ],
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  }
+}

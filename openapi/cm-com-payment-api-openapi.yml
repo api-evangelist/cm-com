@@ -1,0 +1,163 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Sign Payment API
+  description: 'Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via this link. This will grant you access to the sandbox environment.
+
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Payment
+  description: ''
+paths:
+  /dossiers/{dossierId}/invitees/{inviteeId}/payments:
+    parameters:
+    - $ref: '#/components/parameters/DossierId'
+    - $ref: '#/components/parameters/InviteeId'
+    get:
+      operationId: list_payments
+      summary: Get payments
+      description: Retrieve the payment methods and statuses per invitee.
+      tags:
+      - Payment
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/NotAvailable'
+components:
+  responses:
+    NotAvailable:
+      description: The request cannot be made because the feature is not available for your account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    Payment:
+      title: Payment
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: The payment amount in cents
+          minimum: 1
+          examples:
+          - 100
+        currency:
+          type: string
+          enum:
+          - EUR
+          description: The payment currency
+      required:
+      - amount
+      - currency
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    PaymentResult:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        properties:
+          status:
+            type: string
+            enum:
+            - pending
+            - success
+            - expired
+            description: The payment status
+            examples:
+            - success
+          paymentMethod:
+            type: string
+            description: The payment method
+            examples:
+            - IDEAL
+          paymentReference:
+            type: string
+            description: The payment reference
+            examples:
+            - ch-9a0a32bc-bb25-4f5f-8aeb-681276a738fe
+  parameters:
+    DossierId:
+      name: dossierId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a dossier
+
+        '
+      example: 22470767-904e-4553-9586-d7ed4f2b330e
+    InviteeId:
+      name: inviteeId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a single invitee
+
+        '
+      example: c4b5020f-a092-4516-b890-81a635ebe470
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

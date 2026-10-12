@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-tooling-bulk-email-api-models-api-mailing-schema.json",
+  "title": "CM.Tooling.BulkEmail.Api.Models.ApiMailing",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-email-campaigns-v1-openapi.yml#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing",
+  "type": "object",
+  "properties": {
+    "ID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "AccountID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "CampaignID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "Name": {
+      "type": "string"
+    },
+    "FromName": {
+      "type": "string"
+    },
+    "FromAddressID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "ReplyToAddressID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "Subject": {
+      "type": "string"
+    },
+    "MailingState": {
+      "format": "int32",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "type": "integer"
+    },
+    "MailingType": {
+      "format": "int32",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "type": "integer"
+    },
+    "Template": {
+      "$ref": "#/$defs/CM.Tooling.BulkEmail.Api.Models.ApiTemplate"
+    },
+    "CreatedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "CreatedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ModifiedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ModifiedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "DeletedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "DeletedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "CM.Tooling.BulkEmail.Api.Models.ApiMergeFields": {
+      "type": "object",
+      "properties": {
+        "MergeTags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Tooling.BulkEmail.Api.Models.ApiMergeTag"
+          }
+        },
+        "SpecialLinks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Tooling.BulkEmail.Api.Models.ApiSpecialLink"
+          }
+        }
+      }
+    },
+    "CM.Tooling.BulkEmail.Api.Models.ApiMergeTag": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "string"
+        },
+        "Mapping": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Tooling.BulkEmail.Api.Models.ApiSpecialLink": {
+      "type": "object",
+      "properties": {
+        "Type": {
+          "type": "string"
+        },
+        "Label": {
+          "type": "string"
+        },
+        "Link": {
+          "type": "string"
+        },
+        "Mapping": {
+          "type": "string"
+        },
+        "Tag": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Tooling.BulkEmail.Api.Models.ApiTemplate": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "AccountID": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Description": {
+          "type": "string"
+        },
+        "HtmlBody": {
+          "type": "string"
+        },
+        "TextBody": {
+          "type": "string"
+        },
+        "Json": {
+          "type": "string"
+        },
+        "MergeFields": {
+          "$ref": "#/$defs/CM.Tooling.BulkEmail.Api.Models.ApiMergeFields"
+        },
+        "TemplateEditorType": {
+          "format": "int32",
+          "enum": [
+            1,
+            2
+          ],
+          "type": "integer"
+        },
+        "CreatedOn": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "CreatedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "ModifiedOn": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "ModifiedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "DeletedOn": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "DeletedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

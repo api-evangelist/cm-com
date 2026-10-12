@@ -1,0 +1,386 @@
+openapi: 3.2.0
+info:
+  title: Email Gateway Receive Webhooks API
+  version: '1.0'
+  description: Send transactional and marketing emails, manage domains, suppressions, webhooks, and more.
+servers:
+- url: https://api.cm.com
+  description: Production
+tags:
+- name: Receive Webhooks
+paths:
+  /email/configuration/v1/accounts/{logicalAccount}/inbound-webhook:
+    get:
+      summary: List receiving webhooks
+      tags:
+      - Receive Webhooks
+      parameters:
+      - name: logicalAccount
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: domain
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailInboundWebhookControllerResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailInboundWebhookControllerResponse'
+      operationId: op_22
+      security:
+      - ProductToken: []
+    post:
+      summary: Create receiving webhook
+      tags:
+      - Receive Webhooks
+      parameters:
+      - name: logicalAccount
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Configuration_EmailInboundWebhookRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration_EmailInboundWebhookRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Configuration_EmailInboundWebhookRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Configuration_EmailInboundWebhookRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailInboundWebhookResponseControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailInboundWebhookResponseControllerResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailInboundWebhookResponseControllerResponse'
+      operationId: op_23
+      security:
+      - ProductToken: []
+    patch:
+      summary: Update receiving webhook
+      tags:
+      - Receive Webhooks
+      parameters:
+      - name: logicalAccount
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Configuration_EmailInboundWebhookUpdateRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration_EmailInboundWebhookUpdateRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Configuration_EmailInboundWebhookUpdateRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Configuration_EmailInboundWebhookUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailInboundWebhookControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailInboundWebhookControllerResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailInboundWebhookControllerResponse'
+      operationId: op_24
+      security:
+      - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccount}/inbound-webhook/{id}:
+    delete:
+      summary: Delete receiving webhook
+      tags:
+      - Receive Webhooks
+      parameters:
+      - name: logicalAccount
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_Int64ControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_Int64ControllerResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_Int64ControllerResponse'
+      operationId: op_25
+      security:
+      - ProductToken: []
+components:
+  schemas:
+    Configuration_EmailInboundWebhookControllerResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        webhookResponse:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_EmailInboundWebhookResponse'
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailInboundWebhookRequest:
+      type: object
+      properties:
+        webhookUrl:
+          type:
+          - string
+          - 'null'
+          description: HTTPS URL, port 443. Trailing slash is removed.
+        domain:
+          type:
+          - string
+          - 'null'
+          description: Recipient domain. Stored lower-case.
+        usePresignedAttachments:
+          type:
+          - boolean
+          - 'null'
+          description: Send attachments as download links instead of inline base64. Default false.
+        presignedUrlExpiryHours:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: Lifetime of download links in hours. Default 24, effective maximum 168.
+      additionalProperties: false
+    Configuration_EmailInboundWebhookResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        logicalAccountId:
+          type: string
+          format: uuid
+        webhookUrl:
+          type:
+          - string
+          - 'null'
+        domain:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        modifiedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        usePresignedAttachments:
+          type: boolean
+        presignedUrlExpiryHours:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Configuration_EmailInboundWebhookResponseControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          $ref: '#/components/schemas/Configuration_EmailInboundWebhookResponse'
+      additionalProperties: false
+    Configuration_EmailInboundWebhookUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Must be greater than 0.
+        resetPresignedUrlExpiryHours:
+          type: boolean
+          description: Sets the expiry back to 24. Wins over presignedUrlExpiryHours.
+        webhookUrl:
+          type:
+          - string
+          - 'null'
+        domain:
+          type:
+          - string
+          - 'null'
+        usePresignedAttachments:
+          type:
+          - boolean
+          - 'null'
+          description: Send attachments as download links instead of inline base64. Default false.
+        presignedUrlExpiryHours:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: Lifetime of download links in hours. Default 24, effective maximum 168.
+      additionalProperties: false
+    Configuration_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    Configuration_Int64ControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type: integer
+          format: int64
+          description: Number of rows deleted.
+      additionalProperties: false
+    Configuration_StatusCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 429
+      - 500
+      - 999
+      type: integer
+      format: int32
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-PRODUCTTOKEN
+      description: Your CM.com product token. Find it in the Email Gateway App → Settings → Integration.

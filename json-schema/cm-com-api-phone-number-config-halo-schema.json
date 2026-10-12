@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-phone-number-config-halo-schema.json",
+  "title": "Phone Number Config Halo",
+  "description": "Configuration settings for configuring a Phone Number for Halo",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-phone-numbers-v1-openapi.yml#/components/schemas/ApiPhoneNumberConfigHalo",
+  "type": "object",
+  "properties": {
+    "phoneNumber": {
+      "type": "integer",
+      "description": "The Phone Number that the current configuration applies to.",
+      "format": "int64"
+    },
+    "appAccountGuid": {
+      "type": "string",
+      "description": "The unique identifier of the application can be found in the Voice Management App in the API Settings section.",
+      "format": "uuid"
+    },
+    "type": {
+      "type": "string",
+      "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+    },
+    "haloProfileId": {
+      "minimum": 1,
+      "type": "integer",
+      "description": "Numeric identifier of the Halo profile that should be used",
+      "format": "int32"
+    },
+    "cultureCode": {
+      "maxLength": 36,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The culture code that should be used for this Halo configuration\r\nFormatted as a standard IETF BCP 47 language tag\r\n<example>en-GB</example>"
+    }
+  },
+  "additionalProperties": false
+}

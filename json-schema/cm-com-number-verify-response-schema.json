@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-number-verify-response-schema.json",
+  "title": "NumberVerifyResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-mobile-identity-v1-openapi.yml#/components/schemas/NumberVerifyResponse",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ID of the number verify transaction",
+      "format": "uuid"
+    },
+    "state": {
+      "$ref": "#/$defs/State",
+      "description": "State of the number verify transaction"
+    },
+    "match": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Is the number verified. If state is pending, match is null."
+    }
+  },
+  "$defs": {
+    "State": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "unavailable"
+      ]
+    }
+  }
+}

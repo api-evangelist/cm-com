@@ -1,0 +1,963 @@
+# x-archived-from: cm-com-voice-phone-numbers-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: Phone Number API
+  version: v1
+servers:
+- url: https://api.cm.com
+paths:
+  /voice-phonenumberapi/v1/{accountGuid}/phonenumbers:
+    get:
+      tags:
+      - Phone Number
+      summary: Get Phone Numbers
+      description: Get a list of all Phone Numbers linked to a given Voice Account.
+      parameters:
+      - name: skip
+        in: query
+        description: Skip.
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          description: Skip.
+          format: int32
+          nullable: true
+      - name: take
+        in: query
+        description: Take.
+        schema:
+          maximum: 25
+          minimum: 1
+          type: integer
+          description: Take.
+          format: int32
+          nullable: true
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPhoneNumber'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPhoneNumber'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPhoneNumber'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    put:
+      tags:
+      - Phone Number
+      summary: Update Phone Number config
+      description: Updates the configuration for the given Phone Numbers.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: Dictionary of phone numbers and configs
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                oneOf:
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigDirectForwarding'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigFlowBuilder'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigNone'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigNotification'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigSip'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigHalo'
+                description: Model that represents the config of a phone number
+          application/json:
+            schema:
+              type: array
+              items:
+                oneOf:
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigDirectForwarding'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigFlowBuilder'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigNone'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigNotification'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigSip'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigHalo'
+                description: Model that represents the config of a phone number
+          text/json:
+            schema:
+              type: array
+              items:
+                oneOf:
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigDirectForwarding'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigFlowBuilder'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigNone'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigNotification'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigSip'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigHalo'
+                description: Model that represents the config of a phone number
+          application/*+json:
+            schema:
+              type: array
+              items:
+                oneOf:
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigDirectForwarding'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigFlowBuilder'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigNone'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigNotification'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigSip'
+                - $ref: '#/components/schemas/ApiPhoneNumberConfigHalo'
+                description: Model that represents the config of a phone number
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - $ref: '#/components/schemas/ApiPhoneNumberConfigDirectForwarding'
+                  - $ref: '#/components/schemas/ApiPhoneNumberConfigFlowBuilder'
+                  - $ref: '#/components/schemas/ApiPhoneNumberConfigNone'
+                  - $ref: '#/components/schemas/ApiPhoneNumberConfigNotification'
+                  - $ref: '#/components/schemas/ApiPhoneNumberConfigSip'
+                  - $ref: '#/components/schemas/ApiPhoneNumberConfigHalo'
+                  description: Model that represents the config of a phone number
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberapi/v1/{accountGuid}/phonenumbers/export:
+    get:
+      tags:
+      - Phone Number
+      summary: Export Phone Numbers to Excel
+      description: Exports a list of all inbound Phone Numbers linked to a given Voice Account or all Voice Accounts in an organization in Excel format.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: exportAll
+        in: query
+        description: Wheter all Voice Accounts whithin the organization should be included or not.
+        schema:
+          type: boolean
+          default: false
+        example: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+            text/json:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberapi/v1/{accountGuid}/phonenumbers/{phoneNumber}/companyprofile:
+    put:
+      tags:
+      - Phone Number
+      summary: Update Phone Number Company Profile
+      description: Update the Company Profile of a Phone Number to change the connected address.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the voice account or logical account
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: phoneNumber
+        in: path
+        description: The start phone number of the phone number range to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: The company profile guid to update to
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdatePhoneNumberCompanyProfileGuid'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdatePhoneNumberCompanyProfileGuid'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdatePhoneNumberCompanyProfileGuid'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdatePhoneNumberCompanyProfileGuid'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiCustomerAliasPhoneNumber'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCustomerAliasPhoneNumber'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiCustomerAliasPhoneNumber'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberapi/v1/{organizationId}/phonenumbers:
+    get:
+      tags:
+      - Phone Number
+      summary: Get all phone numbers
+      description: As a Voice Reseller, you can use this endpoint to view all phone numbers owned by all of your managed voice accounts.\n\r\n\r**Please note:** This endpoint is only available for Voice Resellers.
+      parameters:
+      - name: skip
+        in: query
+        description: Skip.
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          description: Skip.
+          format: int32
+          nullable: true
+      - name: take
+        in: query
+        description: Take.
+        schema:
+          maximum: 25
+          minimum: 1
+          type: integer
+          description: Take.
+          format: int32
+          nullable: true
+      - name: organizationId
+        in: path
+        description: Identifier of the organization
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPhoneNumber'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPhoneNumber'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPhoneNumber'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-phonenumberapi/v1/phonenumberranges/{accountGuid}/phonenumbers/{phoneNumber}/customeralias:
+    put:
+      tags:
+      - Phone Number Range
+      summary: Update Phone Number alias
+      description: Update the Phone Number alias to help identify it from other numbers.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: phoneNumber
+        in: path
+        description: The Phone Number to be updated.
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 31761000000
+      requestBody:
+        description: CM.Voice.PhoneNumberApi.Models.Api.ApiCustomerAliasCustomerRequest
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerAliasCustomerRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerAliasCustomerRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerAliasCustomerRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerAliasCustomerRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCustomerAliasPhoneNumber'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+components:
+  schemas:
+    ApiApplication:
+      title: Application
+      type: object
+      properties:
+        guid:
+          type: string
+          description: Unique id
+          nullable: true
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          description: Name of the application
+          nullable: true
+          example: FlowBuilder
+        isConfigurable:
+          type: boolean
+          description: Can be configured in the frontend
+          example: true
+        displayCode:
+          type: integer
+          description: Unique id for frontend
+          format: int32
+          nullable: true
+          example: 1
+      additionalProperties: false
+      description: Application
+    ApiCustomerAliasCustomerRequest:
+      type: object
+      properties:
+        customerAlias:
+          pattern: ^[a-zA-Z0-9À-ÿ\-@'().\/\+?&|\s]*$
+          type: string
+          description: New Phone Number alias that can be used to differentiate a Phone Number.
+          nullable: true
+          example: Breda Office Front Desk
+      additionalProperties: false
+      description: Details of an customerAlias request.
+    ApiCustomerAliasPhoneNumber:
+      title: Customer Alias Phone Number
+      type: object
+      properties:
+        originalNumber:
+          type: integer
+          description: Original number, geographical number meant for Belgian customers, who want to use a service number.
+          format: int64
+          nullable: true
+          example: 32760000000
+        number:
+          type: integer
+          description: Phone number that the customer alias is assigned to.
+          format: int64
+          example: 32700000000
+        customerAlias:
+          type: string
+          description: Custom name to help identify a phone number.
+          nullable: true
+          example: Breda office front desk
+      additionalProperties: false
+      description: Details of a phone number.
+    ApiDistributionGroup:
+      title: Distribution Group
+      type: object
+      properties:
+        guid:
+          type: string
+          description: Unique identifier of the Distribution Group.
+          nullable: true
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          description: Name of the Distribution Group.
+          nullable: true
+          example: Voice PBX
+        createdOn:
+          type: string
+          description: Date and time the Distribution Group was created.
+          format: date-time
+          nullable: true
+          example: '2022-01-01T00:00:00'
+        updatedOn:
+          type: string
+          description: Date and time the Distribution Group was last updated.
+          format: date-time
+          nullable: true
+          example: '2022-02-01T00:00:00'
+        voiceAccountGuid:
+          type: string
+          description: Unique identifier of the Voice Account.
+          nullable: true
+          example: 00000000-0000-0000-0000-000000000000
+      additionalProperties: false
+      description: DistributionGroup API model
+    ApiPaginationQuery:
+      title: Pagination Query
+      type: object
+      properties:
+        skip:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          description: Skip.
+          format: int32
+          nullable: true
+        take:
+          maximum: 25
+          minimum: 1
+          type: integer
+          description: Take.
+          format: int32
+          nullable: true
+      additionalProperties: false
+      description: Pagination query api model.
+    ApiPhoneNumber:
+      title: Phone Number
+      type: object
+      properties:
+        number:
+          type: string
+          description: Number.
+          nullable: true
+          example: '31600000000'
+        originalNumber:
+          type: string
+          description: Original number.
+          nullable: true
+          example: '32600000000'
+        customerAlias:
+          type: string
+          description: Custom name.
+          nullable: true
+          example: Steve
+        voiceAccount:
+          $ref: '#/components/schemas/ApiVoiceAccount'
+        application:
+          $ref: '#/components/schemas/ApiApplication'
+        appConfig:
+          oneOf:
+          - $ref: '#/components/schemas/ApiPhoneNumberConfigDirectForwarding'
+          - $ref: '#/components/schemas/ApiPhoneNumberConfigFlowBuilder'
+          - $ref: '#/components/schemas/ApiPhoneNumberConfigNone'
+          - $ref: '#/components/schemas/ApiPhoneNumberConfigNotification'
+          - $ref: '#/components/schemas/ApiPhoneNumberConfigSip'
+          - $ref: '#/components/schemas/ApiPhoneNumberConfigHalo'
+          description: Configuration model.
+          nullable: true
+        distributionGroup:
+          $ref: '#/components/schemas/ApiDistributionGroup'
+        country:
+          $ref: '#/components/schemas/Country'
+        validFrom:
+          type: string
+          description: Number valid from.
+          format: date-time
+          nullable: true
+          example: '2022-01-01T00:00:00'
+        validTo:
+          type: string
+          description: Number valid till.
+          format: date-time
+          nullable: true
+          example: '2023-01-01T00:00:00'
+        numberType:
+          type: string
+          description: Type of number.
+          nullable: true
+          example: FIXED_LINE
+        updatedOn:
+          type: string
+          description: Last updated on.
+          format: date-time
+          nullable: true
+          example: '2022-01-01T00:00:00'
+        status:
+          $ref: '#/components/schemas/ApiPhoneNumberStatus'
+      additionalProperties: false
+      description: ''
+    ApiPhoneNumberConfig:
+      title: Phone Number Config
+      type: object
+      properties:
+        type:
+          type: string
+          description: The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.
+          nullable: true
+          readOnly: true
+          example: tts
+        phoneNumber:
+          type: integer
+          description: The Phone Number that the current configuration applies to.
+          format: int64
+          example: 31761000000
+      additionalProperties: false
+      description: Model that represents the config of a phone number
+    ApiPhoneNumberConfigDirectForwarding:
+      title: Phone Number Config Direct Forwarding
+      type: object
+      properties:
+        phoneNumber:
+          type: integer
+          description: The Phone Number that the current configuration applies to.
+          format: int64
+          example: 31761000000
+        appAccountGuid:
+          type: string
+          description: The unique identifier of the application can be found in the Voice Management App in the API Settings section.
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          type: string
+          description: The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.
+          example: directforwarding
+        destinationNumber:
+          type: integer
+          description: The Phone Number that the call will be forwarded to.
+          format: int64
+          example: 31761000000
+        customCallerId:
+          type: integer
+          description: Optional caller ID (CLI) that will be used when the call is forwarded.
+          format: int64
+          nullable: true
+          example: 31762000000
+      additionalProperties: false
+      description: Configuration settings for configuring a Phone Number for Direct Forwarding.
+    ApiPhoneNumberConfigFlowBuilder:
+      title: Phone Number Config Flow Builder
+      required:
+      - appAccountGuid
+      - callFlowId
+      type: object
+      properties:
+        phoneNumber:
+          minimum: 100000
+          type: integer
+          description: The Phone Number that the current configuration applies to.
+          format: int64
+          example: 31761000000
+        appAccountGuid:
+          minLength: 1
+          type: string
+          description: The unique identifier of the application can be found in the Voice Management App in the API Settings section.
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          type: string
+          description: The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.
+          example: flowbuilder
+        callFlowId:
+          minLength: 1
+          type: string
+          description: Unique Identifier of the callflow that should be used. Can be found in the Voice FlowBuilder application.
+          example: 00000000-0000-0000-0000-000000000000
+      additionalProperties: false
+      description: Configuration settings for configuring a Phone Number for the Voice FlowBuilder Application.
+    ApiPhoneNumberConfigHalo:
+      title: Phone Number Config Halo
+      type: object
+      properties:
+        phoneNumber:
+          type: integer
+          description: The Phone Number that the current configuration applies to.
+          format: int64
+          example: 31761000000
+        appAccountGuid:
+          type: string
+          description: The unique identifier of the application can be found in the Voice Management App in the API Settings section.
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          type: string
+          description: The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.
+          example: halo
+        haloProfileId:
+          minimum: 1
+          type: integer
+          description: Numeric identifier of the Halo profile that should be used
+          format: int32
+        cultureCode:
+          maxLength: 36
+          type: string
+          description: "The culture code that should be used for this Halo configuration\r\nFormatted as a standard IETF BCP 47 language tag\r\n<example>en-GB</example>"
+          nullable: true
+      additionalProperties: false
+      description: Configuration settings for configuring a Phone Number for Halo
+    ApiPhoneNumberConfigNone:
+      title: Phone Number Config None
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ApiPhoneNumberConfig'
+      properties:
+        type:
+          type: string
+          description: The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.
+          example: none
+      additionalProperties: false
+      description: Configuration settings for configuring a Phone Number to no application, meaning it's not actively used.
+    ApiPhoneNumberConfigNotification:
+      title: Phone Number Config Notification
+      type: object
+      properties:
+        phoneNumber:
+          type: integer
+          description: The Phone Number that the current configuration applies to.
+          format: int64
+          example: 31761000000
+        appAccountGuid:
+          type: string
+          description: The unique identifier of the application can be found in the Voice Management App in the API Settings section.
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          type: string
+          description: The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.
+          example: notification
+        promptType:
+          type: string
+          description: The type of prompt that should be played in the notification. Can be either `file` for a custom audio file in the Voice Audio Manager, or `tts` for a text-to-speech message.
+          nullable: true
+          example: tts
+        prompt:
+          type: string
+          description: The text-to-speech message if the PromptType property is set to `tts`, or the path of the audio file in the Voice Audio Manager if the PromptType property is set to `file`.
+          nullable: true
+          example: This is my Voice Notification message.
+        language:
+          type: string
+          description: The language of the text-to-speech voice that will be used in ISO 639-1 format. Only relevant if the PromptType value is set to `tts`.
+          nullable: true
+          example: nl-NL
+        gender:
+          type: string
+          description: The gender of the text-to-speech voice that will be used. Can be either `male` or `female`. Only relevant if the PromptType value is set to `tts`.
+          nullable: true
+          example: female
+        voiceNumber:
+          type: integer
+          description: The specific text-to-speech voice that will be used for the given Language and Gender combination. Only relevant if the PromptType value is set to `tts`. Should in most cases be set to 1.
+          format: int32
+          nullable: true
+          example: 1
+        callbackUrl:
+          type: string
+          description: Callback URL that will be called after the Notification was completed.
+          nullable: true
+          example: https://www.example.com
+      additionalProperties: false
+      description: Configuration settings for configuring a Phone Number for the Voice Notification Application.
+    ApiPhoneNumberConfigSip:
+      title: Phone Number Config Sip
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ApiPhoneNumberConfig'
+      properties:
+        type:
+          type: string
+          description: The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.
+          example: sip
+        distributionGroupGuid:
+          type: string
+          description: Unique identifier of the Distribution Group.
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        algorithm:
+          type: string
+          description: The algorithm for the distribution group that should be applied, can be either `RoundRobin` or `FailOver`.
+          nullable: true
+          example: RoundRobin
+        fallbackDistributionGroupGuid:
+          type: string
+          description: Unique identifier of the fallback Distribution Group.
+          format: uuid
+          nullable: true
+          example: 00000000-0000-0000-0000-000000000000
+        fallbackAlgorithm:
+          type: string
+          description: The algorithm for the fallback Distribution Group that should be applied, can be either `RoundRobin` or `FailOver`.
+          nullable: true
+          example: RoundRobin
+      additionalProperties: false
+      description: Configuration settings for configuring a Phone Number for SIP trunking.
+    ApiPhoneNumberStatus:
+      title: Phone Number Status
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the status.
+          nullable: true
+          example: Operational
+      additionalProperties: false
+      description: Details of a phone number status.
+    ApiUpdatePhoneNumberCompanyProfileGuid:
+      title: Update Phone Number Company Profile Guid
+      type: object
+      properties:
+        companyProfileGuid:
+          type: string
+          description: Unique identifier of the company profile to update the Phone Number with
+          format: uuid
+      additionalProperties: false
+      description: Update model for updating the company profile linked to a phone number
+    ApiVoiceAccount:
+      title: Voice Account
+      type: object
+      properties:
+        createdOn:
+          type: string
+          description: Date and time on which the Voice Account was created.
+          format: date-time
+          example: '2023-01-01T00:00:00'
+        name:
+          type: string
+          description: The name of the Voice Account.
+          nullable: true
+          example: Test voice account
+        productAccountId:
+          type: string
+          description: The unique identifier of the Voice Account.
+          nullable: true
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          description: Optional external ID of the Voice Account that can be set by the customer for external references outside of the CM.com Platform.
+          nullable: true
+          example: 0kv6jzbl
+        externalName:
+          type: string
+          description: Optional external name of the Voice Account that can be set by the customer for external references outside of the CM.com Platform.
+          nullable: true
+          example: External test name
+        isActive:
+          type: boolean
+          description: Whether or not the Voice Account is set to Active.
+          example: true
+      additionalProperties: false
+      description: A Voice Account is the central account for all things Voice related. Among others, phone numbers and SIP trunks will be linked to a certain Voice Account. **Please note** that a Voice Account is different from a Logical Account. You will be able to create multiple Voice Accounts with one Logical Account.
+    Country:
+      title: Country
+      type: object
+      properties:
+        code:
+          type: string
+          description: Country code.
+          nullable: true
+          example: '31'
+        name:
+          type: string
+          description: Country name.
+          nullable: true
+          example: Netherlands
+        prefix:
+          type: string
+          description: Country prefix.
+          nullable: true
+          example: NL
+        zone:
+          type: string
+          description: Whether the country is in the European Union.
+          nullable: true
+          example: EER
+      additionalProperties: false
+      description: Details of a Country.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

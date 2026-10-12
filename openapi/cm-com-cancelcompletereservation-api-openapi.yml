@@ -1,0 +1,101 @@
+openapi: 3.2.0
+info:
+  title: Global Reseller Cancel Complete Reservation API
+  version: '1.0'
+  description: The Global Reseller API allows API users to pull availability and ticket types for connected clients.
+servers:
+- url: https://globalreseller.nl/webservices
+security:
+- {}
+tags:
+- name: CancelCompleteReservation
+paths:
+  /cancelCompleteReservation:
+    post:
+      summary: /cancelCompleteReservation
+      description: 'With this function you can cancel a complete reservation. This is only possible with a valid reservationId and if the user allows to cancel a complete reservation.
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + environment + reservationId + userId)`'
+      operationId: cancelcompletereservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - environment
+              - userId
+              - reservationId
+              - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                environment:
+                  type: string
+                  description: '"test" or "production"'
+                  enum:
+                  - production
+                  - test
+                userId:
+                  type: integer
+                  description: The userId is a reference to the user (museum / attraction). The userId can be requested via getAvailableUsers and can be cached in your application.
+                  format: int32
+                reservationId:
+                  type: integer
+                  description: Include the reservationId from the /completeReservation request.
+                  format: int32
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + environment + reservationId + userId).
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    message: contactInfo add was successfully.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  message:
+                    type: string
+                    example: contactInfo add was successfully.
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: false
+                    message: contactInfo add failed.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  message:
+                    type: string
+                    example: contactInfo add failed.
+      deprecated: false
+      tags:
+      - CancelCompleteReservation
+x-readme:
+  headers:
+  - key: Cache-Control
+    value: no-cache
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

@@ -1,0 +1,400 @@
+openapi: 3.2.0
+info:
+  version: v1
+  title: BulkEmail Mailing API
+servers:
+- url: http://api.cm.com
+tags:
+- name: Mailing
+paths:
+  /bulkemail/v1.0/accounts/{accountID}/campaigns/{campaignID}/mailings:
+    get:
+      tags:
+      - Mailing
+      summary: Get all mailings for a campaign
+      operationId: Mailing_GetMailingsForCampaignAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: includeTemplateHtmlBody
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: boolean
+      - name: includeTemplateTextBody
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: boolean
+      - name: includeTemplateJson
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+    post:
+      tags:
+      - Mailing
+      summary: Create a campaign mailing
+      operationId: Mailing_AddMailingForCampaignAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+      responses:
+        '201':
+          description: Mailing created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+  /bulkemail/v1.0/accounts/{accountID}/campaigns/{campaignID}/mailings/{mailingID}:
+    get:
+      tags:
+      - Mailing
+      summary: Get a specific mailing for a campaign
+      operationId: Mailing_GetMailingForCampaignAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mailingID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: includeTemplateHtmlBody
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: boolean
+      - name: includeTemplateTextBody
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: boolean
+      - name: includeTemplateJson
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+    put:
+      tags:
+      - Mailing
+      summary: Update a campaign mailing
+      operationId: Mailing_UpdateMailingForCampaignAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mailingID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+    delete:
+      tags:
+      - Mailing
+      summary: Delete a campaign mailing
+      operationId: Mailing_DeleteMailingForCampaignAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mailingID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    CM.Tooling.BulkEmail.Api.Models.ApiMailing:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        CampaignID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Name:
+          type: string
+        FromName:
+          type: string
+        FromAddressID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        ReplyToAddressID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Subject:
+          type: string
+        MailingState:
+          format: int32
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          type: integer
+        MailingType:
+          format: int32
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          type: integer
+        Template:
+          $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiMergeFields:
+      type: object
+      properties:
+        MergeTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMergeTag'
+        SpecialLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSpecialLink'
+    CM.Tooling.BulkEmail.Api.Models.ApiSpecialLink:
+      type: object
+      properties:
+        Type:
+          type: string
+        Label:
+          type: string
+        Link:
+          type: string
+        Mapping:
+          type: string
+        Tag:
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiMergeTag:
+      type: object
+      properties:
+        Name:
+          type: string
+        Value:
+          type: string
+        Mapping:
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiTemplate:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Name:
+          type: string
+        Description:
+          type: string
+        HtmlBody:
+          type: string
+        TextBody:
+          type: string
+        Json:
+          type: string
+        MergeFields:
+          $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMergeFields'
+        TemplateEditorType:
+          format: int32
+          enum:
+          - 1
+          - 2
+          type: integer
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string
+  requestBodies:
+    CM.Tooling.BulkEmail.Api.Models.ApiMailing:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMailing'
+      required: true

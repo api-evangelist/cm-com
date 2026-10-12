@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-trunk-schema.json",
+  "title": "Trunk",
+  "description": "CM.com SIP Trunk.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-sip-accounts-v1-openapi.yml#/components/schemas/ApiTrunk",
+  "type": "object",
+  "properties": {
+    "city": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "City where the SIP Trunk is located."
+    },
+    "countryCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Countrycode of the country where the SIP Trunk is located in ISO 3166 format."
+    },
+    "code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Code of the SIP Trunk (name of the platform)."
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Description of the SIP Trunk."
+    },
+    "externalIps": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "IP Addresses of the SIP Trunk."
+    }
+  },
+  "additionalProperties": false
+}

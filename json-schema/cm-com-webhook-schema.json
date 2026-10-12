@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-webhook-schema.json",
+  "title": "Webhook",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-id-scan-v1-openapi.yml#/components/schemas/Webhook",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "readOnly": true
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The URL must begin with `https://`."
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/WebhookType"
+      },
+      "description": "The subscribed webhook events.",
+      "default": [
+        "transaction.state.updated",
+        "task.state.updated"
+      ]
+    },
+    "headers": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "The custom HTTP headers sent with each request to the webhook URL. The value is `null` when no headers are set."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the webhook was updated.",
+      "readOnly": true
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the webhook was created.",
+      "readOnly": true
+    }
+  },
+  "required": [
+    "url"
+  ],
+  "$defs": {
+    "WebhookType": {
+      "type": "string",
+      "enum": [
+        "transaction.state.updated",
+        "task.state.updated"
+      ],
+      "description": "Webhook event type"
+    }
+  }
+}

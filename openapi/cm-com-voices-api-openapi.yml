@@ -1,0 +1,171 @@
+openapi: 3.2.0
+info:
+  title: TTS Voices API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Voices
+paths:
+  /voice-tts/v1/voices:
+    get:
+      tags:
+      - Voices
+      summary: Get TTS Voices
+      description: Get a list of available TTS voices supported by the Voice applications.
+      parameters:
+      - name: IsPremium
+        in: query
+        description: 'Whether only premium or non-premium voices should be returned. If left empty, both premium and non premium voices
+
+          will be returned.'
+        schema:
+          type: boolean
+          example: true
+        example: true
+      - name: Language
+        in: query
+        description: 'ISO-639 language code and ISO-3166 country code combination to filter the voices on. It''s also possible to only
+
+          filter on languages independent of countries by only supplying the ISO-639 code (e.g. `en`).'
+        schema:
+          type: string
+          example: en-US
+        example: en-US
+      - name: Gender
+        in: query
+        description: Gender to filter on.
+        schema:
+          $ref: '#/components/schemas/ApiGender'
+        example: Female
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiTtsVoice'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiTtsVoice'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiTtsVoice'
+      operationId: getVoiceTtsV1Voices
+      x-operation-id-source: derived
+  /voice-tts/v1/voices/preview:
+    post:
+      tags:
+      - Voices
+      summary: Get TTS Voice preview
+      description: Returns a preview of the given TTS voice.
+      requestBody:
+        description: The voice to preview
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiTtsPreviewRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiTtsPreviewRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiTtsPreviewRequest'
+      responses:
+        '200':
+          description: TTS preview file.
+      operationId: postVoiceTtsV1VoicesPreview
+      x-operation-id-source: derived
+components:
+  schemas:
+    Encoding:
+      title: Encoding
+      enum:
+      - Mp3
+      - Ogg
+      - Pcm
+      type: string
+      description: The encoding of the audio.
+    ApiTtsPreviewRequest:
+      required:
+      - gender
+      - isPremium
+      - language
+      - voiceNumber
+      type: object
+      properties:
+        language:
+          minLength: 1
+          pattern: ^[a-zA-Z]{2}-[a-zA-Z]{2}$
+          type: string
+          description: ISO-639 language code and ISO-3166 country code.
+          example: en-GB
+        gender:
+          $ref: '#/components/schemas/ApiGender'
+        voiceNumber:
+          type: integer
+          description: The voice number, used to identify this voice.
+          format: int32
+          example: 2
+          exclusiveMinimum: 0
+        isPremium:
+          type: boolean
+          description: Whether or not this is a premium TTS voice.
+          example: true
+        encoding:
+          $ref: '#/components/schemas/Encoding'
+      additionalProperties: false
+      description: Model describing a TTS voice to fetch the preview audio file for.
+    ApiTtsVoice:
+      title: Tts Voice
+      type: object
+      properties:
+        language:
+          type:
+          - string
+          - 'null'
+          description: ISO-639 language code and ISO-3166 country code.
+          example: en-GB
+        gender:
+          $ref: '#/components/schemas/ApiGender'
+        voiceNumber:
+          type: integer
+          description: The voice number, used to indentify this voice.
+          format: int32
+          example: 2
+        name:
+          type:
+          - string
+          - 'null'
+          description: The display name of the current TTS voice.
+          example: Amy
+        isPremium:
+          type: boolean
+          description: Whether or not this is a premium TTS voice, meaning extra surcharges will be invoices for it's use.
+          example: true
+      additionalProperties: false
+      description: Model describing a TTS voice that's supported by the Voice TTS server.
+    ApiGender:
+      title: Gender
+      enum:
+      - Male
+      - Female
+      type: string
+      description: Available genders for TTS voices.
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,20 @@
+generated: '2026-10-13'
+method: none
+source:
+- https://zapier.com/apps/cm-com/integrations
+- https://zapier.com/apps/cm/integrations
+- https://n8n.io/integrations/cm-com/
+- https://n8n.io/integrations/cm/
+- https://composio.dev/toolkits/cm-com
+- https://monid.ai/tools/cm-com
+checked:
+- https://composio.dev/toolkits/cm-com
+- https://monid.ai/tools/cm-com
+- https://n8n.io/integrations/cm-com/
+- https://n8n.io/integrations/cm/
+- https://zapier.com/apps/cm-com/integrations
+- https://zapier.com/apps/cm/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []

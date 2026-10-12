@@ -1,0 +1,167 @@
+openapi: 3.2.0
+info:
+  title: Scan Get Turnover API
+  version: '1.0'
+  description: Every operation is a `POST` request with an `application/x-www-form-urlencoded` body. Every request includes your public `apiKey` and an `HMACKey`. The `HMACKey` is calculated from the input fields; the calculation is listed on each operation as `Base64 encode - SHA256(...)`, where the fields between the brackets are concatenated. Only include optional parameters in the HMAC if you are using those parameters. A `*` after a field marks it as optional.
+servers:
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: GetTurnover
+paths:
+  /getTurnover:
+    post:
+      summary: /getTurnover
+      description: 'With this function you can retrieve the turnover, discount and the number of tickets sold during a selected period. Use the startDate and endDate parameters to select a period.
+
+
+        > **Note:** The maximum period per request is restricted to one month.
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + startDate + endDate)`'
+      operationId: getturnover
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - startDate
+              - endDate
+              - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                startDate:
+                  type: string
+                  description: Startdate of the period for which turnover is requested (yyyy-mm-dd)
+                  format: date
+                endDate:
+                  type: string
+                  description: enddate of the period for which turnover is requested (yyyy-mm-dd)
+                  format: date
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + startDate + endDate).
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    ticketCountTotal: 2
+                    ticketTurnoverTotal: 120
+                    turnoverDiscount: 20
+                    turnoverTotal: 100
+                    turnoverDetails:
+                    - ticketTypeId: 123
+                      ticketCount: 1
+                      ticketTurnoverTotal: 60
+                      turnoverDiscount: 10
+                      turnoverTotal: 50
+                      posId: 1234
+                      purchaseDate: '2022-10-03'
+                    - ticketTypeId: 123
+                      ticketCount: 1
+                      ticketTurnoverTotal: 60
+                      turnoverDiscount: 10
+                      turnoverTotal: 50
+                      posId: 1234
+                      purchaseDate: '2022-10-03'
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  ticketCountTotal:
+                    type: integer
+                    example: 2
+                    default: 0
+                  ticketTurnoverTotal:
+                    type: integer
+                    description: Total turnover of ticket sales before discounts.
+                    example: 120
+                    default: 0
+                  turnoverDiscount:
+                    type: integer
+                    description: Total discount given during the requested turnover period.
+                    example: 20
+                    default: 0
+                  turnoverTotal:
+                    type: integer
+                    description: The total ticketTurnoverTotal minus the turnoverDiscount.
+                    example: 100
+                    default: 0
+                  turnoverDetails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ticketTypeId:
+                          type: integer
+                          example: 123
+                          default: 0
+                        ticketCount:
+                          type: integer
+                          example: 1
+                          default: 0
+                        ticketTurnoverTotal:
+                          type: integer
+                          example: 60
+                          default: 0
+                        turnoverDiscount:
+                          type: integer
+                          example: 10
+                          default: 0
+                        turnoverTotal:
+                          type: integer
+                          example: 50
+                          default: 0
+                        posId:
+                          type: integer
+                          description: PosId (PLU-code) is a unique identifier that can be set within the ticketing system to match products to external systems.
+                          example: 1234
+                          default: 0
+                        purchaseDate:
+                          type: string
+                          example: 2022-10-03
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    errorCode: 400
+                    errorMessage: Period exceeds 30 days.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  errorCode:
+                    type: integer
+                    example: 400
+                    default: 0
+                  errorMessage:
+                    type: string
+                    example: Period exceeds 30 days.
+      deprecated: false
+      tags:
+      - GetTurnover
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

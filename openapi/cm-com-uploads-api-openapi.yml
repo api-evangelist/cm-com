@@ -1,0 +1,124 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Uploads API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Uploads across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Uploads
+  description: File upload handling
+paths:
+  /entrance/v1.0/organisations/{organisationUuid}/uploads/tickets:
+    post:
+      operationId: UploadController_importTicketsCsv_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUploadDto'
+      responses:
+        '202':
+          description: File upload accepts both .csv and gzipped csv (.gz) files up to 300MB and 250,000 rows
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDto'
+        '403':
+          description: The organisation does not have the TICKET_IMPORT feature enabled
+      security:
+      - cookie: []
+      summary: Import tickets from CSV file
+      tags:
+      - Uploads
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/uploads/tickets:
+    post:
+      operationId: UploadController_importTicketsCsv_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUploadDto'
+      responses:
+        '202':
+          description: File upload accepts both .csv and gzipped csv (.gz) files up to 300MB and 250,000 rows
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDto'
+        '403':
+          description: The organisation does not have the TICKET_IMPORT feature enabled
+      security:
+      - cookie: []
+      summary: Import tickets from CSV file
+      tags:
+      - Uploads
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    GenericResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          readOnly: true
+          example: Successfully uploaded file.
+        details:
+          type: array
+          items:
+            type: object
+          example:
+          - file: filename.csv
+      required:
+      - message
+      - details
+    CreateUploadDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Provide a name for your import, this way you can recognize it easier later on.
+        notificationType:
+          type: string
+          enum:
+          - NONE
+          - EMAIL
+          example: EMAIL
+          description: Type of notification uploader wishes to receive.
+        isVisible:
+          type: string
+          description: If set to true the upload will be displayed under imports in the dashboard.
+          default: false
+      required:
+      - name
+      - notificationType
+      - isVisible
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

@@ -1,0 +1,132 @@
+generated: '2026-10-13'
+method: derived
+generator: derive-webhooks.py
+source:
+- openapi/cm-com-live-event-ticketing-v1-openapi.yml
+- openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
+- openapi/cm-com-sign-v1-openapi.yml
+- openapi/cm-com-verification-id-scan-v1-openapi.yml
+- openapi/cm-com-verification-identity-hub-v1-openapi.yml
+- openapi/cm-com-verification-mobile-identity-v1-openapi.yml
+description: 'Event surface derived from the provider''s own OpenAPI: webhooks, enum TransactionWebhookEvent, enum TransactionWebhookBancontactEvents,
+  enum TransactionWebhookQREvents. No AsyncAPI document is published by the provider; this catalog lists the events the contract names.'
+management_operations:
+- op_4
+- op_5
+- op_6
+- op_7
+- op_22
+- op_23
+- op_24
+- op_25
+- op_16
+- op_17
+- ScanController_triggerScanCallback_v1.0
+- AnalyticsReportSubscriptionsController_findAll_v1.0
+- AnalyticsReportSubscriptionsController_create_v1.0
+- AnalyticsReportSubscriptionsController_update_v1.0
+- AnalyticsReportSubscriptionsController_remove_v1.0
+- ScanController_triggerScanCallback_v2.0
+- AnalyticsReportSubscriptionsController_findAll_v2.0
+- AnalyticsReportSubscriptionsController_create_v2.0
+- AnalyticsReportSubscriptionsController_update_v2.0
+- AnalyticsReportSubscriptionsController_remove_v2.0
+- ApiSettings_GetSRWebHookConfigurationAsync
+- ApiSettings_PutSRWebHookConfigurationAsync
+- ApiSettings_PostSRWebHookConfigurationAsync
+- ApiSettings_DeleteSRWebHookConfigurationAsync
+- ApiSettings_DeprecatedGetSRWebHookConfigurationAsync
+- ApiSettings_DeprecatedPutSRWebHookConfigurationAsync
+- ApiSettings_DeprecatedPostSRWebHookConfigurationAsync
+- ApiSettings_DeprecatedDeleteSRWebHookConfigurationAsync
+- ChannelConfiguration_AddWebHookConfigurationElementAsync
+- ChannelConfiguration_UpdateWebHookConfigurationElementAsync
+- ChannelConfiguration_DeleteWebHookConfigurationElementAsync
+- ChannelConfiguration_AddEventWebHookConfigurationElementAsync
+- ChannelConfiguration_UpdateEventWebHookConfigurationElementAsync
+- ChannelConfiguration_DeleteEventWebHookConfigurationElementAsync
+- Channels_ProcessIncapableAccountChannelRequestAsync
+- Unsubscription_GetUnsubscriptionsAsync
+- Unsubscription_AddUnsubscriptionAsync
+- Unsubscription_DeleteUnsubscriptionAsync
+- Webhook_GetWebhookAsync
+- Webhook_UpdateWebhookAsync
+events:
+- event: customer_product.canceled
+  description: Webhook — customer_product.canceled
+  declared_in: webhooks
+- event: order.canceled
+  description: Webhook — order.canceled
+  declared_in: webhooks
+- event: order.completed
+  description: Webhook — order.completed
+  declared_in: webhooks
+- event: transactionEvent
+  description: Webhook event for a transaction.
+  declared_in: webhooks
+- event: iDEALQRPaymentEvent
+  description: Webhook event for a transaction for an iDEAL-QR payment.
+  declared_in: webhooks
+- event: bancontactPaymentEvent
+  description: Webhook event for a BanContact payment.
+  declared_in: webhooks
+- event: sessionEvent
+  description: Webhook event for a session-based payment (Google Pay, Apple Pay).
+  declared_in: webhooks
+- event: dossier.state.updated
+  description: Dossier state updated
+  declared_in: webhooks
+- event: dossier.prepared
+  description: Dossier prepared
+  declared_in: webhooks
+- event: dossier.invite.created
+  description: Invite created
+  declared_in: webhooks
+- event: dossier.invite.expired
+  description: Invite expired
+  declared_in: webhooks
+- event: dossier.invite.undelivered
+  description: Invite undelivered
+  declared_in: webhooks
+- event: dossier.invite.viewed
+  description: Invite viewed
+  declared_in: webhooks
+- event: dossier.invitee.state.updated
+  description: Invitee state updated
+  declared_in: webhooks
+- event: dossier.invitee.reassignRequest.state.updated
+  description: Reassign request state updated
+  declared_in: webhooks
+- event: transaction.state.updated
+  description: Transaction state updated
+  declared_in: webhooks
+- event: task.state.updated
+  description: Task state updated
+  declared_in: webhooks
+- event: transactionState
+  description: Transaction state
+  declared_in: webhooks
+- event: numberVerifyState
+  description: Number verify state
+  declared_in: webhooks
+- event: STATUS_CHANGE
+  description: When the status of the transaction changes to any other value.
+  declared_in: components/schemas/TransactionWebhookEvent
+- event: PAYMENT_CREATED
+  description: When a new payment is created for the transaction.
+  declared_in: components/schemas/TransactionWebhookEvent
+- event: TRANSACTION_CREATED
+  description: When a new transaction is created for a session (used by Google Pay and Apple Pay).
+  declared_in: components/schemas/TransactionWebhookEvent
+- event: REFUND_STATUS
+  description: Invoke webhook when a transaction receives an update on one of its requested refunds.
+  declared_in: components/schemas/TransactionWebhookEvent
+- event: CHARGEBACK_STATUS
+  description: Invoke webhook when a transaction receives an update on one of its chargebacks.
+  declared_in: components/schemas/TransactionWebhookEvent
+- event: FINALSTATUS
+  description: This value is deprecated and shouldn't be used anymore. Use `STATUS_CHANGE` instead.
+  declared_in: components/schemas/TransactionWebhookEvent
+- event: QR_PAYMENT_CREATED
+  description: When a new payment is created using the qr code.
+  declared_in: components/schemas/TransactionWebhookQREvents

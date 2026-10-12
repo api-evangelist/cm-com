@@ -1,0 +1,426 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Webhook API
+  version: '1.0'
+  description: 'Operations tagged Webhook across 2 of this provider''s published API definitions: cm-com-mobile-marketing-cloud-email-campaigns-v1-openapi.yml, cm-com-sign-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: http://api.cm.com
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+tags:
+- name: Webhook
+paths:
+  /bulkemail/v1.0/accounts/{accountID}/webhooks:
+    get:
+      tags:
+      - Webhook
+      summary: Get a webhook
+      operationId: Webhook_GetWebhookAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+    put:
+      tags:
+      - Webhook
+      summary: Add a webhook
+      operationId: Webhook_UpdateWebhookAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhook'
+    delete:
+      tags:
+      - Webhook
+      summary: Delete a webhook
+      operationId: Webhook_DeleteWebhookAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+    servers:
+    - url: http://api.cm.com
+  /clients/{kid}/webhooks:
+    parameters:
+    - $ref: '#/components/parameters/KeyId'
+    post:
+      operationId: create_client_webhook
+      summary: Add webhook
+      description: Add a webhook
+      tags:
+      - Webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - JWT: []
+    get:
+      operationId: list_client_webhooks
+      summary: Get all webhooks
+      description: Retrieve all webhooks
+      tags:
+      - Webhook
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - JWT: []
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  /clients/{kid}/webhooks/{webhookId}:
+    parameters:
+    - $ref: '#/components/parameters/KeyId'
+    - $ref: '#/components/parameters/WebhookId'
+    get:
+      operationId: get_client_webhook
+      summary: Get webhook
+      description: Retrieve a webhook
+      tags:
+      - Webhook
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - JWT: []
+    put:
+      operationId: replace_client_webhook
+      summary: Update webhook
+      description: Update a webhook
+      tags:
+      - Webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookUpdate'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - JWT: []
+    delete:
+      operationId: delete_client_webhook
+      summary: Delete webhook
+      description: Delete a webhook
+      tags:
+      - Webhook
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - JWT: []
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+components:
+  schemas:
+    CM.Tooling.BulkEmail.Api.Models.ApiWebhook:
+      type: object
+      properties:
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Url:
+          type: string
+        Settings:
+          $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiWebhookSettings'
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiWebhookSettings:
+      type: object
+      properties:
+        Sent:
+          type: boolean
+        Unsubscribe:
+          type: boolean
+        Delivered:
+          type: boolean
+        Complaint:
+          type: boolean
+        Bounced:
+          type: boolean
+        Blacklisted:
+          type: boolean
+        Opened:
+          type: boolean
+        ViewedInBrowser:
+          type: boolean
+        Clicked:
+          type: boolean
+        PermanentBounced:
+          type: boolean
+    WebhookUpdate:
+      type: object
+      properties:
+        url:
+          type: string
+          format: url
+          description: The URL must begin with https://
+          examples:
+          - https://example.com
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookType'
+          description: The subscribed webhook events
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          examples:
+          - My-Custom-Header: Example
+          description: The request HTTP headers
+        disabled:
+          type: boolean
+          description: Provide with value false to re-enable automatically disabled webhooks.
+          examples:
+          - false
+    Webhook:
+      title: Webhook
+      allOf:
+      - type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            description: a uuid string that identifies the webhook
+            examples:
+            - eab04267-d849-46d1-9fe3-e7ff0b2c55cf
+            readOnly: true
+      - $ref: '#/components/schemas/WebhookUpdate'
+      - type: object
+        properties:
+          disabled:
+            type: boolean
+            description: Webhooks may automatically be disabled if too many requests fail
+            readOnly: true
+          createdAt:
+            type: string
+            format: date-time
+            description: The date the invite was created
+            readOnly: true
+          updatedAt:
+            type: string
+            format: date-time
+            description: The date the invite was created
+            readOnly: true
+        required:
+        - url
+    WebhookType:
+      type: string
+      description: 'Webhook event types that can be subscribed to. By default, dossier.state.updated, dossier.prepared, and dossier.invite.undelivered events are sent.
+
+        '
+      enum:
+      - dossier.invite.created
+      - dossier.invite.expired
+      - dossier.invite.undelivered
+      - dossier.invite.viewed
+      - dossier.invitee.state.updated
+      - dossier.prepared
+      - dossier.state.updated
+      - dossier.invitee.reassignRequest.state.updated
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+  parameters:
+    KeyId:
+      name: kid
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies the client
+
+        '
+      example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
+    WebhookId:
+      name: webhookId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a webhook
+
+        '
+      example: b411f416-bec1-4714-91c1-a97daad86b01
+  responses:
+    Forbidden:
+      description: Access to the specified resource was denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '
+x-refined-from:
+- cm-com-mobile-marketing-cloud-email-campaigns-v1-openapi.yml
+- cm-com-sign-v1-openapi.yml

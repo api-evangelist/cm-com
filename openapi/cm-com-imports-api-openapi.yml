@@ -1,0 +1,528 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Imports API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Imports across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Imports
+  description: Data import operations
+paths:
+  /entrance/v1.0/organisations/{organisationUuid}/imports:
+    get:
+      operationId: ImportsController_findAll_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Comma separated values for import statuses
+        schema:
+          example: COMPLETED,FAILED
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Import'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all imports
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/imports/{importUuid}/csv:
+    get:
+      operationId: ImportsController_downloadFailedRows_v1.0
+      parameters:
+      - name: importUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: Download a csv file with all records that failed to import
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Download failed import rows as CSV
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/imports/ticket/example/csv:
+    get:
+      operationId: ImportsController_downloadExampleTicketImportCsv_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: Returns an example csv file that can be used to import tickets
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Download example ticket import CSV
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/imports/{importUuid}:
+    delete:
+      operationId: ImportsController_remove_v1.0
+      parameters:
+      - name: importUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete an import
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/imports/bulk-delete:
+    post:
+      operationId: ImportsController_delete_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteImportsDto'
+      responses:
+        '202':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Bulk delete imports
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/imports:
+    get:
+      operationId: ImportsController_findAll_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Comma separated values for import statuses
+        schema:
+          example: COMPLETED,FAILED
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Import'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all imports
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/imports/{importUuid}/csv:
+    get:
+      operationId: ImportsController_downloadFailedRows_v2.0
+      parameters:
+      - name: importUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: Download a csv file with all records that failed to import
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Download failed import rows as CSV
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/imports/ticket/example/csv:
+    get:
+      operationId: ImportsController_downloadExampleTicketImportCsv_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: Returns an example csv file that can be used to import tickets
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Download example ticket import CSV
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/imports/{importUuid}:
+    delete:
+      operationId: ImportsController_remove_v2.0
+      parameters:
+      - name: importUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete an import
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/imports/bulk-delete:
+    post:
+      operationId: ImportsController_delete_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteImportsDto'
+      responses:
+        '202':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Bulk delete imports
+      tags:
+      - Imports
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    DeleteImportsDto:
+      type: object
+      properties:
+        uuids:
+          description: Array of import uuids
+          type: array
+          items:
+            type: array
+      required:
+      - uuids
+    Import:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Import name
+        importedRecords:
+          type: number
+          readOnly: true
+        failedRecords:
+          type: number
+          readOnly: true
+        errorDetails:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        completedAt:
+          format: date-time
+          type: string
+          readOnly: true
+        status:
+          type: string
+          readOnly: true
+          enum:
+          - SCHEDULED
+          - RUNNING
+          - COMPLETED
+          - COMPLETED_WITH_FAILURES
+          - FAILED
+          example: COMPLETED
+        type:
+          type: string
+          readOnly: true
+          enum:
+          - TICKET
+          - EVENT
+          - VENUE
+          - PRODUCT
+          example: TICKET
+        isVisible:
+          type: boolean
+          description: If set to true the upload will be displayed under imports in the dashboard.
+          default: false
+      required:
+      - uuid
+      - name
+      - importedRecords
+      - failedRecords
+      - errorDetails
+      - completedAt
+      - status
+      - type
+      - isVisible
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

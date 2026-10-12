@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-status-request-schema.json",
+  "title": "StatusRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-iban-verification-v1-openapi.yml#/components/schemas/StatusRequest",
+  "allOf": [
+    {
+      "$ref": "#/$defs/TokenizedRequest"
+    },
+    {
+      "title": "StatusRequestParameters",
+      "required": [
+        "merchant_reference",
+        "transaction_id"
+      ],
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "$ref": "#/$defs/TransactionID"
+        },
+        "merchant_reference": {
+          "maxLength": 35,
+          "pattern": "^[a-zA-Z0-9]+$",
+          "type": "string",
+          "description": "The private reference of the transaction"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "MerchantToken": {
+      "type": "string",
+      "description": "a UUID string that is unique and private to you as a merchant. Do not share this key, keep it safe. Example 3c01abeb-b031-4fea-9f2d-c55c283cd78e",
+      "format": "uuid"
+    },
+    "TokenizedRequest": {
+      "title": "TokenRequestParameters",
+      "required": [
+        "merchant_token"
+      ],
+      "type": "object",
+      "properties": {
+        "merchant_token": {
+          "$ref": "#/$defs/MerchantToken"
+        }
+      }
+    },
+    "TransactionID": {
+      "maxLength": 16,
+      "minLength": 16,
+      "pattern": "^[0-9]+$",
+      "type": "string",
+      "description": "A token for this transaction. You should store this with your session data, so that at any point, you can make a callback to the CM api and retrieve the status and/or results. Note that it is not guaranteed that your user will return to you via your merchant_return_url. A connection might be dropped, a user might accidentally close a window, or they might trigger the back button and return that way. This id is the only way you can retrieve any information in that case.\n"
+    }
+  }
+}

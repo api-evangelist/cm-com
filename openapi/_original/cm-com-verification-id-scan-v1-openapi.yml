@@ -1,0 +1,1202 @@
+# x-archived-from: cm-com-verification-id-scan-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: '3.1.1'
+
+servers:
+  - url: https://api.cm.com/id-scan/v1
+
+security: [ { JWT: [ ] } ]
+
+info:
+  version: '1'
+  title: ID Scan API
+  description: |
+    With ID Scan, you can verify your customer's identity by letting them scan their identity document using a mobile device, like a passport or a driver's license. An advanced OCR engine abstracts data from their document and detects the customer as a living human being via their device's camera.
+
+tags:
+  - name: Transactions
+    description: Create or get transactions with identification tasks.
+  - name: Webhooks
+    description: Manage the webhooks that receive notifications when the state of a transaction or task changes.
+  - name: Webhook Events
+    description: Events sent to your webhook URL when the state of a transaction or task changes. Webhooks are subscribed to via the `Webhooks` endpoints.
+  - name: Configuration
+    description: Configure how transactions behave, such as which image quality checks are enforced for document scans.
+
+paths:
+  /transactions:
+    post:
+      operationId: create_transaction
+      description: Create a new transaction. To get notified about status updates, configure a webhook via the `/webhooks` endpoint. For the event structure see the `Webhook Events` section.
+      summary: Create a transaction
+      tags: [ Transactions ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransaction'
+            example:
+              tasks:
+                - document_scan
+      responses:
+        '201':
+          description: The transaction has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    get:
+      operationId: list_transactions
+      description: Get all transactions
+      summary: Get all transactions
+      tags: [ Transactions ]
+      parameters:
+        - name: since
+          in: query
+          required: true
+          description: Filter transactions created after this date (inclusive). This date may not be older than 1 year.
+          schema:
+            description: ISO 8601 date
+            type: string
+            format: date-time
+          example: 2026-01-01T00:00:00Z
+        - name: until
+          in: query
+          required: true
+          description: Filter transactions created before this date (exclusive).
+          schema:
+            description: ISO 8601 date
+            type: string
+            format: date-time
+          example: 2026-02-01T00:00:00Z
+        - name: pageSize
+          in: query
+          required: false
+          description: The number of items per page
+          schema:
+            type: number
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: cursor
+          in: query
+          required: false
+          description: The pointer to the next item in the data set, returned by the previous request.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A page of transactions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /transactions/{transactionId}:
+    get:
+      operationId: get_transaction
+      description: Retrieve the details of a transaction by its ID.
+      summary: Get transaction details
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          description: Unique identifier for the transaction
+          schema:
+            type: string
+      tags: [ Transactions ]
+      responses:
+        '200':
+          description: Successfully retrieved transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /transactions/{transactionId}/results/{resultId}:
+    parameters:
+      - name: includeRawImages
+        in: query
+        required: false
+        description: If set to true, a url to download the raw images will be added to the result
+        schema:
+          type: boolean
+          default: false
+        example: true
+      - $ref: '#/components/parameters/TransactionId'
+      - $ref: '#/components/parameters/ResultId'
+    get:
+      operationId: get_transaction_result
+      description: Retrieve the results for a completed transaction.
+      summary: Get transaction results
+      tags: [ Transactions ]
+      responses:
+        '200':
+          description: The results of the transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /transactions/{transactionId}/report/{resultId}:
+    parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      - $ref: '#/components/parameters/ResultId'
+      - $ref: '#/components/parameters/AuditReportType'
+    get:
+      operationId: get_transaction_report
+      description: |
+        Retrieve an audit report of a completed transaction.
+
+        Can specify the type of report using the `type` query parameter.
+
+        Simple reports are always available to be retrieved.
+
+        Extended audit reports contain all documents and will be sealed, only retrievable within transaction validity.
+      summary: Get transaction report
+      tags: [ Transactions ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /webhooks:
+    post:
+      operationId: create_webhook
+      description: Add a webhook
+      summary: Add a webhook
+      tags: [ Webhooks ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+      responses:
+        '200':
+          description: The webhook has been added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    get:
+      operationId: list_webhooks
+      description: Retrieve all webhooks
+      summary: Retrieve all webhooks
+      tags: [ Webhooks ]
+      responses:
+        '200':
+          description: All configured webhooks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /webhooks/{webhookId}:
+    parameters:
+      - $ref: '#/components/parameters/WebhookId'
+    get:
+      operationId: get_webhook
+      description: Retrieve a webhook
+      summary: Retrieve a webhook
+      tags: [ Webhooks ]
+      responses:
+        '200':
+          description: The requested webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      operationId: replace_webhook
+      description: Update a webhook
+      summary: Update a webhook
+      tags: [ Webhooks ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+      responses:
+        '200':
+          description: The updated webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      operationId: delete_webhook
+      description: Delete a webhook
+      summary: Delete a webhook
+      tags: [ Webhooks ]
+      responses:
+        '200':
+          description: The webhook has been deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /config:
+    get:
+      operationId: get_config
+      description: Retrieve the configuration
+      summary: Retrieve the configuration
+      tags: [ Configuration ]
+      responses:
+        '200':
+          description: The current configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      operationId: update_config
+      description: Update the configuration. Only the provided values are changed; omitted values keep their current setting.
+      summary: Update the configuration
+      tags: [ Configuration ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Config'
+      responses:
+        '200':
+          description: The updated configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+webhooks:
+  transaction.state.updated:
+    post:
+      operationId: webhook_transaction_state_updated
+      summary: Transaction state updated
+      description: |
+        The state of a transaction is updated. For example, from `pending` to `completed`. The `resultId` is only present when the state is `completed`. This event is sent by default.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionStateUpdatedEvent'
+            example:
+              id: "b041a287-bc92-4469-801e-ae1a39c08f6e"
+              type: "transaction.state.updated"
+              created: "2026-01-01T00:00:00+00:00"
+              transaction:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: completed
+                resultId: "e6b7ce66-df56-4316-bb36-3d014ed84636"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+  task.state.updated:
+    post:
+      operationId: webhook_task_state_updated
+      summary: Task state updated
+      description: |
+        The state of a task is updated. For example, from `pending` to `completed`. This event is sent by default.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskStateUpdatedEvent'
+            example:
+              id: "c36f5fc9-b412-4aeb-9cbd-bdb6cdca581f"
+              type: "task.state.updated"
+              created: "2026-01-01T00:00:00+00:00"
+              transaction:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: pending
+              task:
+                type: document_scan
+                state: completed
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookReceived'
+
+components:
+  schemas:
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          example: 400
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          example: The request is invalid
+
+    CreateTransaction:
+      allOf:
+        - $ref: '#/components/schemas/Transaction'
+      properties:
+        expiresIn:
+          type: integer
+          minimum: 3600
+          maximum: 86400
+          description: The time in seconds after which a transaction should expire.
+          default: 3600
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        state:
+          $ref: '#/components/schemas/TransactionState'
+          readOnly: true
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskType'
+          description: The tasks to be performed by the user. The `face_liveness` task can only be performed when the `document_scan` task is added. For the `face_match` task both the `document_scan` task and `face_liveness` task must be added.
+        settings:
+          $ref: '#/components/schemas/Settings'
+        locale:
+          $ref: '#/components/schemas/Locale'
+          description: The language of the ID Scan process. Currently supports English, Dutch, French.
+          default: en-US
+        url:
+          type: string
+          description: The URL to start the transaction.
+          example: https://example.com/en-us/Dtiu9rE2GE
+          readOnly: true
+        mobileOnly:
+          type: boolean
+          description: When this is set to true, the user must complete the transaction on their mobile device.
+          default: false
+        returnUrl:
+          type: string
+          description: The URL to redirect the user to after the transaction is completed. The `trxid`, `state` and `resultid` will be added as a query parameter. If the URL is not set a default page is shown.
+          default: null
+        scanReturnUrl:
+          type: string
+          description: The URL to redirect the user to in case the transaction is transferred to a mobile device (by scanning the QR code) and the transaction is completed. The `trxid` and `state` will be added as a query parameter. If the URL is not set a default page is shown.
+          default: null
+        expires:
+          type: string
+          format: date-time
+          description: The date the transaction expires.
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          description: The date the transaction was created.
+          readOnly: true
+      required: [ tasks ]
+
+    TransactionPageDetail:
+      allOf:
+        - $ref: '#/components/schemas/TransactionDetailBase'
+        - type: object
+          properties:
+            tasks:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/TaskDocumentScanDetail'
+                  - $ref: '#/components/schemas/TaskFaceLivenessDetail'
+                  - $ref: '#/components/schemas/TaskFaceMatchDetail'
+                discriminator:
+                  propertyName: type
+
+    TransactionDetailBase:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the transaction
+          format: uuid
+        state:
+          $ref: '#/components/schemas/TransactionState'
+        created:
+          type: string
+          format: date-time
+          description: The date the transaction was created.
+        expires:
+          type: string
+          format: date-time
+          description: The date the transaction expires.
+        completed:
+          type: [ 'string', 'null' ]
+          format: date-time
+          description: The date the transaction was completed.
+
+    TransactionDetail:
+      allOf:
+        - $ref: '#/components/schemas/TransactionDetailBase'
+        - type: object
+          properties:
+            tasks:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/TaskDocumentScanDetailExtended'
+                  - $ref: '#/components/schemas/TaskFaceLivenessDetail'
+                  - $ref: '#/components/schemas/TaskFaceMatchDetail'
+                discriminator:
+                  propertyName: type
+
+    TaskDetail:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/TaskState'
+          example: pending
+        attempts:
+          type: number
+          description: The number of attempts made for this task.
+          minimum: 0
+          example: 3
+        attemptsInvoiced:
+          type: number
+          description: The number of attempts that have been invoiced.
+          minimum: 0
+          example: 1
+
+    TaskDocumentScanDetail:
+      allOf:
+        - $ref: '#/components/schemas/TaskDetail'
+      properties:
+        type:
+          type: string
+          enum: [ document_scan ]
+          example: document_scan
+
+    TaskDocumentScanDetailExtended:
+      allOf:
+        - $ref: '#/components/schemas/TaskDetail'
+      properties:
+        type:
+          type: string
+          enum: [ document_scan ]
+          example: document_scan
+        documentScans:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentScanDetail'
+
+    DocumentScanDetail:
+      type: object
+      description: Details of a document scan attempt
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The date the document scan was executed.
+        code:
+          oneOf:
+            - $ref: '#/components/schemas/DocumentScanErrorCode'
+            - type: [ "null" ]
+          description: The task error code. The value `null` means that there was no error.
+          default: null
+        score:
+          $ref: '#/components/schemas/AuthenticityScore'
+        source:
+          $ref: '#/components/schemas/CaptureSource'
+        linked:
+          type: boolean
+          description: Whether the document scan is linked to a previous document scan.
+          example: true
+        files:
+          type: array
+          description: Array with stored files. Files are not provided if the transaction has expired.
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/TaskResultDocumentScanFileRawImage'
+              - $ref: '#/components/schemas/TaskResultDocumentScanFileDocument'
+              - $ref: '#/components/schemas/TaskResultDocumentScanFileImage'
+            discriminator:
+              propertyName: category
+
+    TaskFaceLivenessDetail:
+      allOf:
+        - $ref: '#/components/schemas/TaskDetail'
+      properties:
+        type:
+          type: string
+          enum: [ face_liveness ]
+          example: face_liveness
+
+    TaskFaceMatchDetail:
+      allOf:
+        - $ref: '#/components/schemas/TaskDetail'
+      properties:
+        type:
+          type: string
+          enum: [ face_match ]
+          example: face_match
+        score:
+          type: number
+          description: Similarity score
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.99
+
+    Settings:
+      type: object
+      properties:
+        documentScan:
+          properties:
+            allowedExpiration:
+              type: integer
+              description: Change the allowed expiry date of the document. A positive number allows a document to be expired for the specified number of days, a negative number requires a document to be valid for at least the specified number of days.
+              example: 90
+            captureSources:
+              type: [ 'array', 'null' ]
+              description: The camera capture source allows the user to live capture an ID document. The file capture source allows the user to upload an already captured ID document.
+              items:
+                $ref: '#/components/schemas/CaptureSource'
+              default: [ camera, file ]
+            redactFields:
+              type: array
+              description: The fields to be masked/blurred on the downloaded ID document.
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/TextField'
+                  - $ref: '#/components/schemas/GraphicField'
+            minimumAge:
+              type: [ 'integer', 'null' ]
+              minimum: 0
+              description: Set a minimum age of the user, that will be derived from the document.
+              example: 16
+            maximumAge:
+              type: [ 'integer', 'null' ]
+              minimum: 0
+              description: Set a maximum age of the user, that will be derived from the document.
+              example: 80
+            requireBothSides:
+              type: [ 'boolean', 'null' ]
+              description: If set to true, the back side of the document will also be requested. Regardless if the personal number is detected on the front side. Unless the document has no other side.
+              example: false
+            desiredFields:
+              type: array
+              description: Request availability of specific fields. The other side of the document will be scanned if the desired fields are not available on the front side. The document scan will not fail if the desired fields can't be found on any of the scanned sides.
+              items:
+                $ref: '#/components/schemas/TextField'
+            validateFields:
+              type: array
+              description: The specified fields must have a valid validity status. A field with a validity status of `not_checked` is also considered valid. If any of the fields have an `invalid` status, the user must attempt to scan again.
+              items:
+                $ref: '#/components/schemas/TextField'
+            extractFields:
+              type: array
+              description: Specify which fields should be extracted from the document. Only the specified fields will be processed and returned in the response.
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/TextField'
+                  - $ref: '#/components/schemas/GraphicField'
+              example: [ document_number, date_of_birth, document_image, portrait ]
+
+    TransactionResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        state:
+          $ref: '#/components/schemas/TransactionState'
+          readOnly: true
+          example: completed
+        tasks:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/TaskResultDocumentScan'
+              - $ref: '#/components/schemas/TaskResultFaceLiveness'
+              - $ref: '#/components/schemas/TaskResultFaceMatch'
+            discriminator:
+              propertyName: type
+
+    TaskResult:
+      type: object
+      properties:
+        type:
+          type: string
+        state:
+          $ref: '#/components/schemas/TaskState'
+          readOnly: true
+          example: completed
+        attempts:
+          $ref: '#/components/schemas/Attempts'
+        score:
+          type: number
+          description: Average authenticity score for any side. Returns -1 if no authenticity checkmarks were found on any side of the document.
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.99
+
+    TaskResultDocumentScan:
+      allOf:
+        - $ref: '#/components/schemas/TaskResult'
+      properties:
+        type:
+          type: string
+          enum: [ document_scan ]
+          example: document_scan
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                $ref: '#/components/schemas/TextField'
+              validity:
+                $ref: '#/components/schemas/ValidityStatus'
+              comparison:
+                $ref: '#/components/schemas/ComparisonStatus'
+              locale:
+                type: [ 'string', 'null' ]
+                example: nl-NL
+              values:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    source:
+                      $ref: '#/components/schemas/SourceType'
+                    value:
+                      type: string
+                      example: NLD
+        files:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/TaskResultDocumentScanFileRawImage'
+              - $ref: '#/components/schemas/TaskResultDocumentScanFileDocument'
+              - $ref: '#/components/schemas/TaskResultDocumentScanFileImage'
+            discriminator:
+              propertyName: category
+
+    TaskResultFaceLiveness:
+      properties:
+        type:
+          type: string
+          enum: [ face_liveness ]
+          example: face_liveness
+        state:
+          $ref: '#/components/schemas/TaskState'
+          example: completed
+        attempts:
+          $ref: '#/components/schemas/Attempts'
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskResultFaceLivenessFile'
+
+    TaskResultFaceMatch:
+      allOf:
+        - $ref: '#/components/schemas/TaskResult'
+      properties:
+        type:
+          type: string
+          enum: [ face_match ]
+          example: face_match
+
+    TaskResultFile:
+      type: object
+      properties:
+        url:
+          type: [ 'string', 'null' ]
+          description: The url to download the image. This url also requires a valid JWT header.
+          example: https://example.com/ZUQqP3v0Uq
+
+    TaskResultDocumentScanFileDocument:
+      allOf:
+        - $ref: '#/components/schemas/TaskResultFile'
+      properties:
+        category:
+          type: string
+          description: The file category
+          example: document
+        type:
+          $ref: '#/components/schemas/DocumentType'
+        name:
+          type: string
+          description: The name of the document.
+          example: Netherlands - Driving License (2022)
+        score:
+          $ref: '#/components/schemas/AuthenticityScore'
+
+    TaskResultDocumentScanFileImage:
+      allOf:
+        - $ref: '#/components/schemas/TaskResultFile'
+      properties:
+        category:
+          type: string
+          description: The file category
+          example: image
+        type:
+          type: string
+          description: The type of image
+          example: portrait
+
+    TaskResultDocumentScanFileRawImage:
+      allOf:
+        - $ref: '#/components/schemas/TaskResultFile'
+      properties:
+        category:
+          type: string
+          description: The file category
+          example: document
+        type:
+          type: string
+          description: The type of image
+          example: raw_document_image
+
+    TaskResultFaceLivenessFile:
+      allOf:
+        - $ref: '#/components/schemas/TaskResultFile'
+      properties:
+        category:
+          type: string
+          enum:
+            - image
+            - video
+          description: The file category
+          example: image
+
+    TaskType:
+      type: string
+      enum: [ document_scan, face_liveness, face_match ]
+
+    TaskState:
+      type: string
+      enum: [ pending, completed, aborted, maximum_attempts_exceeded ]
+
+    DocumentScanErrorCode:
+      type: string
+      enum:
+        - age_criteria_not_met
+        - back_side_provided_front_side_required
+        - expiration_criteria_not_met
+        - field_validation_failed
+        - front_side_provided_back_side_required
+        - image_quality_requirements_not_met
+        - processing
+        - text_fields_analysis_failed
+        - unable_to_determine_age
+        - unable_to_determine_date_of_expiry
+        - unknown_type_back
+        - unknown_type_front
+
+    TransactionState:
+      type: string
+      description: Current state of the transaction
+      enum: [ pending, completed, failed ]
+
+    Locale:
+      type: string
+      enum: [ en-US, nl-NL, fr-FR, it-IT ]
+      default: en-US
+      description: The language of the ID Scan process. Currently supports English, Dutch, French, and Italian.
+
+    Attempts:
+      type: number
+      description: The number of attempts made for this task.
+      readOnly: true
+      minimum: 1
+      example: 1
+
+    CaptureSource:
+      type: string
+      enum: [ camera, file ]
+      example: camera
+      default: camera
+
+    SourceType:
+      type: string
+      enum: [ visual, mrz, barcode ]
+      description: The data is read from the visual inspection zone, barcode or from the machine readable zone (MRZ).
+
+    AuthenticityScore:
+      type: number
+      description: Authenticity score for image pattern checks. Returns -1 if no authenticity checkmarks are found.
+      format: float
+      minimum: 0
+      maximum: 1
+      example: 0.99
+
+    AuditReportType:
+      type: string
+      enum: [ simple, extended ]
+      default: simple
+      description: The type of audit report to be retrieved of a completed ID Scan transaction.
+
+    WebhookResultId:
+      type: string
+      format: uuid
+      description: A unique identifier to retrieve the transaction results. This field is only present when the transaction state is completed.
+
+    WebhookEventBase:
+      description: Properties shared by all webhook events. More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: A unique identifier for the event.
+        created:
+          type: string
+          format: date-time
+          description: The date the event was created.
+      required: [ id, created ]
+
+    TransactionStateUpdatedEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: transaction.state.updated
+              description: The type of the event.
+            transaction:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: The unique identifier of the transaction.
+                state:
+                  $ref: '#/components/schemas/TransactionState'
+                resultId:
+                  $ref: '#/components/schemas/WebhookResultId'
+              required: [ id, state ]
+          required: [ type, transaction ]
+
+    TaskStateUpdatedEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: task.state.updated
+              description: The type of the event.
+            transaction:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: The unique identifier of the transaction the task belongs to.
+                state:
+                  $ref: '#/components/schemas/TransactionState'
+              required: [ id, state ]
+            task:
+              type: object
+              properties:
+                type:
+                  $ref: '#/components/schemas/TaskType'
+                state:
+                  $ref: '#/components/schemas/TaskState'
+              required: [ type, state ]
+          required: [ type, transaction, task ]
+
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          description: The URL must begin with `https://`.
+          example: https://example.com
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookType'
+          description: The subscribed webhook events.
+          default:
+            - transaction.state.updated
+            - task.state.updated
+        headers:
+          type: [ 'object', 'null' ]
+          additionalProperties:
+            type: string
+          example:
+            My-Custom-Header: Example
+          description: The custom HTTP headers sent with each request to the webhook URL. The value is `null` when no headers are set.
+        updated:
+          type: string
+          format: date-time
+          description: The date the webhook was updated.
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          description: The date the webhook was created.
+          readOnly: true
+      required: [ url ]
+
+    WebhookType:
+      type: string
+      enum: [ transaction.state.updated, task.state.updated ]
+      description: Webhook event type
+
+    Config:
+      type: object
+      description: The configuration.
+      properties:
+        documentScan:
+          $ref: '#/components/schemas/DocumentScanConfig'
+
+    DocumentScanConfig:
+      type: object
+      description: Configuration applied to document scan tasks.
+      properties:
+        imageQualityChecks:
+          $ref: '#/components/schemas/ImageQualityChecks'
+
+    ImageQualityChecks:
+      type: object
+      description: The individual image quality checks. A check is only enforced when set to `true`; all checks are disabled by default.
+      properties:
+        glare:
+          type: boolean
+          description: Checks for the presence of glare on the document image.
+          default: false
+        focus:
+          type: boolean
+          description: Checks whether the document image is in focus.
+          default: false
+        resolution:
+          type: boolean
+          description: Checks whether the document image has a low resolution.
+          default: false
+        color:
+          type: boolean
+          description: Checks whether the image is colorless, for example a black-and-white scan or photocopy.
+          default: false
+        perspective:
+          type: boolean
+          description: Checks whether the document in the image has perspective distortion.
+          default: false
+        bounds:
+          type: boolean
+          description: Checks whether the document is fully present in the image.
+          default: false
+        moire:
+          type: boolean
+          description: Checks for moiré patterns, which indicate the image is a screen capture instead of a physical document.
+          default: false
+        portrait:
+          type: boolean
+          description: Checks whether the portrait is present on the document.
+          default: false
+        handwritten:
+          type: boolean
+          description: Checks whether the document contains handwritten text in the scanned fields.
+          default: false
+        brightness:
+          type: boolean
+          description: Checks whether the document image is bright enough.
+          default: false
+        occlusion:
+          type: boolean
+          description: Checks whether part of the document is occluded in the image.
+          default: false
+
+    DocumentType:
+      type: string
+      description: The document type.
+      enum: [ not_defined, passport, identity_card, diplomatic_passport, service_passport, seamans_identity_document, identity_card_for_residence, travel_document, other, visa_id2, visa_id3, national_identity_card, social_identity_card, aliens_identity_card, privileged_identity_card, residence_permit_identity_card, origin_card, emergency_passport, aliens_passport, alternative_identity_card, authorization_card, beginner_permit, border_crossing_card, chauffeur_license, chauffeur_license_under_18, chauffeur_license_under_21, commercial_driving_license, commercial_driving_license_instructional_permit, commercial_driving_license_under_18, commercial_driving_license_under_21, commercial_instruction_permit, commercial_new_permit, concealed_carry_license, concealed_firearm_permit, conditional_driving_license, department_of_veterans_affairs_identity_card, diplomatic_driving_license, driving_license, driving_license_instructional_permit, driving_license_instructional_permit_under_18, driving_license_instructional_permit_under_21, driving_license_learners_permit, driving_license_learners_permit_under_18, driving_license_learners_permit_under_21, driving_license_novice, driving_license_novice_under_18, driving_license_novice_under_21, driving_license_registered_offender, driving_license_restricted_under_18, driving_license_restricted_under_21, driving_license_temporary_visitor, driving_license_temporary_visitor_under_18, driving_license_temporary_visitor_under_21, driving_license_under_18, driving_license_under_21, employment_driving_permit, enhanced_chauffeur_license, enhanced_chauffeur_license_under_18, enhanced_chauffeur_license_under_21, enhanced_commercial_driving_license, enhanced_driving_license, enhanced_driving_license_under_18, enhanced_driving_license_under_21, enhanced_identity_card, enhanced_identity_card_under_18, enhanced_identity_card_under_21, enhanced_operators_license, firearms_permit, full_provisional_license, full_provisional_license_under_18, full_provisional_license_under_21, geneva_conventions_identity_card, graduated_driving_license_under_18, graduated_driving_license_under_21, graduated_instruction_permit_under_18, graduated_instruction_permit_under_21, graduated_license_under_18, graduated_license_under_21, handgun_carry_permit, identity_and_privilege_card, identity_card_mobility_impaired, identity_card_registered_offender, identity_card_temporary_visitor, identity_card_temporary_visitor_under_18, identity_card_temporary_visitor_under_21, identity_card_under_18, identity_card_under_21, ignition_interlock_permit, immigrant_visa, instruction_permit, instruction_permit_under_18, instruction_permit_under_21, interim_driving_license, interim_identity_card, intermediate_driving_license, intermediate_driving_license_under_18, intermediate_driving_license_under_21, junior_driving_license, learner_instructional_permit, learner_license, learner_license_under_18, learner_license_under_21, learner_permit, learner_permit_under_18, learner_permit_under_21, limited_license, limited_permit, limited_term_driving_license, limited_term_identity_card, liquor_identity_card, new_permit, new_permit_under_18, new_permit_under_21, non_us_citizen_driving_license, occupational_driving_license, oneida_tribe_of_indians_identity_card, operator_license, operator_license_under_18, operator_license_under_21, permanent_driving_license, permit_to_reenter, probationary_auto_license, probationary_driving_license_under_18, probationary_driving_license_under_21, probationary_vehicle_sales_person_license, provisional_driving_license, provisional_driving_license_under_18, provisional_driving_license_under_21, provisional_license, provisional_license_under_18, provisional_license_under_21, public_passenger_chauffeur_license, racing_and_gaming_comission_card, refugee_travel_document, renewal_permit, restricted_commercial_driver_license, restricted_driver_license, restricted_permit, seasonal_permit, seasonal_resident_identity_card, seasonal_citizen_identity_card, sex_offender, social_security_card, temporary_driving_license, temporary_driving_license_under_18, temporary_driving_license_under_21, temporary_identity_card, temporary_instruction_permit_identity_card, temporary_instruction_permit_identity_card_under_18, temporary_instruction_permit_identity_card_under_21, temporary_visitor_driving_license, temporary_visitor_driving_license_under_18, temporary_visitor_driving_license_under_21, uniformed_services_identity_card, vehicle_sales_person_license, worker_identification_credential, commercial_driving_license_novice, commercial_driving_license_novice_under_18, commercial_driving_license_novice_under_21, passport_card, passport_resident_card, personal_identification_verification, temporary_operator_license, driving_license_under_19, identity_card_under_19, visa, temporary_passport, voting_card, health_card, certificate_of_citizenship, address_card, airport_immigration_card, alien_registration_card, apeh_card, coupon_to_driving_license, crew_member_certificate, document_for_return, e_card, employment_card, hksar_immigration_form, immigrant_card, labour_card, laissez_passer, lawyer_identity_certificate, license_card, passport_stateless, passport_child, passport_consular, passport_diplomatic_service, passport_official, passport_provisional, passport_special, permission_to_the_local_border_traffic, registration_certificate, sedesol_card, social_card, tb_card, vehicle_passport, w_document, diplomatic_identity_card, consular_identity_card, income_tax_card, residence_permit, document_of_identity, border_crossing_permit, passport_limited_validity, sim_card, tax_card, company_card, domestic_passport, identity_certificate, resident_id_card, armed_forces_identity_card, professional_card, registration_stamp, driver_card, driver_training_certificate, qualification_driving_license, membership_card, public_vehicle_driver_authority_card, marine_license, temporary_learner_license, temporary_commercial_driving_license, interim_instructional_permit, certificate_of_competency, certificate_of_proficiency, trade_license, passport_page ]
+      example: passport
+
+    TextField:
+      type: string
+      enum: [ academic_title, accompanied_by, address, address_area, address_block_number, address_building, address_building_type, address_city, address_city_sector, address_city_type, address_country, address_county_type, address_entrance, address_flat, address_floor_number, address_house, address_jurisdiction_code, address_location, address_municipality, address_postal_code, address_state, address_street, address_street_number, address_street_type, address_zip_code, administrative_number, age, age_at_issue, agy, airline_code, airline_designator_of_boarding_pass_issuer, airline_name, airline_name_frequent_flyer, airline_numeric_code, airport_from, airport_to, aka_date_of_birth, aka_given_names, aka_name_prefix, aka_name_suffix, aka_social_security_number, aka_surname, aka_surname_and_given_names, allergies, alt_code, alt_date_of_expiry, application_number, artistic_name, audit_information, authority, authority_code, authority_rus, authorization_number, bank_card_number, bank_card_valid_thru, banknote_number, bdb_type, benefits_number, binary_code, biometric_format_owner, biometric_format_type, biometric_product_id, biometric_subtype, biometric_type, blood_group, booklet_number, caliber, card_access_number, category, ccw_until, cdl_class, century_date_of_birth, chassis_number, check_in_sequence_number, children, citizenship_of_first_person, citizenship_of_second_person, citizenship_status, civil_status, commercial_indicator, commercial_vehicle_codes, company_name, compartment_code, complexion, compliance_type, conditions, configuration, consul, control_number, copy, court_code, csc_code, cty, current_date, custody_info, cvv, data_date_of_expiry, data_discriminator, date_first_renewal, date_of_arrival, date_of_birth, date_of_birth_check_digit, date_of_birth_checksum, date_of_birth_of_husband, date_of_birth_of_wife, date_of_creation, date_of_expiry, date_of_expiry_check_digit, date_of_expiry_checksum, date_of_first_positive_test_result, date_of_flight, date_of_insurance_expiry, date_of_issue, date_of_issue_boarding_pass, date_of_issue_check_digit, date_of_issue_checksum, date_of_personalization, date_of_registration, date_of_retirement, date_of_specimen_collection, date_second_renewal, day, department, dept_number, destination, digital_travel_authorization_number, discretionary_data, dl_cdl_restriction_code, dl_class, dl_class_code_a1_from, dl_class_code_a1_notes, dl_class_code_a1_to, dl_class_code_a2_from, dl_class_code_a2_notes, dl_class_code_a2_to, dl_class_code_a3_from, dl_class_code_a3_notes, dl_class_code_a3_to, dl_class_code_a_from, dl_class_code_a_notes, dl_class_code_a_to, dl_class_code_am_from, dl_class_code_am_notes, dl_class_code_am_to, dl_class_code_b1_from, dl_class_code_b1_notes, dl_class_code_b1_to, dl_class_code_b2_from, dl_class_code_b2_notes, dl_class_code_b2_to, dl_class_code_b2e_from, dl_class_code_b2e_notes, dl_class_code_b2e_to, dl_class_code_b_from, dl_class_code_b_notes, dl_class_code_b_to, dl_class_code_be_from, dl_class_code_be_notes, dl_class_code_be_to, dl_class_code_btp_from, dl_class_code_btp_notes, dl_class_code_btp_to, dl_class_code_c1_from, dl_class_code_c1_notes, dl_class_code_c1_to, dl_class_code_c1e_from, dl_class_code_c1e_notes, dl_class_code_c1e_to, dl_class_code_c2_from, dl_class_code_c2_notes, dl_class_code_c2_to, dl_class_code_c3_from, dl_class_code_c3_notes, dl_class_code_c3_to, dl_class_code_c_from, dl_class_code_c_notes, dl_class_code_c_to, dl_class_code_ca_from, dl_class_code_ca_notes, dl_class_code_ca_to, dl_class_code_cd_from, dl_class_code_cd_notes, dl_class_code_cd_to, dl_class_code_ce_from, dl_class_code_ce_notes, dl_class_code_ce_to, dl_class_code_d1_from, dl_class_code_d1_notes, dl_class_code_d1_to, dl_class_code_d1e_from, dl_class_code_d1e_notes, dl_class_code_d1e_to, dl_class_code_d2_from, dl_class_code_d2_notes, dl_class_code_d2_to, dl_class_code_d3_from, dl_class_code_d3_notes, dl_class_code_d3_to, dl_class_code_d_from, dl_class_code_d_notes, dl_class_code_d_to, dl_class_code_de_from, dl_class_code_de_notes, dl_class_code_de_to, dl_class_code_e_from, dl_class_code_e_notes, dl_class_code_e_to, dl_class_code_eb_from, dl_class_code_eb_notes, dl_class_code_eb_to, dl_class_code_ec1_from, dl_class_code_ec1_notes, dl_class_code_ec1_to, dl_class_code_ec_from, dl_class_code_ec_notes, dl_class_code_ec_to, dl_class_code_f_from, dl_class_code_f_notes, dl_class_code_f_to, dl_class_code_fa1_from, dl_class_code_fa1_notes, dl_class_code_fa1_to, dl_class_code_fa_from, dl_class_code_fa_notes, dl_class_code_fa_to, dl_class_code_fb_from, dl_class_code_fb_notes, dl_class_code_fb_to, dl_class_code_g1_from, dl_class_code_g1_notes, dl_class_code_g1_to, dl_class_code_g_from, dl_class_code_g_notes, dl_class_code_g_to, dl_class_code_h_from, dl_class_code_h_notes, dl_class_code_h_to, dl_class_code_hc_from, dl_class_code_hc_notes, dl_class_code_hc_to, dl_class_code_hr_from, dl_class_code_hr_notes, dl_class_code_hr_to, dl_class_code_i_from, dl_class_code_i_notes, dl_class_code_i_to, dl_class_code_j_from, dl_class_code_j_notes, dl_class_code_j_to, dl_class_code_k_from, dl_class_code_k_notes, dl_class_code_k_to, dl_class_code_l_from, dl_class_code_l_notes, dl_class_code_l_to, dl_class_code_lc_from, dl_class_code_lc_notes, dl_class_code_lc_to, dl_class_code_lk_from, dl_class_code_lk_notes, dl_class_code_lk_to, dl_class_code_lr_from, dl_class_code_lr_notes, dl_class_code_lr_to, dl_class_code_m_from, dl_class_code_m_notes, dl_class_code_m_to, dl_class_code_mc_from, dl_class_code_mc_notes, dl_class_code_mc_to, dl_class_code_mr_from, dl_class_code_mr_notes, dl_class_code_mr_to, dl_class_code_n_from, dl_class_code_n_notes, dl_class_code_n_to, dl_class_code_nt_from, dl_class_code_nt_notes, dl_class_code_nt_to, dl_class_code_pw_from, dl_class_code_pw_notes, dl_class_code_pw_to, dl_class_code_r_from, dl_class_code_r_notes, dl_class_code_r_to, dl_class_code_re_from, dl_class_code_re_notes, dl_class_code_re_to, dl_class_code_rm_from, dl_class_code_rm_notes, dl_class_code_rm_to, dl_class_code_s_from, dl_class_code_s_notes, dl_class_code_s_to, dl_class_code_t_from, dl_class_code_t_notes, dl_class_code_t_to, dl_class_code_tb_from, dl_class_code_tb_notes, dl_class_code_tb_to, dl_class_code_tm_from, dl_class_code_tm_notes, dl_class_code_tm_to, dl_class_code_tn_from, dl_class_code_tn_notes, dl_class_code_tn_to, dl_class_code_tr_from, dl_class_code_tr_notes, dl_class_code_tr_to, dl_class_code_tv_from, dl_class_code_tv_notes, dl_class_code_tv_to, dl_class_code_v_from, dl_class_code_v_notes, dl_class_code_v_to, dl_class_code_w_from, dl_class_code_w_notes, dl_class_code_w_to, dl_duplicate_date, dl_endorsed, dl_issue_type, dl_record_created, dl_restriction_code, dl_under_18_date, dl_under_19_date, dl_under_21_date, dni_number, document_class_code, document_class_name, document_discriminator, document_number, document_number_check_digit, document_number_checksum, document_series, document_status, dod_number, donor, dossier_number, ds_certificate_issuer, ds_certificate_subject, ds_certificate_valid_from, ds_certificate_valid_to, dtc_date_of_expiry, dtc_id, dtc_version, duf_number, duration_of_stay, e_id_place_of_birth_city, e_id_place_of_birth_country, e_id_place_of_birth_state, e_id_place_of_birth_street, e_id_place_of_birth_zip_code, e_id_residence_permit_1, e_id_residence_permit_2, ec_environmental_type, ef_card_access, electronic_ticket_indicator, email, endorsement_expiration_date, engine_model, engine_number, engine_power, engine_volume, eqv_code, exam_date, except_in_tanks, expiry_timestamp, eyes_color, faculty, family_name, family_name_truncation, fast_track, father_country_of_birth, father_date_of_birth, father_given_name, father_personal_number, father_place_of_birth, father_surname, fathers_name, fathers_name_rus, federal_elections, fee, field_from_mrz, final_check_digit, final_checksum, first_issue_date, first_issue_date_checkdigit, first_issue_date_checksum, first_name, first_name_truncation, first_surname, flight_number, folio_number, form_of_education, fourth_name, free_baggage_allowance, frequent_flyer_airline_designator, frequent_flyer_number, from_airport_code, fuel_type, given_names, given_names_rus, gnib_number, grandfather_name, grandfather_name_maternal, hair_color, health_number, height, identifier, identity_card_number, identity_card_number_check_digit, identity_card_number_checksum, in_tanks, inventory_number, invitation_number, invitation_number_check_digit, invitation_number_checksum, invited_by, iso_issuer_id_number, issue_timestamp, issuer_identification_number, issuing_state_code, issuing_state_code_alpha2, issuing_state_code_numeric, issuing_state_name, jurisdiction_endorsement_code, jurisdiction_restriction_code, jurisdiction_specific_data, jurisdiction_vehicle_class, last_name, license_number, limited_duration_document_indicator, line_1_check_digit, line_1_checksum, line_1_optional_data, line_2_check_digit, line_2_checksum, line_2_optional_data, line_3_check_digit, line_3_checksum, line_3_optional_data, mailing_address_city, mailing_address_jurisdiction_code, mailing_address_postal_code, mailing_address_street, make, marital_status, max_mass_of_trailer_braked, max_mass_of_trailer_unbraked, max_speed, mc_novice_date, medical_indicator_codes, method_of_testing, middle_name, middle_name_truncation, military_book_number, military_service_from, military_service_to, model, month, month_of_birth, mortgage_by, mother_country_of_birth, mother_date_of_birth, mother_given_name, mother_personal_number, mother_place_of_birth, mother_surname, mothers_name, mrz_strings, mrz_strings_icao_rfid, mrz_strings_with_correct_check_sums, mrz_type, mvc_agency, name_prefix, name_suffix, nationality, nationality_code, nationality_code_alpha2, nationality_code_numeric, non_domiciled_indicator, non_resident_indicator, number_of_axles, number_of_card_issuance, number_of_card_issuance_check_digit, number_of_card_issuance_checksum, number_of_cylinders, number_of_duplicates, number_of_entries, number_of_seats, number_of_standing_places, observations, ocr_number, old_date_of_issue, old_document_number, old_place_of_issue, optional_data, optional_data_check_digit, optional_data_checksum, organization, other, other_name, other_person_name, other_valid_id, owner, parents_given_names, passport_number, passport_number_check_digit, passport_number_checksum, patron_header_version, pay_grade, payload_capacity, payment_period_from, payment_period_to, pdf417_codec, permissible_axle_load, permit_date_of_expiry, permit_date_of_issue, permit_dl_class, permit_endorsed, permit_identifier, permit_restriction_code, person_to_notify_address, person_to_notify_date_of_record, person_to_notify_name, person_to_notify_phone, personal_number, personal_number_check_digit, personal_number_checksum, personal_summary, personalization_sn, phone, place_of_birth, place_of_birth_area, place_of_birth_city, place_of_birth_rus, place_of_birth_state_code, place_of_examination, place_of_issue, place_of_registration, pnr_code, police_district, power_weight_ratio, precinct, previous_type, profession, professional_id_number, pseudo_code, purpose_of_entry, race_ethnicity, rank, reference_number, reference_number_check_digit, reference_number_checksum, reg_cert_body_number, reg_cert_body_type, reg_cert_car_color, reg_cert_car_mark, reg_cert_car_model, reg_cert_car_type, reg_cert_max_weight, reg_cert_reg_number, reg_cert_reg_number_check_digit, reg_cert_reg_number_checksum, reg_cert_vehicle_its_code, reg_cert_vin, reg_cert_vin_check_digit, reg_cert_vin_checksum, reg_cert_weight, relationship, religion, remainder_term, resident_from, resident_until, result_of_testing, retirement_number, revision_date, room_number, sbh_integrity_options, sbh_security_options, seat_number, second_name, second_surname, section, selectee_indicator, sequence_number, serial_number, sex, short_flight_number, signature, skin_color, social_security_number, sp_code, special_notes, sponsor, sponsor_service, sponsor_ssn, sponsor_status, stamp_number, status_date_of_expiry, surname, surname_and_given_names, surname_and_given_names_check_digit, surname_and_given_names_checksum, surname_and_given_names_rus, surname_at_birth, surname_of_husband_after_registration, surname_of_spouse, surname_of_wife_after_registration, tax, tax_number, telex_code, territorial_validity, third_name, ticket_number, title, to_airport_code, tracking_number, trailer_hitch, transaction_number, transmission_type, type_approval_number, type_of_testing, unique_certificate_identifier, unique_customer_identifier, url, uscis, vaccination_certificate_identifier, validity_period, vehicle_category, veteran, visa_class, visa_id, visa_id_check_digit, visa_id_checksum, visa_id_rus, visa_number, visa_number_check_digit, visa_number_checksum, visa_subclass, visa_type, visa_valid_from, visa_valid_until, visa_valid_until_check_digit, visa_valid_until_checksum, voter, voter_key, voucher_number, vrc_data_object_entry, weight, weight_pounds, year, year_of_birth, year_of_expiry, years_since_issue ]
+      example: personal_number
+
+    GraphicField:
+      type: string
+      enum: [ bar_code, color_dynamic, contact_chip, document_image, document_rear, eye, finger_left_four_fingers, finger_left_index, finger_left_little, finger_left_middle, finger_left_ring, finger_left_thumb, finger_right_four_fingers, finger_right_index, finger_right_little, finger_right_middle, finger_right_ring, finger_right_thumb, finger_two_thumbs, fingerprint, ghost_portrait, other, portrait, portrait_of_child, proof_of_citizenship, signature, stamp ]
+      example: portrait
+
+    ValidityStatus:
+      type: string
+      enum: [ valid, invalid, not_checked ]
+      example: valid
+      description: The status indicates the validity of the field.
+
+    ComparisonStatus:
+      type: string
+      description: The result of comparing MRZ, barcode and visual field values. If only one field value is available, the status will be `not_performed`.
+      enum: [ match, no_match, not_performed ]
+      example: match
+
+    TransactionPage:
+      type: object
+      properties:
+        nextCursor:
+          type: string
+          description: The cursor pointing to the next page.
+          example: 0ETuixXmBflbB8voRanDsw
+        nextUrl:
+          type: string
+          description: The URL to get the next page of transactions. The URL includes all previously provided parameters and the cursor for the next page.
+          example: https://api.cm.com/id-scan/v1/transactions?from=2026-01-01T00:00:00Z&until=2026-02-01T00:00:00Z&pageSize=50&cursor=0ETuixXmBflbB8voRanDsw
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionPageDetail'
+
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+        ```
+        Authorization: Bearer GENERATED_TOKEN_HERE
+        ```
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+  responses:
+    NotFound:
+      description: The specified resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 404
+            message: Not found
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+    WebhookReceived:
+      description: |
+        The event was received successfully. Any 2xx HTTP status code is accepted and the response body is ignored.
+
+        In case of a 4xx status code, the event is dropped and not retried. In case of a 5xx status code, a timeout or a connection error, the event will be retried a few times with an increasing delay before it's dropped.
+
+  parameters:
+    TransactionId:
+      name: transactionId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: A unique identifier for the transaction.
+
+    ResultId:
+      name: resultId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: This result ID can be obtained from the `resultId` parameter in the iframe event or query parameter `resultid` in the return url after the user completes the transaction.
+
+    AuditReportType:
+      name: type
+      in: query
+      schema:
+        $ref: '#/components/schemas/AuditReportType'
+      required: false
+      description: |
+        Specify the type of audit report. Defaults to `simple`.
+
+        Simple audit report already exists and can always be retrieved.
+
+        Extended audit report can be requested within the ID Scan transaction validity.
+
+    WebhookId:
+      name: webhookId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: A unique identifier for the webhook.

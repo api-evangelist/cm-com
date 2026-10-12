@@ -1,0 +1,328 @@
+openapi: 3.2.0
+info:
+  title: Sip Accounts Sip Config API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Sip Config
+paths:
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/config:
+    get:
+      tags:
+      - Sip Config
+      summary: Get SIP Account Config
+      description: Get the configuration for the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipConfig'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoiceSipaccountsapiV1ByVoiceAccountGuidSipAccountsBySipAccountGuidConfig
+      x-operation-id-source: derived
+    put:
+      tags:
+      - Sip Config
+      summary: Update SIP Account Config
+      description: Update the configuration for the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: New sip config
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/ApiSipConfig'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiSipConfig'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiSipConfig'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiSipConfig'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipConfig'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: putVoiceSipaccountsapiV1ByVoiceAccountGuidSipAccountsBySipAccountGuidConfig
+      x-operation-id-source: derived
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/trunks:
+    get:
+      tags:
+      - Sip Config
+      summary: Get active SIP Trunks
+      description: Get a list of all currently active CM.com SIP Trunks.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: sipAccountGuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiTrunk'
+        '401':
+          description: Unauthorized
+      operationId: getVoiceSipaccountsapiV1ByVoiceAccountGuidSipAccountsBySipAccountGuidTrunks
+      x-operation-id-source: derived
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/platformdomains:
+    get:
+      tags:
+      - Sip Config
+      summary: Get active Platform Domains
+      description: Get a list of all currently active CM.com Platform Domains.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sipAccountGuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPlatformDomain'
+        '401':
+          description: Unauthorized
+      operationId: getVoiceSipaccountsapiV1ByVoiceAccountGuidSipAccountsBySipAccountGuidPlatformdomains
+      x-operation-id-source: derived
+components:
+  schemas:
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ApiPlatformDomain:
+      title: Platform Domain
+      type: object
+      properties:
+        domain:
+          type:
+          - string
+          - 'null'
+          description: URL of the given Platform Domain.
+        platforms:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiTrunk'
+          description: List of SIP Trunks in this Platform Domain.
+      additionalProperties: false
+      description: CM.com Platform Domain containing SIP Trunks.
+    ApiSipConfig:
+      title: Sip Config
+      type: object
+      properties:
+        cpsLimit:
+          type: integer
+          description: Limit of the amount of calls that can be set up per second.
+          format: int32
+          example: 2
+        ccLimit:
+          type: integer
+          description: Limit of the amount of calls that can take place concurrently.
+          format: int32
+          example: 100
+        alwaysAnonymous:
+          type: boolean
+          description: Whether or not outbound calls from this SIP Account will always be dialed out with CLI anonymous.
+          example: false
+        hasAnonymousOverride:
+          type: boolean
+          description: When set to true, this option guarantees routing that support anonymous calls.
+          example: false
+        defaultOutboundCallerId:
+          type:
+          - string
+          - 'null'
+          description: The CLI used when making outbound calls. This does not override a valid CLI that is already provided in the SIP invite.
+          example: ''
+        restrictionType:
+          type:
+          - string
+          - 'null'
+          description: Sets the type of prefix restrictions placed on this SIP Account, this can be either set to `whitelist` or `blacklist`. When set to `whitelist`, only calls to the given prefixes will be allowed, when set to `blacklist`, only calls to the given prefixes will be blocked.
+          example: blacklist
+        primaryTrunkId:
+          type:
+          - string
+          - 'null'
+          description: Platform name or domain of the primary SIP trunk or DNS that will be used. The `/trunks` and `/platformdomains` endpoints can be used to get a list of currently active SIP Trunks and Platform Domains.
+          example: outbound02
+        secondaryTrunkId:
+          type:
+          - string
+          - 'null'
+          description: Platform name or domain of the secondary (backup) SIP trunk that will be used. The `/trunks` and `/platformdomains` endpoints can be used to get a list of currently active SIP Trunks and Platform Domains. **When using DNS, reach out to support for a backup DNS.**
+          example: outbound01
+        blockNonEerToEer:
+          type: boolean
+          description: All calls with a non-European CLI to a European country will be blocked for this SIP account.
+          example: false
+        allowPremium:
+          type: boolean
+          description: Allow calls to premium pay-per-minute or pay-per-call numbers.
+          example: false
+      additionalProperties: false
+      description: SIP configuration containing settings that define how a SIP Account can be used.
+    ApiTrunk:
+      title: Trunk
+      type: object
+      properties:
+        city:
+          type:
+          - string
+          - 'null'
+          description: City where the SIP Trunk is located.
+        countryCode:
+          type:
+          - string
+          - 'null'
+          description: Countrycode of the country where the SIP Trunk is located in ISO 3166 format.
+        code:
+          type:
+          - string
+          - 'null'
+          description: Code of the SIP Trunk (name of the platform).
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the SIP Trunk.
+        externalIps:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: IP Addresses of the SIP Trunk.
+      additionalProperties: false
+      description: CM.com SIP Trunk.
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

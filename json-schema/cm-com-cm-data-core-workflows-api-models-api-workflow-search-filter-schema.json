@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-data-core-workflows-api-models-api-workflow-search-filter-schema.json",
+  "title": "CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-cdp-profiles-v1-openapi.yml#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter",
+  "type": "object",
+  "properties": {
+    "nameContains": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "enabledStatus": {
+      "$ref": "#/$defs/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchEnabledStatus"
+    },
+    "sortOn": {
+      "$ref": "#/$defs/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSortOrder"
+    },
+    "reverse": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "favorites": {
+      "$ref": "#/$defs/CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter": {
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "type": "integer",
+      "format": "int32"
+    },
+    "CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchEnabledStatus": {
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "type": "integer",
+      "format": "int32"
+    },
+    "CM.Data.Core.Workflows.Api.Models.ApiWorkflowSortOrder": {
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "type": "integer",
+      "format": "int32"
+    }
+  }
+}

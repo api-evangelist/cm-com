@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-identity-match-match-response-schema.json",
+  "title": "IdentityMatchMatchResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-mobile-identity-v1-openapi.yml#/components/schemas/IdentityMatchMatchResponse",
+  "type": "object",
+  "properties": {
+    "state": {
+      "$ref": "#/$defs/ResponseState"
+    },
+    "firstNameMatch": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "If the provided first name matched to the provided phone number. The value can be `null` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator."
+    },
+    "lastNameMatch": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "If the provided last name matched to the provided phone number. The value can be `null` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator."
+    },
+    "nameMatch": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "If the provided full name matched to the provided phone number. The value can be `null` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator."
+    },
+    "addressMatch": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "If the provided address matched to the provided phone number. The value can be `null` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator."
+    },
+    "postalCodeMatch": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "If the provided postal code matched to the provided phone number. The value can be `null` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator."
+    },
+    "dateOfBirthMatch": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "If the provided date of birth matched to the provided phone number. The value can be `null` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator."
+    }
+  },
+  "$defs": {
+    "ResponseState": {
+      "type": "string",
+      "description": "State that indicates whether the request was successful or the data could not be retrieved due to unavailability.",
+      "enum": [
+        "success",
+        "unavailable"
+      ]
+    }
+  }
+}

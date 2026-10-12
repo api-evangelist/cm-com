@@ -1,0 +1,2003 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Channels API
+  version: '1.0'
+  description: 'Operations tagged Channels across 4 of this provider''s published API definitions: cm-com-live-event-ticketing-v1-openapi.yml, cm-com-messaging-channels-api-v1-2-openapi.yml, cm-com-mobile-marketing-cloud-mmc-campaigns-v1-openapi.yml, cm-com-sign-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /ticketing/v1
+- url: https://api.cm.com
+  description: Production Server
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+tags:
+- name: Channels
+paths:
+  /events/{event_id}/channels:
+    get:
+      description: Returns the active sales channels of an event. Each channel has a public shop `url` that you can link your customers to.
+      operationId: ListChannels
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Number of items to skip (default 0)
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Page size (default 100)
+        in: query
+        name: take
+        schema:
+          type: integer
+      - description: Field to sort by
+        in: query
+        name: sort
+        schema:
+          enum:
+          - created_at
+          - slug
+          type: string
+      - description: Sort direction
+        in: query
+        name: order
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.listResponse-handler_channelListItem'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: List channels
+      tags:
+      - Channels
+    servers:
+    - url: /ticketing/v1
+  /channels/v1/accounts/{accountId}/channels/meta/loginforbusiness/attempt:
+    post:
+      tags:
+      - Channels
+      summary: Processes a Meta Login for Business attempt
+      operationId: Channels_ProcessLoginForBusinessAttemptAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelType
+        in: query
+        description: Type of the channel.
+        required: true
+        schema:
+          type: string
+          enum:
+          - WHATSAPP
+          - FACEBOOK
+          - INSTAGRAM
+      responses:
+        '200':
+          description: OK
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/meta/loginforbusiness/attempt/dialogresult:
+    post:
+      tags:
+      - Channels
+      summary: Processes a Meta Login for Business attempt's dialog result
+      operationId: Channels_ProcessLoginForBusinessAttemptDialogResultAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelType
+        in: query
+        description: Type of the channel.
+        required: true
+        schema:
+          type: string
+          enum:
+          - WHATSAPP
+          - FACEBOOK
+          - INSTAGRAM
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+          text/json:
+            schema:
+              type: object
+          text/xml:
+            schema:
+              type: object
+          multipart/form-data:
+            schema:
+              type: object
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+        description: The dialog result.
+        required: true
+      responses:
+        '200':
+          description: OK
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/access:
+    get:
+      tags:
+      - Channels
+      summary: Verifies the read capabilities asynchronous
+      operationId: Channels_VerifyReadCapabilitiesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/ottmetrics/year/{year}/month/{month}:
+    get:
+      tags:
+      - Channels
+      summary: Gets the monthly ott metrics asynchronous
+      operationId: Channels_GetMonthlyOttMetricsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: year
+        in: path
+        description: The year.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: month
+        in: path
+        description: The month.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelAnalyticsBaseResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelAnalyticsBaseResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelAnalyticsBaseResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelAnalyticsBaseResponse'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/overview:
+    get:
+      tags:
+      - Channels
+      summary: Get a channel request overview
+      operationId: Channels_GetChannelOverviewAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: query
+        description: The channel type identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverview'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverview'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverview'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverview'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/conversationalprofiles:
+    get:
+      tags:
+      - Channels
+      summary: Get all conversational profiles
+      operationId: Channels_GetConversationalProfilesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: query
+        description: The channel type identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiConversationalProfile'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiConversationalProfile'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels:
+    get:
+      tags:
+      - Channels
+      summary: Gets the channels asynchronous
+      operationId: Channels_GetChannelsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: query
+        description: The channel type identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannels'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannels'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannels'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannels'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/{channelId}:
+    get:
+      tags:
+      - Channels
+      summary: Gets the channel asynchronous
+      operationId: Channels_GetChannelAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/{channelId}/events/updates:
+    get:
+      tags:
+      - Channels
+      summary: Get a Channel's UPDATE events
+      operationId: Channels_GetChannelCategoryUpdateEventsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBaseEvent'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBaseEvent'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBaseEvent'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBaseEvent'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/requests:
+    get:
+      tags:
+      - Channels
+      summary: Gets the channel requests asynchronous
+      operationId: Channels_GetChannelRequestsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: query
+        description: The channel type identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeRequestBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeRequestBase'
+      security:
+      - ProductToken: []
+    post:
+      tags:
+      - Channels
+      summary: Adds the channel request asynchronous
+      operationId: Channels_AddChannelRequestAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: query
+        description: The channel type identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: simulate
+        in: query
+        description: if set to true [simulate].
+        required: false
+        schema:
+          type: boolean
+      - name: skipChannelTypeAccountCreation
+        in: query
+        description: if set to true [skip channel type account creation].
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeRequestBase'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeRequestBase'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/requests/{channelRequestId}:
+    get:
+      tags:
+      - Channels
+      summary: Gets the channel request asynchronous
+      operationId: Channels_GetChannelRequestAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeRequest'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeRequest'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeRequest'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeRequest'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/types:
+    get:
+      tags:
+      - Channels
+      summary: Gets all channel types
+      operationId: Channels_GetChannelTypesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: betaChannels
+        in: query
+        description: The beta channels.
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeBaseResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeBaseResponse'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/types/{channelTypeId}:
+    get:
+      tags:
+      - Channels
+      summary: Gets a channel type
+      operationId: Channels_GetChannelTypeAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: path
+        description: The channel type identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeResponse'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/types/{channelTypeId}/categories:
+    get:
+      tags:
+      - Channels
+      summary: Gets channel type categories
+      operationId: Channels_GetChannelTypeCategoriesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: path
+        description: The channel type identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/types/{channelTypeId}/categories/{channelCategoryId}:
+    get:
+      tags:
+      - Channels
+      summary: Gets a channel type category
+      operationId: Channels_GetChannelTypeCategoryAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: path
+        description: The channel type identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelCategoryId
+        in: path
+        description: The channel category identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: isSandBox
+        in: query
+        description: Sandbox/demo.
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/types/{channelTypeId}/requestform:
+    get:
+      tags:
+      - Channels
+      summary: Gets the channel request form asynchronous
+      operationId: Channels_GetChannelTypeRequestFormAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: path
+        description: The channel type identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeCategoryId
+        in: query
+        description: The channel type category identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestForm'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestForm'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestForm'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestForm'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/{channelId}/customrequestform:
+    get:
+      tags:
+      - Channels
+      summary: Get a channel's custom request form
+      operationId: Channels_GetChannelCustomRequestFormAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestForm'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestForm'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestForm'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestForm'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/{channelId}/customrequestform/forminput:
+    get:
+      tags:
+      - Channels
+      summary: Get a channel's custom request form input
+      operationId: Channels_GetChannelCustomRequestFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse'
+      security:
+      - ProductToken: []
+    put:
+      tags:
+      - Channels
+      summary: Add input to the channel's custom request form
+      operationId: Channels_AddCustomRequestFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse'
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /channels/v1/accounts/{accountId}/channels/notification/{channelTypeId}:
+    post:
+      tags:
+      - Channels
+      summary: Handles the demo account channel request asynchronous
+      operationId: Channels_ProcessIncapableAccountChannelRequestAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelTypeId
+        in: path
+        description: The channel type identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelCategoryId
+        in: query
+        description: The channel category identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /messages/v1/accounts/{accountId}/messagechannels:
+    get:
+      tags:
+      - Channels
+      summary: Gets available channels
+      operationId: getMessagesV1AccountsByAccountIdMessagechannels
+      parameters:
+      - name: accountId
+        in: path
+        description: The accountId.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiMessageChannel'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiMessageChannel'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiMessageChannel'
+      x-operation-id-source: normalized
+      x-operation-id-original: Channels_GetChannelsAsync
+    servers:
+    - url: https://api.cm.com
+  /messages/v1/accounts/{accountId}/channels:
+    get:
+      tags:
+      - Channels
+      summary: Gets available channels
+      operationId: getMessagesV1AccountsByAccountIdChannels
+      parameters:
+      - name: accountId
+        in: path
+        description: The accountId.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiChannelInfo'
+            text/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiChannelInfo'
+            text/xml:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiChannelInfo'
+      x-operation-id-source: normalized
+      x-operation-id-original: Channels_GetChannelTypesAsync
+    servers:
+    - url: https://api.cm.com
+  /clients/{kid}/channels:
+    parameters:
+    - $ref: '#/components/parameters/KeyId'
+    get:
+      operationId: list_channels
+      summary: Get configured channels
+      description: Retrieve all channels that can be used to send an invite.
+      tags:
+      - Channels
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Channel'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - JWT: []
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+components:
+  schemas:
+    handler.channelListItem:
+      properties:
+        created_at:
+          type: string
+        online_from:
+          type: string
+        online_till:
+          type: string
+        slug:
+          type: string
+        url:
+          type: string
+        uuid:
+          type: string
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+    handler.listResponse-handler_channelListItem:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/handler.channelListItem'
+          type: array
+          uniqueItems: false
+        links:
+          properties:
+            first:
+              type: string
+            last:
+              type: string
+            next:
+              type: string
+            prev:
+              type: string
+            self:
+              type: string
+          type: object
+        page_size:
+          type: integer
+        total_items:
+          type: integer
+      type: object
+    CM.Platform.Channels.Models.Channels.ApiChannelTypeRequest:
+      required:
+      - id
+      - channelTypeId
+      - isPending
+      - isActive
+      - isGenerated
+      - createdOnUtc
+      - requestState
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelTypeId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        isGenerated:
+          type: boolean
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormElement:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputKey:
+          type: string
+        inputDescriptionKey:
+          type: string
+        inputPosition:
+          type: string
+        inputProperties:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormElementProperties'
+        inputType:
+          type: string
+        isRequired:
+          type: boolean
+        isAdminElement:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
+      type: object
+      properties:
+        type:
+          enum:
+          - UNKNOWN
+          - PROCESSING
+          - ACTION_REQUIRED
+          type: string
+        descriptionKey:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelOverviewTypeRequestCategoryRequest:
+      required:
+      - categoryName
+      - isPending
+      - isSandbox
+      type: object
+      properties:
+        categoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        categoryName:
+          type: string
+        categoryIconClass:
+          type: string
+        isPending:
+          type: boolean
+        isSandbox:
+          type: boolean
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.Channels.ApiAnalyticsOttMessagesBundle:
+      required:
+      - bundleType
+      - bundleSpecifics
+      - effectiveOnUtc
+      type: object
+      properties:
+        bundleType:
+          enum:
+          - MAU
+          - CONVERSATIONS
+          - MESSAGES
+          type: string
+        bundleSpecifics:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Internal.Analytics.ApiInternalAnalyticsOttMessagesBundleSpecifics'
+        effectiveOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.EventLogging.ApiBaseEvent:
+      required:
+      - id
+      - eventType
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        ssoAccountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        eventType:
+          type: string
+        eventSubType:
+          type: string
+        eventData:
+          type: object
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelAnalyticsBaseResponse:
+      type: object
+      properties:
+        activeBundle:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiAnalyticsOttMessagesBundle'
+        ottMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiOttMetrics'
+        ottMetricsRetrievalException:
+          enum:
+          - API_UNAVAILABLE
+          - API_NO_RESULTS
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiConversationalProfileSenderIdConfig:
+      type: object
+      properties:
+        senderId:
+          type: string
+        medium:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelsAvailable:
+      type: object
+      properties:
+        sms:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        whatsApp:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        rcs:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        abc:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        voice:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        vSms:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        payments:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        twitter:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        viber:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        facebook:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        instagram:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        mobilePush:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        line:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        googlesBusinessMessages:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+        whatsAppPartnerSolution:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelBase:
+      required:
+      - id
+      - channelID
+      - channelUrl
+      - isPending
+      - createdOnUtc
+      - requestState
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelTypeId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelID:
+          type: string
+        channelUrl:
+          type: string
+        customRequestFormId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        customRequestFormIsPending:
+          type: boolean
+        isPending:
+          type: boolean
+        createdOnUtc:
+          format: date-time
+          type: string
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.Channels.ApiChannelOverview:
+      required:
+      - active
+      - pending
+      - unused
+      type: object
+      properties:
+        active:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
+        pending:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
+        unused:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
+        isDemoAccount:
+          type: boolean
+        isOnTrial:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
+      type: object
+      properties:
+        stages:
+          type: array
+          items:
+            type: string
+        current:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelCategory:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        iconClass:
+          type: string
+        name:
+          type: string
+        channelLimit:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.Channels.ApiRequestState:
+      type: object
+      properties:
+        completeness:
+          format: int32
+          type: integer
+        nextStage:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
+        progression:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
+        hasPendingOrder:
+          type: boolean
+        hasEligibleOrder:
+          type: boolean
+        hasMissingOrder:
+          type: boolean
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormElementProperties:
+      type: object
+      properties:
+        cssClass:
+          type: string
+        cssGridClass:
+          type: string
+        cssStyle:
+          type: string
+        fileSizeMax:
+          format: int32
+          type: integer
+        fileType:
+          type: string
+        lengthMax:
+          format: int32
+          type: integer
+        lengthMin:
+          format: int32
+          type: integer
+        regex:
+          type: string
+        resolutionMax:
+          type: string
+        resolutionMin:
+          type: string
+        selectable:
+          type: array
+          items:
+            type: string
+        showAs:
+          type: string
+        showInputDescriptionKey:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ApiChannelTypeResponse:
+      required:
+      - id
+      - currency
+      - startupCost
+      - monthlyCost
+      - noticePeriodDays
+      - channelRequestProcessingDays
+      - categories
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        currency:
+          type: string
+        description:
+          type: string
+        prettyName:
+          type: string
+        iconClass:
+          type: string
+        startupCost:
+          format: double
+          type: number
+        monthlyCost:
+          format: double
+          type: number
+        noticePeriodDays:
+          format: int32
+          type: integer
+        channelRequestProcessingDays:
+          format: int32
+          type: integer
+        requiredCapability:
+          type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+    CM.Platform.Channels.Models.Channels.ApiChannels:
+      required:
+      - available
+      - sandbox
+      - comingSoon
+      - sandboxAvailable
+      type: object
+      properties:
+        available:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelsAvailable'
+        sandbox:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelsAvailable'
+        comingSoon:
+          type: array
+          items:
+            type: string
+        sandboxAvailable:
+          type: array
+          items:
+            type: string
+        isDemoAccount:
+          type: boolean
+    CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelTypeRequestBase:
+      required:
+      - id
+      - channelTypeId
+      - isPending
+      - isActive
+      - createdOnUtc
+      - requestState
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelTypeId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        createdOnUtc:
+          format: date-time
+          type: string
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.Channels.ApiOttMetrics:
+      required:
+      - type
+      - typeName
+      - typePrettyName
+      - typeIconClass
+      type: object
+      properties:
+        type:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        typeName:
+          type: string
+        typePrettyName:
+          type: string
+        typeIconClass:
+          type: string
+        requestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        amount:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.Channels.ApiChannelTypeBaseResponse:
+      required:
+      - id
+      - currency
+      - startupCost
+      - monthlyCost
+      - channelRequestProcessingDays
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        currency:
+          type: string
+        description:
+          type: string
+        prettyName:
+          type: string
+        iconClass:
+          type: string
+        startupCost:
+          format: double
+          type: number
+        monthlyCost:
+          format: double
+          type: number
+        channelRequestProcessingDays:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestForm:
+      type: object
+      properties:
+        channelType:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeBaseResponse'
+        formElements:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormElement'
+    CM.Platform.Channels.Models.RequestForms.ApiCustomRequestForm:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElements:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormElement'
+    CM.Platform.Channels.Models.Internal.Analytics.ApiInternalAnalyticsOttMessagesBundleSpecifics:
+      type: object
+      properties:
+        dimension:
+          enum:
+          - PAYASYOUGO
+          - BUNDLE
+          type: string
+        dimensionValue:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelOverviewType:
+      required:
+      - type
+      - typeName
+      - typePrettyName
+      - typeIconClass
+      - sandboxIsAvailable
+      type: object
+      properties:
+        type:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        typeName:
+          type: string
+        typePrettyName:
+          type: string
+        typeIconClass:
+          type: string
+        requestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+        sandboxIsAvailable:
+          type: boolean
+        categoryRequests:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewTypeRequestCategoryRequest'
+    CM.Platform.Channels.Models.Channels.ApiConversationalProfile:
+      type: object
+      properties:
+        channelTypePrettyName:
+          type: string
+        channelCategoryName:
+          type: string
+        channelTypeRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        id:
+          type: string
+        senderIdConfig:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiConversationalProfileSenderIdConfig'
+        name:
+          type: string
+        imageResourceUrl:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Messages.Models.ApiMessageChannel:
+      type: object
+      properties:
+        profileImage:
+          type: string
+        id:
+          type: string
+        allowImages:
+          type: boolean
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        whatsAppRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        requestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          type: string
+    CM.Platform.Messages.Models.ApiChannelInfo:
+      type: object
+      properties:
+        disabled:
+          type: boolean
+        name:
+          type: string
+        options:
+          $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiChannelOptions'
+        type:
+          type: string
+    CM.Platform.Messages.Models.ApiChannelOptions:
+      type: object
+      properties:
+        allowImages:
+          type: boolean
+        allowTemplates:
+          type: boolean
+        requestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        appKey:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+    ChannelType:
+      type: string
+      enum:
+      - email
+      - sms
+      - whatsapp
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    Channel:
+      title: Channel
+      type: object
+      properties:
+        channel:
+          $ref: '#/components/schemas/ChannelType'
+          examples:
+          - sms
+          readOnly: true
+        disabled:
+          type: boolean
+          description: Indicates if a channel is disabled
+          examples:
+          - false
+          readOnly: true
+  requestBodies:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
+  parameters:
+    KeyId:
+      name: kid
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies the client
+
+        '
+      example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    SystemTokenAuth:
+      description: Send your organisation's system token in this header.
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID
+      type: apiKey
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '
+externalDocs:
+  description: ''
+  url: ''
+x-refined-from:
+- cm-com-live-event-ticketing-v1-openapi.yml
+- cm-com-messaging-channels-api-v1-2-openapi.yml
+- cm-com-mobile-marketing-cloud-mmc-campaigns-v1-openapi.yml
+- cm-com-sign-v1-openapi.yml

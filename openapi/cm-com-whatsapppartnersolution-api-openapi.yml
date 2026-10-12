@@ -1,0 +1,240 @@
+openapi: 3.2.0
+info:
+  title: Channels Whats App Partner Solution API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: WhatsAppPartnerSolution
+paths:
+  /channels/v1/accounts/{accountId}/whatsapppartnersolution/{channelRequestId}/partnersolution:
+    get:
+      tags:
+      - WhatsAppPartnerSolution
+      summary: Gets all WhatsApp PartnerSolutions for this account
+      operationId: WhatsAppPartnerSolution_GetWhatsAppPartnerSolutionsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution'
+  /channels/v1/accounts/{accountId}/whatsapppartnersolution/{channelRequestId}/partnersolution/{partnerSolutionId}:
+    get:
+      tags:
+      - WhatsAppPartnerSolution
+      summary: Gets a WhatsApp Partner Solution
+      operationId: WhatsAppPartnerSolution_GetWhatsAppPartnerSolutionAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: partnerSolutionId
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution'
+  ? /channels/v1/accounts/{accountId}/whatsapppartnersolution/{channelRequestId}/partnersolution/{partnerSolutionId}/businessaccounts
+  : get:
+      tags:
+      - WhatsAppPartnerSolution
+      summary: Gets a WhatsApp Partner Solution business accounts
+      operationId: WhatsAppPartnerSolution_GetWhatsAppPartnerSolutionBusinessAccountsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: partnerSolutionId
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolutionBusinessAccount'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolutionBusinessAccount'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolutionBusinessAccount'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolutionBusinessAccount'
+components:
+  schemas:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution:
+      required:
+      - id
+      - createdOnUtc
+      - solutionId
+      - usesCloudApi
+      - usesCMBusinessMessagingApi
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        createdOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        solutionId:
+          type: string
+        solutionName:
+          type: string
+        cmBusinessId:
+          type: string
+        techPartnerBusinessId:
+          type: string
+        techPartnerBusinessName:
+          type: string
+        status:
+          type: string
+        usesCloudApi:
+          type: boolean
+        usesCMBusinessMessagingApi:
+          type: boolean
+        partnerBusinessAccountsCount:
+          format: int32
+          type: integer
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+    CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolutionBusinessAccount:
+      required:
+      - id
+      - businessAccountId
+      - ownerBusinessAccountId
+      - solutionId
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        businessAccountId:
+          type: string
+        businessAccountName:
+          type: string
+        ownerBusinessAccountId:
+          type: string
+        ownerBusinessAccountName:
+          type: string
+        solutionId:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

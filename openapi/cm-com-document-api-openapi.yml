@@ -1,0 +1,154 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Sign Document API
+  description: 'Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via this link. This will grant you access to the sandbox environment.
+
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Document
+  description: Upload documents
+paths:
+  /upload:
+    post:
+      operationId: upload_document
+      summary: Upload document
+      description: Upload a new PDF document to be added to a dossier. Make sure to indicate the `Content-Type` correctly for the file parameter of the form data. The file should be no more than 10MB. The filename will be visible to the end user.
+      tags:
+      - Document
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUpload'
+            encoding:
+              file:
+                contentType: application/pdf
+      responses:
+        '200':
+          description: Successful upload with the description of the file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    FileBase:
+      title: File
+      type: object
+      properties:
+        name:
+          type: string
+          description: Original name of the file without extension
+          maxLength: 255
+          examples:
+          - Purchase contract
+        hash:
+          type: string
+          description: A sha256 hash of the document
+          maxLength: 64
+          readOnly: true
+        uploadDateTime:
+          type: string
+          format: date-time
+          description: The time at which the file was uploaded
+          readOnly: true
+        size:
+          type: integer
+          description: The size of the file in bytes
+          examples:
+          - 3028
+        contentType:
+          type: string
+          description: The content type identifying the type of file
+          examples:
+          - application/pdf
+          readOnly: true
+      required:
+      - name
+      - hash
+      - uploadDateTime
+      - contentType
+    FileReference:
+      type: string
+      format: uuid
+      description: A unique reference number for this file.
+      examples:
+      - 8d817359-7eb8-4b6e-9030-17ac286b7dc0
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    FileUpload:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/pdf
+          description: The PDF document to upload.
+    File:
+      allOf:
+      - type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/FileId'
+        required:
+        - id
+      - $ref: '#/components/schemas/FileBase'
+    FileId:
+      $ref: '#/components/schemas/FileReference'
+      readOnly: true
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

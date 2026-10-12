@@ -1,0 +1,4054 @@
+# x-archived-from: cm-com-email-gateway-api-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.3
+info:
+  title: Email Gateway API
+  version: "1.0"
+  description: Send transactional and marketing emails, manage domains,
+    suppressions, webhooks, and more.
+servers:
+  - url: https://api.cm.com
+    description: Production
+paths:
+  /email/gateway/v1/marketing:
+    post:
+      summary: Send marketing email
+      tags:
+        - Send Email
+      parameters:
+        - name: X-CM-PRODUCTTOKEN
+          in: header
+          schema:
+            type: string
+        - name: Sandbox-Mode
+          in: header
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Gateway_GatewayRequest"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Gateway_GatewayRequest"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Gateway_GatewayRequest"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Gateway_GatewayRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gateway_EmailResponseDto"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gateway_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gateway_ProblemDetails"
+      operationId: op_1
+      security:
+        - ProductToken: []
+  /email/gateway/v1/transactional:
+    post:
+      summary: Send transactional email
+      tags:
+        - Send Email
+      parameters:
+        - name: X-CM-PRODUCTTOKEN
+          in: header
+          schema:
+            type: string
+        - name: priority
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: Sandbox-Mode
+          in: header
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Gateway_GatewayRequest"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Gateway_GatewayRequest"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Gateway_GatewayRequest"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Gateway_GatewayRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gateway_EmailResponseDto"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gateway_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gateway_ProblemDetails"
+      operationId: op_2
+      security:
+        - ProductToken: []
+  /email/configuration/v1/dns/accounts/{logicalAccountId}/verify:
+    post:
+      summary: Verify DNS records
+      tags:
+        - DnsVerify
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: domain
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainValidityResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainValidityResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainValidityResponse"
+        "400":
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "409":
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_3
+      security:
+        - ProductToken: []
+  /email/configuration/v1/dns/accounts/{logicalAccountId}/verify/{capability}:
+    post:
+      summary: Verify DNS capability
+      tags:
+        - DnsVerify
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: capability
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - sending
+              - receiving
+              - all
+        - name: domain
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainValidityResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainValidityResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainValidityResponse"
+        "400":
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "409":
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_19
+      security:
+        - ProductToken: []
+  /email/configuration/v1/account/{logicalAccount}/alerts/list:
+    get:
+      summary: List usage alerts
+      tags:
+        - EmailAlerts
+      parameters:
+        - name: logicalAccount
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailAlertListControllerResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailAlertListControllerResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailAlertListControllerResponse"
+      operationId: op_4
+      security:
+        - ProductToken: []
+  /email/configuration/v1/account/{logicalAccount}/alerts/create:
+    post:
+      summary: Create usage alert
+      tags:
+        - EmailAlerts
+      parameters:
+        - name: logicalAccount
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailAlertDto"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailAlertDto"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailAlertDto"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailAlertDto"
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+      operationId: op_5
+      security:
+        - ProductToken: []
+  /email/configuration/v1/account/{logicalAccount}/alerts/update/{id}:
+    put:
+      summary: Update usage alert
+      tags:
+        - EmailAlerts
+      parameters:
+        - name: logicalAccount
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailAlertDto"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailAlertDto"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailAlertDto"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailAlertDto"
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+      operationId: op_6
+      security:
+        - ProductToken: []
+  /email/configuration/v1/account/{logicalAccount}/alerts/delete/{id}:
+    delete:
+      summary: Delete usage alert
+      tags:
+        - EmailAlerts
+      parameters:
+        - name: logicalAccount
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+      operationId: op_7
+      security:
+        - ProductToken: []
+  /email/configuration/v1/configuration/add-domain:
+    post:
+      summary: Add domain
+      tags:
+        - Domains
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_DomainConfigPostDto"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_DomainConfigPostDto"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_DomainConfigPostDto"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_DomainConfigPostDto"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainConfigResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_8
+      security:
+        - ProductToken: []
+  /email/configuration/v1/configuration/accounts/{logicalAccountId}:
+    get:
+      summary: List account domains
+      tags:
+        - Domains
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_MultiDomainConfigResponse"
+      operationId: op_9
+      security:
+        - ProductToken: []
+  /email/configuration/v1/configuration/accounts/{logicalAccountId}/domains/{domainId}:
+    get:
+      summary: Get domain
+      tags:
+        - Domains
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: domainId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_DnsRecordGetResponse"
+      operationId: op_10
+      security:
+        - ProductToken: []
+    delete:
+      summary: Delete domain
+      tags:
+        - Domains
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: domainId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ConfigResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_11
+      security:
+        - ProductToken: []
+  /email/configuration/v1/configuration/accounts/{logicalAccountId}/domains/{domain}/sending:
+    put:
+      summary: Enable or disable sending
+      tags:
+        - Domains
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: domain
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: enabled
+          in: query
+          required: true
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainConfigIEnumerableControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_20
+      security:
+        - ProductToken: []
+  /email/configuration/v1/configuration/accounts/{logicalAccountId}/domains/{domain}/receiving:
+    put:
+      summary: Enable or disable receiving
+      tags:
+        - Domains
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: domain
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: enabled
+          in: query
+          required: true
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_DomainConfigIEnumerableControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_21
+      security:
+        - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccountId}/emails/receiving:
+    get:
+      summary: List received emails
+      tags:
+        - Receive Emails
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: LogTimeRangeType
+          in: query
+          schema:
+            $ref: "#/components/schemas/Configuration_TimeRangePickerOptions"
+        - name: Direction
+          in: query
+          description: Filter by direction.
+          schema:
+            type: string
+        - name: SearchText
+          in: query
+          description: Free-text search.
+          schema:
+            type: string
+        - name: StartDate
+          in: query
+          description: Required with EndDate when LogTimeRangeType is a custom range.
+          schema:
+            type: string
+            format: date-time
+        - name: EndDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: timezone
+          in: query
+          description: IANA time zone used to render timestamps.
+          schema:
+            type: string
+            default: UTC
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: itemsPerPage
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailsGetResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_26
+      security:
+        - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccountId}/emails/receiving/{emailId}:
+    get:
+      summary: Get received email
+      tags:
+        - Receive Emails
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: emailId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: timezone
+          in: query
+          description: IANA time zone used to render timestamps.
+          schema:
+            type: string
+            default: UTC
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailDetailControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_27
+      security:
+        - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccountId}/emails/receiving/{emailId}/attachments:
+    get:
+      summary: List received email attachments
+      tags:
+        - Receive Emails
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: emailId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailAttachmentListControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+      operationId: op_28
+      security:
+        - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccount}/inbound-webhook:
+    get:
+      summary: List receiving webhooks
+      tags:
+        - Receive Webhooks
+      parameters:
+        - name: logicalAccount
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: domain
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailInboundWebhookControllerResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailInboundWebhookControllerResponse"
+      operationId: op_22
+      security:
+        - ProductToken: []
+    post:
+      summary: Create receiving webhook
+      tags:
+        - Receive Webhooks
+      parameters:
+        - name: logicalAccount
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailInboundWebhookRequest"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailInboundWebhookRequest"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailInboundWebhookRequest"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailInboundWebhookRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailInboundWebhookResponseControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailInboundWebhookResponseControllerResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailInboundWebhookResponseControllerResponse"
+      operationId: op_23
+      security:
+        - ProductToken: []
+    patch:
+      summary: Update receiving webhook
+      tags:
+        - Receive Webhooks
+      parameters:
+        - name: logicalAccount
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailInboundWebhookUpdateRequest"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailInboundWebhookUpdateRequest"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailInboundWebhookUpdateRequest"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_EmailInboundWebhookUpdateRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailInboundWebhookControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailInboundWebhookControllerResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_EmailInboundWebhookControllerResponse"
+      operationId: op_24
+      security:
+        - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccount}/inbound-webhook/{id}:
+    delete:
+      summary: Delete receiving webhook
+      tags:
+        - Receive Webhooks
+      parameters:
+        - name: logicalAccount
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int64ControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int64ControllerResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ProblemDetails"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int64ControllerResponse"
+      operationId: op_25
+      security:
+        - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccountId}/create:
+    post:
+      summary: Create webhook
+      tags:
+        - Webhooks
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_WebhookPostDto"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_WebhookPostDto"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Configuration_WebhookPostDto"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Configuration_WebhookPostDto"
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_Int32ControllerResponse"
+      operationId: op_12
+      security:
+        - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccountId}/list:
+    get:
+      summary: List webhooks
+      tags:
+        - Webhooks
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: all
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ObjectControllerResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ObjectControllerResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ObjectControllerResponse"
+      operationId: op_13
+      security:
+        - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccountId}/delete:
+    delete:
+      summary: Delete webhook
+      tags:
+        - Webhooks
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: webhookType
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/Configuration_ConfigResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ConfigResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/Configuration_ConfigResponse"
+      operationId: op_14
+      security:
+        - ProductToken: []
+  /email/suppression/v1/accounts/{logicalAccountId}/manual:
+    post:
+      summary: Add manual suppression
+      tags:
+        - Suppressions
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Suppression_UnsubscribeRequestDto"
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Suppression_UnsubscribeRequestDto"
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Suppression_UnsubscribeRequestDto"
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Suppression_UnsubscribeRequestDto"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Suppression_ObjectControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Suppression_ProblemDetails"
+        "500":
+          description: Internal Server Error
+      operationId: op_15
+      security:
+        - ProductToken: []
+  /email/suppression/v1/accounts/{logicalAccountId}/subscriptions:
+    post:
+      summary: Search unsubscribes
+      tags:
+        - Suppressions
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: timezone
+          in: query
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 1
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Suppression_EmailUnsubscribeFilters"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Suppression_EmailUnsubscribeFilters"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Suppression_EmailUnsubscribeFilters"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Suppression_EmailUnsubscribeFilters"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Suppression_EmailUnsubscribeResultControllerResponse"
+      operationId: op_16
+      security:
+        - ProductToken: []
+    get:
+      summary: List suppressions
+      tags:
+        - Suppressions
+      parameters:
+        - name: logicalAccountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: searchEmail
+          in: query
+          schema:
+            type: string
+        - name: emailType
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: -1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Suppression_SuppressionListResultControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Suppression_ProblemDetails"
+        "500":
+          description: Internal Server Error
+      operationId: op_17
+      security:
+        - ProductToken: []
+  /email/suppression/v1/{uniqueKey}:
+    post:
+      summary: Update suppression
+      tags:
+        - Suppressions
+      parameters:
+        - name: uniqueKey
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/Suppression_UnsubscribeFromLinkRequest"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Suppression_UnsubscribeFromLinkRequest"
+          text/json:
+            schema:
+              $ref: "#/components/schemas/Suppression_UnsubscribeFromLinkRequest"
+          application/*+json:
+            schema:
+              $ref: "#/components/schemas/Suppression_UnsubscribeFromLinkRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Suppression_ObjectControllerResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Suppression_ProblemDetails"
+        "500":
+          description: Internal Server Error
+      operationId: op_18
+      security:
+        - ProductToken: []
+components:
+  schemas:
+    Gateway_EmailAddress:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Gateway_EmailAttachment:
+      type: object
+      properties:
+        fileName:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+        contentType:
+          type: string
+          nullable: true
+        contentId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Gateway_EmailResponseDto:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+        messageId:
+          type: string
+          nullable: true
+        batchId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Gateway_GatewayRequest:
+      required:
+        - subject
+      type: object
+      properties:
+        from:
+          $ref: "#/components/schemas/Gateway_EmailAddress"
+        replyTo:
+          $ref: "#/components/schemas/Gateway_EmailAddress"
+        to:
+          type: array
+          items:
+            $ref: "#/components/schemas/Gateway_EmailAddress"
+          nullable: true
+        cc:
+          type: array
+          items:
+            $ref: "#/components/schemas/Gateway_EmailAddress"
+          nullable: true
+        bcc:
+          type: array
+          items:
+            $ref: "#/components/schemas/Gateway_EmailAddress"
+          nullable: true
+        subject:
+          type: string
+          nullable: true
+        html:
+          type: string
+          nullable: true
+        text:
+          type: string
+          nullable: true
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Gateway_EmailAttachment"
+          nullable: true
+        customerReference:
+          type: string
+          nullable: true
+        scheduledAt:
+          type: string
+          nullable: true
+        inReplyTo:
+          type: string
+          nullable: true
+        references:
+          type: string
+          nullable: true
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+      additionalProperties: false
+    Gateway_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
+    Configuration_AccountConfig:
+      required:
+        - name
+        - planName
+        - technicalAccount
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        logicalAccount:
+          type: string
+          format: uuid
+        technicalAccount:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        organization:
+          type: integer
+          format: int32
+        suspended:
+          type: boolean
+        suspendedReason:
+          type: string
+          nullable: true
+        cmCompany:
+          type: integer
+          format: int32
+        ipWhitelistEnabled:
+          type: boolean
+        productToken:
+          $ref: "#/components/schemas/Configuration_ProductTokens"
+        planName:
+          type: string
+          nullable: true
+        defaultRecipientCount:
+          type: integer
+          format: int32
+        defaultAttachmentSizeInBytes:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    Configuration_AccountConfigGetResponse:
+      type: object
+      properties:
+        statusCode:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        account:
+          $ref: "#/components/schemas/Configuration_AccountConfig"
+      additionalProperties: false
+    Configuration_AccountConfigPostDto:
+      required:
+        - logicalAccount
+        - planName
+        - technicalAccount
+      type: object
+      properties:
+        logicalAccount:
+          type: string
+          format: uuid
+        technicalAccount:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        organization:
+          type: integer
+          format: int32
+        suspended:
+          type: boolean
+        suspendedReason:
+          type: string
+          nullable: true
+        cmCompany:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
+        planName:
+          type: string
+          nullable: true
+        defaultRecipientCount:
+          type: integer
+          format: int32
+        defaultAttachmentSizeInBytes:
+          type: integer
+          format: int32
+        ipWhitelistEnabled:
+          type: boolean
+      additionalProperties: false
+    Configuration_AccountConfigResponse:
+      required:
+        - message
+        - status
+      type: object
+      properties:
+        accountConfig:
+          $ref: "#/components/schemas/Configuration_AccountConfig"
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_AccountDetails:
+      required:
+        - name
+        - planName
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        logicalAccount:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        organization:
+          type: integer
+          format: int32
+        status:
+          $ref: "#/components/schemas/Configuration_AccountStatus"
+        suspendedReason:
+          type: string
+          nullable: true
+        defaultRecipientCount:
+          type: integer
+          format: int32
+        defaultAttachmentSize:
+          type: integer
+          format: int32
+        createdOn:
+          type: string
+          format: date-time
+          nullable: true
+        planName:
+          type: string
+          nullable: true
+        emailCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Configuration_AccountDetailsListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_AccountDetails"
+          nullable: true
+      additionalProperties: false
+    Configuration_AccountStatus:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      format: int32
+    Configuration_AccountUpdateRequest:
+      type: object
+      properties:
+        recipientCount:
+          type: integer
+          format: int32
+        defaultAttachmentSize:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Configuration_BooleanControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: boolean
+      additionalProperties: false
+    Configuration_BooleanNullableControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    Configuration_ConfigResponse:
+      required:
+        - message
+        - status
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_DataRetention:
+      type: object
+      properties:
+        statusCode:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        statusMessage:
+          type: string
+          nullable: true
+        logicalAccountId:
+          type: string
+          format: uuid
+        retentionValue:
+          type: integer
+          format: int32
+        retentionPeriod:
+          $ref: "#/components/schemas/Configuration_RetentionPeriod"
+      additionalProperties: false
+    Configuration_DataRetentionRequest:
+      type: object
+      properties:
+        retentionValue:
+          type: integer
+          format: int32
+        retentionPeriod:
+          $ref: "#/components/schemas/Configuration_RetentionPeriod"
+      additionalProperties: false
+    Configuration_DateBucketOptions:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      type: integer
+      format: int32
+    Configuration_DnsEntry:
+      required:
+        - host
+        - purpose
+        - type
+        - value
+      type: object
+      properties:
+        host:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+        isValid:
+          type: boolean
+        type:
+          type: string
+          nullable: true
+        purpose:
+          type: string
+          nullable: true
+          description: 'Either sending (CNAME records) or receiving (the MX record).'
+        priority:
+          type: integer
+          format: int32
+          nullable: true
+          description: MX preference. Null for non-MX records.
+        status:
+          type: integer
+          format: int32
+          description: 1 not verified yet, 2 verified, 3 verification ran and failed.
+      additionalProperties: false
+    Configuration_DnsRecord:
+      required:
+        - host
+        - purpose
+        - type
+        - value
+      type: object
+      properties:
+        host:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+        purpose:
+          type: string
+          nullable: true
+          description: 'Either sending (CNAME records) or receiving (the MX record).'
+        priority:
+          type: integer
+          format: int32
+          nullable: true
+          description: MX preference. Null for non-MX records.
+        dnsStatus:
+          type: integer
+          format: int32
+          description: 1 not verified yet, 2 verified, 3 verification ran and failed.
+      additionalProperties: false
+    Configuration_DnsRecordGetDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        fromDomain:
+          type: integer
+          format: int32
+        host:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+        isValid:
+          type: boolean
+        purpose:
+          type: string
+          nullable: true
+          description: 'Either sending (CNAME records) or receiving (the MX record).'
+        priority:
+          type: integer
+          format: int32
+          nullable: true
+          description: MX preference. Null for non-MX records.
+        dnsStatus:
+          type: integer
+          format: int32
+          description: 1 not verified yet, 2 verified, 3 verification ran and failed.
+      additionalProperties: false
+    Configuration_DnsRecordGetResponse:
+      required:
+        - message
+        - status
+      type: object
+      properties:
+        dnsRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_DnsRecordGetDto"
+          nullable: true
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_DomainConfig:
+      required:
+        - domain
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        accountId:
+          type: string
+          format: uuid
+        domain:
+          type: string
+          nullable: true
+        createdOn:
+          type: string
+          format: date-time
+          nullable: true
+        modifiedOn:
+          type: string
+          format: date-time
+          nullable: true
+        deletedOn:
+          type: string
+          format: date-time
+          nullable: true
+        dnsRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_DnsRecord"
+          nullable: true
+        isValid:
+          type: boolean
+        clickTracking:
+          type: boolean
+        openTracking:
+          type: boolean
+        sendingEnabled:
+          type: boolean
+          description: Defaults to true for a new domain.
+        receivingEnabled:
+          type: boolean
+          description: Defaults to false for a new domain.
+        status:
+          type: integer
+          format: int32
+          description: 1 not verified yet, 2 verified, 3 verification ran and failed.
+      additionalProperties: false
+    Configuration_DomainConfigIEnumerableControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_DomainConfig"
+          nullable: true
+      additionalProperties: false
+    Configuration_DomainConfigPostDto:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        domain:
+          type: string
+          nullable: true
+        clickTracking:
+          type: boolean
+        openTracking:
+          type: boolean
+      additionalProperties: false
+    Configuration_DomainConfigResponse:
+      required:
+        - message
+        - status
+      type: object
+      properties:
+        domainConfig:
+          $ref: "#/components/schemas/Configuration_DomainConfig"
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_DomainValidityResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+        dnsEntries:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_DnsEntry"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailAggregateMetrics:
+      type: object
+      properties:
+        totalSent:
+          type: integer
+          format: int64
+        totalBounced:
+          type: integer
+          format: int64
+        totalDelivered:
+          type: integer
+          format: int64
+        deliveryRate:
+          type: number
+          format: double
+        bounceRate:
+          type: number
+          format: double
+        totalAbused:
+          type: number
+          format: double
+        totalSpamRelated:
+          type: number
+          format: double
+        totalSpam:
+          type: number
+          format: double
+        spamRate:
+          type: number
+          format: double
+      additionalProperties: false
+    Configuration_EmailAlert:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        logicalAccountId:
+          type: string
+          format: uuid
+        alertName:
+          type: string
+          nullable: true
+        metric:
+          type: string
+          nullable: true
+        threshold:
+          type: string
+          nullable: true
+        recipient:
+          type: string
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+        updatedDate:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Configuration_EmailAlertDto:
+      type: object
+      properties:
+        alertName:
+          type: string
+          nullable: true
+        metric:
+          type: string
+          nullable: true
+        threshold:
+          type: string
+          nullable: true
+        recipient:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailAlertListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailAlert"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailDomainGraphMetrics:
+      type: object
+      properties:
+        totalRequest:
+          type: integer
+          format: int64
+        totalDelivered:
+          type: integer
+          format: int64
+        totalBounced:
+          type: integer
+          format: int64
+        emailDomain:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailEventAggregateMetrics:
+      type: object
+      properties:
+        totalSent:
+          type: number
+          format: double
+        totalUniqueOpenCount:
+          type: number
+          format: double
+        totalUniqueClickCount:
+          type: number
+          format: double
+        totalOpenCount:
+          type: number
+          format: double
+        totalClickCount:
+          type: number
+          format: double
+        openRate:
+          type: number
+          format: double
+        clickRate:
+          type: number
+          format: double
+        clickToOpenRate:
+          type: number
+          format: double
+      additionalProperties: false
+    Configuration_EmailEventGraphMetric:
+      required:
+        - axisCount
+      type: object
+      properties:
+        axisCount:
+          type: number
+          format: double
+        timeOffset:
+          type: string
+          format: date-time
+        totalSent:
+          type: number
+          format: double
+        totalUniqueOpenCount:
+          type: number
+          format: double
+        totalUniqueClickCount:
+          type: number
+          format: double
+        totalOpenCount:
+          type: number
+          format: double
+        totalClickCount:
+          type: number
+          format: double
+        dateBucketOption:
+          $ref: "#/components/schemas/Configuration_DateBucketOptions"
+      additionalProperties: false
+    Configuration_EmailFeatureInfo:
+      required:
+        - featureName
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        featureName:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        active:
+          type: boolean
+        value:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailFeatureRequest:
+      required:
+        - featureName
+      type: object
+      properties:
+        featureName:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        active:
+          type: boolean
+        value:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailFeaturesInfoResponse:
+      type: object
+      properties:
+        statusCode:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        featureFlags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailFeatureInfo"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailGraphAggregate:
+      required:
+        - axisCount
+      type: object
+      properties:
+        axisCount:
+          type: number
+          format: double
+        timeOffset:
+          type: string
+          format: date-time
+        totalSent:
+          type: number
+          format: double
+        totalDelivered:
+          type: number
+          format: double
+        totalBounced:
+          type: number
+          format: double
+        totalSoftBounced:
+          type: number
+          format: double
+        totalHardBounced:
+          type: number
+          format: double
+        dateBucketOption:
+          $ref: "#/components/schemas/Configuration_DateBucketOptions"
+      additionalProperties: false
+    Configuration_EmailAttachment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fileName:
+          type: string
+          nullable: true
+        contentType:
+          type: string
+          nullable: true
+        inline:
+          type: boolean
+        contentId:
+          type: string
+          nullable: true
+        sizeBytes:
+          type: integer
+          format: int64
+          nullable: true
+        url:
+          type: string
+          nullable: true
+        checksumSha256:
+          type: string
+          nullable: true
+        truncated:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailAttachmentListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailAttachment"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailAttachmentMetadata:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fileName:
+          type: string
+          nullable: true
+        contentType:
+          type: string
+          nullable: true
+        inline:
+          type: boolean
+        contentId:
+          type: string
+          nullable: true
+        sizeBytes:
+          type: integer
+          format: int64
+          nullable: true
+        checksumSha256:
+          type: string
+          nullable: true
+        truncated:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        direction:
+          type: string
+          nullable: true
+        rfcMessageId:
+          type: string
+          nullable: true
+        fromAddress:
+          type: string
+          nullable: true
+        fromName:
+          type: string
+          nullable: true
+        toHeader:
+          type: string
+          nullable: true
+        originalRecipient:
+          type: string
+          nullable: true
+        subject:
+          type: string
+          nullable: true
+        sentDate:
+          type: string
+          format: date-time
+          nullable: true
+        receivedAt:
+          type: string
+          format: date-time
+          nullable: true
+        sizeBytes:
+          type: integer
+          format: int64
+          nullable: true
+        attachmentCount:
+          type: integer
+          format: int32
+        inReplyTo:
+          type: string
+          nullable: true
+        cc:
+          type: string
+          nullable: true
+        bcc:
+          type: string
+          nullable: true
+        referencesJson:
+          type: string
+          nullable: true
+        headers:
+          type: string
+          nullable: true
+        hasTruncatedAttachment:
+          type: boolean
+        rawContent:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        bodyTextBody:
+          type: string
+          nullable: true
+        bodyHtmlBody:
+          type: string
+          nullable: true
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailAttachmentMetadata"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailDetailControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_EmailDetail"
+      additionalProperties: false
+    Configuration_EmailListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        from:
+          type: string
+          nullable: true
+        fromName:
+          type: string
+          nullable: true
+        toHeader:
+          type: string
+          nullable: true
+        originalRecipient:
+          type: string
+          nullable: true
+        subject:
+          type: string
+          nullable: true
+        receivedAt:
+          type: string
+          format: date-time
+          nullable: true
+        sizeBytes:
+          type: integer
+          format: int64
+          nullable: true
+        attachmentCount:
+          type: integer
+          format: int32
+        direction:
+          type: string
+          nullable: true
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailAttachmentMetadata"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailsGetResponse:
+      type: object
+      properties:
+        statusCode:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        totalCount:
+          type: integer
+          format: int64
+        emails:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailListItem"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailInboundWebhookControllerResponse:
+      required:
+        - message
+        - status
+      type: object
+      properties:
+        webhookResponse:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailInboundWebhookResponse"
+          nullable: true
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailInboundWebhookRequest:
+      type: object
+      properties:
+        webhookUrl:
+          type: string
+          nullable: true
+          description: HTTPS URL, port 443. Trailing slash is removed.
+        domain:
+          type: string
+          nullable: true
+          description: Recipient domain. Stored lower-case.
+        usePresignedAttachments:
+          type: boolean
+          nullable: true
+          description: Send attachments as download links instead of inline base64. Default false.
+        presignedUrlExpiryHours:
+          type: integer
+          format: int32
+          nullable: true
+          description: Lifetime of download links in hours. Default 24, effective maximum 168.
+      additionalProperties: false
+    Configuration_EmailInboundWebhookResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        logicalAccountId:
+          type: string
+          format: uuid
+        webhookUrl:
+          type: string
+          nullable: true
+        domain:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        modifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+        usePresignedAttachments:
+          type: boolean
+        presignedUrlExpiryHours:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Configuration_EmailInboundWebhookResponseControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_EmailInboundWebhookResponse"
+      additionalProperties: false
+    Configuration_EmailInboundWebhookUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Must be greater than 0.
+        resetPresignedUrlExpiryHours:
+          type: boolean
+          description: Sets the expiry back to 24. Wins over presignedUrlExpiryHours.
+        webhookUrl:
+          type: string
+          nullable: true
+        domain:
+          type: string
+          nullable: true
+        usePresignedAttachments:
+          type: boolean
+          nullable: true
+          description: Send attachments as download links instead of inline base64. Default false.
+        presignedUrlExpiryHours:
+          type: integer
+          format: int32
+          nullable: true
+          description: Lifetime of download links in hours. Default 24, effective maximum 168.
+      additionalProperties: false
+    Configuration_EmailInvoice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        logicalAccount:
+          type: string
+          format: uuid
+        processedDate:
+          type: string
+          format: date-time
+        bundleName:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        bundleSize:
+          type: integer
+          format: int32
+        sentEmailCount:
+          type: integer
+          format: int32
+        pricePerUnit:
+          type: number
+          format: double
+        totalPayableAmount:
+          type: number
+          format: double
+        localCurrency:
+          type: string
+          nullable: true
+        localTotalPayableAmount:
+          type: number
+          format: double
+      additionalProperties: false
+    Configuration_EmailInvoiceResponse:
+      type: object
+      properties:
+        accountName:
+          type: string
+          nullable: true
+        logicalAccountId:
+          type: string
+          format: uuid
+        invoice:
+          $ref: "#/components/schemas/Configuration_EmailInvoice"
+      additionalProperties: false
+    Configuration_EmailInvoiceResponseListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailInvoiceResponse"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailLogs:
+      type: object
+      properties:
+        messageId:
+          type: string
+          format: uuid
+        customer:
+          type: string
+          nullable: true
+        logicalAccount:
+          type: string
+          format: uuid
+        batchGuid:
+          type: string
+          format: uuid
+        sender:
+          type: string
+          nullable: true
+        requestedOn:
+          type: string
+          format: date-time
+          nullable: true
+        processed:
+          type: string
+          format: date-time
+          nullable: true
+        logged:
+          type: string
+          format: date-time
+          nullable: true
+        messageStatusId:
+          type: integer
+          format: int64
+        recipient:
+          type: string
+          nullable: true
+        statusCode:
+          type: integer
+          format: int32
+        statusDetail:
+          type: string
+          nullable: true
+        sent:
+          type: string
+          format: date-time
+          nullable: true
+        finalized:
+          type: string
+          format: date-time
+          nullable: true
+        clicked:
+          type: boolean
+        opened:
+          type: boolean
+        clickedCount:
+          type: integer
+          format: int32
+        openedCount:
+          type: integer
+          format: int32
+        lastClicked:
+          type: string
+          format: date-time
+          nullable: true
+        lastOpened:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailLogsGetResponse:
+      type: object
+      properties:
+        statusCode:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        logs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailLogs"
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailMetricsTrends:
+      type: object
+      properties:
+        metricType:
+          type: string
+          nullable: true
+        previousValue:
+          type: integer
+          format: int64
+        currentValue:
+          type: integer
+          format: int64
+        trend:
+          type: string
+          nullable: true
+        tooltipTrend:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_EmailOverViewResponse:
+      type: object
+      properties:
+        statusCode:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        emailGraphAggregates:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailGraphAggregate"
+          nullable: true
+        emailDomainMetrics:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/Configuration_EmailDomainGraphMetrics"
+          nullable: true
+        emailAggregateMetrics:
+          $ref: "#/components/schemas/Configuration_EmailAggregateMetrics"
+        emailUnsubscribeMetrics:
+          $ref: "#/components/schemas/Configuration_EmailUnsubscribeMetrics"
+        emailEventAggregateMetrics:
+          $ref: "#/components/schemas/Configuration_EmailEventAggregateMetrics"
+        emailEventGraphMetrics:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailEventGraphMetric"
+          nullable: true
+        emailMetricsTrends:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_EmailMetricsTrends"
+          nullable: true
+        clickTrackingEnabled:
+          type: boolean
+        openTrackingEnabled:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailOverviewRequest:
+      type: object
+      properties:
+        senders:
+          type: string
+          nullable: true
+        recipients:
+          type: string
+          nullable: true
+        emailTypes:
+          type: string
+          nullable: true
+        statuses:
+          type: string
+          nullable: true
+        sendingDomains:
+          type: string
+          nullable: true
+        emailOverViewOption:
+          $ref: "#/components/schemas/Configuration_TimeRangePickerOptions"
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    Configuration_EmailTrackingSettingsDto:
+      type: object
+      properties:
+        openTrackingEnabled:
+          type: boolean
+        clickTrackingEnabled:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailUnsubscribeMetrics:
+      type: object
+      properties:
+        totalBounce:
+          type: number
+          format: double
+        totalBouncedByEmailAction:
+          type: number
+          format: double
+        totalManualBounce:
+          type: number
+          format: double
+        totalBounceByHeaderOrLink:
+          type: number
+          format: double
+      additionalProperties: false
+    Configuration_EmailUsage:
+      required:
+        - message
+        - status
+      type: object
+      properties:
+        emailsSent:
+          type: integer
+          format: int64
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        logicalAccount:
+          type: string
+          format: uuid
+        emailTierLimit:
+          type: integer
+          format: int32
+        tierName:
+          type: string
+          nullable: true
+        resetPeriodInDays:
+          type: number
+          format: double
+          readOnly: true
+        nextResetTime:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        emailUsagePercentage:
+          type: number
+          format: double
+          readOnly: true
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_ExtendedAccount:
+      required:
+        - planName
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+        logicalAccount:
+          type: string
+          format: uuid
+        organization:
+          type: integer
+          format: int32
+        suspended:
+          type: boolean
+        suspendReason:
+          type: string
+          nullable: true
+        cmCompany:
+          type: integer
+          format: int32
+        technicalAccount:
+          type: string
+          format: uuid
+        isActive:
+          type: boolean
+        planId:
+          type: integer
+          format: int64
+        defaultRecipientCount:
+          type: integer
+          format: int32
+        defaultAttachmentSize:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        planName:
+          type: string
+          nullable: true
+        contractTerm:
+          type: string
+          nullable: true
+        currency:
+          type: string
+          nullable: true
+        emailCount:
+          type: integer
+          format: int32
+        price:
+          type: integer
+          format: int32
+        ipWhitelistEnabled:
+          type: boolean
+      additionalProperties: false
+    Configuration_ExtendedAccountControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_ExtendedAccount"
+      additionalProperties: false
+    Configuration_Int32ControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Configuration_Int64ControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: integer
+          format: int64
+          description: Number of rows deleted.
+      additionalProperties: false
+    Configuration_IpAssignmentInfo:
+      type: object
+      properties:
+        ipType:
+          type: string
+          nullable: true
+        ipCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Configuration_LogFilters:
+      type: object
+      properties:
+        logTimeRangeType:
+          $ref: "#/components/schemas/Configuration_TimeRangePickerOptions"
+        senders:
+          type: string
+          nullable: true
+        recipients:
+          type: string
+          nullable: true
+        referenceId:
+          type: string
+          format: uuid
+          nullable: true
+        statuses:
+          type: string
+          nullable: true
+        sendingDomains:
+          type: string
+          nullable: true
+        emailTypes:
+          type: string
+          nullable: true
+        requestedOn:
+          type: string
+          format: date-time
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+        searchText:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_ManualWebhookRetryRequest:
+      required:
+        - personGuid
+        - webhookLogId
+      type: object
+      properties:
+        webhookLogId:
+          type: string
+          format: uuid
+        personGuid:
+          type: string
+          format: uuid
+      additionalProperties: false
+    Configuration_MessageStatusHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        messageStatusId:
+          type: integer
+          format: int32
+        statusCode:
+          type: integer
+          format: int32
+        statusDetail:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        recipient:
+          type: string
+          nullable: true
+        messageId:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    Configuration_MessageStatusHistoryListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_MessageStatusHistory"
+          nullable: true
+      additionalProperties: false
+    Configuration_MultiDomainConfigResponse:
+      required:
+        - message
+        - status
+      type: object
+      properties:
+        domains:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_DomainConfig"
+          nullable: true
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_ObjectControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          nullable: true
+          type: object
+      additionalProperties: false
+    Configuration_OnboardingAction:
+      type: object
+      properties:
+        actionId:
+          $ref: "#/components/schemas/Configuration_OnboardingActionType"
+        isOptional:
+          type: boolean
+        isCompleted:
+          type: boolean
+      additionalProperties: false
+    Configuration_OnboardingActionListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_OnboardingAction"
+          nullable: true
+      additionalProperties: false
+    Configuration_OnboardingActionType:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      format: int32
+    Configuration_PricePlanRequest:
+      type: object
+      properties:
+        pricePlan:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
+    Configuration_ProductTokenDetails:
+      type: object
+      properties:
+        productToken:
+          type: string
+          format: uuid
+        updatedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Configuration_ProductTokenRegenerationResult:
+      type: object
+      properties:
+        token:
+          type: string
+          format: uuid
+          nullable: true
+        isSuccess:
+          type: boolean
+      additionalProperties: false
+    Configuration_ProductTokenRegenerationResultControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_ProductTokenRegenerationResult"
+      additionalProperties: false
+    Configuration_ProductTokens:
+      type: object
+      properties:
+        productToken:
+          type: string
+          format: uuid
+      additionalProperties: false
+    Configuration_RetentionPeriod:
+      enum:
+        - 0
+        - 1
+      type: integer
+      format: int32
+    Configuration_SenderScore:
+      type: object
+      properties:
+        logicalAccountId:
+          type: string
+          format: uuid
+        calculatedOn:
+          type: string
+          format: date-time
+        score:
+          type: number
+          format: double
+        deliveryRate:
+          type: number
+          format: double
+          nullable: true
+        bounceRate:
+          type: number
+          format: double
+          nullable: true
+        spamRate:
+          type: number
+          format: double
+          nullable: true
+        unsubscribeRate:
+          type: number
+          format: double
+          nullable: true
+        openRate:
+          type: number
+          format: double
+          nullable: true
+        clickRate:
+          type: number
+          format: double
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        modifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    Configuration_SenderScoreControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_SenderScore"
+      additionalProperties: false
+    Configuration_SenderScoreDto:
+      type: object
+      properties:
+        score:
+          type: number
+          format: double
+        deliveryRate:
+          type: number
+          format: double
+          nullable: true
+        bounceRate:
+          type: number
+          format: double
+          nullable: true
+        spamRate:
+          type: number
+          format: double
+          nullable: true
+        unsubscribeRate:
+          type: number
+          format: double
+          nullable: true
+        openRate:
+          type: number
+          format: double
+          nullable: true
+        clickRate:
+          type: number
+          format: double
+          nullable: true
+      additionalProperties: false
+    Configuration_SenderScoreListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_SenderScore"
+          nullable: true
+      additionalProperties: false
+    Configuration_StatusCode:
+      enum:
+        - 200
+        - 400
+        - 401
+        - 403
+        - 404
+        - 409
+        - 429
+        - 500
+        - 999
+      type: integer
+      format: int32
+    Configuration_StringControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_SuspendAccountRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_TimeRangePickerOptions:
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+      type: integer
+      format: int32
+    Configuration_TokenValidation:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: true
+        isValid:
+          type: boolean
+      additionalProperties: false
+    Configuration_TokenValidationControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_TokenValidation"
+      additionalProperties: false
+    Configuration_WebhookLogEvent:
+      type: object
+      properties:
+        eventName:
+          type: string
+          nullable: true
+        eventDetails:
+          type: string
+          nullable: true
+        eventDate:
+          type: string
+          format: date-time
+        statusCode:
+          type: integer
+          format: int32
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        attemptNumber:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    Configuration_WebhookLogFilters:
+      type: object
+      properties:
+        eventTypes:
+          type: string
+          nullable: true
+        statusCodes:
+          type: string
+          nullable: true
+        messageId:
+          type: string
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    Configuration_WebhookLogStatusDetails:
+      type: object
+      properties:
+        webhookLogId:
+          type: string
+          format: uuid
+        logicalAccountId:
+          type: string
+          format: uuid
+        eventType:
+          type: integer
+          format: int32
+        eventTypeName:
+          type: string
+          nullable: true
+        webhookId:
+          type: integer
+          format: int32
+        messageId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        currentStatus:
+          type: string
+          nullable: true
+        currentStatusCode:
+          type: integer
+          format: int32
+        currentStatusDetails:
+          type: string
+          nullable: true
+        lastUpdatedAt:
+          type: string
+          format: date-time
+        totalAttempts:
+          type: integer
+          format: int32
+        manualAttempts:
+          type: integer
+          format: int32
+        automaticAttempts:
+          type: integer
+          format: int32
+        eventTimeline:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_WebhookLogEvent"
+          nullable: true
+      additionalProperties: false
+    Configuration_WebhookLogStatusDetailsControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_WebhookLogStatusDetails"
+      additionalProperties: false
+    Configuration_WebhookLogSummaryResponse:
+      type: object
+      properties:
+        webhookLogId:
+          type: string
+          format: uuid
+        logicalAccountId:
+          type: string
+          format: uuid
+        webhookType:
+          type: integer
+          format: int32
+        webhookTypeName:
+          type: string
+          nullable: true
+        webhookId:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        messageId:
+          type: string
+          format: uuid
+        eventType:
+          type: string
+          nullable: true
+        statusCode:
+          type: integer
+          format: int32
+        statusDetails:
+          type: string
+          nullable: true
+        totalAttempts:
+          type: integer
+          format: int32
+        manualAttempts:
+          type: integer
+          format: int32
+        lastRetriedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Configuration_WebhookLogsData:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_WebhookLogSummaryResponse"
+          nullable: true
+        totalCount:
+          type: integer
+          format: int64
+      additionalProperties: false
+    Configuration_WebhookLogsDataControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_WebhookLogsData"
+      additionalProperties: false
+    Configuration_WebhookPayloadDetails:
+      type: object
+      properties:
+        logicalAccountId:
+          type: string
+          format: uuid
+        webhookLogId:
+          type: string
+          format: uuid
+        payload:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_WebhookPayloadDetailsControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_WebhookPayloadDetails"
+      additionalProperties: false
+    Configuration_WebhookPostDto:
+      type: object
+      properties:
+        webhookType:
+          type: string
+          nullable: true
+        webhookUrl:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Configuration_WebhookSecret:
+      type: object
+      properties:
+        logicalAccount:
+          type: string
+          format: uuid
+        secretKey:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Configuration_WebhookSecretControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_WebhookSecret"
+      additionalProperties: false
+    Configuration_WhitelistedIp:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        ipv4Range:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Configuration_WhitelistedIpControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: "#/components/schemas/Configuration_WhitelistedIp"
+      additionalProperties: false
+    Configuration_WhitelistedIpListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: "#/components/schemas/Configuration_StatusCode"
+        message:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Configuration_WhitelistedIp"
+          nullable: true
+      additionalProperties: false
+    Suppression_ConfigurationErrorCode:
+      enum:
+        - 200
+        - 400
+        - 401
+        - 403
+        - 404
+        - 500
+      type: integer
+      format: int32
+    Suppression_EmailKind:
+      enum:
+        - 0
+        - 1
+        - 2
+        - -1
+      type: integer
+      format: int32
+    Suppression_EmailSuppression:
+      type: object
+      properties:
+        logicalAccount:
+          type: string
+          format: uuid
+        sender:
+          type: string
+          nullable: true
+        recipient:
+          type: string
+          nullable: true
+        unsubscribeType:
+          type: integer
+          format: int32
+        reason:
+          type: string
+          nullable: true
+        emailType:
+          type: integer
+          format: int32
+        domain:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Suppression_EmailSuppressionListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/Suppression_ConfigurationErrorCode"
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Suppression_EmailSuppression"
+          nullable: true
+      additionalProperties: false
+    Suppression_EmailUnsubscribe:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        messageRequestId:
+          type: string
+          format: uuid
+        sender:
+          type: string
+          nullable: true
+        recipient:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        emailType:
+          type: integer
+          format: int32
+        unsubscribeType:
+          type: integer
+          format: int32
+        logicalAccount:
+          type: string
+          format: uuid
+      additionalProperties: false
+    Suppression_EmailUnsubscribeFilters:
+      type: object
+      properties:
+        logTimeRangeType:
+          $ref: "#/components/schemas/Configuration_TimeRangePickerOptions"
+        unsubscribeTypes:
+          type: string
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+        searchEmail:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Suppression_EmailUnsubscribeResult:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        unsubscribedEmails:
+          type: array
+          items:
+            $ref: "#/components/schemas/Suppression_EmailUnsubscribe"
+          nullable: true
+      additionalProperties: false
+    Suppression_EmailUnsubscribeResultControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/Suppression_ConfigurationErrorCode"
+        data:
+          $ref: "#/components/schemas/Suppression_EmailUnsubscribeResult"
+      additionalProperties: false
+    Suppression_Int32ControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/Suppression_ConfigurationErrorCode"
+        data:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Suppression_ManualEmailUnsubscribeRequest:
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Suppression_ObjectControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/Suppression_ConfigurationErrorCode"
+        data:
+          nullable: true
+          type: object
+      additionalProperties: false
+    Suppression_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
+    Suppression_SuppressionListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        sender:
+          type: string
+          nullable: true
+        recipient:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        emailType:
+          type: integer
+          format: int32
+        unsubscribeType:
+          type: integer
+          format: int32
+        logicalAccount:
+          type: string
+          format: uuid
+        domain:
+          type: string
+          nullable: true
+        failureCount:
+          type: integer
+          format: int32
+        expirationDate:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    Suppression_SuppressionListResult:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        unsubscribedEmails:
+          type: array
+          items:
+            $ref: "#/components/schemas/Suppression_SuppressionListItem"
+          nullable: true
+      additionalProperties: false
+    Suppression_SuppressionListResultControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/Suppression_ConfigurationErrorCode"
+        data:
+          $ref: "#/components/schemas/Suppression_SuppressionListResult"
+      additionalProperties: false
+    Suppression_TimeRangePickerOptions:
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+      type: integer
+      format: int32
+    Suppression_UnsubscribeFromLinkRequest:
+      type: object
+      properties:
+        unsubscribeReason:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Suppression_UnsubscribeRequestDto:
+      required:
+        - recipient
+      type: object
+      properties:
+        sender:
+          type: string
+          format: email
+          nullable: true
+        recipient:
+          type: string
+          format: email
+          nullable: true
+        unsubscribeType:
+          $ref: "#/components/schemas/Suppression_UnsubscribeType"
+        emailType:
+          $ref: "#/components/schemas/Suppression_EmailKind"
+      additionalProperties: false
+    Suppression_UnsubscribeType:
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+      type: integer
+      format: int32
+    Suppression_UrlData:
+      required:
+        - hash
+        - longUrl
+        - queryParameters
+        - reference
+        - source
+        - visitedOn
+      type: object
+      properties:
+        longUrl:
+          type: string
+          nullable: true
+        queryParameters:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+        hash:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+        reference:
+          type: string
+          nullable: true
+        visitedOn:
+          type: string
+          format: date-time
+      additionalProperties: false
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-PRODUCTTOKEN
+      description: Your CM.com product token. Find it in the Email Gateway App →
+        Settings → Integration.

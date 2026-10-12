@@ -1,0 +1,208 @@
+generated: '2026-10-13'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 16
+  own: 10
+  other_domain: 5
+  platform: 1
+  roles:
+  - api
+  - docs
+  - identity
+  - other
+  - portal
+  - security
+  - source
+  - status
+  - website
+hosts:
+- host: api.cdp.cm.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: cm.com
+  role: api
+  relation: own
+- host: api.cm.com
+  found_by:
+  - apis[]
+  - contract-discovery
+  types: []
+  serves:
+  - api
+  registrable_domain: cm.com
+  role: api
+  relation: own
+- host: api.ticketing.cm.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: cm.com
+  role: api
+  relation: own
+- host: app.intigriti.com
+  found_by:
+  - pointer
+  types:
+  - Security
+  serves: []
+  registrable_domain: intigriti.com
+  role: security
+  relation: other-domain
+- host: core-node-h3cjyx4jzq-ez.a.run.app
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: run.app
+  role: other
+  relation: other-domain
+- host: developers.cm.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types:
+  - APIReference
+  - DeveloperPortal
+  serves: []
+  registrable_domain: cm.com
+  role: portal
+  relation: own
+- host: docs.cm.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - GettingStarted
+  - Documentation
+  - APICatalog
+  - MCPServer
+  - LLMsTxt
+  serves:
+  - docs
+  registrable_domain: cm.com
+  role: docs
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: globalreseller.nl
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: globalreseller.nl
+  role: other
+  relation: other-domain
+- host: globalticket.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: globalticket.com
+  role: other
+  relation: other-domain
+- host: gw.cmtelecom.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: cmtelecom.com
+  role: other
+  relation: other-domain
+- host: jobs.cm.com
+  found_by:
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: cm.com
+  role: other
+  relation: own
+- host: login.cm.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - Login
+  serves: []
+  registrable_domain: cm.com
+  role: identity
+  relation: own
+- host: releasenotes.cm.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - docs-index
+  - well-known
+  types:
+  - ChangeLog
+  serves:
+  - docs
+  registrable_domain: cm.com
+  role: other
+  relation: own
+- host: status.cm.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: cm.com
+  role: status
+  relation: own
+- host: www.cm.com
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - Blog
+  - SignUp
+  - Pricing
+  - Support
+  - PrivacyPolicy
+  - TermsOfService
+  - TrustCenter
+  - Newsroom
+  serves:
+  - cdn
+  vendor: cloudflare
+  registrable_domain: cm.com
+  role: website
+  relation: own

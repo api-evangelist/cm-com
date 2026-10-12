@@ -1,0 +1,133 @@
+openapi: 3.2.0
+info:
+  title: iDIN Merchant API
+  description: iDIN is a service by the banks, that allows customers to identify themselves on websites, using the same secure methods as their own bank uses.
+  version: '1.0'
+servers:
+- url: https://api.cm.com/idin/v1.0
+tags:
+- name: Merchant
+paths:
+  /merchants/{merchant_token}:
+    get:
+      operationId: get_merchant
+      tags:
+      - Merchant
+      summary: Get merchant information
+      description: Retrieve information about a merchant
+      parameters:
+      - name: merchant_token
+        in: path
+        description: 'a UUID string that is unique and private to you as a merchant. Do not share this key, keep it safe. Example 3c01abeb-b031-4fea-9f2d-c55c283cd78e
+
+          '
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: An object with all information about this merchant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantResponse'
+        default:
+          description: Any non-compliant request will return an error object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that a bank is not available or that the system is offline, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here then in production mode.
+        code:
+          type: integer
+          format: int32
+          description: Low level and/or internal error code describing the error.
+      description: 'Whenever an error occurs, you are expected to show the message to the user
+
+        and to give the user the option of trying again. Errors can happen for a variety of reasons,
+
+        but a common reason is because the issuer the user chose is temporarily not available.
+
+        '
+    MerchantResponse:
+      title: Merchant information
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of this merchant
+          examples:
+          - Example merchant
+        status:
+          type: string
+          description: 'When you are not fully known to CM yet, and have not yet proven to qualify as an iDIN merchant, then you will have the `onboarding` status. In this status, you will only be able to retrieve test data.
+
+            '
+          examples:
+          - onboarding
+          enum:
+          - onboarding
+          - active
+          - disabled
+        services:
+          type: object
+          properties:
+            identity:
+              type: boolean
+              description: 'Retrieve a uniquely identifying token with the bank for this consumer that is consistent across multiple sessions
+
+                '
+            name:
+              type: boolean
+              description: Can retrieve the name information associated with this consumer
+            gender:
+              type: boolean
+              description: Can retrieve the gender of this consumer
+            address:
+              type: boolean
+              description: Can retrieve address information associated with this consumer
+            date_of_birth:
+              type: boolean
+              description: Can retrieve the birthdate of the user
+            18y_or_older:
+              type: boolean
+              description: Can retrieve if this user is known to be 18 years or older.
+            email_address:
+              type: boolean
+              description: Can retrieve the email address associated with this consumer.
+            telephone_number:
+              type: boolean
+              description: Can retrieve the telephone number associated with this consumer.
+          description: This lists the services that you are allowed to access per your agreement with CM.
+        contact:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of contact person
+            phone:
+              type: string
+              description: Phone number of contact person
+            email:
+              type: string
+              description: E-mail address of contact person
+              format: email
+          description: Your contact information as it is known to CM
+        balance:
+          type: object
+          properties: {}
+          description: Reserved. This will list the credit balance etc.
+      description: Retrieve properties of this merchant

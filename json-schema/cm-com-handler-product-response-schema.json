@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-handler-product-response-schema.json",
+  "title": "handler.productResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-live-event-ticketing-v1-openapi.yml#/components/schemas/handler.productResponse",
+  "properties": {
+    "additional_information": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "capacity": {
+      "type": "integer"
+    },
+    "description": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "external_id_1": {
+      "type": "string"
+    },
+    "external_id_2": {
+      "type": "string"
+    },
+    "external_id_3": {
+      "type": "string"
+    },
+    "has_unlimited_stock": {
+      "type": "boolean"
+    },
+    "is_personalizable": {
+      "type": "boolean"
+    },
+    "is_visible": {
+      "type": "boolean"
+    },
+    "name": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "price": {
+      "type": "number"
+    },
+    "product_type": {
+      "type": "string"
+    },
+    "sales_from": {
+      "type": "string"
+    },
+    "sales_until": {
+      "type": "string"
+    },
+    "stock": {
+      "type": "integer"
+    },
+    "subtitle": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "ticket_status_type_id": {
+      "type": "string"
+    },
+    "uuid": {
+      "type": "string"
+    },
+    "valid_from": {
+      "type": "string"
+    },
+    "valid_until": {
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

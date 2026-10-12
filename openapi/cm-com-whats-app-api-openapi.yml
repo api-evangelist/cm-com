@@ -1,0 +1,3828 @@
+openapi: 3.2.0
+info:
+  title: Channels WhatsApp API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: Whats App
+paths:
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/businessaccount/marketingliteapi/eligibility:
+    get:
+      tags:
+      - Whats App
+      summary: Get a WhatsApp business account's marketing lite API eligibility status
+      operationId: WhatsApp_GetBusinessAccountMarketingLiteApiEligibilityStatusAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: forceMetaStatusUpdate
+        in: query
+        description: The force meta status update.
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiEligibility'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiEligibility'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiEligibility'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiEligibility'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/businessaccount/marketingliteapi/business/onboard:
+    post:
+      tags:
+      - Whats App
+      summary: Start a WhatsApp business account's Meta business marketing lite API onboarding
+      operationId: WhatsApp_StartBusinessAccountMarketingLiteApiBusinessOnboardingAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/businessaccount/marketingliteapi/eligibility/numbers:
+    post:
+      tags:
+      - Whats App
+      summary: Get WhatsApp business account numbers' marketing lite API eligibility status
+      operationId: WhatsApp_GetBusinessAccountMarketingLiteApiNumberEligibilityStatusAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiNumberEligibility'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiNumberEligibility'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiNumberEligibility'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiNumberEligibility'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/businessaccount/marketingliteapi/numbers/{numberId}/onboard:
+    post:
+      tags:
+      - Whats App
+      summary: Start a WhatsApp business account eligible number's marketing lite API…
+      operationId: WhatsApp_StartBusinessAccountMarketingLiteApiEligibleNumberOnboardingAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: numberId
+        in: path
+        description: The number identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/whatsapp/embeddedsignup/accesstoken:
+    post:
+      tags:
+      - Whats App
+      summary: Processes an embedded sign up session token
+      operationId: WhatsApp_ProcessEmbeddedSignUpSessionTokenAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: userAccessToken
+        in: query
+        description: The user access token.
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+            text/xml:
+              schema:
+                type: string
+            multipart/form-data:
+              schema:
+                type: string
+  /channels/v1/accounts/{accountId}/whatsapp/embeddedsignup/code:
+    post:
+      tags:
+      - Whats App
+      summary: Processes the embedded sign up session code asynchronous
+      operationId: WhatsApp_ProcessEmbeddedSignUpSessionCodeAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: sessionCode
+        in: query
+        description: The session code.
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountEmbeddedSignupSessionCodeResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountEmbeddedSignupSessionCodeResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountEmbeddedSignupSessionCodeResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountEmbeddedSignupSessionCodeResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/businessaccount:
+    get:
+      tags:
+      - Whats App
+      summary: Gets a WhatsApp business account
+      operationId: WhatsApp_GetBusinessAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount'
+    post:
+      tags:
+      - Whats App
+      summary: Adds the business account asynchronous
+      operationId: WhatsApp_AddBusinessAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: facebookId
+        in: query
+        description: The whats application business account identifier.
+        required: false
+        schema:
+          type: string
+      - name: businessIntegrationAccessToken
+        in: query
+        description: The business integration access token.
+        required: false
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/businessaccount/forminput:
+    get:
+      tags:
+      - Whats App
+      summary: Gets the business account form input asynchronous
+      operationId: WhatsApp_GetBusinessAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/businessaccount/{businessAccountId}/forminput:
+    put:
+      tags:
+      - Whats App
+      summary: Adds WhatsApp business account form input
+      operationId: WhatsApp_AddBusinessAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: businessAccountId
+        in: path
+        description: The business account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount'
+  /channels/v1/accounts/{accountId}/whatsapp/supportedlanguages:
+    get:
+      tags:
+      - Whats App
+      summary: Gets the WhatsApp supported languages
+      operationId: WhatsApp_GetWhatsAppSupportedLanguagesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/profiles/{profileId}/conversationalcomponents:
+    get:
+      tags:
+      - Whats App
+      summary: Get a profile's conversational components
+      operationId: WhatsApp_GetProfileConversationalComponentsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+    put:
+      tags:
+      - Whats App
+      summary: Update a profile's conversational components
+      operationId: WhatsApp_UpdateProfileConversationalComponentsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+        description: The conversational components.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/profiles:
+    get:
+      tags:
+      - Whats App
+      summary: Gets all known WhatsApp profiles
+      operationId: WhatsApp_GetProfilesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The search query.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: includeMetaQualityRating
+        in: query
+        description: if set to true [include meta quality rating].
+        required: false
+        schema:
+          type: boolean
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileBase'
+    post:
+      tags:
+      - Whats App
+      summary: Adds a WhatsApp profile
+      operationId: WhatsApp_AddProfileAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: simulate
+        in: query
+        description: if set to true [simulate].
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/profiles/{profileId}:
+    get:
+      tags:
+      - Whats App
+      summary: Gets a WhatsApp profile
+      operationId: WhatsApp_GetProfileAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: includeMetaSupplierInfo
+        in: query
+        description: if set to true [include meta supplier information].
+        required: false
+        schema:
+          type: boolean
+      - name: syncWithMeta
+        in: query
+        description: if set to true [synchronize with meta].
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+    delete:
+      tags:
+      - Whats App
+      summary: Deletes a WhatsApp profile
+      operationId: WhatsApp_DeleteProfileAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/profiles/{profileId}/forminput:
+    get:
+      tags:
+      - Whats App
+      summary: Gets a WhatsApp profile's form input
+      operationId: WhatsApp_GetProfileFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: includeProfileImage
+        in: query
+        description: if set to true [include profile image].
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+    put:
+      tags:
+      - Whats App
+      summary: Adds WhatsApp profile form input
+      operationId: WhatsApp_AddProfileFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/profiles/{profileId}/phonenumber:
+    put:
+      tags:
+      - Whats App
+      summary: Updates a WhatsApp profile
+      operationId: WhatsApp_UpdateProfilePhoneNumberAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: phoneNumber
+        in: query
+        description: The phone number.
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/profiles/{profileId}/phonenumber/otp:
+    get:
+      tags:
+      - Whats App
+      summary: Triggers a profile phone number one-time-password
+      operationId: WhatsApp_GetProfilePhoneNumberOtpAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: otpMethod
+        in: query
+        description: The otp method.
+        required: true
+        schema:
+          type: string
+          enum:
+          - voice
+          - sms
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+    post:
+      tags:
+      - Whats App
+      summary: Validates a profile phone number
+      operationId: WhatsApp_ValidateProfilePhoneNumberAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: phoneNumber
+        in: query
+        description: The phone number.
+        required: true
+        schema:
+          type: string
+      - name: otp
+        in: query
+        description: The otp.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/profiles/{profileId}/embeddedsignup/finalize:
+    post:
+      tags:
+      - Whats App
+      summary: Finalize an imported via embedded sign up and ownership-verified profile
+      operationId: WhatsApp_FinalizeEmbeddedSignUpImportedProfileAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+  /channels/v1/accounts/{accountId}/whatsapp/sandbox/profiles:
+    get:
+      tags:
+      - Whats App
+      summary: Gets all known WhatsApp sandbox profiles
+      operationId: WhatsApp_GetSandboxProfilesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The search query.
+        required: false
+        schema:
+          type: string
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileBase'
+    post:
+      tags:
+      - Whats App
+      summary: Adds a WhatsApp sandbox profile
+      operationId: WhatsApp_AddSandboxProfileAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: phoneNumber
+        in: query
+        description: The phone number.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+  /channels/v1/accounts/{accountId}/whatsapp/sandbox/profiles/{profileId}:
+    get:
+      tags:
+      - Whats App
+      summary: Gets a WhatsApp sandbox profile
+      operationId: WhatsApp_GetSandboxProfileAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile'
+    delete:
+      tags:
+      - Whats App
+      summary: Deletes a WhatsApp sandbox profile
+      operationId: WhatsApp_DeleteSandboxProfileAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        description: The profile identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/whatsapp/sandbox/expiration:
+    get:
+      tags:
+      - Whats App
+      summary: Gets the expire date for sandbox profiles in a channel group
+      operationId: WhatsApp_GetWhatsAppSandboxExpirationDateAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/categories:
+    get:
+      tags:
+      - Whats App
+      summary: Gets supported WhatsApp template categories
+      operationId: WhatsApp_GetTemplateCategoriesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: includeDeprecatedCategories
+        in: query
+        description: The include deprecated categories.
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateCategory'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateCategory'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateCategory'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateCategory'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates:
+    get:
+      tags:
+      - Whats App
+      summary: Gets all WhatsApp templates
+      operationId: WhatsApp_GetTemplatesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The search query.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseResponse'
+    post:
+      tags:
+      - Whats App
+      summary: Adds a WhatsApp template
+      operationId: WhatsApp_AddTemplateAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateCategoryId
+        in: query
+        description: The template category identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateGeneratedLayout
+        in: query
+        description: The template generated layout.
+        required: false
+        schema:
+          type: string
+          enum:
+          - AUTHENTICATION_OTP_COPY
+          - AUTHENTICATION_OTP_ONE_TAP
+          - MARKETING_CAROUSEL
+          - MARKETING_COUPONS
+          - MARKETING_LIMITED_TIME_OFFER
+          - UTILITY_CAROUSEL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseRequest'
+        description: The template request.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}:
+    get:
+      tags:
+      - Whats App
+      summary: Gets a WhatsApp template
+      operationId: WhatsApp_GetTemplateAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: includeMetaCallbackHistory
+        in: query
+        description: if set to true [include meta callback history].
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+    put:
+      tags:
+      - Whats App
+      summary: Updates a WhatsApp template
+      operationId: WhatsApp_UpdateTemplateAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateUpdateRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateUpdateRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateUpdateRequest'
+        description: The template update.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+    delete:
+      tags:
+      - Whats App
+      summary: Deletes a template
+      operationId: WhatsApp_DeleteTemplateAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/languages/{languageId}:
+    get:
+      tags:
+      - Whats App
+      summary: Gets a template language
+      operationId: WhatsApp_GetTemplateLanguageAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: languageId
+        in: path
+        description: The language identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: includeMetaCallbackHistory
+        in: query
+        description: if set to true [include meta callback history].
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/header:
+    put:
+      tags:
+      - Whats App
+      summary: Updates the template header settings asynchronous
+      operationId: WhatsApp_UpdateTemplateHeaderSettingsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+        description: The header settings.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/interactivesettings:
+    put:
+      tags:
+      - Whats App
+      summary: Updates the template interactive settings asynchronous
+      operationId: WhatsApp_UpdateTemplateInteractiveSettingsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsRequest'
+        description: The settings.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+  ? /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/languages/{languageId}/interactivesettings
+  : put:
+      tags:
+      - Whats App
+      summary: Updates the template language interactive settings asynchronous
+      operationId: WhatsApp_UpdateTemplateLanguageInteractiveSettingsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: languageId
+        in: path
+        description: The language identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: ignoreButtonValidityChecks
+        in: query
+        description: if set to true [ignore button validity checks].
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest'
+        description: The interactive settings.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+  ? /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/languages/{languageId}/carouselsettings
+  : put:
+      tags:
+      - Whats App
+      summary: Updates the template language carousel settings asynchronous
+      operationId: WhatsApp_UpdateTemplateLanguageCarouselSettingsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: languageId
+        in: path
+        description: The language identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest'
+        description: The carousel settings.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/languages/{languageId}/ttl:
+    put:
+      tags:
+      - Whats App
+      summary: Updates the template language time to live settings asynchronous
+      operationId: WhatsApp_UpdateTemplateLanguageTimeToLiveSettingsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: languageId
+        in: path
+        description: The language identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: messageSendTimeToLiveSeconds
+        in: query
+        description: The message send time to live seconds.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/validate:
+    post:
+      tags:
+      - Whats App
+      summary: Requests validation for a template
+      operationId: WhatsApp_RequestTemplateValidationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: useDefaultHeaderMediaExample
+        in: query
+        description: if set to true [use default example].
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/fields:
+    post:
+      tags:
+      - Whats App
+      summary: Adds a replacement field to a template
+      operationId: WhatsApp_AddTemplateReplacementFieldAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: name
+        in: query
+        description: The name.
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: The type.
+        required: true
+        schema:
+          type: string
+          enum:
+          - text
+          - currency
+          - datetime
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/fields/{fieldId}:
+    put:
+      tags:
+      - Whats App
+      summary: Updates a template replacement field
+      operationId: WhatsApp_UpdateTemplateReplacementFieldAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fieldId
+        in: path
+        description: The field identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: name
+        in: query
+        description: The name.
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: The type.
+        required: true
+        schema:
+          type: string
+          enum:
+          - text
+          - currency
+          - datetime
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+    delete:
+      tags:
+      - Whats App
+      summary: Removes a replacement field from a template
+      operationId: WhatsApp_RemoveTemplateReplacementFieldAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fieldId
+        in: path
+        description: The field identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/enabledlanguages:
+    get:
+      tags:
+      - Whats App
+      summary: Gets the enabled languages for a template
+      operationId: WhatsApp_GetWhatsAppTemplateEnabledLanguagesAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+  ? /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/enabledlanguages/{supportedLanguageId}
+  : post:
+      tags:
+      - Whats App
+      summary: Adds an enabled language for a template
+      operationId: WhatsApp_AddWhatsAppTemplateEnabledLanguageAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: supportedLanguageId
+        in: path
+        description: The enabled language identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+    delete:
+      tags:
+      - Whats App
+      summary: Removes an enabled language for a template
+      operationId: WhatsApp_RemoveWhatsAppTemplateEnabledLanguageAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: supportedLanguageId
+        in: path
+        description: The enabled language identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/analytics/meta:
+    get:
+      tags:
+      - Whats App
+      summary: Get a template's Meta analytics
+      operationId: WhatsApp_GetTemplateMetaAnalyticsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: startDate
+        in: query
+        description: The start date.
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: languageId
+        in: query
+        description: The language identifier.
+        required: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaAnalytics'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaAnalytics'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaAnalytics'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaAnalytics'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/supplierStatus:
+    get:
+      tags:
+      - Whats App
+      summary: Get a template's supplier status
+      operationId: WhatsApp_GetTemplateSupplierStatusAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatusBase'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatusBase'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatusBase'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatusBase'
+  /channels/v1/accounts/{accountId}/whatsapp/{channelRequestId}/templates/{templateId}/languages/{languageId}/supplierStatus:
+    get:
+      tags:
+      - Whats App
+      summary: Get a template language's supplier status
+      operationId: WhatsApp_GetTemplateLanguageSupplierStatusAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        description: The template identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: languageId
+        in: path
+        description: The language identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatus'
+            text/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatus'
+            text/xml:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatus'
+            multipart/form-data:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatus'
+components:
+  schemas:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        content:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsResponse:
+      type: object
+      properties:
+        buttonGrouping:
+          type: object
+          properties:
+            QUICK_REPLY:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
+            CALL_TO_ACTION:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
+            OTHER:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
+        isGeneratedLayout:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageStatus:
+      required:
+      - total
+      - active
+      - languageCategoryOverrideActive
+      type: object
+      properties:
+        total:
+          format: int32
+          type: integer
+        active:
+          format: int32
+          type: integer
+        languageCategoryOverrideActive:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileBase:
+      required:
+      - id
+      - accountId
+      - isActive
+      - isOtpProcessed
+      - isOtpSent
+      - isPending
+      - isSandbox
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isFacebookEmbeddedSignUpImport:
+          type: boolean
+        phoneNumber:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+        isOtpProcessed:
+          type: boolean
+        isOtpSent:
+          type: boolean
+        isPending:
+          type: boolean
+        isSandbox:
+          type: boolean
+        metaQualityRating:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating'
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaAnalytics:
+      type: object
+      properties:
+        responseRaw:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateSettingsResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        replacementFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsRequest:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest:
+      type: object
+      properties:
+        oneTap:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTap'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutResponse:
+      type: object
+      properties:
+        carouselSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsResponse'
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardResponse'
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageMetaCallbackHistory:
+      required:
+      - languageId
+      - events
+      type: object
+      properties:
+        languageId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        events:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        hasExpiration:
+          type: boolean
+    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateOtherInfo:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaSupplierInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        accountMode:
+          type: string
+        codeVerificationStatus:
+          enum:
+          - NOT_VERIFIED
+          - VERIFIED
+          - EXPIRED
+          type: string
+        displayPhonenumber:
+          type: string
+        isOfficialBusinessAccount:
+          type: boolean
+        isPinEnabled:
+          type: boolean
+        isPreVerifiedNumber:
+          type: boolean
+        nameStatus:
+          type: string
+        newNameStatus:
+          type: string
+        platformType:
+          type: string
+        qualityRating:
+          type: string
+        qualityScore:
+          type: object
+        searchVisibility:
+          type: string
+        status:
+          type: string
+        throughput:
+          type: object
+        verifiedName:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest:
+      type: object
+      properties:
+        format:
+          enum:
+          - none
+          - text
+          - image
+          - document
+          - video
+          type: string
+        replacementFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        otpSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
+        buttonSettings:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTapSupportedApps:
+      type: object
+      properties:
+        packageName:
+          type: string
+        signatureHash:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountEmbeddedSignupSessionCodeResponse:
+      required:
+      - metaWhatsAppBusinessAccountId
+      - metaBusinessIntegrationAccessToken
+      type: object
+      properties:
+        metaWhatsAppBusinessAccountId:
+          type: string
+        metaBusinessIntegrationAccessToken:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutRequest:
+      type: object
+      properties:
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardRequest'
+        carouselSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRatingLimit:
+      type: object
+      properties:
+        fallbackLimit:
+          type: string
+        officialLimit:
+          enum:
+          - TIER_50
+          - TIER_250
+          - TIER_1K
+          - TIER_10K
+          - TIER_100K
+          - TIER_UNLIMITED
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse:
+      required:
+      - id
+      - category
+      - name
+      - header
+      - body
+      - content
+      - footer
+      - isActive
+      - isIncomplete
+      - isPending
+      - isValidationRequested
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        category:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCategory'
+        name:
+          type: string
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutResponse'
+        headerContent:
+          type: string
+        body:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutResponse'
+        content:
+          type: string
+        footer:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutResponse'
+        footerContent:
+          type: string
+        interactiveSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsResponse'
+        carouselLayoutSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutResponse'
+        limitedTimeOffer:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutResponse'
+        messageSendTimeToLiveSeconds:
+          format: int32
+          type: integer
+        rejectionReason:
+          type: string
+        isActive:
+          type: boolean
+        isIncomplete:
+          type: boolean
+        isPending:
+          type: boolean
+        isValidationRequested:
+          type: boolean
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        metaCallbackHistory:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageMetaCallbackHistory'
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        format:
+          enum:
+          - none
+          - text
+          - image
+          - document
+          - video
+          type: string
+        replacementFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCategory:
+      required:
+      - id
+      - name
+      - metaOverride
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        metaOverride:
+          type: boolean
+        metaOverrideOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        generatedLayoutButtonText:
+          type: string
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          enum:
+          - PHONENUMBER
+          - URL
+          - QUICK_REPLY
+          - OTP_COPY
+          - OTP_ONE_TAP
+          - CODE_COPY
+          type: string
+        urlType:
+          enum:
+          - STATIC
+          - DYNAMIC
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTap:
+      type: object
+      properties:
+        autofillText:
+          type: string
+        supportedApps:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTapSupportedApps'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsResponse:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse'
+        isGeneratedLayout:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings:
+      type: object
+      properties:
+        copyCodeExpirationMinutes:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        content:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageRequest:
+      required:
+      - header
+      - body
+      - content
+      - footer
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutRequest'
+        headerContent:
+          type: string
+        body:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest'
+        content:
+          type: string
+        footer:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutRequest'
+        footerContent:
+          type: string
+        interactiveSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest'
+        carouselLayoutSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutRequest'
+        limitedTimeOffer:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutRequest'
+        messageSendTimeToLiveSeconds:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating:
+      type: object
+      properties:
+        rating:
+          type: string
+        currentLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRatingLimit'
+        dailyConversationLimit:
+          format: int64
+          type: integer
+        restrictionHistory:
+          type: array
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppBusinessAccountUpdateRestriction'
+    CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusiness:
+      required:
+      - id
+      - metaBusinessId
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        metaBusinessId:
+          type: string
+        marketingMessagesLiteApiOnboardingStatus:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusinessMarketingLiteApiOnboardingStatus'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents:
+      type: object
+      properties:
+        enableWelcomeMessage:
+          type: boolean
+        prompts:
+          type: array
+          items:
+            type: string
+        commands:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponentsCommand'
+    CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatus:
+      type: object
+      properties:
+        status:
+          enum:
+          - GREEN
+          - RED
+          - UNKNOWN
+          type: string
+        requiresAttention:
+          type: boolean
+          readOnly: true
+        iconClass:
+          type: string
+        supplierStatus:
+          type: string
+        eventId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        receivedAtUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseRequest:
+      required:
+      - enabledLanguages
+      type: object
+      properties:
+        name:
+          type: string
+        enabledLanguages:
+          type: array
+          items:
+            format: uuid
+            type: string
+            example: 00000000-0000-0000-0000-000000000000
+        assistedMode:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaCallbackHistory:
+      required:
+      - templateId
+      - events
+      type: object
+      properties:
+        templateId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        events:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        index:
+          format: int32
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate:
+      type: object
+      properties:
+        message_template_id:
+          format: int64
+          type: integer
+        message_template_name:
+          type: string
+        message_template_language:
+          type: string
+        previous_category:
+          type: string
+        new_category:
+          type: string
+        reason:
+          type: string
+        previous_quality_score:
+          type: string
+        new_quality_score:
+          type: string
+        disable_info:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateDisableInfo'
+        other_info:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateOtherInfo'
+        event:
+          type: string
+        requester:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest:
+      type: object
+      properties:
+        buttonText:
+          type: string
+        url:
+          type: string
+        phoneNumber:
+          type: string
+        otp:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest'
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          enum:
+          - PHONENUMBER
+          - URL
+          - QUICK_REPLY
+          - OTP_COPY
+          - OTP_ONE_TAP
+          - CODE_COPY
+          type: string
+        urlType:
+          enum:
+          - STATIC
+          - DYNAMIC
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest:
+      type: object
+      properties:
+        content:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatusBase:
+      type: object
+      properties:
+        status:
+          enum:
+          - GREEN
+          - RED
+          - UNKNOWN
+          type: string
+        requiresAttention:
+          type: boolean
+          readOnly: true
+        iconClass:
+          type: string
+        receivedAtUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
+        buttonSettings:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateCategory:
+      required:
+      - id
+      - name
+      - isDeprecated
+      - supportsBlankLayout
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        isDeprecated:
+          type: boolean
+        supportsBlankLayout:
+          type: boolean
+        generatedLayouts:
+          type: array
+          items:
+            enum:
+            - AUTHENTICATION_OTP_COPY
+            - AUTHENTICATION_OTP_ONE_TAP
+            - MARKETING_CAROUSEL
+            - MARKETING_COUPONS
+            - MARKETING_LIMITED_TIME_OFFER
+            - UTILITY_CAROUSEL
+            type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiNumberEligibility:
+      required:
+      - onboardedNumbers
+      - eligibleNumbers
+      - unknownNumbers
+      type: object
+      properties:
+        onboardedNumbers:
+          type: array
+          items:
+            type: string
+        eligibleNumbers:
+          type: array
+          items:
+            type: string
+        unknownNumbers:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          enum:
+          - PHONENUMBER
+          - URL
+          - QUICK_REPLY
+          - OTP_COPY
+          - OTP_ONE_TAP
+          - CODE_COPY
+          type: string
+        urlType:
+          enum:
+          - STATIC
+          - DYNAMIC
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile:
+      required:
+      - id
+      - accountId
+      - isActive
+      - isOtpProcessed
+      - isOtpSent
+      - isPending
+      - isSandbox
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isFacebookEmbeddedSignUpOwnershipVerified:
+          type: boolean
+        isFacebookEmbeddedSignUpImport:
+          type: boolean
+        phoneNumber:
+          type: string
+        image:
+          type: string
+        imageUrl:
+          type: string
+        rejectionReason:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+        isOtpProcessed:
+          type: boolean
+        isOtpSent:
+          type: boolean
+        isPending:
+          type: boolean
+        isSandbox:
+          type: boolean
+        metaSupplierInfo:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaSupplierInfo'
+        metaQualityRating:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating'
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount:
+      required:
+      - id
+      - accountId
+      - channelRequestId
+      - isPending
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        isFacebookEmbeddedSignUp:
+          type: boolean
+        facebookId:
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateDisableInfo:
+      type: object
+      properties:
+        disable_date:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutRequest:
+      type: object
+      properties:
+        content:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse:
+      required:
+      - id
+      - accountId
+      - channelId
+      - templateCategoryId
+      - enabledLanguages
+      - isActive
+      - isIncomplete
+      - isPending
+      - isValidationRequested
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        facebookNamespaceId:
+          type: string
+        name:
+          type: string
+        templateCategoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        category:
+          type: string
+        generatedLayout:
+          enum:
+          - AUTHENTICATION_OTP_COPY
+          - AUTHENTICATION_OTP_ONE_TAP
+          - MARKETING_CAROUSEL
+          - MARKETING_COUPONS
+          - MARKETING_LIMITED_TIME_OFFER
+          - UTILITY_CAROUSEL
+          type: string
+        facebookName:
+          type: string
+        enabledLanguages:
+          type: array
+          items:
+            format: uuid
+            type: string
+            example: 00000000-0000-0000-0000-000000000000
+        assistedMode:
+          type: boolean
+        interactiveSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsResponse'
+        headerSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsResponse'
+        rejectionReason:
+          type: string
+        settings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateSettingsResponse'
+        languagesStatus:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageStatus'
+        languages:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse'
+        isActive:
+          type: boolean
+        isIncomplete:
+          type: boolean
+        isPending:
+          type: boolean
+        isValidationRequested:
+          type: boolean
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        metaCallbackHistory:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaCallbackHistory'
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseResponse:
+      required:
+      - id
+      - accountId
+      - templateCategoryId
+      - enabledLanguages
+      - isActive
+      - isIncomplete
+      - isPending
+      - isValidationRequested
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        facebookNamespaceId:
+          type: string
+        name:
+          type: string
+        templateCategoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        category:
+          type: string
+        generatedLayout:
+          enum:
+          - AUTHENTICATION_OTP_COPY
+          - AUTHENTICATION_OTP_ONE_TAP
+          - MARKETING_CAROUSEL
+          - MARKETING_COUPONS
+          - MARKETING_LIMITED_TIME_OFFER
+          - UTILITY_CAROUSEL
+          type: string
+        facebookName:
+          type: string
+        enabledLanguages:
+          type: array
+          items:
+            format: uuid
+            type: string
+            example: 00000000-0000-0000-0000-000000000000
+        assistedMode:
+          type: boolean
+        headerSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsResponse'
+        settings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateSettingsResponse'
+        languagesStatus:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageStatus'
+        languages:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse'
+        isActive:
+          type: boolean
+        isIncomplete:
+          type: boolean
+        isPending:
+          type: boolean
+        isValidationRequested:
+          type: boolean
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader:
+      type: object
+      properties:
+        format:
+          enum:
+          - IMAGE
+          - VIDEO
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardResponse:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse'
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
+        body:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponentsCommand:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiEligibility:
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          enum:
+          - UNKNOWN
+          - NONE
+          - PENDING_ONBOARDING_INITIATED
+          - INELIGIBLE_ON_BEHALF_OF_WABA
+          - INELIGIBLE_INACTIVE_OR_RESTRICTED
+          - INELIGIBLE_COUNTRY_NOT_SUPPORTED
+          - INELIGIBLE_USING_WHATSAPP_BUSINESS_APP
+          - ELIGIBLE
+          - PENDING_VALID_PAYMENT_METHOD
+          - PENDING_INTERNAL_SETUP
+          - ONBOARDED
+          type: string
+        metaBusinessInfo:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusiness'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        generatedLayoutButtonText:
+          type: string
+        buttonText:
+          type: string
+        url:
+          type: string
+        phoneNumber:
+          type: string
+        otp:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest'
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          enum:
+          - PHONENUMBER
+          - URL
+          - QUICK_REPLY
+          - OTP_COPY
+          - OTP_ONE_TAP
+          - CODE_COPY
+          type: string
+        urlType:
+          enum:
+          - STATIC
+          - DYNAMIC
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        content:
+          type: string
+        otpSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings'
+    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppBusinessAccountUpdateRestriction:
+      type: object
+      properties:
+        restriction_type:
+          type: string
+        expiration:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        code:
+          type: string
+        name:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateUpdateRequest:
+      required:
+      - enabledLanguages
+      type: object
+      properties:
+        name:
+          type: string
+        generatedLayout:
+          enum:
+          - AUTHENTICATION_OTP_COPY
+          - AUTHENTICATION_OTP_ONE_TAP
+          - MARKETING_CAROUSEL
+          - MARKETING_COUPONS
+          - MARKETING_LIMITED_TIME_OFFER
+          - UTILITY_CAROUSEL
+          type: string
+        templateCategoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabledLanguages:
+          type: array
+          items:
+            format: uuid
+            type: string
+            example: 00000000-0000-0000-0000-000000000000
+        assistedMode:
+          type: boolean
+        languages:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        content:
+          type: string
+        hasExpiration:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusinessMarketingLiteApiOnboardingStatus:
+      required:
+      - isOnboarded
+      type: object
+      properties:
+        isOnboarded:
+          type: boolean
+        isOnboardingRequested:
+          type: boolean
+        onboardingRequestId:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardRequest:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest'
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
+        body:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest'
+  requestBodies:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

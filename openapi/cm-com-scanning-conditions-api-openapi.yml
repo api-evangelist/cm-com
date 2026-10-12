@@ -1,0 +1,777 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Scanning Conditions API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Scanning Conditions across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Scanning Conditions
+  description: Conditions attached to entrance plans and scanning rules
+paths:
+  /entrance/v1.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/conditions:
+    post:
+      operationId: ConditionsController_create_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConditionDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a scanning condition
+      tags:
+      - Scanning Conditions
+    get:
+      operationId: ConditionsController_findAllByEntrancePlan_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ConditionDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List conditions for an entrance plan
+      tags:
+      - Scanning Conditions
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/conditions/{conditionUuid}:
+    get:
+      operationId: ConditionsController_findOne_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: conditionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get a scanning condition by ID
+      tags:
+      - Scanning Conditions
+    patch:
+      operationId: ConditionsController_patch_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: conditionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConditionDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a scanning condition
+      tags:
+      - Scanning Conditions
+    delete:
+      operationId: ConditionsController_remove_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: conditionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a scanning condition
+      tags:
+      - Scanning Conditions
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/conditions:
+    post:
+      operationId: ConditionsController_create_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConditionDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a scanning condition
+      tags:
+      - Scanning Conditions
+    get:
+      operationId: ConditionsController_findAllByEntrancePlan_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ConditionDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List conditions for an entrance plan
+      tags:
+      - Scanning Conditions
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/conditions/{conditionUuid}:
+    get:
+      operationId: ConditionsController_findOne_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: conditionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get a scanning condition by ID
+      tags:
+      - Scanning Conditions
+    patch:
+      operationId: ConditionsController_patch_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: conditionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConditionDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a scanning condition
+      tags:
+      - Scanning Conditions
+    delete:
+      operationId: ConditionsController_remove_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: conditionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a scanning condition
+      tags:
+      - Scanning Conditions
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    UpdateConditionDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Should be scanned once on plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Valid inputs are string, number, boolean, object or date
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        conditionEntrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
+      - name
+      - subject
+      - operator
+      - value
+    CreateConditionDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Should be scanned once on plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Valid inputs are string, number, boolean, object or date
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        conditionEntrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
+      - name
+      - subject
+      - operator
+      - value
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    Condition:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Must be scanned once on entrance plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Value to compare the condition operator to.
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        entrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
+      - uuid
+      - name
+      - subject
+      - operator
+      - value
+    ConditionDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Should be scanned once on plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Valid inputs are string, number, boolean, object or date
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        conditionEntrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
+      - uuid
+      - name
+      - subject
+      - operator
+      - value
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

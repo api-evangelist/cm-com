@@ -1,0 +1,301 @@
+openapi: 3.2.0
+info:
+  title: Channels Viber API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: Viber
+paths:
+  /channels/v1/accounts/{accountId}/viber/{channelRequestId}/account:
+    get:
+      tags:
+      - Viber
+      summary: Gets the account asynchronous
+      operationId: Viber_GetViberAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount'
+    post:
+      tags:
+      - Viber
+      summary: Adds the viber account asynchronous
+      operationId: Viber_AddViberAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Created
+  /channels/v1/accounts/{accountId}/viber/{channelRequestId}/account/forminput:
+    get:
+      tags:
+      - Viber
+      summary: Gets the account form input asynchronous
+      operationId: Viber_GetViberAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+  /channels/v1/accounts/{accountId}/viber/{channelRequestId}/account/{viberAccountId}/forminput:
+    put:
+      tags:
+      - Viber
+      summary: Adds the account form input asynchronous
+      operationId: Viber_AddViberAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: viberAccountId
+        in: path
+        description: The viber account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount'
+components:
+  requestBodies:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
+  schemas:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount:
+      required:
+      - id
+      - accountId
+      - serviceId
+      - phoneNumber
+      - name
+      - isActive
+      - isPending
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        serviceId:
+          type: string
+        phoneNumber:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+        isPending:
+          type: boolean
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        rejectionReason:
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

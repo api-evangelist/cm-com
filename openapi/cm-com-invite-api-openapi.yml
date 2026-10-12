@@ -1,0 +1,266 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Sign Invite API
+  description: 'Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via this link. This will grant you access to the sandbox environment.
+
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Invite
+  description: Manage invites
+paths:
+  /dossiers/{dossierId}/invites:
+    parameters:
+    - $ref: '#/components/parameters/DossierId'
+    get:
+      operationId: list_dossier_invites
+      summary: Get all invites
+      description: List of all the invites in the dossier
+      tags:
+      - Invite
+      responses:
+        '200':
+          description: The list of all invites in the dossier
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: create_dossier_invite
+      summary: Create invites
+      description: Add invites to the dossier if allowed. In the response you will receive the id for this new invite.
+      tags:
+      - Invite
+      requestBody:
+        description: Add invites to the dossier that needs to be signed
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Invite'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidState'
+  /dossiers/{dossierId}/invites/{inviteId}:
+    parameters:
+    - $ref: '#/components/parameters/DossierId'
+    - $ref: '#/components/parameters/InviteId'
+    get:
+      operationId: get_dossier_invite
+      summary: Get invite
+      description: Retrieve the invite from the dossier.
+      tags:
+      - Invite
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: delete_dossier_invite
+      summary: Delete invite
+      description: Remove a single invite from the dossier.
+      tags:
+      - Invite
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidState'
+components:
+  responses:
+    InvalidState:
+      description: The request cannot be made because the state of the dossier does not match the state that is expected for this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    InviteId:
+      name: inviteId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a single invite
+
+        '
+      example: 6f840cea-796e-4d5d-97ce-20114af5f51c
+    DossierId:
+      name: dossierId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a dossier
+
+        '
+      example: 22470767-904e-4553-9586-d7ed4f2b330e
+  schemas:
+    ChannelType:
+      type: string
+      enum:
+      - email
+      - sms
+      - whatsapp
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    Invite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the invite
+          examples:
+          - 730c6ec8-755b-450f-9ab6-f57111ab1d93
+          readOnly: true
+        inviteeId:
+          type: string
+          format: uuid
+          description: The ID of the invitee
+          examples:
+          - 7ab828ac-054e-4189-b24d-a9ab1bf23196
+        inviteUri:
+          type: string
+          format: url
+          description: 'This is a link which the particular invitee can use to access and subsequently sign the dossier.
+
+            '
+          examples:
+          - https://www.cm.com/app/sign/invites/fjDKGjSXeKSmZbH5zKDjuPmpQqoMZDfAAr7iZuXd4e8pIubzP5FwBm4Y28dwXG8zEHk
+          readOnly: true
+        channel:
+          $ref: '#/components/schemas/ChannelType'
+          examples:
+          - email
+          description: 'Send invite via email, SMS or WhatsApp. Please note that SMS and WhatsApp are only available when configured for your account.
+
+
+            If this field is not provided or set to null, the invite will not be sent automatically. Instead, the `inviteUri` will be included in the response, and the link must be manually provided to the invitee.
+
+            '
+          nullable: true
+        emailConfig:
+          type: object
+          writeOnly: true
+          properties:
+            message:
+              type: string
+              description: Add your own message to the invite email.
+        reminder:
+          type: boolean
+          examples:
+          - false
+          description: Marker to indicate this invite is a reminder of an earlier invite
+        emailSentAt:
+          type: string
+          format: date-time
+          description: The date at which the email was sent that was requested by setting the `channel` property of an invite to `email`.
+          readOnly: true
+        expiresIn:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 7776000
+          examples:
+          - 2592000
+          default: 2592000
+          description: The expiry in seconds since invite was created
+        expiresAt:
+          type: string
+          format: date-time
+          description: The date the invite expires
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the invite was created
+          readOnly: true
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

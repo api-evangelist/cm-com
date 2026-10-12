@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-create-transaction-response-schema.json",
+  "title": "CreateTransactionResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-identity-hub-v1-openapi.yml#/components/schemas/CreateTransactionResponse",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The UUID of the created transaction."
+    },
+    "url": {
+      "type": "string",
+      "format": "url",
+      "description": "The hosted URL the end-user should be redirected to in order to complete the transaction."
+    }
+  },
+  "required": [
+    "id",
+    "url"
+  ]
+}

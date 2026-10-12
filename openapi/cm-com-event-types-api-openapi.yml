@@ -1,0 +1,363 @@
+openapi: 3.2.0
+info:
+  title: Event Types API
+  version: v1.0
+tags:
+- name: Event Types
+paths:
+  /profile/v1.0/tenants/{tenantId}/eventtypes:
+    get:
+      tags:
+      - Event Types
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: isMapped
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: isUnmapped
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: dependencyKey
+        in: query
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+        '404':
+          description: Not Found
+      summary: Get profile tenants by tenant id eventtypes
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdEventtypes
+      x-operation-id-source: derived
+    post:
+      tags:
+      - Event Types
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      summary: Create profile tenants by tenant id eventtypes
+      x-summary-source: derived
+      operationId: postProfileV10TenantsByTenantIdEventtypes
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/eventtypes:
+    get:
+      tags:
+      - Event Types
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+        '404':
+          description: Not Found
+      summary: Get profile tenants by tenant id profiletypes by profile type id eventtypes
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdEventtypes
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/eventtypes/{eventTypeId}:
+    get:
+      tags:
+      - Event Types
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+        '404':
+          description: Not Found
+      summary: Get profile tenants by tenant id eventtypes by event type id
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdEventtypesByEventTypeId
+      x-operation-id-source: derived
+    put:
+      tags:
+      - Event Types
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: ignoreDependencyLinkValidation
+        in: query
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      summary: Replace profile tenants by tenant id eventtypes by event type id
+      x-summary-source: derived
+      operationId: putProfileV10TenantsByTenantIdEventtypesByEventTypeId
+      x-operation-id-source: derived
+    patch:
+      tags:
+      - Event Types
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      summary: Update profile tenants by tenant id eventtypes by event type id
+      x-summary-source: derived
+      operationId: patchProfileV10TenantsByTenantIdEventtypesByEventTypeId
+      x-operation-id-source: derived
+    delete:
+      tags:
+      - Event Types
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+      summary: Delete profile tenants by tenant id eventtypes by event type id
+      x-summary-source: derived
+      operationId: deleteProfileV10TenantsByTenantIdEventtypesByEventTypeId
+      x-operation-id-source: derived
+components:
+  schemas:
+    CM.Data.Core.Profiles.Api.Models.ApiEventType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type:
+          - string
+          - 'null'
+        properties:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventTypeProperty'
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiEventTypeProperty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type:
+          - string
+          - 'null'
+        priority:
+          type: integer
+          format: int32
+        type:
+          $ref: '#/components/schemas/CM.Data.Domain.Enums.PropertyType'
+        isOptional:
+          type: boolean
+        isNotIndexed:
+          type: boolean
+      additionalProperties: false
+    CM.Data.Domain.Enums.PropertyType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 100
+      - 101
+      - 102
+      - 103
+      - 104
+      type: integer
+      format: int32

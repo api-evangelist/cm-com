@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-platform-messages-models-api-message-cost-schema.json",
+  "title": "CM.Platform.Messages.Models.ApiMessageCost",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-mmc-campaigns-v1-openapi.yml#/components/schemas/CM.Platform.Messages.Models.ApiMessageCost",
+  "type": "object",
+  "properties": {
+    "minNumberOfPartsPerRecipient": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "maxNumberOfPartsPerRecipient": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "charsLeft": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "charsToRemove": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "countryCosts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CM.Platform.Messages.Models.ApiCountryCost"
+      }
+    },
+    "currency": {
+      "type": "string"
+    },
+    "isMultipart": {
+      "type": "boolean"
+    },
+    "messageCount": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "minDeliveryTime": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "recipientCount": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "totalCost": {
+      "format": "double",
+      "type": "number"
+    },
+    "hasUnicode": {
+      "type": "boolean"
+    },
+    "hasTags": {
+      "type": "boolean"
+    }
+  },
+  "$defs": {
+    "CM.Platform.Messages.Models.ApiCountryCost": {
+      "type": "object",
+      "properties": {
+        "cost": {
+          "format": "double",
+          "type": "number"
+        },
+        "countryCode": {
+          "type": "string"
+        },
+        "isMultipart": {
+          "type": "boolean"
+        },
+        "messageCount": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "recipientCount": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

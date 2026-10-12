@@ -1,0 +1,62 @@
+# x-archived-from: cm-com-live-event-apps-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: Appmiral Api
+  version: 1.0.0
+  description: |
+    Appmiral Api
+  license:
+    name: Proprietary
+    identifier: LicenseRef-CM.com-Proprietary
+
+servers:
+  - url: https://api.cm.com/ticketing/v1
+    description: Production
+
+tags:
+  - name: Health
+    description: Service health
+
+security:
+  - BearerAuth: []
+
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      summary: Health check
+      description: Returns the health status of the Mobile Appmiral Ticketing API.
+      tags:
+        - Health
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Service is unavailable
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy]
+          example: healthy
+        service:
+          type: string
+          example: ticketing-mobile-appmiral
+        version:
+          type: string
+          example: 1.0.0

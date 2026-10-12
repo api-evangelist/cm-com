@@ -1,0 +1,783 @@
+# x-archived-from: cm-com-voice-voice-api-v2-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: Voice API
+  version: v2
+servers:
+- url: https://api.cm.com
+paths:
+  /voiceapi/v2/dtmf:
+    post:
+      tags:
+      - Dtmf
+      summary: DTMF
+      description: Send out a call that requests DTMF input from the callee. For more information, see the [Voice DTMF documentation](/voice/voice-api/v2/api-reference).
+      requestBody:
+        description: Details of the DTMF instruction.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestDtmfInstruction'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/RequestDtmfInstruction'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/RequestDtmfInstruction'
+      responses:
+        '200':
+          description: Call is queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallQueuedEvent'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionEvent'
+        '401':
+          description: Unauthorized
+  /voiceapi/v2/flowbuilder:
+    post:
+      tags:
+      - Flow Builder
+      summary: FlowBuilder
+      description: Initiate an outbound FlowBuilder call. For more information, see the [Voice FlowBuilder documentation](/voice/flowbuilder).
+      requestBody:
+        description: Details of the FlowBuilder instruction.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlowBuilderInstruction'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/FlowBuilderInstruction'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/FlowBuilderInstruction'
+      responses:
+        '200':
+          description: Call is queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallQueuedEvent'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionEvent'
+        '401':
+          description: Unauthorized
+  /voiceapi/v2/notification:
+    post:
+      tags:
+      - Notification
+      summary: Notification
+      description: Send out a Voice Notification message. For more information, see the [Voice Notification documentation](/voice/voice-api/v2/api-reference).
+      requestBody:
+        description: Details of the notification instruction.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationInstruction'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/NotificationInstruction'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/NotificationInstruction'
+      responses:
+        '200':
+          description: Call is queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallQueuedEvent'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionEvent'
+        '401':
+          description: Unauthorized
+  /voiceapi/v2/otp:
+    post:
+      tags:
+      - Otp
+      summary: OTP
+      description: Send out a Voice OTP (one time password). For more information, see the [Voice OTP documentation](/voice/voice-api/v2/api-reference).
+      requestBody:
+        description: Details of the OTP instruction.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpInstruction'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/OtpInstruction'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/OtpInstruction'
+      responses:
+        '200':
+          description: Call is queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallQueuedEvent'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionEvent'
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    CallQueuedEvent:
+      title: Call Queued Event
+      type: object
+      properties:
+        type:
+          type: string
+          description: The Type of event.
+          nullable: true
+          readOnly: true
+        call-id:
+          type: string
+          description: The ID of the call this event belongs to.
+          format: uuid
+        instruction-id:
+          type: string
+          description: The ID of the instruction the event is a result of.
+          nullable: true
+        queue-id:
+          type: string
+          description: The ID of the queue.
+          nullable: true
+        caller:
+          type: string
+          description: The id (e.g. number) of the caller.
+          nullable: true
+        callee:
+          type: string
+          description: The id (e.g. number) of the callee.
+          nullable: true
+        success:
+          type: boolean
+          description: True if the PlaceCallInstruction was accepted.
+        error:
+          type: string
+          description: True if the PlaceCallInstruction was accepted.
+          nullable: true
+      additionalProperties: false
+      description: "Event that is a result (basically a direct response) to the PlaceCallInstruction.\r\nThis one is generally used in the async versions of the calls."
+    CodeType:
+      title: Code Type
+      enum:
+      - Default
+      - TTS
+      - Custom
+      type: string
+      description: The type of the OTP code
+    DayOfWeek:
+      title: Day Of Week
+      enum:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      type: string
+    ExceptionEvent:
+      title: Exception Event
+      type: object
+      properties:
+        type:
+          type: string
+          description: The Type of event.
+          nullable: true
+          readOnly: true
+        call-id:
+          type: string
+          description: The ID of the call this event belongs to.
+          format: uuid
+        instruction-id:
+          type: string
+          description: The ID of the instruction the event is a result of.
+          nullable: true
+        queue-id:
+          type: string
+          description: The ID of the queue.
+          nullable: true
+        code:
+          $ref: '#/components/schemas/ExceptionEventCode'
+        title:
+          type: string
+          description: The title of the exception.
+          nullable: true
+          readOnly: true
+        message:
+          type: string
+          description: Some explanatory text on the exception.
+          nullable: true
+      additionalProperties: false
+      description: And event containing an exception.
+    ExceptionEventCode:
+      title: Exception Event Code
+      enum:
+      - InvalidJson
+      - SignatureError
+      - FileNotFound
+      - InvalidInstruction
+      - InvalidParameter
+      - InsufficientBalance
+      - PremiumNotAllowed
+      - CallLimitReached
+      - TooManyNumbers
+      type: string
+      description: Enum of the different codes of exceptions.
+    FlowBuilderInstruction:
+      title: Flow Builder Instruction
+      required:
+      - caller
+      - callflow-id
+      type: object
+      properties:
+        instruction-id:
+          maxLength: 64
+          type: string
+          description: "Optional string that allows you to uniquely identify the placed outbound call. Its value is also included\r\nin the callback and Call Detail Records (CDRs)."
+          nullable: true
+          example: mycustomid
+        callee:
+          maxLength: 24
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          type: string
+          description: "The number to dial. When the number is invalid, the request will be rejected. Must be in valid international\r\nE.164 format."
+          nullable: true
+          example: '+31612345678'
+        callees:
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          maxItems: 100
+          type: array
+          items:
+            type: string
+          description: "List of multiple numbers to dial. When the list contains one or more invalid numbers, the request will be\r\nrejected. Must be in valid international E.164 format."
+          nullable: true
+          example:
+          - '+31612345678'
+          - '+31612345679'
+        caller:
+          maxLength: 24
+          minLength: 1
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          type: string
+          description: The caller ID to display on the recipient's phone. Must be in valid international E.164 format.
+          example: '+31612345678'
+        anonymous:
+          type: boolean
+          description: Indicates whether the caller ID should be hidden. Defaults to `false`.
+          example: false
+        callback-url:
+          type: string
+          description: "URL that will be called when the call is finished. The body of this POST request will contain details about\r\nthe call or calls."
+          format: uri
+          nullable: true
+        max-ringing-timeout:
+          maximum: 60
+          minimum: 10
+          type: integer
+          description: "Determines how long the Voice API will wait for the callee to answer the call. Cancels the ringing call\r\nafter the timeout period exceeded. Defaults to `60`."
+          format: int32
+          nullable: true
+          example: 60
+        callflow-id:
+          minLength: 1
+          type: string
+          description: "This property represents the unique identifier for a FlowBuilder flow. For guidance on locating the callflow\r\nID of a specific flow, please refer to the <a href=\"/voice/flowbuilder/configuring-flows/outbound-calls#finding-your-call-flow-id\">FlowBuilder documentation</a>."
+          example: 00000000-0000-0000-0000-000000000000
+        flow-variables:
+          type: object
+          additionalProperties: {}
+          description: "Optional list of flow variables that will be set. For more information on FlowBuilder variables, please see\r\nthe <a href=\"/voice/flowbuilder/flow-variables\">FlowBuilder documentation</a>."
+          nullable: true
+        voicemail-response:
+          $ref: '#/components/schemas/VoicemailResponse'
+      additionalProperties: false
+      description: This sends the instruction to make and outbound call and start a FlowBuilder flow.
+    Gender:
+      title: Gender
+      enum:
+      - Male
+      - Female
+      type: string
+      description: Genders supported by TTS.
+    NotificationInstruction:
+      title: Notification Instruction
+      required:
+      - caller
+      - prompt
+      type: object
+      properties:
+        instruction-id:
+          maxLength: 64
+          type: string
+          description: "Optional string that allows you to uniquely identify the placed outbound call. Its value is also included\r\nin the callback and Call Detail Records (CDRs)."
+          nullable: true
+          example: mycustomid
+        callee:
+          maxLength: 24
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          type: string
+          description: "The number to dial. When the number is invalid, the request will be rejected. Must be in valid international\r\nE.164 format."
+          nullable: true
+          example: '+31612345678'
+        callees:
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          maxItems: 100
+          type: array
+          items:
+            type: string
+          description: "List of multiple numbers to dial. When the list contains one or more invalid numbers, the request will be\r\nrejected. Must be in valid international E.164 format."
+          nullable: true
+          example:
+          - '+31612345678'
+          - '+31612345679'
+        caller:
+          maxLength: 24
+          minLength: 1
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          type: string
+          description: The caller ID to display on the recipient's phone. Must be in valid international E.164 format.
+          example: '+31612345678'
+        anonymous:
+          type: boolean
+          description: Indicates whether the caller ID should be hidden. Defaults to `false`.
+          example: false
+        callback-url:
+          type: string
+          description: "URL that will be called when the call is finished. The body of this POST request will contain details about\r\nthe call or calls."
+          format: uri
+          nullable: true
+        max-ringing-timeout:
+          maximum: 60
+          minimum: 10
+          type: integer
+          description: "Determines how long the Voice API will wait for the callee to answer the call. Cancels the ringing call\r\nafter the timeout period exceeded. Defaults to `60`."
+          format: int32
+          nullable: true
+          example: 60
+        prompt:
+          maxLength: 750
+          minLength: 1
+          type: string
+          description: The prompt to play. This can be either TTS or SSML, or the path to an audio file in your Voice Audio Manager.
+          example: This is my Voice Notification message.
+        prompt-type:
+          $ref: '#/components/schemas/PromptType'
+        voice:
+          $ref: '#/components/schemas/Voice'
+        voicemail-response:
+          $ref: '#/components/schemas/VoicemailResponse'
+        max-replays:
+          maximum: 3
+          minimum: 0
+          type: integer
+          description: The number of times the Notification can be replayed.
+          format: int32
+          nullable: true
+          example: 3
+        auto-replay:
+          type: boolean
+          description: Whether to automatically replay the Notification. Defaults to `false`.
+          nullable: true
+          example: false
+        replay-prompt:
+          maxLength: 750
+          type: string
+          description: "Optional prompt instructing the callee to press 1 to replay the Notification. This can be either TTS or\r\nSSML, or the path to an audio file in your Voice Audio Manager."
+          nullable: true
+          example: Press 1 to replay the message.
+        replay-prompt-type:
+          $ref: '#/components/schemas/PromptType'
+      additionalProperties: false
+      description: This sends the instruction to make and outbound call and send a notification.
+    OtpInstruction:
+      required:
+      - caller
+      - code
+      type: object
+      properties:
+        instruction-id:
+          maxLength: 64
+          type: string
+          description: "Optional string that allows you to uniquely identify the placed outbound call. Its value is also included\r\nin the callback and Call Detail Records (CDRs)."
+          nullable: true
+          example: mycustomid
+        callee:
+          maxLength: 24
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          type: string
+          description: "The number to dial. When the number is invalid, the request will be rejected. Must be in valid international\r\nE.164 format."
+          nullable: true
+          example: '+31612345678'
+        callees:
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          maxItems: 100
+          type: array
+          items:
+            type: string
+          description: "List of multiple numbers to dial. When the list contains one or more invalid numbers, the request will be\r\nrejected. Must be in valid international E.164 format."
+          nullable: true
+          example:
+          - '+31612345678'
+          - '+31612345679'
+        caller:
+          maxLength: 24
+          minLength: 1
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          type: string
+          description: The caller ID to display on the recipient's phone. Must be in valid international E.164 format.
+          example: '+31612345678'
+        anonymous:
+          type: boolean
+          description: Indicates whether the caller ID should be hidden. Defaults to `false`.
+          example: false
+        callback-url:
+          type: string
+          description: "URL that will be called when the call is finished. The body of this POST request will contain details about\r\nthe call or calls."
+          format: uri
+          nullable: true
+        max-ringing-timeout:
+          maximum: 60
+          minimum: 10
+          type: integer
+          description: "Determines how long the Voice API will wait for the callee to answer the call. Cancels the ringing call\r\nafter the timeout period exceeded. Defaults to `60`."
+          format: int32
+          nullable: true
+          example: 60
+        intro-prompt:
+          maxLength: 500
+          type: string
+          description: "Optional prompt to play when the call is first answered. This can be either TTS or SSML, or the path to an\r\naudio file in your Voice Audio Manager."
+          nullable: true
+          example: This is the CM.com OTP Service.
+        intro-prompt-type:
+          $ref: '#/components/schemas/PromptType'
+        code-prompt:
+          maxLength: 500
+          type: string
+          description: "Optional prompt to play right before playing the actual OTP code. This can be either TTS or SSML, or the\r\npath to an audio file in your Voice Audio Manager. This prompt is also replayed when the code is replayed."
+          nullable: true
+          example: 'Your one time password is:'
+        code-prompt-type:
+          $ref: '#/components/schemas/PromptType'
+        code:
+          maxLength: 64
+          minLength: 1
+          type: string
+          description: The code to read to the caller. Note that this code is read character per character, not as a word or number.
+          example: 1234abc
+        code-type:
+          $ref: '#/components/schemas/CodeType'
+        replay-prompt:
+          maxLength: 500
+          type: string
+          description: "Optional prompt instructing the callee to press 1 to replay the OTP. This can be either TTS or SSML, or the\r\npath to an audio file in your Voice Audio Manager."
+          nullable: true
+          example: Press 1 to replay the message.
+        replay-prompt-type:
+          $ref: '#/components/schemas/PromptType'
+        outro-prompt:
+          maxLength: 500
+          type: string
+          description: "Optional prompt instructing the callee to press 1 to replay the Notification. This can be either TTS or\r\nSSML, or the path to an audio file in your Voice Audio Manager."
+          nullable: true
+          example: Press 1 to replay the message.
+        outro-prompt-type:
+          $ref: '#/components/schemas/PromptType'
+        max-replays:
+          maximum: 3
+          minimum: 0
+          type: integer
+          description: The number of times the OTP can be replayed.
+          format: int32
+          nullable: true
+          example: 3
+        auto-replay:
+          type: boolean
+          description: Whether to automatically replay the OTP. Defaults to `false`.
+          nullable: true
+          example: false
+        voice:
+          $ref: '#/components/schemas/Voice'
+        voicemail-response:
+          $ref: '#/components/schemas/VoicemailResponse'
+      additionalProperties: false
+      description: Instruction to send an OTP (One Time Password) to the callee.
+    PromptType:
+      title: Prompt Type
+      enum:
+      - File
+      - TTS
+      - TTS_SSML
+      type: string
+      description: The type of the prompt, to distinguish between a filename and a string that needs to be tts-ed.
+    RequestDtmfInstruction:
+      title: Request Dtmf Instruction
+      required:
+      - caller
+      - prompt
+      - valid-prompt
+      type: object
+      properties:
+        instruction-id:
+          maxLength: 64
+          type: string
+          description: "Optional string that allows you to uniquely identify the placed outbound call. Its value is also included\r\nin the callback and Call Detail Records (CDRs)."
+          nullable: true
+          example: mycustomid
+        callee:
+          maxLength: 24
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          type: string
+          description: "The number to dial. When the number is invalid, the request will be rejected. Must be in valid international\r\nE.164 format."
+          nullable: true
+          example: '+31612345678'
+        callees:
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          maxItems: 100
+          type: array
+          items:
+            type: string
+          description: "List of multiple numbers to dial. When the list contains one or more invalid numbers, the request will be\r\nrejected. Must be in valid international E.164 format."
+          nullable: true
+          example:
+          - '+31612345678'
+          - '+31612345679'
+        caller:
+          maxLength: 24
+          minLength: 1
+          pattern: ^(\+|00)?[1-9]\d{6,14}$
+          type: string
+          description: The caller ID to display on the recipient's phone. Must be in valid international E.164 format.
+          example: '+31612345678'
+        anonymous:
+          type: boolean
+          description: Indicates whether the caller ID should be hidden. Defaults to `false`.
+          example: false
+        callback-url:
+          type: string
+          description: "URL that will be called when the call is finished. The body of this POST request will contain details about\r\nthe call or calls."
+          format: uri
+          nullable: true
+        max-ringing-timeout:
+          maximum: 60
+          minimum: 10
+          type: integer
+          description: "Determines how long the Voice API will wait for the callee to answer the call. Cancels the ringing call\r\nafter the timeout period exceeded. Defaults to `60`."
+          format: int32
+          nullable: true
+          example: 60
+        prompt:
+          maxLength: 1000
+          minLength: 1
+          type: string
+          description: "The prompt to play which describes what DTMF input is requested from the callee. This can be either TTS or\r\nSSML, or the path to an audio file in your Voice Audio Manager."
+          example: Please enter some digits.
+        prompt-type:
+          $ref: '#/components/schemas/PromptType'
+        valid-prompt:
+          maxLength: 1000
+          minLength: 1
+          type: string
+          description: The prompt to play when the . This can be either TTS or SSML, or the path to an audio file in your Voice Audio Manager.
+          example: Thank you for your answer, the call will now be ended.
+        valid-prompt-type:
+          $ref: '#/components/schemas/PromptType'
+        invalid-prompt:
+          type: string
+          description: The prompt, which is either the path and name of the file to play, or the string that needs to be tts-ed.
+          nullable: true
+          example: This is not a valid input, please try again.
+        invalid-prompt-type:
+          $ref: '#/components/schemas/PromptType'
+        min-digits:
+          maximum: 64
+          minimum: 1
+          type: integer
+          description: The minimum number of digits for the dtmf input.
+          format: int32
+          nullable: true
+          example: 3
+        max-digits:
+          maximum: 64
+          minimum: 1
+          type: integer
+          description: The maximum number of digits for the dtmf input.
+          format: int32
+          nullable: true
+          example: 15
+        max-attempts:
+          maximum: 10
+          minimum: 1
+          type: integer
+          description: The maximum number of attempts to input valid dtmf.
+          format: int32
+          nullable: true
+          example: 3
+        timeout:
+          maximum: 10000
+          minimum: 1000
+          type: integer
+          description: "The max. time in ms between the end of the prompt audio and the first digit, or between digits. If no digit\r\nis received before this timeout, it is counted as an attempt and the prompt is restarted. Value must be\r\nbetween 1000 and 10000 ms. Defaults to `5000`."
+          format: int32
+          nullable: true
+          example: 5000
+        terminators:
+          type: string
+          description: The keys that will end dtmf input. Usually `#` or `*`. Defaults to `#`.
+          nullable: true
+          example: '#'
+        regex:
+          type: string
+          description: "The regex to match the input against. An attempt will fail if the input does not match this regular\r\nexpression. Defaults to `[0-9]*`."
+          nullable: true
+          example: '[0-9]*'
+        voice:
+          $ref: '#/components/schemas/Voice'
+        voicemail-response:
+          $ref: '#/components/schemas/VoicemailResponse'
+      additionalProperties: false
+      description: Instruction to place a call and request DTMF from the callee.
+    TimeSpan:
+      title: Time Span
+      type: object
+      properties:
+        ticks:
+          type: integer
+          format: int64
+        days:
+          type: integer
+          format: int32
+          readOnly: true
+        hours:
+          type: integer
+          format: int32
+          readOnly: true
+        milliseconds:
+          type: integer
+          format: int32
+          readOnly: true
+        microseconds:
+          type: integer
+          format: int32
+          readOnly: true
+        nanoseconds:
+          type: integer
+          format: int32
+          readOnly: true
+        minutes:
+          type: integer
+          format: int32
+          readOnly: true
+        seconds:
+          type: integer
+          format: int32
+          readOnly: true
+        totalDays:
+          type: number
+          format: double
+          readOnly: true
+        totalHours:
+          type: number
+          format: double
+          readOnly: true
+        totalMilliseconds:
+          type: number
+          format: double
+          readOnly: true
+        totalMicroseconds:
+          type: number
+          format: double
+          readOnly: true
+        totalNanoseconds:
+          type: number
+          format: double
+          readOnly: true
+        totalMinutes:
+          type: number
+          format: double
+          readOnly: true
+        totalSeconds:
+          type: number
+          format: double
+          readOnly: true
+      additionalProperties: false
+    Voice:
+      title: Voice
+      required:
+      - gender
+      - language
+      - number
+      type: object
+      properties:
+        language:
+          maxLength: 6
+          minLength: 5
+          pattern: ^[a-zA-Z]{2,3}-[a-zA-Z]{2,3}$
+          type: string
+          description: 'The language (5 character locale) of the voice to use. Examples: en-US, en-GB, nl-NL. Defaults to en-GB'
+          example: en-GB
+        gender:
+          $ref: '#/components/schemas/Gender'
+        number:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          description: "Usually `1`, but if the selected language and gender support multiple voices, you can use this to make\r\na selection between the different ones. To see the available voices, please see the\r\n<a href=\"/voice/tts/supported-languages\">TTS voices documentation</a>."
+          format: int32
+          example: 1
+        volume:
+          maximum: 4
+          minimum: -4
+          type: integer
+          description: The volume level of the voice. Must be a value between -4 and 4. Defaults to 0.
+          format: int32
+          example: 2
+        premium:
+          type: boolean
+          description: "Whether to use a premium text-to-speech voice. Please be aware that additional costs will be charged for the\r\nuse of premium voices. Defaults to `false`."
+          example: true
+      additionalProperties: false
+      description: The properties in this class are used to select the required TTS voice.
+    VoicemailResponse:
+      title: Voicemail Response
+      enum:
+      - Ignore
+      - Restart
+      - Stop
+      - Disconnect
+      type: string
+      description: The type that determines the flow of Voicemail detection.
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

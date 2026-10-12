@@ -1,0 +1,75 @@
+generated: '2026-10-13'
+method: searched
+source: https://docs.cm.com/mcp
+status: published
+server:
+  name: docs.cm.com/mcp
+  title: CM.com Documentation
+  version: 1.1.0
+  transport: http
+  url: https://docs.cm.com/mcp
+  protocolVersion: '2025-06-18'
+  authentication: none
+note: Documentation MCP server (search/read docs and OpenAPI specs) advertised in https://docs.cm.com/llms.txt. tools/list answered without auth on 2026-10-13. api.cm.com/mcp and developers.cm.com/mcp answer 401 (gated) and were not enumerated.
+gated_servers:
+- url: https://api.cm.com/mcp
+  status: 401
+- url: https://developers.cm.com/mcp
+  status: 401
+tools:
+- name: search_docs
+  description: Search CM.com product documentation (messaging, payments, voice, verification, signing, ticketing and more) by keywords. Returns page titles, Markdown URLs and summaries; read a page with get_page.
+  inputSchema:
+    type: object
+    properties:
+      query:
+        type: string
+        description: Keywords, e.g. "whatsapp template message".
+        maxLength: 200
+      limit:
+        type: integer
+        minimum: 1
+        maximum: 25
+        default: 10
+    required:
+    - query
+    additionalProperties: false
+- name: get_page
+  description: Read one CM.com documentation page as Markdown. Accepts a page URL or path from this site.
+  inputSchema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: e.g. "/payments/online-payments/guides/ideal-wero".
+    required:
+    - url
+    additionalProperties: false
+- name: list_apis
+  description: List published CM.com APIs with their reference documentation and OpenAPI specification URL. Lists every API unless a query narrows it.
+  inputSchema:
+    type: object
+    properties:
+      query:
+        type: string
+        description: Optional words to narrow the list by API title or product, e.g. "messaging" or "payments v1".
+        maxLength: 200
+    additionalProperties: false
+- name: get_openapi_spec
+  description: Get the OpenAPI (YAML) specification of a CM.com API. Pass a spec or reference URL from list_apis.
+  inputSchema:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Spec or API reference URL from list_apis.
+    required:
+    - url
+    additionalProperties: false
+deployment:
+  mode: remote
+  endpoint: https://docs.cm.com/mcp
+  install: null
+  package: null
+  auth: none
+  verified: probed

@@ -1,0 +1,97 @@
+openapi: 3.2.0
+info:
+  title: General Admission Partner Customerdata API
+  version: '1.0'
+servers:
+- url: https://api.ticketing.cm.com/partnerapi/v1.0
+security:
+- sec0: []
+tags:
+- name: Customerdata
+paths:
+  /customerdata/{customer_uuid}:
+    get:
+      summary: Get Customer Data
+      description: Use this endpoint to get the details of the customer information.
+      operationId: get-customer-data
+      parameters:
+      - name: customer_uuid
+        in: path
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: '{ "uuid": "00000000-0000-0000-0000-000000000000", "external_id": null, "first_name": "John", "last_name": "Doeh", "email": "john.doeh@example.com", "mobile": "06123456789", "gender": "M", "address_line_1": null, "address_line_1_building_number": null, "address_line_2": null, "address_line_2_building_number": null, "zipcode": null, "city": "Breda", "state": null, "organisation_name": null, "position_name": null, "date_of_birth": "1990-01-01", "custom_field_1": null, "custom_field_2": null, "custom_field_3": null, "has_accepted_newsletter": false, "created_at": "2021-06-30T10:01:58+00:00", "updated_at": "2021-06-30T10:08:27+00:00", "country_id": null }
+
+                    '
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  external_id: {}
+                  first_name:
+                    type: string
+                    example: John
+                  last_name:
+                    type: string
+                    example: Doeh
+                  email:
+                    type: string
+                    example: john.doeh@example.com
+                  mobile:
+                    type: string
+                    example: 06123456789
+                  gender:
+                    type: string
+                    example: M
+                  address_line_1: {}
+                  address_line_1_building_number: {}
+                  address_line_2: {}
+                  address_line_2_building_number: {}
+                  zipcode: {}
+                  city:
+                    type: string
+                    example: Breda
+                  state: {}
+                  organisation_name: {}
+                  position_name: {}
+                  date_of_birth:
+                    type: string
+                    example: 1990-01-01
+                  custom_field_1: {}
+                  custom_field_2: {}
+                  custom_field_3: {}
+                  has_accepted_newsletter:
+                    type: boolean
+                    example: false
+                    default: true
+                  created_at:
+                    type: string
+                    example: 2021-06-30 10:01:58+00:00
+                  updated_at:
+                    type: string
+                    example: 2021-06-30 10:08:27+00:00
+                  country_id: {}
+      deprecated: false
+      tags:
+      - Customerdata
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers:
+  - key: X-TF-PREFERREDLANGUAGEID
+    value: Language ID
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

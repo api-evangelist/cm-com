@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-endpoint-schema.json",
+  "title": "Endpoint",
+  "description": "Endpoint of a Distribution Group where calls can be routed to.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-distribution-groups-v1-openapi.yml#/components/schemas/ApiEndpoint",
+  "type": "object",
+  "properties": {
+    "guid": {
+      "type": "string",
+      "description": "Unique identifier of the Endpoint.",
+      "format": "uuid"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Name of the Endpoint."
+    },
+    "ipAddress": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "External IP address of the Endpoint."
+    },
+    "port": {
+      "type": "integer",
+      "description": "The port to be configured that is supported by CM. Supported ports: 5060-5100.",
+      "format": "int32"
+    },
+    "priority": {
+      "minimum": 1,
+      "type": "integer",
+      "description": "Determines the Round-Robin order of the endpoint. Each endpoint inside a Distribution Group must have a unique priority.",
+      "format": "int32"
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Determines whether the Endpoint should be active or not."
+    },
+    "tlsEnabled": {
+      "type": "boolean",
+      "description": "Determines whether this endpoint receives SIP traffic via TLS."
+    },
+    "attributes": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "description": "Key/Value Pairs of attributes configured to an Endpoint.\r\nAttributes are extra settings that can be configured to an Endpoint, for example: media encryption.\r\n            \r\nExample:\r\n{\r\n    \"medianenc\": \"SRTP\"\r\n}"
+    }
+  },
+  "additionalProperties": false
+}

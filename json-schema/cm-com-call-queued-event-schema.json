@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-call-queued-event-schema.json",
+  "title": "Call Queued Event",
+  "description": "Event that is a result (basically a direct response) to the PlaceCallInstruction.\r\nThis one is generally used in the async versions of the calls.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-voice-api-v2-openapi.yml#/components/schemas/CallQueuedEvent",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The Type of event.",
+      "readOnly": true
+    },
+    "call-id": {
+      "type": "string",
+      "description": "The ID of the call this event belongs to.",
+      "format": "uuid"
+    },
+    "instruction-id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The ID of the instruction the event is a result of."
+    },
+    "queue-id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The ID of the queue."
+    },
+    "caller": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The id (e.g. number) of the caller."
+    },
+    "callee": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The id (e.g. number) of the callee."
+    },
+    "success": {
+      "type": "boolean",
+      "description": "True if the PlaceCallInstruction was accepted."
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "True if the PlaceCallInstruction was accepted."
+    }
+  },
+  "additionalProperties": false
+}

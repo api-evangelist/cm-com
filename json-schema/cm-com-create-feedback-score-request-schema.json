@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-create-feedback-score-request-schema.json",
+  "title": "CreateFeedbackScoreRequest",
+  "description": "Request to create a feedback score for a conversation interaction.\n\nExample:\n```json\n{\n    \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"interaction_id\": \"987fcdeb-51a2-3c4d-e5f6-789012345678\",\n    \"score\": 4,\n    \"comment\": \"The assistant was very helpful and resolved my issue quickly.\",\n    \"product_source\": \"HALO_WEB_WIDGET\"\n}\n```",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-halo-analytics-v1-openapi.yml#/components/schemas/CreateFeedbackScoreRequest",
+  "type": "object",
+  "required": [
+    "account_id",
+    "conversation_id",
+    "score"
+  ],
+  "properties": {
+    "account_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The account ID this feedback belongs to"
+    },
+    "comment": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional comment from the user explaining their score"
+    },
+    "conversation_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The conversation ID for this feedback score"
+    },
+    "interaction_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "description": "The specific interaction ID within the conversation (optional)"
+    },
+    "product_source": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/ProductSource",
+          "description": "The product source where the feedback was submitted"
+        }
+      ]
+    },
+    "profile_id": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32",
+      "description": "The profile ID associated with this feedback (optional)"
+    },
+    "score": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The feedback score (0-4 range, will be normalized to 1-5 for storage)"
+    }
+  },
+  "$defs": {
+    "ProductSource": {
+      "type": "string",
+      "description": "Product source enum for feedback scores",
+      "enum": [
+        "CAIC",
+        "MSC",
+        "HALO_TEST_CENTER",
+        "WEB_CONVERSATIONS",
+        "CPAAS"
+      ]
+    }
+  }
+}

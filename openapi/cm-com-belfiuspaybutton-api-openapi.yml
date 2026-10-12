@@ -1,0 +1,736 @@
+openapi: 3.2.0
+info:
+  title: Payments Gateway Belfius Pay Button API
+  description: Common payments API
+  version: 1.27.22
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+- url: /api/v1
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: BelfiusPayButton
+  description: Belfius Pay Button is a Belgian online payment method that allows customers to pay securely using their Belfius bank account.
+  externalDocs:
+    url: https://www.belfius.be/
+paths:
+  /paymentmethods/belfiuspaybutton/v1/transactions:
+    post:
+      operationId: createBelfiusPayButtonTransaction
+      description: Create a new Belfius Pay Button payment transaction. The **id** field in the response can be used in future calls as **transactionId** to reference this transaction (for instance in a refund).
+      tags:
+      - BelfiusPayButton
+      summary: Create payment
+      requestBody:
+        description: Create Belfius Pay Button Transaction
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BelfiusPayButtonPayment'
+      responses:
+        '201':
+          description: 'The Belfius Pay Button transaction was created successfully.
+
+
+            The consumer should be redirected to the URL provided in the response to complete the payment.'
+          headers:
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BelfiusPayButtonTransaction'
+              examples:
+                openBelfiusPayButton:
+                  $ref: '#/components/examples/openBelfiusPayButton'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/belfiuspaybutton/v1/transactions/{transactionId}:
+    get:
+      operationId: getBelfiusPayButtonTransaction
+      description: Retrieve details for an existing Belfius Pay Button transaction. This endpoint must be used to obtain the status for a transaction.
+      tags:
+      - BelfiusPayButton
+      summary: Fetch payment
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          description: Returns the transaction details for the Belfius Pay Button transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BelfiusPayButtonTransaction'
+              examples:
+                openBelfiusPayButton:
+                  $ref: '#/components/examples/openBelfiusPayButton'
+                successBelfiusPayButton:
+                  $ref: '#/components/examples/successBelfiusPayButton'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/belfiuspaybutton/v1/transactions/{transactionId}/refunds:
+    post:
+      description: 'Create a refund for an existing Belfius Pay Button transaction. The **transactionId** parameter must be the ID of the transaction to be refunded.
+
+
+        The **amount** field is required and must be a positive value, which is the amount to be refunded.'
+      tags:
+      - BelfiusPayButton
+      summary: Create refund
+      operationId: createBelfiusPayButtonRefund
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      requestBody:
+        description: Create Belfius Pay Button Refund
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Refund'
+      responses:
+        '201':
+          description: The Belfius Pay Button refund was created successfully. The response contains the refund details.
+          headers:
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BelfiusPayButtonTransaction'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+    get:
+      tags:
+      - BelfiusPayButton
+      operationId: getBelfiusPayButtonRefunds
+      summary: Fetch refunds
+      description: Retrieve refunds for an existing Belfius Pay Button transaction.
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          $ref: '#/components/responses/RefundsResponse'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    FinalStatusEvent:
+      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - FINALSTATUS
+      example: FINALSTATUS
+    Email:
+      description: The email address of the consumer.
+      type: string
+      format: email
+      example: john.doe@email.tld
+    Description:
+      description: Description of the underlying value or reason of the payment.
+      type: string
+      maxLength: 255
+      example: Order at yourdomain.tld
+    RedirectAction:
+      description: URL where consumer should be redirected to by the merchant to perform the payment.
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          description: URL where consumer should be redirected to by the merchant to perform the payment.
+          type: string
+          format: url
+          example: https://issuer.tld/ideal/start?trxid=213981209381209390821&random=wreq0dq90vgq0ew923123
+    ReturnUrls:
+      type: object
+      description: 'URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this object we can redirect consumer to a dedicated page per payment result status. Either this object or the returnUrl field is mandatory.'
+      required:
+      - success
+      - cancelled
+      - expired
+      - failed
+      properties:
+        success:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-success.html
+        cancelled:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-cancelled.html
+        expired:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-expired.html
+        failed:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-failed.html
+    RefundsList:
+      description: Details of all refunds belonging to a transaction.
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundDetails'
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+      type: string
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
+    Refund:
+      description: Refund an already successfully processed payment.
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
+
+            '
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+    RefundStatus:
+      description: '* `SUCCESS`    - Refund has succeeded.
+
+        * `PENDING`    - Refund is waiting to be processed.
+
+        * `FAILURE`    - Refund has failed.
+
+        * `CANCELLED`  - Refund has been cancelled.
+
+        '
+      type: string
+      enum:
+      - SUCCESS
+      - PENDING
+      - FAILURE
+      - CANCELLED
+      example: SUCCESS
+    TransactionWebhooks:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhook'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    Consumer:
+      allOf:
+      - $ref: '#/components/schemas/GenderlessConsumer'
+      - type: object
+        properties:
+          gender:
+            $ref: '#/components/schemas/Gender'
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
+
+        '
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    ReturnURLOneOf:
+      oneOf:
+      - type: object
+        required:
+        - returnUrls
+        properties:
+          returnUrls:
+            $ref: '#/components/schemas/ReturnUrls'
+      - type: object
+        required:
+        - returnUrl
+        properties:
+          returnUrl:
+            $ref: '#/components/schemas/ReturnUrl'
+    PaymentWithoutDescriptionAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - type: object
+        properties:
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
+    TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - id
+        - reference
+        - amount
+        - currency
+        - status
+        - description
+        properties:
+          id:
+            $ref: '#/components/schemas/TransactionId'
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
+          description:
+            $ref: '#/components/schemas/Description'
+    StatusAuthorized:
+      description: The transaction has been authorized.
+      type: string
+      format: enum
+      enum:
+      - AUTHORIZED
+      example: AUTHORIZED
+    StatusFailure:
+      description: The transaction has failed.
+      type: string
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
+    Country:
+      description: Country of the consumer (ISO-3166)
+      type: string
+      example: NL
+      minLength: 2
+      maxLength: 2
+    TransactionWithoutOrderIdLanguageRefundsAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt'
+      - type: object
+        required:
+        - createdAt
+        properties:
+          createdAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time when the transaction was created.
+    PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - reference
+        - amount
+        properties:
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    BelfiusPayButtonPayment:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        required:
+        - language
+        properties:
+          expiresAt:
+            allOf:
+            - $ref: '#/components/schemas/Datetime'
+            - description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes EXPIRED. If left empty, the value defaults to 1 hour.
+          consumer:
+            $ref: '#/components/schemas/Consumer'
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
+    StatusExpired:
+      description: The transaction has expired.
+      type: string
+      format: enum
+      enum:
+      - EXPIRED
+      example: EXPIRED
+    Gender:
+      description: The consumers gender.
+      type: string
+      format: enum
+      enum:
+      - m
+      - f
+      - 'null'
+      default: null
+    Currency:
+      description: ISO 4217 currency code.
+      type: string
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    RefundStatusEvent:
+      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+        '
+      type: string
+      enum:
+      - REFUND_STATUS
+      example: REFUND_STATUS
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
+      type: string
+      format: enum
+      enum:
+      - CANCELLED
+      example: CANCELLED
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    Payment:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
+      - type: object
+        required:
+        - description
+        properties:
+          description:
+            $ref: '#/components/schemas/Description'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    StatusOpen:
+      description: The transaction is open and can be paid.
+      type: string
+      format: enum
+      enum:
+      - OPEN
+      example: OPEN
+    TransactionWithoutOrderId:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
+      - type: object
+        required:
+        - language
+        - expiresAt
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+          refunds:
+            $ref: '#/components/schemas/Refunds'
+    GenderlessConsumer:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+        phone:
+          $ref: '#/components/schemas/Phone'
+        dateOfBirth:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          example: '1990-05-23'
+          description: Date of birth in ISO 8601 format (YYYY-MM-DD).
+    TransactionWebhook:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    Transaction:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderId'
+      - type: object
+        required:
+        - orderId
+        properties:
+          orderId:
+            allOf:
+            - deprecated: true
+            - $ref: '#/components/schemas/Uuid'
+    PaymentWithoutDescriptionExpiresAtAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
+      - type: object
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
+    BelfiusPayButtonTransaction:
+      allOf:
+      - $ref: '#/components/schemas/Transaction'
+      - type: object
+        required:
+        - country
+        - action
+        - status
+        properties:
+          status:
+            description: The status of the transaction.
+            oneOf:
+            - $ref: '#/components/schemas/StatusOpen'
+            - $ref: '#/components/schemas/StatusSuccess'
+            - $ref: '#/components/schemas/StatusCancelled'
+            - $ref: '#/components/schemas/StatusExpired'
+            - $ref: '#/components/schemas/StatusFailure'
+            - $ref: '#/components/schemas/StatusAuthorized'
+          country:
+            $ref: '#/components/schemas/Country'
+          action:
+            anyOf:
+            - type: object
+              description: Next action to be performed by the merchant (or consumer) to complete the payment.
+              properties:
+                redirect:
+                  $ref: '#/components/schemas/RedirectAction'
+            - type: 'null'
+    RefundDetails:
+      description: Details of a refund.
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - reason
+      - status
+      - created
+      - updated
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/Uuid'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+        created:
+          $ref: '#/components/schemas/Datetime'
+        updated:
+          $ref: '#/components/schemas/Datetime'
+    Refunds:
+      description: Details of refunds for a transaction
+      type: object
+      required:
+      - refundedAmount
+      - refundedPendingAmount
+      properties:
+        refundedAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
+          type: integer
+          minimum: 0
+          maximum: 99999999
+          example: 300
+        refundedPendingAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
+          type: integer
+          minimum: 1
+          maximum: 99999999
+          example: 100
+    Phone:
+      description: The phonenumber of the consumer (E.164 format).
+      type: string
+      maxLength: 16
+      example: '+31695613259'
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+  responses:
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+    RefundsResponse:
+      description: Details of all refunds belonging to a transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundsList'
+  parameters:
+    TransactionId:
+      name: transactionId
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/TransactionId'
+  examples:
+    successBelfiusPayButton:
+      summary: Successful Belfius Pay Button transaction
+      value:
+        id: 9a3e15f2-8c7b-4d6e-a1f0-3b8e7c4d9a1e
+        orderId: 7f2a8e3d-4c1b-4e9a-8d2f-1a5c3e7b9d4f
+        reference: '20210623130413'
+        amount: 1500
+        currency: EUR
+        description: Order at yourdomain.tld
+        expiresAt: '2025-06-02T15:04:05Z'
+        language: nl
+        country: BE
+        webhooks:
+        - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+        status: SUCCESS
+        action: null
+        createdAt: '2025-05-28T11:53:32Z'
+        returnUrl: https://yourdomain.tld/order/return?orderID=order123
+    openBelfiusPayButton:
+      summary: Open Belfius Pay Button transaction
+      value:
+        id: 9a3e15f2-8c7b-4d6e-a1f0-3b8e7c4d9a1e
+        orderId: 7f2a8e3d-4c1b-4e9a-8d2f-1a5c3e7b9d4f
+        reference: '20210623130413'
+        amount: 1500
+        currency: EUR
+        description: Order at yourdomain.tld
+        expiresAt: '2025-06-02T15:04:05Z'
+        language: nl
+        country: BE
+        webhooks:
+        - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+        status: OPEN
+        action:
+          redirect:
+            url: https://checkout.gateway.cmpayments.nl/belfiuspaybutton/9a3e15f2-8c7b-4d6e-a1f0-3b8e7c4d9a1e
+        createdAt: '2025-05-27T13:03:04Z'
+        returnUrl: https://yourdomain.tld/order/return?orderID=order123
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 Client Credentials Grant.
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/authorization/oauth2/token
+          scopes: {}

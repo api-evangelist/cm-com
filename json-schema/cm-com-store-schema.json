@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-store-schema.json",
+  "title": "Store",
+  "description": "Information about Store where merchant can do transactions.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-payments-pos-cloud-api-v1-9-0-openapi.yml#/components/schemas/Store",
+  "required": [
+    "uuid",
+    "name",
+    "address"
+  ],
+  "type": "object",
+  "properties": {
+    "uuid": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/UUID"
+        },
+        {
+          "description": "Identifier of the store"
+        }
+      ]
+    },
+    "name": {
+      "description": "Name of the store",
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+    },
+    "address": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Address"
+        },
+        {
+          "description": "The address of the store"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "Address": {
+      "required": [
+        "address",
+        "zipCode",
+        "city",
+        "countryCode"
+      ],
+      "type": "object",
+      "properties": {
+        "address": {
+          "description": "Address line, e.g. streetname and number",
+          "maxLength": 255,
+          "minLength": 1,
+          "type": "string"
+        },
+        "zipCode": {
+          "description": "Zip code",
+          "maxLength": 255,
+          "minLength": 1,
+          "type": "string"
+        },
+        "city": {
+          "description": "City name",
+          "maxLength": 255,
+          "minLength": 1,
+          "type": "string"
+        },
+        "stateCode": {
+          "description": "State of province code, according to country local regulations",
+          "maxLength": 255,
+          "minLength": 1,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "countryCode": {
+          "description": "Alpha-2 Country code according to <a href=\"https://en.wikipedia.org/wiki/ISO_3166\">ISO 3166</a>",
+          "maxLength": 2,
+          "minLength": 2,
+          "type": "string"
+        }
+      }
+    },
+    "UUID": {
+      "format": "uuid",
+      "pattern": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+      "type": "string"
+    }
+  }
+}

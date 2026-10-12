@@ -1,0 +1,1778 @@
+openapi: 3.2.0
+info:
+  title: Channels API Settings API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: ApiSettings
+paths:
+  /channels/v1/accounts/{accountId}/apisettings/authentication/httpproducttokens:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the gateway product tokens asynchronous
+      operationId: ApiSettings_GetHttpProductTokensAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp'
+            text/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp'
+            text/xml:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp'
+            multipart/form-data:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp'
+  /channels/v1/accounts/{accountId}/apisettings/authentication/apikeys:
+    get:
+      tags:
+      - ApiSettings
+      summary: Get the API keys for the logical account asynchronous
+      operationId: ApiSettings_GetApiKeysAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiKey'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiKey'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiKey'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiKey'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/access:
+    get:
+      tags:
+      - ApiSettings
+      summary: Determines if the Account ID has Messaging Capability asynchronous
+      operationId: ApiSettings_AccountHasMessagingCapabilityAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+            text/json:
+              schema:
+                type: boolean
+            text/xml:
+              schema:
+                type: boolean
+            multipart/form-data:
+              schema:
+                type: boolean
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/testmessage/whitelist:
+    get:
+      tags:
+      - ApiSettings
+      summary: Get whitelisted numbers linked to logical account, if null, no whitelist is…
+      operationId: ApiSettings_GetTestMessageNumberWhitelistAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/xml:
+              schema:
+                type: array
+                items:
+                  type: string
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: string
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/testmessage:
+    post:
+      tags:
+      - ApiSettings
+      summary: Send test message
+      operationId: ApiSettings_SendTestMessageAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: productToken
+        in: query
+        description: The product token to use in the Business Messaging API
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: recipient
+        in: query
+        description: The recipient of the test message
+        required: true
+        schema:
+          type: string
+      - name: messageContent
+        in: query
+        description: The Message content to send to the recipient
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: NoContent
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/System.Void'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/events/{entityType}:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the business messaging entity events asynchronous
+      operationId: ApiSettings_GetBusinessMessagingEntityEventsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: entityType
+        in: path
+        description: Type of the entity.
+        required: true
+        schema:
+          type: string
+          enum:
+          - MT_RECIPIENT_COUNTRY_FILTER
+          - SR_CONFIGURATION
+          - IP_RESTRICTION_CONFIGURATION
+          - RATE_LIMITING_CONFIGURATION
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/iprestrictions:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the ip restriction configuration asynchronous
+      operationId: ApiSettings_GetIPRestrictionConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+    put:
+      tags:
+      - ApiSettings
+      summary: Updates the ip restriction configuration asynchronous
+      operationId: ApiSettings_UpdateIPRestrictionConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+    post:
+      tags:
+      - ApiSettings
+      summary: Adds the ip restriction configuration asynchronous
+      operationId: ApiSettings_AddIPRestrictionConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse'
+    delete:
+      tags:
+      - ApiSettings
+      summary: Deletes the ip restriction configuration asynchronous
+      operationId: ApiSettings_DeleteIPRestrictionConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/iprestrictions/suggestions:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the ip restriction suggestions asynchronous
+      operationId: ApiSettings_GetIPRestrictionSuggestionsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionSuggestionsResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionSuggestionsResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionSuggestionsResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionSuggestionsResponse'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/mtrecipientcountryfilter/countries:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the mt recipient available country filters asynchronous
+      operationId: ApiSettings_GetMTRecipientAvailableCountryFiltersAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/mtrecipientcountryfilter:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the mt recipient country filter configuration asynchronous
+      operationId: ApiSettings_GetMTRecipientCountryFilterConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+    put:
+      tags:
+      - ApiSettings
+      summary: Updates the mt recipient country filter configuration asynchronous
+      operationId: ApiSettings_UpdateMTRecipientCountryFilterConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+    post:
+      tags:
+      - ApiSettings
+      summary: Adds the mt recipient country filter configuration asynchronous
+      operationId: ApiSettings_AddMTRecipientCountryFilterConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse'
+    delete:
+      tags:
+      - ApiSettings
+      summary: Deletes the mt recipient country filter configuration asynchronous
+      operationId: ApiSettings_DeleteMTRecipientCountryFilterConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilterResponse'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/mtrecipientcountryfilter/default:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the default mt recipient country filter configuration asynchronous
+      operationId: ApiSettings_GetDefaultMTRecipientCountryFilterConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/ratelimit:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the rate limiting configuration asynchronous
+      operationId: ApiSettings_GetRateLimitingConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+    put:
+      tags:
+      - ApiSettings
+      summary: Updates the rate limiting configuration asynchronous
+      operationId: ApiSettings_UpdateRateLimitingConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+        description: The updated configuration.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+    post:
+      tags:
+      - ApiSettings
+      summary: Creates the rate limiting configuration asynchronous
+      operationId: ApiSettings_CreateRateLimitingConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest'
+        description: The new configuration.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse'
+    delete:
+      tags:
+      - ApiSettings
+      summary: Deletes the rate limiting configuration asynchronous
+      operationId: ApiSettings_DeleteRateLimitingConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/ratelimit/acceptedtimeunits:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the rate limiting accepted time units asynchronous
+      operationId: ApiSettings_GetRateLimitingAcceptedTimeUnitsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitAcceptedTimeUnits'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitAcceptedTimeUnits'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitAcceptedTimeUnits'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitAcceptedTimeUnits'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/smpp:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the SMPP configurations asynchronous
+      operationId: ApiSettings_GetSmppConfigurationsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/smpp/{smssAccountId}:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the SMPP configuration asynchronous
+      operationId: ApiSettings_GetSmppConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: smssAccountId
+        in: path
+        description: The SMSS account identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+  /channels/v1/accounts/{accountId}/apisettings/businessmessaging/sr:
+    get:
+      tags:
+      - ApiSettings
+      summary: Gets the sr webhook configuration asynchronous
+      operationId: ApiSettings_GetSRWebHookConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+    put:
+      tags:
+      - ApiSettings
+      summary: Puts the sr webhook configuration asynchronous
+      operationId: ApiSettings_PutSRWebHookConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest2'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+    post:
+      tags:
+      - ApiSettings
+      summary: Posts the sr webhook configuration asynchronous
+      operationId: ApiSettings_PostSRWebHookConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest2'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+    delete:
+      tags:
+      - ApiSettings
+      summary: Deletes the sr webhook configuration asynchronous
+      operationId: ApiSettings_DeleteSRWebHookConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+  /channels/v1/accounts/{accountId}/apisettings/httpProductTokens:
+    get:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedGetHttpProductTokensAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp'
+            text/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp'
+            text/xml:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp'
+            multipart/form-data:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp'
+      deprecated: true
+  /channels/v1/accounts/{accountId}/apisettings/access/status:
+    get:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedAccountHasMessagingCapabilityAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+            text/json:
+              schema:
+                type: boolean
+            text/xml:
+              schema:
+                type: boolean
+            multipart/form-data:
+              schema:
+                type: boolean
+      deprecated: true
+  /channels/v1/accounts/{accountId}/apisettings/sr:
+    get:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedGetSRWebHookConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+      deprecated: true
+    put:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedPutSRWebHookConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+      deprecated: true
+    post:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedPostSRWebHookConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+      deprecated: true
+    delete:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedDeleteSRWebHookConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse'
+      deprecated: true
+  /channels/v1/accounts/{accountId}/apisettings/smpp:
+    get:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedGetSmppConfigurationsAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+      deprecated: true
+  /channels/v1/accounts/{accountId}/apisettings/smpp/{smssAccountId}:
+    get:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedGetSmppConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: smssAccountId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp'
+      deprecated: true
+  /channels/v1/accounts/{accountId}/apisettings/testmessage/whitelist:
+    get:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedGetTestMessageNumberWhitelistAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/xml:
+              schema:
+                type: array
+                items:
+                  type: string
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: string
+      deprecated: true
+  /channels/v1/accounts/{accountId}/apisettings/testmessage:
+    post:
+      tags:
+      - ApiSettings
+      summary: Deprecated
+      operationId: ApiSettings_DeprecatedSendTestMessageAsync
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: productToken
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: recipient
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: messageContent
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: NoContent
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/System.Void'
+      deprecated: true
+components:
+  schemas:
+    CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent:
+      required:
+      - id
+      - eventType
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        entityId:
+          type: string
+        entityType:
+          enum:
+          - MT_RECIPIENT_COUNTRY_FILTER
+          - SR_CONFIGURATION
+          - IP_RESTRICTION_CONFIGURATION
+          - RATE_LIMITING_CONFIGURATION
+          type: string
+        ssoAccountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        eventType:
+          type: string
+        eventSubType:
+          type: string
+        eventMetaData:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData'
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry:
+      required:
+      - iso3166
+      - name
+      type: object
+      properties:
+        iso3166:
+          type: string
+        name:
+          type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest:
+      required:
+      - countries
+      - type
+      type: object
+      properties:
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry'
+        type:
+          enum:
+          - None
+          - Allow
+          - Deny
+          type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionSuggestionsResponse:
+      type: object
+      properties:
+        ipv4Addresses:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilter:
+      type: object
+      properties:
+        type:
+          type: string
+        countries:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse:
+      type: object
+      properties:
+        limit:
+          format: int32
+          type: integer
+        timeUnit:
+          enum:
+          - MINUTE
+          - HOUR
+          - DAY
+          - WEEK
+          - MONTH
+          type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest:
+      required:
+      - method
+      - encodingReplaceValue
+      - url
+      - data
+      type: object
+      properties:
+        method:
+          type: string
+        encodingReplaceValue:
+          type: string
+        url:
+          type: string
+        data:
+          type: string
+        httpHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        amountOfRetries:
+          format: int32
+          type: integer
+        retryIntervalInSeconds:
+          format: int32
+          type: integer
+        outOfRetriesProcedure:
+          type: string
+        oauthSettingId:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest:
+      type: object
+      properties:
+        ipv4Addresses:
+          type: array
+          items:
+            type: string
+    System.Void:
+      type: object
+      properties: {}
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest:
+      type: object
+      properties:
+        accountLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitRequest'
+        recipientLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitRequest'
+    CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData:
+      required:
+      - from
+      - to
+      type: object
+      properties:
+        from:
+          type: object
+        to:
+          type: object
+    CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse:
+      required:
+      - id
+      - countries
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry'
+        type:
+          enum:
+          - None
+          - Allow
+          - Deny
+          type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiKey:
+      required:
+      - apiKey
+      - createdOn
+      - isActive
+      type: object
+      properties:
+        apiKey:
+          type: string
+        createdOn:
+          format: date-time
+          type: string
+        isActive:
+          type: boolean
+    CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp:
+      required:
+      - systemId
+      - password
+      - isActive
+      - windowSize
+      - configChanged
+      - mtWindowSize
+      - id
+      - moSrWindowSize
+      - name
+      - maximumThroughputPerSecond
+      - connectionClassification
+      - encoding
+      - service
+      - proprietaryExtensionSet
+      - priority
+      - maxBinds
+      - deliveryReceiptFormat
+      - addSubAndDlvrdToDeliveryReport
+      - moMapping
+      - serviceConfig
+      type: object
+      properties:
+        systemId:
+          type: string
+        password:
+          type: string
+        isActive:
+          type: boolean
+        windowSize:
+          format: int32
+          type: integer
+        configChanged:
+          type: string
+        mtWindowSize:
+          format: int32
+          type: integer
+        id:
+          format: int32
+          type: integer
+        moSrWindowSize:
+          format: int32
+          type: integer
+        name:
+          type: string
+        maximumThroughputPerSecond:
+          format: int32
+          type: integer
+        connectionClassification:
+          format: int32
+          type: integer
+        encoding:
+          type: string
+        service:
+          format: int32
+          type: integer
+        proprietaryExtensionSet:
+          format: int32
+          type: integer
+        priority:
+          format: int32
+          type: integer
+        maxBinds:
+          format: int32
+          type: integer
+        deliveryReceiptFormat:
+          format: int32
+          type: integer
+        addSubAndDlvrdToDeliveryReport:
+          format: int32
+          type: integer
+        moMapping:
+          format: int32
+          type: integer
+        serviceConfig:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmppService'
+    CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilterResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+        data:
+          $ref: '#/components/schemas/CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilter'
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse:
+      type: object
+      properties:
+        accountLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse'
+        recipientLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse'
+    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse:
+      type: object
+      properties:
+        ipv4Addresses:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmppService:
+      required:
+      - id
+      - platformLocation
+      - platformName
+      - serviceName
+      - endpointUrl
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        platformLocation:
+          format: int32
+          type: integer
+        platformName:
+          type: string
+        serviceName:
+          type: string
+        endpointUrl:
+          type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp:
+      required:
+      - isActive
+      - smssAccount
+      - configChanged
+      - id
+      - serviceId
+      - name
+      - connectionClassification
+      - service
+      - priority
+      type: object
+      properties:
+        isActive:
+          type: boolean
+        smssAccount:
+          format: int32
+          type: integer
+        configChanged:
+          type: string
+        smssAccountName:
+          type: string
+        id:
+          format: int32
+          type: integer
+        serviceId:
+          format: int32
+          type: integer
+        name:
+          type: string
+        mainServiceUrl:
+          type: string
+        connectionClassification:
+          format: int32
+          type: integer
+        service:
+          format: int32
+          type: integer
+        priority:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse:
+      required:
+      - method
+      - encodingReplaceValue
+      - url
+      - data
+      type: object
+      properties:
+        method:
+          type: string
+        encodingReplaceValue:
+          type: string
+        url:
+          type: string
+        data:
+          type: string
+        httpHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        amountOfRetries:
+          format: int32
+          type: integer
+        retryIntervalInSeconds:
+          format: int32
+          type: integer
+        outOfRetriesProcedure:
+          type: string
+        oauthSettingId:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitValidTimeUnitOption:
+      type: object
+      properties:
+        timeUnit:
+          enum:
+          - MINUTE
+          - HOUR
+          - DAY
+          - WEEK
+          - MONTH
+          type: string
+        minimumLimit:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitAcceptedTimeUnits:
+      type: object
+      properties:
+        type:
+          enum:
+          - MESSAGING_ACCOUNT
+          - RECIPIENT
+          type: string
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitValidTimeUnitOption'
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitRequest:
+      type: object
+      properties:
+        limit:
+          format: int32
+          type: integer
+        timeUnit:
+          enum:
+          - MINUTE
+          - HOUR
+          - DAY
+          - WEEK
+          - MONTH
+          type: string
+  requestBodies:
+    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+      description: The requested configuration.
+      required: true
+    CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest2:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+      description: The sr webhook.
+      required: true
+    CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+      required: true
+    CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest'
+      description: The country filter.
+      required: true
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

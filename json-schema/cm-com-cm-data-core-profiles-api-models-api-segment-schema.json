@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-data-core-profiles-api-models-api-segment-schema.json",
+  "title": "CM.Data.Core.Profiles.Api.Models.ApiSegment",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-cdp-profiles-v1-openapi.yml#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "queryTree": {
+      "$ref": "#/$defs/CM.Data.QueryLanguage.Tree"
+    },
+    "consentPurposeId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "shouldBeSynchronizedToAddressBook": {
+      "type": "boolean"
+    },
+    "addressBookStatus": {
+      "$ref": "#/$defs/CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus": {
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "type": "integer",
+      "format": "int32"
+    },
+    "CM.Data.QueryLanguage.Nodes.Node": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "CM.Data.QueryLanguage.Tree": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "$ref": "#/$defs/CM.Data.QueryLanguage.Nodes.Node"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

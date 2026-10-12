@@ -1,0 +1,166 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: ticketing@cm.com
+    name: CM.com Ticketing
+    url: https://www.cm.com
+  description: Integrate your own systems with CM.com Ticketing.
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  termsOfService: https://www.cm.com/terms-of-service/
+  title: External Ticketing Payment methods API
+  version: '0.1'
+servers:
+- url: /ticketing/v1
+tags:
+- name: Payment Methods
+paths:
+  /events/{event_id}/payment-methods:
+    get:
+      description: Returns the payment methods that are enabled for an event and available to online customers. Box-office-only payment methods are not included.
+      operationId: ListPaymentMethods
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/handler.paymentMethodResponse'
+                type: array
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: List payment methods
+      tags:
+      - Payment Methods
+  /paymentmethods:
+    get:
+      summary: Get an array of all available payment methods
+      description: 'Receive a list of all available payments which can be rendered in your checkout.
+
+
+        Note: this list is **not** context aware and is only a list of your activated payment methods.'
+      tags:
+      - Payment Methods
+      operationId: getPaymentMethods
+      responses:
+        '200':
+          description: List of available payment methods for the authenticated merchant.
+          headers:
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                items:
+                  type: string
+                example:
+                - bancontact
+                - creditcard
+                - ideal
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    handler.paymentMethodResponse:
+      properties:
+        currency_id:
+          type: string
+        image_uri:
+          type: string
+        name:
+          type: string
+        uuid:
+          type: string
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+  securitySchemes:
+    SystemTokenAuth:
+      description: Send your organisation's system token in this header.
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID
+      type: apiKey
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 Client Credentials Grant.
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/authorization/oauth2/token
+          scopes: {}
+  responses:
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+externalDocs:
+  description: ''
+  url: ''

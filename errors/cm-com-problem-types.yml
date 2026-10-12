@@ -1,0 +1,132 @@
+generated: '2026-10-13'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/cm-com-conversational-ai-v1-openapi.yml
+- openapi/cm-com-conversational-router-v1-openapi.yml
+- openapi/cm-com-conversational-router-v2-openapi.yml
+- openapi/cm-com-customer-engagement-v1-openapi.yml
+- openapi/cm-com-email-gateway-api-v1-openapi.yml
+- openapi/cm-com-halo-analytics-v1-openapi.yml
+- openapi/cm-com-halo-core-v1-openapi.yml
+- openapi/cm-com-live-entrance-management-v1-openapi.yml
+- openapi/cm-com-live-entrance-management-v2-openapi.yml
+- openapi/cm-com-live-event-apps-v1-openapi.yml
+- openapi/cm-com-live-event-ticketing-v1-openapi.yml
+- openapi/cm-com-live-ga-partner-v1-openapi.yml
+format: custom
+envelope:
+  media_type: application/json
+  schema: ErrorDto
+coverage:
+  operations: 1092
+  statuses_declared: 14
+problems:
+- status: 400
+  title: Bad Request
+  description: Bad Request
+  operations: 148
+  media_types:
+  - application/json
+  - text/plain
+  - text/json
+  schema: ErrorCollection
+- status: 401
+  title: Unauthorized
+  description: Unauthorized
+  operations: 149
+  media_types:
+  - application/json
+  - text/plain
+  - text/json
+  schema: ErrorResponse
+- status: 403
+  title: Forbidden
+  description: Access to the specified resource was denied
+  operations: 14
+  media_types:
+  - application/json
+  schema: ErrorResponse
+- status: 404
+  title: Not Found
+  description: Not Found
+  operations: 149
+  media_types:
+  - application/json
+  - text/plain
+  - text/json
+  schema: ErrorCollection
+- status: 409
+  title: Conflict
+  description: Conflict
+  operations: 10
+  media_types:
+  - application/json
+  - text/plain
+  - text/json
+  schema: Configuration_ProblemDetails
+- status: 410
+  title: Gone
+  description: Conversation content redacted after the retention window; body carries the retained non-PII metadata
+    (redacted, created, ended, ai_resolutio
+  operations: 3
+  media_types: []
+  schema: null
+- status: 422
+  title: Unprocessable Content
+  description: The request cannot be made because the state of the dossier does not match the state that is expected
+    for this operation.
+  operations: 10
+  media_types:
+  - application/json
+  schema: ErrorResponse
+- status: 429
+  title: Too Many Requests
+  description: Rate limit exceeded - Maximum 10 requests per minute.
+  operations: 1
+  media_types:
+  - application/json
+  schema: PartnerApiErrorResponse
+- status: 4XX
+  title: null
+  description: The request could not be processed. The body contains a standardized error object.
+  operations: 386
+  media_types:
+  - application/json
+  schema: ErrorDto
+- status: 500
+  title: Internal Server Error
+  description: internal_server_error
+  operations: 61
+  media_types:
+  - application/json
+  - text/plain
+  - text/json
+  schema: rest.HttpError
+- status: 501
+  title: Not Implemented
+  description: Not yet implemented.
+  operations: 1
+  media_types: []
+  schema: null
+- status: 503
+  title: Service Unavailable
+  description: Service is unavailable
+  operations: 10
+  media_types:
+  - application/json
+  schema: null
+- status: 5XX
+  title: null
+  description: Internal server error. This can be caused by an unresponsive backend
+  operations: 90
+  media_types:
+  - application/json
+  schema: null
+- status: default
+  title: null
+  description: Any non-compliant request will return an error object
+  operations: 7
+  media_types:
+  - application/json
+  schema: ErrorResponse

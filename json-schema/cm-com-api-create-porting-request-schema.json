@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-create-porting-request-schema.json",
+  "title": "Create Porting Request",
+  "description": "A porting requests that allows you to port you phone numbers from your current provider to the CM.com platform.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-number-requests-v1-openapi.yml#/components/schemas/ApiCreatePortingRequest",
+  "required": [
+    "providerCompanyName"
+  ],
+  "type": "object",
+  "properties": {
+    "phoneNumbers": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/ApiPortingPhoneNumber"
+      },
+      "description": "Phone numbers to be ported over."
+    },
+    "providerCompanyName": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Company name of the current number provider."
+    },
+    "preferredPortingDateTime": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "**Only used for porting non-dutch numbers.** Preferred date and time to port the phone number(s) in UTC time. Will be picked up between 6:00 and 20:00 UTC time. Should be null when the porting request should be handled as soon as possible.",
+      "format": "date-time"
+    },
+    "companyProfileGuid": {
+      "type": "string",
+      "description": "Unique identifier of the company profile that will be operating the ported numbers.",
+      "format": "uuid"
+    },
+    "comment": {
+      "maxLength": 500,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Additional comment for customers to for example add a distribution group or IP address."
+    },
+    "callbackUrl": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire porting request order including the updated status."
+    },
+    "documents": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/ApiUploadPortingRequestDocument"
+      },
+      "description": "Optional documents to upload with the porting request (LoA, Telco Invoice, etc.)"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiPortingPhoneNumber": {
+      "title": "Porting Phone Number",
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "minimum": 0,
+          "exclusiveMinimum": true,
+          "type": "integer",
+          "description": "The (first) phone number to be ported.",
+          "format": "int64"
+        },
+        "lastPhoneNumber": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "When a range of phone numbers are being ported, this number should be the last number in the range. If you are porting a single number, this value can be left empty.",
+          "format": "int64"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Phone number to be ported"
+    },
+    "ApiUploadPortingRequestDocument": {
+      "title": "Upload Porting Request Document",
+      "required": [
+        "documentGuid",
+        "documentType"
+      ],
+      "type": "object",
+      "properties": {
+        "documentType": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Type of document (LoA, TelcoInvoice, Other)"
+        },
+        "documentGuid": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique identifier of the document from the documents API",
+          "format": "uuid"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Document upload information for porting requests"
+    }
+  }
+}

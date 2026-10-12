@@ -1,0 +1,262 @@
+openapi: 3.2.0
+info:
+  title: Sip Accounts Restrictions API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Restrictions
+paths:
+  /voice-sipaccountsapi/v1/{accountGuid}/sipaccounts/{sipAccountGuid}/restrictions:
+    get:
+      tags:
+      - Restrictions
+      summary: Get SIP Account Restrictions
+      description: Get the restrictions set for the given SIP Account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRestriction'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoiceSipaccountsapiV1ByAccountGuidSipaccountsBySipAccountGuidRestrictions
+      x-operation-id-source: derived
+  /voice-sipaccountsapi/v1/{accountGuid}/sipaccounts/restrictions/{threshold}:
+    get:
+      tags:
+      - Restrictions
+      summary: Get Restrictions By Threshold
+      description: Get all blacklist restrictions for all SIP Accounts where the traffic costs are higher then the given threshold.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: threshold
+        in: path
+        description: The threshold to search the blacklist restrictions for.
+        required: true
+        schema:
+          type: number
+          format: double
+        example: 4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRestriction'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoiceSipaccountsapiV1ByAccountGuidSipaccountsRestrictionsByThreshold
+      x-operation-id-source: derived
+  /voice-sipaccountsapi/v1/{accountGuid}/sipaccounts/{sipAccountGuid}/restrictions/{restrictionType}:
+    put:
+      tags:
+      - Restrictions
+      summary: Update Restrictions
+      description: 'Update the restrictions that are set up for the given SIP Account.
+
+
+        **CAUTION!** This action will overwrite ALL current restrictions, so when adding a restriction to the existing list, send the entire current list of restrictions with the new restriction appended.'
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: restrictionType
+        in: path
+        description: Sets the type of the restrictions, this can be either set to `whitelist` or `blacklist`. When set to `whitelist`, only calls to the given prefixes will be allowed, when set to `blacklist`, only calls to the given prefixes will be blocked.
+        required: true
+        schema:
+          $ref: '#/components/schemas/RestrictionType'
+        example: blacklist
+      requestBody:
+        description: List of the new restrictions to be set.
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRestriction'
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRestriction'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRestriction'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRestriction'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRestriction'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: putVoiceSipaccountsapiV1ByAccountGuidSipaccountsBySipAccountGuidRestrictionsByRestrictionType
+      x-operation-id-source: derived
+components:
+  schemas:
+    ApiRestriction:
+      title: Restriction
+      type: object
+      properties:
+        username:
+          type:
+          - string
+          - 'null'
+          description: Username of the SIP Account.
+          example: MySIPAccount
+        prefix:
+          type:
+          - string
+          - 'null'
+          description: Phone number prefix affected by the restriction.
+          example: '3176'
+        restrictionType:
+          $ref: '#/components/schemas/RestrictionType'
+        forcedByCm:
+          type: boolean
+          description: Whether this restriction was created and enforced by CM or not. This value cannot be set or updated via the API.
+      additionalProperties: false
+      description: A whitelist or blaclist based restriction that can be placed on a SIP Account.
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    RestrictionType:
+      title: Restriction Type
+      enum:
+      - Blacklist
+      - Whitelist
+      - Unknown
+      type: string
+      description: List of available user restriction types.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

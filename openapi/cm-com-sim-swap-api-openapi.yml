@@ -1,0 +1,208 @@
+openapi: 3.2.0
+info:
+  title: Mobile Identity SIM Swap API
+  description: Mobile Identity API
+  version: 1.0.0
+servers:
+- url: https://api.cm.com/mobile-identity/v1
+- url: https://api.cm.com/mobile-identity-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: SIM Swap
+  description: Request a SIM Swap check
+paths:
+  /sim-swap:
+    post:
+      operationId: create_sim_swap
+      summary: SIM swap
+      description: Request the date time of the last SIM swap of the provided phone number
+      tags:
+      - SIM Swap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimSwapRequest'
+      responses:
+        '200':
+          description: Retrieved SIM Swap information. Response depends on the provided service type request field.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/SimSwapTimestampResponse'
+                - $ref: '#/components/schemas/SimSwap24hResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    SimSwapRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          description: The phone number to match the person to. Must be in E.164 format.
+          examples:
+          - '+31612345678'
+        serviceType:
+          $ref: '#/components/schemas/SimSwapType'
+          description: Type of SIM Swap response to be retrieved.
+          examples:
+          - 24h
+      required:
+      - phoneNumber
+      - serviceType
+    SimSwapTimestampResponse:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/ResponseState'
+        timestamp:
+          type: string
+          description: Last SIM Swap for that phone number in ISO 8601 format
+          format: date-time
+          examples:
+          - '2026-01-01T00:00:00Z'
+    SimSwap24hResponse:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/ResponseState'
+        24h:
+          type: boolean
+          description: Boolean if the phone number has been SIM swapped in the last 24 hours
+          examples:
+          - false
+    ErrorCode:
+      type: integer
+      description: "Error code description:\n\n * 1000 - Unknown error\n * 1001 - Invalid request\n * 1002 - Supplier error\n * 1003 - Unsupported configuration\n * 2000 - Validation error\n * 2001 - Invalid `phoneNumber` field\n * 2002 - Invalid `serviceType` field\n * 2003 - Invalid `firstName` field\n * 2004 - Invalid `lastName` field\n * 2005 - Invalid `address` field\n * 2006 - Invalid `postalCode` field\n * 2007 - Invalid `dateOfBirth` field\n * 2008 - Invalid `callbackUrl` field\n * 3000 - Feature not enabled\n * 3001 - Phone number is not active\n"
+      enum:
+      - 1000
+      - 1001
+      - 1002
+      - 1003
+      - 2000
+      - 2001
+      - 2002
+      - 2003
+      - 2004
+      - 2005
+      - 2006
+      - 2007
+      - 2008
+      - 3000
+      - 3001
+      examples:
+      - 2001
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
+        message:
+          type: string
+          description: Description of the error that occurred.
+          examples:
+          - The phone number field is required
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+    ResponseState:
+      type: string
+      description: State that indicates whether the request was successful or the data could not be retrieved due to unavailability.
+      enum:
+      - success
+      - unavailable
+    SimSwapType:
+      type: string
+      enum:
+      - timestamp
+      - 24h
+  responses:
+    InternalServerError:
+      description: Errors related to the transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: Transaction could not be started
+            code: 1002
+    Unauthorized:
+      description: Errors related to the authorization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+            code: 1000
+    BadRequest:
+      description: Errors related to the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: The phone number field is required
+            code: 2001
+    NotFound:
+      description: Errors related to the request URL
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 404
+            message: Not found
+            code: 1000
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '
+    HMAC:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Used on callbacks sent by Mobile Identity to your `callbackUrl`. The header contains the HMAC-SHA256 signature of the request body, calculated with your client secret as the secret key, prefixed with `HMAC `:
+
+
+        ```
+
+        Authorization: HMAC MIi9ZMyar2v+o7H7LD7oNolO5LrTJaC+8uKvYUGqJvM=
+
+        ```
+
+        '

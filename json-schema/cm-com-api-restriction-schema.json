@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-restriction-schema.json",
+  "title": "Restriction",
+  "description": "A whitelist or blaclist based restriction that can be placed on a SIP Account.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-sip-accounts-v1-openapi.yml#/components/schemas/ApiRestriction",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Username of the SIP Account."
+    },
+    "prefix": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Phone number prefix affected by the restriction."
+    },
+    "restrictionType": {
+      "$ref": "#/$defs/RestrictionType"
+    },
+    "forcedByCm": {
+      "type": "boolean",
+      "description": "Whether this restriction was created and enforced by CM or not. This value cannot be set or updated via the API."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "RestrictionType": {
+      "title": "Restriction Type",
+      "enum": [
+        "Blacklist",
+        "Whitelist",
+        "Unknown"
+      ],
+      "type": "string",
+      "description": "List of available user restriction types."
+    }
+  }
+}

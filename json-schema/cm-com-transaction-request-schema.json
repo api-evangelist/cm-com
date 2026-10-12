@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-transaction-request-schema.json",
+  "title": "Transaction request",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-iban-verification-v1-openapi.yml#/components/schemas/TransactionRequest",
+  "allOf": [
+    {
+      "$ref": "#/$defs/TokenizedRequest"
+    },
+    {
+      "required": [
+        "entrance_code",
+        "merchant_return_url"
+      ],
+      "type": "object",
+      "properties": {
+        "entrance_code": {
+          "maxLength": 40,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9]+$",
+          "type": "string",
+          "description": "This is a token that will allow you to rejoin the user to his session when he returns. It can be a maximum of 40 characters and should only contain the characters a-z, A-Z and 0-9. It should only be valid once and needs to be random enough (best use a cryptographically secure random generator), to avoid the possibility of replay attacks.\n"
+        },
+        "merchant_return_url": {
+          "maxLength": 512,
+          "type": "string",
+          "description": "The place where the bank should redirect the user to at the end of the flow. The bank will append two query parameters to this url when returning the user to you, `trxid` and `ec`. The latter will contain the value of entranceCode, trxid is the `transaction_id` that you will receive in this request.\n"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "MerchantToken": {
+      "type": "string",
+      "description": "a UUID string that is unique and private to you as a merchant. Do not share this key, keep it safe. Example 3c01abeb-b031-4fea-9f2d-c55c283cd78e",
+      "format": "uuid"
+    },
+    "TokenizedRequest": {
+      "title": "TokenRequestParameters",
+      "required": [
+        "merchant_token"
+      ],
+      "type": "object",
+      "properties": {
+        "merchant_token": {
+          "$ref": "#/$defs/MerchantToken"
+        }
+      }
+    }
+  }
+}

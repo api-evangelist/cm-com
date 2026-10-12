@@ -1,0 +1,112 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Structured Logging API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Structured Logging across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Structured Logging
+  description: Client-side structured log ingestion
+paths:
+  /entrance/v1.0/structured-logging/log:
+    post:
+      operationId: StructuredLoggingController_handleStructuredLog_v1.0
+      parameters: []
+      requestBody:
+        required: true
+        description: Array of structured log entries to process
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Object'
+            examples:
+              errorLog:
+                summary: Error log example
+                value:
+                - message: 'Error: This is a test error for logging\nat Component.method (https://example.com/file.js:66:11)'
+                  severity: ERROR
+                  httpRequest:
+                    requestMethod: POST
+                  timestamp:
+                    nanos: 366000000
+                    seconds: 1748935093
+                  logging.googleapis.com/labels:
+                    application_id: SCANNING-WEB-APP
+                    device_id: Y2T4T
+                  logging.googleapis.com/sourceLocation: {}
+                  additional:
+                  - APPLICATION_ERROR_HANDLER
+                  - {}
+      responses:
+        '202':
+          description: Log entries have been accepted and processed
+        '400':
+          description: Invalid log entry format
+      summary: Submit structured log entries
+      tags:
+      - Structured Logging
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/structured-logging/log:
+    post:
+      operationId: StructuredLoggingController_handleStructuredLog_v2.0
+      parameters: []
+      requestBody:
+        required: true
+        description: Array of structured log entries to process
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Object'
+            examples:
+              errorLog:
+                summary: Error log example
+                value:
+                - message: 'Error: This is a test error for logging\nat Component.method (https://example.com/file.js:66:11)'
+                  severity: ERROR
+                  httpRequest:
+                    requestMethod: POST
+                  timestamp:
+                    nanos: 366000000
+                    seconds: 1748935093
+                  logging.googleapis.com/labels:
+                    application_id: SCANNING-WEB-APP
+                    device_id: Y2T4T
+                  logging.googleapis.com/sourceLocation: {}
+                  additional:
+                  - APPLICATION_ERROR_HANDLER
+                  - {}
+      responses:
+        '202':
+          description: Log entries have been accepted and processed
+        '400':
+          description: Invalid log entry format
+      summary: Submit structured log entries
+      tags:
+      - Structured Logging
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    Object:
+      type: object
+      properties: {}
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

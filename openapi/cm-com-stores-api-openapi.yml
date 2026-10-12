@@ -1,0 +1,145 @@
+openapi: 3.2.0
+info:
+  title: Merchant Stores API
+  description: '## Payment Acceptance Made Easy
+
+    The MerchantAPI allows merchants to interact with and retrieve information from the PayPlaza payment system.'
+  contact:
+    name: Development
+    url: https://www.payplaza.com
+    email: development@payplaza.com
+  version: 1.9.0
+servers:
+- url: /merchant/v1
+security:
+- ApiKeyAuth: []
+tags:
+- name: Stores
+  description: Operations related to stores
+paths:
+  /stores:
+    get:
+      operationId: listStores
+      tags:
+      - Stores
+      summary: List all stores
+      parameters:
+      - name: page
+        in: query
+        description: The page number of your query result
+        required: false
+        schema:
+          format: int32
+          default: 1
+          minimum: 1
+          type: integer
+      - name: size
+        in: query
+        description: The amount of results (defaults to 10)
+        required: false
+        schema:
+          format: int32
+          default: 10
+          maximum: 100
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          description: OK.
+          headers:
+            Link:
+              description: Multiple links providing information about how to navigate through the entries. Links are seperated by a comma ',' Format is compliant with RFC 8288 Web Linking
+              required: true
+              allowEmptyValue: true
+              style: simple
+              schema:
+                type: string
+            X-Total-Count:
+              description: Total number of entries available
+              required: true
+              allowEmptyValue: false
+              style: simple
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Store'
+        '400':
+          description: Bad request.
+        '500':
+          description: Internal server error.
+components:
+  schemas:
+    Store:
+      title: Store
+      description: Information about Store where merchant can do transactions.
+      required:
+      - uuid
+      - name
+      - address
+      type: object
+      properties:
+        uuid:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          - description: Identifier of the store
+        name:
+          description: Name of the store
+          maxLength: 255
+          minLength: 1
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          - description: The address of the store
+    Address:
+      required:
+      - address
+      - zipCode
+      - city
+      - countryCode
+      type: object
+      properties:
+        address:
+          description: Address line, e.g. streetname and number
+          maxLength: 255
+          minLength: 1
+          type: string
+        zipCode:
+          description: Zip code
+          maxLength: 255
+          minLength: 1
+          type: string
+        city:
+          description: City name
+          maxLength: 255
+          minLength: 1
+          type: string
+        stateCode:
+          description: State of province code, according to country local regulations
+          maxLength: 255
+          minLength: 1
+          type:
+          - string
+          - 'null'
+        countryCode:
+          description: Alpha-2 Country code according to <a href="https://en.wikipedia.org/wiki/ISO_3166">ISO 3166</a>
+          maxLength: 2
+          minLength: 2
+          type: string
+    UUID:
+      format: uuid
+      pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+      type: string
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: Authentication via the API Key provided by PayPlaza
+      name: API-Key
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

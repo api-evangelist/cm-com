@@ -1,0 +1,155 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: ID Scan Configuration API
+  description: With ID Scan, you can verify your customer's identity by letting them scan their identity document using a mobile device, like a passport or a driver's license. An advanced OCR engine abstracts data from their document and detects the customer as a living human being via their device's camera.
+servers:
+- url: https://api.cm.com/id-scan/v1
+security:
+- JWT: []
+tags:
+- name: Configuration
+  description: Configure how transactions behave, such as which image quality checks are enforced for document scans.
+paths:
+  /config:
+    get:
+      operationId: get_config
+      summary: Retrieve the configuration
+      tags:
+      - Configuration
+      responses:
+        '200':
+          description: The current configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      operationId: update_config
+      description: Update the configuration. Only the provided values are changed; omitted values keep their current setting.
+      summary: Update the configuration
+      tags:
+      - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Config'
+      responses:
+        '200':
+          description: The updated configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          example: 400
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          example: The request is invalid
+    Config:
+      type: object
+      description: The configuration.
+      properties:
+        documentScan:
+          $ref: '#/components/schemas/DocumentScanConfig'
+    DocumentScanConfig:
+      type: object
+      description: Configuration applied to document scan tasks.
+      properties:
+        imageQualityChecks:
+          $ref: '#/components/schemas/ImageQualityChecks'
+    ImageQualityChecks:
+      type: object
+      description: The individual image quality checks. A check is only enforced when set to `true`; all checks are disabled by default.
+      properties:
+        glare:
+          type: boolean
+          description: Checks for the presence of glare on the document image.
+          default: false
+        focus:
+          type: boolean
+          description: Checks whether the document image is in focus.
+          default: false
+        resolution:
+          type: boolean
+          description: Checks whether the document image has a low resolution.
+          default: false
+        color:
+          type: boolean
+          description: Checks whether the image is colorless, for example a black-and-white scan or photocopy.
+          default: false
+        perspective:
+          type: boolean
+          description: Checks whether the document in the image has perspective distortion.
+          default: false
+        bounds:
+          type: boolean
+          description: Checks whether the document is fully present in the image.
+          default: false
+        moire:
+          type: boolean
+          description: Checks for moiré patterns, which indicate the image is a screen capture instead of a physical document.
+          default: false
+        portrait:
+          type: boolean
+          description: Checks whether the portrait is present on the document.
+          default: false
+        handwritten:
+          type: boolean
+          description: Checks whether the document contains handwritten text in the scanned fields.
+          default: false
+        brightness:
+          type: boolean
+          description: Checks whether the document image is bright enough.
+          default: false
+        occlusion:
+          type: boolean
+          description: Checks whether part of the document is occluded in the image.
+          default: false
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-create-otp-voice-schema.json",
+  "title": "Create OTP (Voice)",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-otp-v2-openapi.yml#/components/schemas/CreateOtpVoice",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "#/$defs/CreateOtpBase"
+    }
+  ],
+  "properties": {
+    "channel": {
+      "enum": [
+        "voice"
+      ]
+    },
+    "from": {
+      "type": "string",
+      "description": "The number of the sender. This must be a valid phone number in E.164 format."
+    },
+    "to": {
+      "type": "string",
+      "description": "The number of the receiver. This must be a valid phone number in E.164 format."
+    },
+    "locale": {
+      "type": "string",
+      "description": "Set the spoken language in the voice call.",
+      "enum": [
+        "de-DE",
+        "en-AU",
+        "en-GB",
+        "en-IN",
+        "en-US",
+        "es-ES",
+        "fr-CA",
+        "fr-FR",
+        "it-IT",
+        "ja-JP",
+        "nl-NL"
+      ],
+      "default": "en-GB"
+    },
+    "anonymous": {
+      "type": "boolean",
+      "description": "Set whether the number of the caller (from) is hidden in the voice call.",
+      "default": true
+    },
+    "message": {
+      "type": "string",
+      "description": "Set a custom message to be used in the voice call.",
+      "maxLength": 500
+    },
+    "gender": {
+      "type": "string",
+      "description": "Set the gender of the text-to-speech voice used in the voice call.",
+      "enum": [
+        "male",
+        "female"
+      ],
+      "default": "female"
+    },
+    "number": {
+      "type": "integer",
+      "format": "int32",
+      "description": "Set which text-to-speech voice to use in the voice call. For the list of numbers, see [TTS voices](https://developers.cm.com/voice/docs/supported-languages).",
+      "minimum": 1,
+      "maximum": 2147483647
+    },
+    "premium": {
+      "type": "boolean",
+      "description": "Set whether a premium text-to-speech voice is used in the voice call. Enabling this may incur additional cost.",
+      "default": false
+    }
+  },
+  "required": [
+    "from",
+    "to"
+  ],
+  "$defs": {
+    "CreateOtpBase": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "description": "The channel to send the code."
+        },
+        "digits": {
+          "type": "integer",
+          "description": "The length of the code.",
+          "minimum": 4,
+          "maximum": 10,
+          "default": 5
+        },
+        "expiry": {
+          "type": "integer",
+          "description": "The expiry of the code in seconds.",
+          "minimum": 10,
+          "maximum": 3600,
+          "default": 60
+        }
+      },
+      "required": [
+        "channel"
+      ]
+    }
+  }
+}

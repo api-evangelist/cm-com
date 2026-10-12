@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-flow-builder-instruction-schema.json",
+  "title": "Flow Builder Instruction",
+  "description": "This sends the instruction to make and outbound call and start a FlowBuilder flow.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-voice-api-v2-openapi.yml#/components/schemas/FlowBuilderInstruction",
+  "required": [
+    "caller",
+    "callflow-id"
+  ],
+  "type": "object",
+  "properties": {
+    "instruction-id": {
+      "maxLength": 64,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional string that allows you to uniquely identify the placed outbound call. Its value is also included\r\nin the callback and Call Detail Records (CDRs)."
+    },
+    "callee": {
+      "maxLength": 24,
+      "pattern": "^(\\+|00)?[1-9]\\d{6,14}$",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The number to dial. When the number is invalid, the request will be rejected. Must be in valid international\r\nE.164 format."
+    },
+    "callees": {
+      "pattern": "^(\\+|00)?[1-9]\\d{6,14}$",
+      "maxItems": 100,
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "List of multiple numbers to dial. When the list contains one or more invalid numbers, the request will be\r\nrejected. Must be in valid international E.164 format."
+    },
+    "caller": {
+      "maxLength": 24,
+      "minLength": 1,
+      "pattern": "^(\\+|00)?[1-9]\\d{6,14}$",
+      "type": "string",
+      "description": "The caller ID to display on the recipient's phone. Must be in valid international E.164 format."
+    },
+    "anonymous": {
+      "type": "boolean",
+      "description": "Indicates whether the caller ID should be hidden. Defaults to `false`."
+    },
+    "callback-url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "URL that will be called when the call is finished. The body of this POST request will contain details about\r\nthe call or calls.",
+      "format": "uri"
+    },
+    "max-ringing-timeout": {
+      "maximum": 60,
+      "minimum": 10,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Determines how long the Voice API will wait for the callee to answer the call. Cancels the ringing call\r\nafter the timeout period exceeded. Defaults to `60`.",
+      "format": "int32"
+    },
+    "callflow-id": {
+      "minLength": 1,
+      "type": "string",
+      "description": "This property represents the unique identifier for a FlowBuilder flow. For guidance on locating the callflow\r\nID of a specific flow, please refer to the <a href=\"/voice/flowbuilder/configuring-flows/outbound-calls#finding-your-call-flow-id\">FlowBuilder documentation</a>."
+    },
+    "flow-variables": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {},
+      "description": "Optional list of flow variables that will be set. For more information on FlowBuilder variables, please see\r\nthe <a href=\"/voice/flowbuilder/flow-variables\">FlowBuilder documentation</a>."
+    },
+    "voicemail-response": {
+      "$ref": "#/$defs/VoicemailResponse"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "VoicemailResponse": {
+      "title": "Voicemail Response",
+      "enum": [
+        "Ignore",
+        "Restart",
+        "Stop",
+        "Disconnect"
+      ],
+      "type": "string",
+      "description": "The type that determines the flow of Voicemail detection."
+    }
+  }
+}

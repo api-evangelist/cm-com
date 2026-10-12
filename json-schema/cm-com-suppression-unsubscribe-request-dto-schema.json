@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-suppression-unsubscribe-request-dto-schema.json",
+  "title": "Suppression_UnsubscribeRequestDto",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Suppression_UnsubscribeRequestDto",
+  "required": [
+    "recipient"
+  ],
+  "type": "object",
+  "properties": {
+    "sender": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "email"
+    },
+    "recipient": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "email"
+    },
+    "unsubscribeType": {
+      "$ref": "#/$defs/Suppression_UnsubscribeType"
+    },
+    "emailType": {
+      "$ref": "#/$defs/Suppression_EmailKind"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "Suppression_EmailKind": {
+      "enum": [
+        0,
+        1,
+        2,
+        -1
+      ],
+      "type": "integer",
+      "format": "int32"
+    },
+    "Suppression_UnsubscribeType": {
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "type": "integer",
+      "format": "int32"
+    }
+  }
+}

@@ -1,0 +1,295 @@
+# x-archived-from: cm-com-voice-sip-thresholds-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: Thresholds API
+  version: v1
+servers:
+- url: https://api.cm.com
+paths:
+  /voice-thresholdsapi/v1/{accountGuid}/sipthresholds:
+    post:
+      tags:
+      - Sip Account Thresholds
+      summary: 'Create Cost Threshold '
+      description: Create a new cost threshold for the SIP account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: Model of the threshold rule
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    get:
+      tags:
+      - Sip Account Thresholds
+      summary: Get Cost Thresholds
+      description: Get all cost thresholds for the given SIP account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-thresholdsapi/v1/{accountGuid}/sipthresholds/{sipAccountThresholdGuid}:
+    put:
+      tags:
+      - Sip Account Thresholds
+      summary: Update Cost Threshold
+      description: Update a given cost threshold.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountThresholdGuid
+        in: path
+        description: Unique identifier of the cost threshold rule.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: Model of the threshold rule
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipAccountThresholdRule'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    delete:
+      tags:
+      - Sip Account Thresholds
+      summary: Delete Cost Threshold
+      description: Remove a given cost threshold.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountThresholdGuid
+        in: path
+        description: Unique identifier of the cost threshold rule.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoContentResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+components:
+  schemas:
+    ApiSipAccountThresholdRule:
+      title: Sip Account Threshold Rule
+      required:
+      - threshold
+      type: object
+      properties:
+        emailAddresses:
+          type: array
+          items:
+            type: string
+            format: email
+          description: List of email addresses that will be notified when cost threshold is surpassed
+          nullable: true
+          example:
+          - user@example.com
+        phoneNumbers:
+          type: array
+          items:
+            type: string
+          description: List of phone numbers that will be notified when cost threshold is surpassed
+          nullable: true
+          example:
+          - '31600000000'
+        guid:
+          type: string
+          description: Unique identifier for a given threshold rule
+          format: uuid
+          nullable: true
+          example: 00000000-0000-0000-0000-000000000000
+        voiceAccountGuid:
+          type: string
+          description: The unique identifier of the Voice Account which this SIP Account is part of.
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        sipAccountGuid:
+          type: string
+          description: The unique identifier of the SIP Account which the rule applies to
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        threshold:
+          minimum: 25
+          type: number
+          description: Decimal value representing the cost threshold in the currency of the sip account
+          format: double
+          example: 200.123
+        blockAccountOnThreshold:
+          type: boolean
+          description: Boolean value whether or not to block the SIP account when the threshold is surpassed
+          example: true
+        notificationSentOn:
+          type: string
+          description: Last time when a notification has been sent due to the threshold being passed. Null if threshold has never been passed
+          format: date-time
+          nullable: true
+      additionalProperties: false
+      description: Represents a sip account threshold rule request
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          nullable: true
+      additionalProperties: false
+    NoContentResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

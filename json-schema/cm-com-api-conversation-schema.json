@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-conversation-schema.json",
+  "title": "Conversation",
+  "description": "Details of a conversation.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-cdr-v1-openapi.yml#/components/schemas/ApiConversation",
+  "type": "object",
+  "properties": {
+    "answeredOn": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The timestamp the call was answered.",
+      "format": "date-time"
+    },
+    "apiAccount": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "API account user name. (if applicable)"
+    },
+    "calleeDestination": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The callee's destination."
+    },
+    "calleeDestinationId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The callee's destination ID.",
+      "format": "uuid"
+    },
+    "calleeId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The phone number identifying the callee."
+    },
+    "callerId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The phone number identifying the caller."
+    },
+    "callId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The unique call ID identifying the call."
+    },
+    "cost": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Call cost, precision of 4.",
+      "format": "double"
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Currency of the call cost."
+    },
+    "direction": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The direction of the call."
+    },
+    "durationInSeconds": {
+      "type": "integer",
+      "description": "The duration in seconds.",
+      "format": "int32"
+    },
+    "externalReference": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unique identifier of the call. (if applicable)"
+    },
+    "finishedOn": {
+      "type": "string",
+      "description": "The timestamp the call was finished.",
+      "format": "date-time"
+    },
+    "isAnonymous": {
+      "type": "boolean",
+      "description": "Whether the call was anonymous."
+    },
+    "sipAccount": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "SIP Account user name. (if applicable)"
+    },
+    "customSipAccountName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Custom name of the SIP Account. (if applicable)"
+    },
+    "startedOn": {
+      "type": "string",
+      "description": "The timestamp the call started.",
+      "format": "date-time"
+    },
+    "surchargeAmount": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "The surcharge amount, precision of 4. (if applicable)",
+      "format": "double"
+    },
+    "surchargeType": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Can be either 'penalty surcharge' or 'Non-EER to EER'. (if applicable)"
+    },
+    "surchargeUnitPrice": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Surcharge unit price per minute, precision of 4. (if applicable)",
+      "format": "double"
+    },
+    "unitPrice": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Call cost per minute, precision of 4.",
+      "format": "double"
+    },
+    "voiceAccountId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The unique identifier of the Voice Account."
+    },
+    "voiceAccountName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The name of the Voice Account."
+    },
+    "customResellerPrice": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Custom reseller price of the call, precision of 4. (only included for Voice Resellers)",
+      "format": "double"
+    },
+    "customResellerSetupCost": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Custom reseller setup cost of the call, precision of 4 (if applicable). (only included for Voice Resellers)",
+      "format": "double"
+    },
+    "customResellerUnitPrice": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Custom reseller unit price per minute, precision of 4. (only included for Voice Resellers)",
+      "format": "double"
+    }
+  },
+  "additionalProperties": false
+}

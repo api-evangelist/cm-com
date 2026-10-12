@@ -1,0 +1,171 @@
+openapi: 3.2.0
+info:
+  version: v1
+  title: Messages Senders API
+servers:
+- url: https://api.cm.com
+tags:
+- name: Senders
+paths:
+  /messages/v1/accounts/{accountId}/senders:
+    get:
+      tags:
+      - Senders
+      summary: Gets senders
+      operationId: Senders_GetSendersAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The accountId.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetResponse'
+    post:
+      tags:
+      - Senders
+      summary: Adds a Sender
+      operationId: Senders_AddSenderAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The accountId.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Messages.Models.ApiSenderPresetRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetResponse'
+  /messages/v1/accounts/{accountId}/senders/{senderId}:
+    put:
+      tags:
+      - Senders
+      summary: Updates a Sender
+      operationId: Senders_UpdateSenderAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The accountId.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: senderId
+        in: path
+        description: The identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Messages.Models.ApiSenderPresetRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetResponse'
+    delete:
+      tags:
+      - Senders
+      summary: Deletes a Sender
+      operationId: Senders_DeleteSenderAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The accountId.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: senderId
+        in: path
+        description: The identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+components:
+  requestBodies:
+    CM.Platform.Messages.Models.ApiSenderPresetRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetRequest'
+      description: The sender.
+      required: true
+  schemas:
+    CM.Platform.Messages.Models.ApiSenderPresetRequest:
+      type: object
+      properties:
+        isFavorite:
+          type: boolean
+        name:
+          type: string
+        senders:
+          type: object
+          additionalProperties:
+            type: string
+    CM.Platform.Messages.Models.ApiSenderPresetResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isFavorite:
+          type: boolean
+        name:
+          type: string
+        senders:
+          type: object
+          additionalProperties:
+            type: string

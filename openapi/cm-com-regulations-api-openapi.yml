@@ -1,0 +1,124 @@
+openapi: 3.2.0
+info:
+  title: Phone Number Request Regulations API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Regulations
+paths:
+  /voice-phonenumberrequestapi/v1/regulations/country-requirements:
+    get:
+      tags:
+      - Regulations
+      summary: Get Number Request Requirements
+      description: Retrieve all rules and regulations, ordered by country and phone number type. Be aware that every request also requires contact information (first & last name, email address), company representative contact information (first & last name, phone number) and company information (name, registration number, address).
+      parameters:
+      - name: CountryCodes
+        in: query
+        description: Country codes to filter on, separated by a comma. (ISO 3166-1 alpha-2 format)
+        schema:
+          type: string
+          example: NL,BE
+        example: NL,BE
+      - name: PhoneNumberTypes
+        in: query
+        description: Phone number types to filter on, separated by a comma.
+        schema:
+          type: string
+          example: Local,National,TollFree
+        example: Local,National,TollFree
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRequirementsPerCountry'
+      operationId: getVoicePhonenumberrequestapiV1RegulationsCountryRequirements
+      x-operation-id-source: derived
+components:
+  schemas:
+    ApiCountryRequirement:
+      title: Country Requirement
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: Unique key for this requirement.
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the requirement.
+        type:
+          type:
+          - string
+          - 'null'
+          description: The type of requirement.
+        resourceLink:
+          type:
+          - string
+          - 'null'
+          description: Download link to the resource that is needed for this requirement.
+        isForReseller:
+          type: boolean
+          description: This requirement ONLY applies to resellers.
+      additionalProperties: false
+      description: Requirement for requests (under a number type and country combination)
+    ApiRequirementsPerNumberType:
+      title: Requirements Per Number Type
+      type: object
+      properties:
+        numberType:
+          type:
+          - string
+          - 'null'
+          description: The phone number type (Local, National, TollFree).
+        requirements:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiCountryRequirement'
+          description: List of requirements for this phone number type.
+      additionalProperties: false
+      description: All requirements for a specific number type. (under a specific country)
+    ApiRequirementsPerCountry:
+      title: Requirements Per Country
+      type: object
+      properties:
+        countryCode:
+          type:
+          - string
+          - 'null'
+          description: The country code (2 letters, ISO 3166).
+        countryName:
+          type:
+          - string
+          - 'null'
+          description: The English country name.
+        requirementsPerNumberType:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiRequirementsPerNumberType'
+          description: List of requirements, ordered by phone number type.
+      additionalProperties: false
+      description: All requirements for a single country, ordered by number type.
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,122 @@
+# x-archived-from: cm-com-mobile-marketing-cloud-cdp-events-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.0
+info:
+  title: API
+  version: v1.0
+paths:
+  /events/v1.0/tenants/{tenantId}/events/{eventTypeId}:
+    post:
+      tags:
+      - Events
+      parameters:
+      - in: path
+        name: tenantId
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: eventTypeId
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/Newtonsoft.Json.Linq.JToken'
+      responses:
+        '201':
+          description: Success
+  /events/v1.0/tenants/{tenantId}/eventtypes/{eventTypeId}/rawevents:
+    post:
+      tags:
+      - Events
+      parameters:
+      - in: path
+        name: tenantId
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: eventTypeId
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/Newtonsoft.Json.Linq.JToken'
+      responses:
+        '201':
+          description: Success
+  /events/v1.0/tenants/{tenantId}/events:
+    post:
+      tags:
+      - Events
+      parameters:
+      - in: path
+        name: tenantId
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Data.Events.Api.Web.Models.ApiEventPostArray'
+      responses:
+        '201':
+          description: Success
+servers:
+- url: http://api.cdp.cm.com
+components:
+  requestBodies:
+    Newtonsoft.Json.Linq.JToken:
+      content:
+        application/json-patch+json:
+          schema:
+            $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+        application/*+json:
+          schema:
+            $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+    CM.Data.Events.Api.Web.Models.ApiEventPostArray:
+      content:
+        application/json-patch+json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Data.Events.Api.Web.Models.ApiEventPost'
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Data.Events.Api.Web.Models.ApiEventPost'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Data.Events.Api.Web.Models.ApiEventPost'
+        application/*+json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Data.Events.Api.Web.Models.ApiEventPost'
+  schemas:
+    CM.Data.Events.Api.Web.Models.ApiEventPost:
+      required:
+      - event
+      - eventTypeId
+      type: object
+      properties:
+        eventTypeId:
+          format: uuid
+          type: string
+        event: {}
+    Newtonsoft.Json.Linq.JToken:
+      type: array
+      items:
+        $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'

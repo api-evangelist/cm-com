@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-tooling-bulk-email-api-models-api-campaign-schema.json",
+  "title": "CM.Tooling.BulkEmail.Api.Models.ApiCampaign",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-email-campaigns-v1-openapi.yml#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaign",
+  "type": "object",
+  "properties": {
+    "ID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "AccountID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "Name": {
+      "type": "string"
+    },
+    "CampaignType": {
+      "format": "int32",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "type": "integer"
+    },
+    "CampaignState": {
+      "format": "int32",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "type": "integer"
+    },
+    "ToAddressListID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "ScheduledOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ScheduledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "TestPercentage": {
+      "format": "double",
+      "type": "number"
+    },
+    "TestDurationMinutes": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "TestMetricType": {
+      "format": "int32",
+      "enum": [
+        1,
+        2,
+        3
+      ],
+      "type": "integer"
+    },
+    "SendToRemainingOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "SendToRemainingOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "WinningVariationID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "TotalRecipients": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "PreviewHtmlBody": {
+      "type": "string"
+    },
+    "CampaignTags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag"
+      }
+    },
+    "GoogleAnalyticsTracking": {
+      "$ref": "#/$defs/CM.Tooling.BulkEmail.Api.Models.ApiGoogleAnalyticsTracking"
+    },
+    "CreatedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "CreatedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ModifiedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ModifiedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "DeletedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "DeletedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "AccountID": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "Tag": {
+          "type": "string"
+        },
+        "CreatedOn": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "CreatedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "ModifiedOn": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "ModifiedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "DeletedOn": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "DeletedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "CM.Tooling.BulkEmail.Api.Models.ApiGoogleAnalyticsTracking": {
+      "type": "object",
+      "properties": {
+        "Source": {
+          "type": "string"
+        },
+        "Medium": {
+          "type": "string"
+        },
+        "Campaign": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-configuration-email-inbound-webhook-request-schema.json",
+  "title": "Configuration_EmailInboundWebhookRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Configuration_EmailInboundWebhookRequest",
+  "type": "object",
+  "properties": {
+    "webhookUrl": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "HTTPS URL, port 443. Trailing slash is removed."
+    },
+    "domain": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Recipient domain. Stored lower-case."
+    },
+    "usePresignedAttachments": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Send attachments as download links instead of inline base64. Default false."
+    },
+    "presignedUrlExpiryHours": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32",
+      "description": "Lifetime of download links in hours. Default 24, effective maximum 168."
+    }
+  },
+  "additionalProperties": false
+}

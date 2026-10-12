@@ -1,0 +1,417 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Sign Invitee API
+  description: 'Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via this link. This will grant you access to the sandbox environment.
+
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Invitee
+  description: ''
+paths:
+  /dossiers/{dossierId}/invitees/{inviteeId}:
+    parameters:
+    - $ref: '#/components/parameters/DossierId'
+    - $ref: '#/components/parameters/InviteeId'
+    put:
+      operationId: replace_dossier_invitee
+      summary: Update invitee
+      description: 'Modify a single invitee and its related information.
+
+        When the dossier is in `pending` state only the `name`, `email` and `phoneNumber` can be modified.
+
+        Existing invites for the invitee are automatically invalidated if the `email` or `phoneNumber` is changed.'
+      tags:
+      - Invitee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifyInvitee'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidState'
+components:
+  schemas:
+    InviteeId:
+      $ref: '#/components/schemas/InviteeReference'
+      readOnly: true
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    Invitee:
+      allOf:
+      - type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/InviteeId'
+        required:
+        - id
+      - $ref: '#/components/schemas/InviteeBase'
+    Locale:
+      type: string
+      enum:
+      - de-DE
+      - en-US
+      - es-ES
+      - fr-FR
+      - hu-HU
+      - it-IT
+      - ja-JP
+      - nl-NL
+      - pl-PL
+      - pt-PT
+      - ro-RO
+      - sk-SK
+      default: en-US
+    FieldReference:
+      type: string
+      format: uuid
+      description: Unique Id of a field
+      examples:
+      - 50ee1534-6172-4228-84e8-653c6f65eaf0
+    InviteeBase:
+      title: Invitee
+      description: An invitee is someone who has been invited to review and/or sign the dossier.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the person invited to read and/or sign the document
+          maxLength: 255
+          examples:
+          - Peter Invitee
+        email:
+          type: string
+          format: email
+          description: A valid email address
+          maxLength: 255
+        locale:
+          $ref: '#/components/schemas/Locale'
+          description: Locale of the language to be used in invitations.
+          nullable: true
+        position:
+          type: integer
+          description: Set the order of signing. For example if there are two invitees set position `1` for the first invitee and position `2` for the second invitee. It is possible to set multiple invitees on the same position. Make sure there is no gap between the positions.
+          examples:
+          - 1
+        authenticationMethods:
+          type: array
+          items:
+            type: string
+            enum:
+            - otp_sms
+            - otp_email
+            - otp_whatsapp
+            - otp_voice
+            description: Additional user authentication is required before the user can view the dossier. Please note that this is only available when configured for your account.
+        identificationMethod:
+          $ref: '#/components/schemas/IdentificationMethod'
+          deprecated: true
+        identificationMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentificationMethod'
+        notifications:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - invite
+            - signed
+            - reviewed
+            - declined
+            - completed
+            description: Determines which notifications should be sent over the configured channel. By default all notifications are sent.
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+          description: Additional payment is required. Please note that this is only available when configured for your account.
+        phoneNumber:
+          type: string
+          description: The phone number of the invitee in E.164 format. Required when identificationMethod is otp.
+          examples:
+          - '+31601234567'
+        reference:
+          type: string
+          description: A reference to an external identifier of your invitee.
+          maxLength: 255
+          examples:
+          - 6c38955e-7324-41e7-97dd-0bcf55e275e2
+        readOnly:
+          type: boolean
+          description: Indicates that this invitee needs to review the dossier, instead of signing it
+          default: false
+        state:
+          type: string
+          enum:
+          - approved
+          - declined
+          description: The invitee has approved or declined the dossier
+        stateComment:
+          type:
+          - string
+          - 'null'
+          description: When the invitee declined the dossier this field may contain the reason for declining.
+          default: null
+          readOnly: true
+          examples:
+          - null
+        stateChanged:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date the invitee state has changed
+          default: null
+          readOnly: true
+          examples:
+          - null
+        redirectUrl:
+          type:
+          - string
+          - 'null'
+          format: url
+          description: URL to redirect the invitee to after signing, approving or declining the dossier. If not set, the default confirmation page will be shown.
+          default: null
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+      required:
+      - name
+    IdentificationMethod:
+      type: string
+      enum:
+      - idin
+      - iban
+      - otp_sms
+      - otp_email
+      - otp_whatsapp
+      - otp_voice
+      - qualified
+      examples:
+      - idin
+      description: Additional user identification is required. When you select `qualified` it cannot be used with other identification methods. Please note that this is only available when configured for your account.
+    FieldId:
+      $ref: '#/components/schemas/FieldReference'
+      readOnly: true
+    FieldLocation:
+      type: object
+      properties:
+        range:
+          type: string
+          pattern: ^\d+(-\d+)?$
+          maxLength: 64
+          description: The page number within the PDF that this field occupies (e.g. `1`), or range for a initials field (e.g. `1-3`).
+          examples:
+          - '1'
+        x:
+          type: number
+          format: float
+          description: X position of the field in points.
+        y:
+          type: number
+          format: float
+          description: Y position of the field in points.
+        width:
+          type: number
+          format: float
+          description: Width of the field in points.
+        height:
+          type: number
+          format: float
+          description: Height of the field in points.
+    Payment:
+      title: Payment
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: The payment amount in cents
+          minimum: 1
+          examples:
+          - 100
+        currency:
+          type: string
+          enum:
+          - EUR
+          description: The payment currency
+      required:
+      - amount
+      - currency
+    FileReference:
+      type: string
+      format: uuid
+      description: A unique reference number for this file.
+      examples:
+      - 8d817359-7eb8-4b6e-9030-17ac286b7dc0
+    Field:
+      allOf:
+      - type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/FieldId'
+        required:
+        - id
+      - $ref: '#/components/schemas/FieldBase'
+    FieldType:
+      type: string
+      description: The type of field for the invitee.
+      enum:
+      - signature
+      - signatureDate
+      - initials
+      - text
+      - textarea
+      - label
+      - checkbox
+      - radio
+      - stamp
+      examples:
+      - signature
+    InviteeReference:
+      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
+      type: string
+      format: uuid
+      examples:
+      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
+    FieldBase:
+      title: Field
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FieldType'
+        required:
+          type: boolean
+          examples:
+          - true
+          default: true
+          description: Indicates if the field is required and must be filled in by the user. When required is `true` and type is `checkbox` the field must be checked. For the `checkbox` type, the default value is `false`.
+        file:
+          $ref: '#/components/schemas/FileReference'
+        tag:
+          type: string
+          examples:
+          - '{signature1}'
+          maxLength: 64
+          description: The tag acts as a placeholder; the range and locations of the field are automatically determined based on the location(s) of the tag in the document. Add the tag to every page the field should include in case of initials. The tag should be hidden, for example by making it white.
+        tagRequired:
+          type: boolean
+          examples:
+          - true
+          default: true
+          description: Indicates if the tag must be present in the document. When this is set to `false` and the tag is not found in the document it will skip this field.
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldLocation'
+        invitee:
+          $ref: '#/components/schemas/InviteeReference'
+          readOnly: true
+      required:
+      - type
+      - file
+    ModifyInvitee:
+      allOf:
+      - type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/InviteeReference'
+        required:
+        - id
+      - $ref: '#/components/schemas/InviteeBase'
+  responses:
+    InvalidState:
+      description: The request cannot be made because the state of the dossier does not match the state that is expected for this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    InviteeId:
+      name: inviteeId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a single invitee
+
+        '
+      example: c4b5020f-a092-4516-b890-81a635ebe470
+    DossierId:
+      name: dossierId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a dossier
+
+        '
+      example: 22470767-904e-4553-9586-d7ed4f2b330e
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

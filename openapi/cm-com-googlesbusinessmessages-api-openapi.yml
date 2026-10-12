@@ -1,0 +1,2847 @@
+openapi: 3.2.0
+info:
+  title: Channels Googles Business Messages API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: GooglesBusinessMessages
+paths:
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/agents:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get all Google's Business Messages Agents
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAgentsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The q.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentBase'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/agents/{agentId}:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get a Google's Business Messages Agent by ID
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAgentAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get all Google's Business Messages Agents for a specified Google's Business…
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesBrandAgentsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The q.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentBase'
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Adds a new Google's Business Messages Agent
+      operationId: GooglesBusinessMessages_AddGooglesBusinessMessagesAgentAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get a Google's Business Messages Agent by ID for a specified Google's Business…
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesBrandAgentAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+    delete:
+      tags:
+      - GooglesBusinessMessages
+      summary: Deletes a Google's Business Messages Agent
+      operationId: GooglesBusinessMessages_DeleteGooglesBusinessMessagesAgentAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/forminput:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Gets the Google's Business Messages Agents form input
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAgentFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+    put:
+      tags:
+      - GooglesBusinessMessages
+      summary: Adds the Google's Business Messages Agents form input
+      operationId: GooglesBusinessMessages_AddGooglesBusinessMessagesAgentFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/configuration:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Gets the Google's Business Messages Agent Configuration
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAgentConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+    put:
+      tags:
+      - GooglesBusinessMessages
+      summary: Updates the Google's Business Messages Agent Configuration
+      operationId: GooglesBusinessMessages_UpdateGooglesBusinessMessagesAgentConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+        description: The configuration.
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/testurls:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Gets the Google's Business Messages Agent Test Urls
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAgentTestUrlsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentTestUrl'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentTestUrl'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentTestUrl'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentTestUrl'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/launch:
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Configure the Google's Business Messages Agent Launch
+      operationId: GooglesBusinessMessages_ConfigureGooglesBusinessMessagesAgentLaunchAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsRequest'
+        description: The request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsResponse'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/locations/{locationId}/launch:
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Configure the Google's Business Messages Agent Location Launch
+      operationId: GooglesBusinessMessages_ConfigureGooglesBusinessMessagesAgentAgentLocationLaunchAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: locationId
+        in: path
+        description: The location identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsRequest'
+        description: The request.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsResponse'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/locations:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get Locations linked to a Google's Business Messages Agent
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAgentLocationsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Create Location for an Google's Business Messages Agent from a Google My…
+      operationId: GooglesBusinessMessages_CreateGooglesBusinessMessagesLocationFromMyBusinessLocationIdAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: myBusinessLocationId
+        in: query
+        description: My business location identifier.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/locations/{locationId}:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get a Location linked to a Google's Business Messages Agent by ID
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAgentLocationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: locationId
+        in: path
+        description: The location identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+    delete:
+      tags:
+      - GooglesBusinessMessages
+      summary: Delete a Location by ID
+      operationId: GooglesBusinessMessages_DeleteGooglesBusinessMessagesLocationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: locationId
+        in: path
+        description: The location identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  ? /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/locations/{locationId}/updatecache
+  : get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Updates location data cache for a Google's Business Messages Agent Location by…
+      operationId: GooglesBusinessMessages_UpdateGooglesBusinessMessagesAgentLocationDataAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: locationId
+        in: path
+        description: The location identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/verify:
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Verify a Google's Business Messages Agent
+      operationId: GooglesBusinessMessages_VerifyGooglesBusinessMessagesAgentAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: forceManualVerification
+        in: query
+        description: if set to true [force manual verification].
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent'
+    delete:
+      tags:
+      - GooglesBusinessMessages
+      summary: Cancel the Google's Business Messages Agent Verification Request
+      operationId: GooglesBusinessMessages_CancelGooglesBusinessMessagesAgentAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/agents/{agentId}/locations/{locationId}/verify:
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Verify a Google's Business Messages Location
+      operationId: GooglesBusinessMessages_VerifyGooglesBusinessMessagesAgentLocationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: agentId
+        in: path
+        description: The agent identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: locationId
+        in: path
+        description: The location identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get all Google's Business Messages Brands
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesBrandsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The q.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrandBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrandBase'
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Add a new Google's Business Messages Brand
+      operationId: GooglesBusinessMessages_AddGooglesBusinessMessagesBrandAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get a Google's Business Messages Brand by ID
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesBrandAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+    delete:
+      tags:
+      - GooglesBusinessMessages
+      summary: Delete a Google's Business Messages Brand
+      operationId: GooglesBusinessMessages_DeleteGooglesBusinessMessagesBrandAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/brands/{brandId}/forminput:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Gets the Google's Business Messages Brand form input
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesBrandFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+    put:
+      tags:
+      - GooglesBusinessMessages
+      summary: Adds the Google's Business Messages Brand form input
+      operationId: GooglesBusinessMessages_AddGooglesBusinessMessagesBrandFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/account:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get a Google's Business Messages Account
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount'
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Adds a Google's Business Messages Account
+      operationId: GooglesBusinessMessages_AddGooglesBusinessMessagesAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Created
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/account/forminput:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get the form input for a Google's Business Messages Account
+      operationId: GooglesBusinessMessages_GetGooglesBusinessMessagesAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+    put:
+      tags:
+      - GooglesBusinessMessages
+      summary: Adds the Google's Business Messages Account form input
+      operationId: GooglesBusinessMessages_AddGooglesBusinessMessagesAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/oauth:
+    get:
+      tags:
+      - GooglesBusinessMessages
+      summary: Convert the Google OAuth Authorization Code into a OAuth Access Token Object
+      operationId: GooglesBusinessMessages_ConvertGoogleOAuthAuthorizationCodeToOAuthAccessTokenAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: oAuthAuthorizationCode
+        in: query
+        description: The o authentication authorization code.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/mybusiness/accounts:
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get all Google My Business Accounts that the supplied OAuth Credential has…
+      operationId: GooglesBusinessMessages_GetGoogleMyBusinessAccountsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessAccount'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessAccount'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessAccount'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessAccount'
+  /channels/v1/accounts/{accountId}/gbm/{channelRequestId}/mybusiness/accounts/{myBusinessAccountId}/locations:
+    post:
+      tags:
+      - GooglesBusinessMessages
+      summary: Get all Google My Business Locations from a Google My Business Account that the…
+      operationId: GooglesBusinessMessages_GetGoogleMyBusinessLocationsFromMyBusinessAccountIdAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: myBusinessAccountId
+        in: path
+        description: My business account identifier.
+        required: true
+        schema:
+          type: string
+      - name: brandId
+        in: query
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessLocation'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessLocation'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessLocation'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessLocation'
+components:
+  schemas:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Suggestion:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedAction'
+        reply:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedReply'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationalSetting:
+      type: object
+      properties:
+        conversationStarters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationStarters'
+        welcomeMessage:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1WelcomeMessage'
+        privacyPolicy:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1PrivacyPolicy'
+        offlineMessage:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OfflineMessage'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction:
+      type: object
+      properties:
+        humanRepresentative:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1HumanRepresentative'
+        interactionType:
+          type: string
+        botRepresentative:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BotRepresentative'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyConfig:
+      type: object
+      properties:
+        templateQuestionIds:
+          type: array
+          items:
+            type: string
+        customSurveys:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1CustomSurveyConfig'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequestOauth:
+      type: object
+      properties:
+        codeChallenge:
+          type: string
+        codeChallengeMethod:
+          type: string
+        clientId:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CarouselCard:
+      type: object
+      properties:
+        cardWidth:
+          type: string
+        cardContents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1LiveAgentRequest:
+      type: object
+      properties:
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyQuestion:
+      type: object
+      properties:
+        questionContent:
+          type: string
+        questionType:
+          type: string
+        name:
+          type: string
+        responseOptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyResponse'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1StandaloneCard:
+      type: object
+      properties:
+        cardContent:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedReply:
+      type: object
+      properties:
+        postbackData:
+          type: string
+        text:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1HumanRepresentative:
+      type: object
+      properties:
+        humanMessagingAvailability:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailability'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1VerifiedSmsAgent:
+      type: object
+      properties:
+        senders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1VerifiedSmsAgentSender'
+        logoUrl:
+          type: string
+        description:
+          type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrand:
+      required:
+      - id
+      - accountId
+      - name
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        gbmAccountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        googleBusinessCommunicationsId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        rejectionReason:
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Image:
+      type: object
+      properties:
+        contentInfo:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedAction:
+      type: object
+      properties:
+        postbackData:
+          type: string
+        openUrlAction:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OpenUrlAction'
+        text:
+          type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials:
+      type: object
+      properties:
+        credentials:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleOAuthAccessToken'
+    ? CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration
+    : type: object
+      properties:
+        businessMessagesAgent:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgent'
+        verifiedSmsAgent:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1VerifiedSmsAgent'
+        name:
+          type: string
+        displayName:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgent:
+      type: object
+      properties:
+        customAgentId:
+          type: string
+        additionalAgentInteractions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction'
+        authorizationConfig:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentAuthorizationConfig'
+        nonLocalConfig:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfig'
+        surveyConfig:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyConfig'
+        agentTestUrl:
+          type: string
+        phone:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
+        entryPointConfigs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesEntryPointConfig'
+        logoUrl:
+          type: string
+        testUrls:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1TestUrl'
+        conversationalSettings:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationalSetting'
+        defaultLocale:
+          type: string
+        primaryAgentInteraction:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1OpenUrlAction:
+      type: object
+      properties:
+        url:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1CustomSurveyConfig:
+      type: object
+      properties:
+        customQuestions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyQuestion'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesEntryPointConfig:
+      type: object
+      properties:
+        allowedEntryPoint:
+          type: string
+        ETag:
+          type: string
+    ? Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentAuthorizationConfig
+    : type: object
+      properties:
+        endpointUrl:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfig:
+      type: object
+      properties:
+        callDeflectionPhoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
+        enabledDomains:
+          type: array
+          items:
+            type: string
+        phoneNumber:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
+        contactOption:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfigContactOption'
+        regionCodes:
+          type: array
+          items:
+            type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent:
+      type: object
+      properties:
+        description:
+          type: string
+        media:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Media'
+        title:
+          type: string
+        suggestions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Suggestion'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1RichCard:
+      type: object
+      properties:
+        carouselCard:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CarouselCard'
+        standaloneCard:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1StandaloneCard'
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsRequest:
+      type: object
+      properties:
+        entryPoint:
+          enum:
+          - NON_LOCAL
+          - LOCATION
+          type: string
+        launched:
+          type: boolean
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OfflineMessage:
+      type: object
+      properties:
+        text:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationStarters:
+      type: object
+      properties:
+        suggestion:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Suggestion'
+        ETag:
+          type: string
+    ? Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfigContactOption
+    : type: object
+      properties:
+        url:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1PrivacyPolicy:
+      type: object
+      properties:
+        url:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailability:
+      type: object
+      properties:
+        hours:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailabilityHours'
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsResponse:
+      type: object
+      properties:
+        googleLaunchStatus:
+          enum:
+          - LAUNCH_STATE_UNSPECIFIED
+          - LAUNCH_STATE_UNLAUNCHED
+          - LAUNCH_STATE_PENDING
+          - LAUNCH_STATE_LAUNCHED
+          - LAUNCH_STATE_REJECTED
+          - LAUNCH_STATE_SUSPENDED
+          - LAUNCH_STATE_PENDING_UNLAUNCH
+          - LAUNCH_STATE_INVALID_IN_GMB
+          type: string
+        entryPoint:
+          enum:
+          - NON_LOCAL
+          - LOCATION
+          type: string
+        launched:
+          type: boolean
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone:
+      type: object
+      properties:
+        number:
+          type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentTestUrl:
+      type: object
+      properties:
+        surface:
+          type: string
+        url:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleTypeTimeOfDay:
+      type: object
+      properties:
+        minutes:
+          format: int32
+          type: integer
+        hours:
+          format: int32
+          type: integer
+        nanos:
+          format: int32
+          type: integer
+        seconds:
+          format: int32
+          type: integer
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequest:
+      type: object
+      properties:
+        oauth:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequestOauth'
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentBase:
+      required:
+      - id
+      - accountId
+      - name
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        gbmBrandId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsRequest:
+      type: object
+      properties:
+        launched:
+          type: boolean
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedReply:
+      type: object
+      properties:
+        text:
+          type: string
+        postbackData:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedAction:
+      type: object
+      properties:
+        postbackData:
+          type: string
+        text:
+          type: string
+        openUrlAction:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1OpenUrlAction'
+        dialAction:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1DialAction'
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent:
+      required:
+      - id
+      - accountId
+      - name
+      - isPending
+      - isActive
+      - messageConfigurationCompleted
+      - entrypointConfigurationCompleted
+      - agentManualVerificationFlowRequired
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        gbmBrandId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        gbmAccountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        googleBusinessCommunicationsId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        googleBusinessCommunicationsVerificationStatus:
+          type: string
+        googleBusinessCommunicationsLaunchStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentLaunchStatus'
+        messageConfigurationCompleted:
+          type: boolean
+        entrypointConfigurationCompleted:
+          type: boolean
+        agentManualVerificationFlowRequired:
+          type: boolean
+        rejectionReason:
+          type: string
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        agentId:
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1VerifiedSmsAgentSender:
+      type: object
+      properties:
+        senderId:
+          type: string
+        countryCode:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Suggestion:
+      type: object
+      properties:
+        liveAgentRequest:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1LiveAgentRequest'
+        reply:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedReply'
+        authenticationRequest:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequest'
+        action:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedAction'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo:
+      type: object
+      properties:
+        thumbnailUrl:
+          type: string
+        altText:
+          type: string
+        fileUrl:
+          type: string
+        forceRefresh:
+          type: boolean
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BotRepresentative:
+      type: object
+      properties:
+        botMessagingAvailability:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailability'
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrandBase:
+      required:
+      - id
+      - accountId
+      - name
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailabilityHours:
+      type: object
+      properties:
+        timeZone:
+          type: string
+        startTime:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleTypeTimeOfDay'
+        startDay:
+          type: string
+        endDay:
+          type: string
+        endTime:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleTypeTimeOfDay'
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsResponse:
+      type: object
+      properties:
+        locationId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        googleLaunchStatus:
+          enum:
+          - LAUNCH_STATE_UNSPECIFIED
+          - LAUNCH_STATE_UNLAUNCHED
+          - LAUNCH_STATE_PENDING
+          - LAUNCH_STATE_LAUNCHED
+          - LAUNCH_STATE_REJECTED
+          - LAUNCH_STATE_SUSPENDED
+          - LAUNCH_STATE_PENDING_UNLAUNCH
+          - LAUNCH_STATE_INVALID_IN_GMB
+          type: string
+        launched:
+          type: boolean
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyResponse:
+      type: object
+      properties:
+        postbackData:
+          type: string
+        content:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OpenUrlAction:
+      type: object
+      properties:
+        url:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Media:
+      type: object
+      properties:
+        contentInfo:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo'
+        height:
+          type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentLaunchStatus:
+      type: object
+      properties:
+        entryPoint:
+          enum:
+          - NON_LOCAL
+          - LOCATION
+          type: string
+        launchState:
+          enum:
+          - LAUNCH_STATE_UNSPECIFIED
+          - LAUNCH_STATE_UNLAUNCHED
+          - LAUNCH_STATE_PENDING
+          - LAUNCH_STATE_LAUNCHED
+          - LAUNCH_STATE_REJECTED
+          - LAUNCH_STATE_SUSPENDED
+          - LAUNCH_STATE_PENDING_UNLAUNCH
+          - LAUNCH_STATE_INVALID_IN_GMB
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessLocation:
+      type: object
+      properties:
+        id:
+          type: string
+        locationName:
+          type: string
+        locationPlaceId:
+          type: string
+        addressLines:
+          type: array
+          items:
+            type: string
+        postalCode:
+          type: string
+        locality:
+          type: string
+        regionCode:
+          type: string
+        canBeAdded:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        accountName:
+          type: string
+        accountType:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        locationName:
+          type: string
+        placeId:
+          type: string
+        address:
+          type: string
+        googleMapsUrl:
+          type: string
+        verificationState:
+          enum:
+          - VERIFICATION_STATE_UNSPECIFIED
+          - VERIFICATION_STATE_UNVERIFIED
+          - VERIFICATION_STATE_PENDING
+          - VERIFICATION_STATE_VERIFIED
+          - VERIFICATION_STATE_SUSPENDED_IN_GMB
+          type: string
+        launchState:
+          enum:
+          - LAUNCH_STATE_UNSPECIFIED
+          - LAUNCH_STATE_UNLAUNCHED
+          - LAUNCH_STATE_PENDING
+          - LAUNCH_STATE_LAUNCHED
+          - LAUNCH_STATE_REJECTED
+          - LAUNCH_STATE_SUSPENDED
+          - LAUNCH_STATE_PENDING_UNLAUNCH
+          - LAUNCH_STATE_INVALID_IN_GMB
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1DialAction:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1WelcomeMessage:
+      type: object
+      properties:
+        richText:
+          type: string
+        richCard:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1RichCard'
+        image:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Image'
+        text:
+          type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount:
+      required:
+      - id
+      - accountId
+      - isPending
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1TestUrl:
+      type: object
+      properties:
+        surface:
+          type: string
+        url:
+          type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleOAuthAccessToken:
+      required:
+      - accessToken
+      - sessionId
+      - issuedAtUtc
+      - expiresAtUtc
+      type: object
+      properties:
+        accessToken:
+          type: string
+        sessionId:
+          type: string
+        issuedAtUtc:
+          format: date-time
+          type: string
+        expiresAtUtc:
+          format: date-time
+          type: string
+  requestBodies:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+      description: The o authentication credentials.
+      required: true
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

@@ -1,0 +1,67 @@
+openapi: 3.2.0
+info:
+  title: General Admission Partner Barcodes API
+  version: '1.0'
+servers:
+- url: https://api.ticketing.cm.com/partnerapi/v1.0
+security:
+- sec0: []
+tags:
+- name: Barcodes
+paths:
+  /barcodes:
+    get:
+      summary: Get Account Barcodes
+      description: Use this endpoint to get list of the barcodes based on your account configuration.
+      operationId: get-account-barcodes
+      parameters:
+      - name: product_sub_type
+        in: query
+        description: ACCOMODATION,ENTRANCE_TICKET,FOOD_AND_BEVERAGE,LOCKERS,MERCHANDISE,OTHER,PARKING,TOKENS,TRANSPORTATION
+        schema:
+          type: string
+      - name: X-TF-PAGINATION-SKIP
+        in: header
+        description: Once you've called the endpoint, you'll get the first 20 items. In this header you can define the amount of items to skip for the next page.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: status
+        in: query
+        description: COMPLETED, CANCELLED, REFUNDED, RESELL_SOLD
+        schema:
+          type: string
+      - name: ticket_type_uuid
+        in: query
+        description: The result can be filtered based on the ticket type UUID, and you can also send multiple ticket types separated by ",".
+        schema:
+          type: string
+      - name: issued_at_range
+        in: query
+        description: 'Example: 2021-03-22T14:30:00,2021-03-30T17:45:00 (time is represented in UTC)'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: "[ { \"uuid\": \"00000000-0000-0000-0000-000000000000\", \"barcode_id\": \"XXXXXXXXX\", \"external_barcode_id\": null, \"expire_at\": null, \"created_at\": \"2023-01-17T10:32:04+00:00\", \"order_id\": \"YXCYYYYY\", \"personalized_at\": null, \"canceled_at\": null,\n    \"used_discount_code_id\": \"CMDISCOUNTCODEID\",\n    \"used_discount_code_external_id\" : \"EXTERNAL_CMDISCOUNTCODEID\",\n    \"used_access_key_id\": \"CMACCESSKEYID\",\n    \"scan_count\": 1,\n    \"last_scanned_at\": \"2023-01-17T10:32:04+00:00\",\n\"status\": \"COMPLETED\", \"ticket_type_price_incl_vat\": 0, \"ticket_type_price_with_discount_incl_vat\": 0,\n    \"currency_id\": \"EUR\",\n\"customer_data\": { \"uuid\": \"00000000-0000-0000-0000-000000000000\", \"first_name\": \"John\", \"last_name\": \"Doeh\", \"email\": \"john.doeh@cm.com\", \"mobile\": null }, \"ticket_type\": { \"uuid\": \"00000000-0000-0000-0000-000000000000\", \"name\": { \"nl\": \"Beer \\/ Soft Drinks\", \"en\": \"Beer \\/ Soft Drinks\", \"fr\": \"Beer \\/ Soft Drinks\", \"de\": \"Beer \\/ Soft Drinks\", \"ar\": \"Beer \\/ Soft Drinks\", \"es\": \"Beer \\/ Soft Drinks\" }, \"ticket_product_sub_type\": \"FOOD_AND_BEVERAGE\", \"is_checkin_allowed\": true, \"validation_max_checkins\": 1, \"sales_from\": null, \"sales_until\": null, \"valid_from\": null, \"valid_until\": null, \"ticket_type_price_incl_vat\": 12,\n      \"external_id_1\": null,\n      \"external_id_2\": null,\n      \"external_id_3\": null\n}, \"event\": { \"uuid\": \"00000000-0000-0000-0000-000000000000\", \"name\": \"Pyramid Warm Up 2023\" }, \"venue\": { \"uuid\": \"00000000-0000-0000-0000-000000000000\", \"name\": \"Venue Name\" },\n    \"tracking_parameters\": [\n    {\n\"name\": \"UTM_REFERRER\", \"value: \"Maxcorp\",\n      }\n    ]\n} ]"
+      deprecated: false
+      tags:
+      - Barcodes
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers:
+  - key: X-TF-PREFERREDLANGUAGEID
+    value: Language ID
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

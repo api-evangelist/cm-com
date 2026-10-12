@@ -1,0 +1,70 @@
+# x-archived-from: cm-com-mobile-marketing-cloud-email-validation-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.0
+info:
+  version: v1
+  title: EmailValidation API
+paths:
+  /emailvalidation/v1/accounts/{accountID}/emailaddressvalidations:
+    post:
+      tags:
+      - EmailAddressValidations
+      summary: Validate an email address
+      operationId: EmailAddressValidations_ValidateEmailAddressAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Email.EmailValidation.Api.Models.ApiEmailAddressValidation'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Email.EmailValidation.Api.Models.ApiEmailAddressValidation'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Email.EmailValidation.Api.Models.ApiEmailAddressValidation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Email.EmailValidation.Api.Models.ApiEmailAddressValidation'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Email.EmailValidation.Api.Models.ApiEmailAddressValidation'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Email.EmailValidation.Api.Models.ApiEmailAddressValidation'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Email.EmailValidation.Api.Models.ApiEmailAddressValidation'
+servers:
+- url: https://api.cm.com
+components:
+  schemas:
+    CM.Email.EmailValidation.Api.Models.ApiEmailAddressValidation:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        EmailAddress:
+          type: string
+        ValidationResult:
+          enum:
+          - Valid
+          - Invalid
+          - AcceptAll
+          - Disposable
+          - Unknown
+          type: string

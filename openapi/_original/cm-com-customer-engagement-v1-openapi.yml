@@ -1,0 +1,82 @@
+# x-archived-from: cm-com-customer-engagement-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: Customer Engagement API
+  description: 'Manage customer service inboxes, run marketing campaigns, track behavior, and automate outreach.'
+  license:
+    name: Proprietary
+    identifier: LicenseRef-CM.com-Proprietary
+  version: '1.0'
+servers:
+  - url: 'https://api.cm.com'
+    description: Production Server
+paths:
+  /engagement/v1/health:
+    get:
+      tags:
+        - Health
+      summary: Health check
+      description: Verify that the Customer Engagement API is reachable and your credentials are valid.
+      operationId: engagement-health-check
+      responses:
+        '200':
+          description: Service is healthy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+      security:
+        - BearerAuth: []
+components:
+  schemas:
+    HealthResponse:
+      title: Health Response
+      description: Standard health check response
+      required:
+        - status
+        - service
+        - version
+      properties:
+        status:
+          description: Service health status
+          type: string
+          example: ok
+        service:
+          description: Service name
+          type: string
+          example: customer-engagement
+        version:
+          description: API version
+          type: string
+          example: v1
+      type: object
+    ErrorResponse:
+      title: Error Response
+      description: Standard error response
+      required:
+        - message
+      properties:
+        message:
+          description: Human-readable error message
+          type: string
+          example: Unauthorized
+      type: object
+  responses:
+    UnauthorizedResponse:
+      description: Unauthorized - invalid or missing credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: 'API authentication using Bearer tokens from your CM.com dashboard.'
+      bearerFormat: 'API Token'
+      scheme: bearer
+tags:
+  - name: Health
+    description: Service health check endpoints

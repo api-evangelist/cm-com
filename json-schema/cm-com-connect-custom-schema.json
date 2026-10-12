@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-connect-custom-schema.json",
+  "title": "ConnectCustom",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-conversational-router-v1-openapi.yml#/components/schemas/ConnectCustom",
+  "type": "object",
+  "properties": {
+    "method": {
+      "type": "string",
+      "description": "The HTTP method to call on the connect service",
+      "enum": [
+        "get",
+        "post",
+        "put",
+        "delete",
+        "patch"
+      ]
+    },
+    "path": {
+      "type": "string",
+      "description": "URI path to call on the connected service, e.g. /customers/123/invoices"
+    },
+    "query": {
+      "type": "array",
+      "description": "Key value pairs transformed to query parameters to the connected service, e.g. ?key=value&key2=value2",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "When provided this will be sent to the connected service as the request body. If the specified method is GET, this will be ignored."
+    }
+  }
+}

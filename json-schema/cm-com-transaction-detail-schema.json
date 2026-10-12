@@ -1,0 +1,549 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-transaction-detail-schema.json",
+  "title": "TransactionDetail",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-id-scan-v1-openapi.yml#/components/schemas/TransactionDetail",
+  "allOf": [
+    {
+      "$ref": "#/$defs/TransactionDetailBase"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/TaskDocumentScanDetailExtended"
+              },
+              {
+                "$ref": "#/$defs/TaskFaceLivenessDetail"
+              },
+              {
+                "$ref": "#/$defs/TaskFaceMatchDetail"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "AuthenticityScore": {
+      "type": "number",
+      "description": "Authenticity score for image pattern checks. Returns -1 if no authenticity checkmarks are found.",
+      "format": "float",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "CaptureSource": {
+      "type": "string",
+      "enum": [
+        "camera",
+        "file"
+      ],
+      "default": "camera"
+    },
+    "DocumentScanDetail": {
+      "type": "object",
+      "description": "Details of a document scan attempt",
+      "properties": {
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the document scan was executed."
+        },
+        "code": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/DocumentScanErrorCode"
+            },
+            {
+              "type": [
+                "null"
+              ]
+            }
+          ],
+          "description": "The task error code. The value `null` means that there was no error.",
+          "default": null
+        },
+        "score": {
+          "$ref": "#/$defs/AuthenticityScore"
+        },
+        "source": {
+          "$ref": "#/$defs/CaptureSource"
+        },
+        "linked": {
+          "type": "boolean",
+          "description": "Whether the document scan is linked to a previous document scan."
+        },
+        "files": {
+          "type": "array",
+          "description": "Array with stored files. Files are not provided if the transaction has expired.",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/TaskResultDocumentScanFileRawImage"
+              },
+              {
+                "$ref": "#/$defs/TaskResultDocumentScanFileDocument"
+              },
+              {
+                "$ref": "#/$defs/TaskResultDocumentScanFileImage"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "DocumentScanErrorCode": {
+      "type": "string",
+      "enum": [
+        "age_criteria_not_met",
+        "back_side_provided_front_side_required",
+        "expiration_criteria_not_met",
+        "field_validation_failed",
+        "front_side_provided_back_side_required",
+        "image_quality_requirements_not_met",
+        "processing",
+        "text_fields_analysis_failed",
+        "unable_to_determine_age",
+        "unable_to_determine_date_of_expiry",
+        "unknown_type_back",
+        "unknown_type_front"
+      ]
+    },
+    "DocumentType": {
+      "type": "string",
+      "description": "The document type.",
+      "enum": [
+        "not_defined",
+        "passport",
+        "identity_card",
+        "diplomatic_passport",
+        "service_passport",
+        "seamans_identity_document",
+        "identity_card_for_residence",
+        "travel_document",
+        "other",
+        "visa_id2",
+        "visa_id3",
+        "national_identity_card",
+        "social_identity_card",
+        "aliens_identity_card",
+        "privileged_identity_card",
+        "residence_permit_identity_card",
+        "origin_card",
+        "emergency_passport",
+        "aliens_passport",
+        "alternative_identity_card",
+        "authorization_card",
+        "beginner_permit",
+        "border_crossing_card",
+        "chauffeur_license",
+        "chauffeur_license_under_18",
+        "chauffeur_license_under_21",
+        "commercial_driving_license",
+        "commercial_driving_license_instructional_permit",
+        "commercial_driving_license_under_18",
+        "commercial_driving_license_under_21",
+        "commercial_instruction_permit",
+        "commercial_new_permit",
+        "concealed_carry_license",
+        "concealed_firearm_permit",
+        "conditional_driving_license",
+        "department_of_veterans_affairs_identity_card",
+        "diplomatic_driving_license",
+        "driving_license",
+        "driving_license_instructional_permit",
+        "driving_license_instructional_permit_under_18",
+        "driving_license_instructional_permit_under_21",
+        "driving_license_learners_permit",
+        "driving_license_learners_permit_under_18",
+        "driving_license_learners_permit_under_21",
+        "driving_license_novice",
+        "driving_license_novice_under_18",
+        "driving_license_novice_under_21",
+        "driving_license_registered_offender",
+        "driving_license_restricted_under_18",
+        "driving_license_restricted_under_21",
+        "driving_license_temporary_visitor",
+        "driving_license_temporary_visitor_under_18",
+        "driving_license_temporary_visitor_under_21",
+        "driving_license_under_18",
+        "driving_license_under_21",
+        "employment_driving_permit",
+        "enhanced_chauffeur_license",
+        "enhanced_chauffeur_license_under_18",
+        "enhanced_chauffeur_license_under_21",
+        "enhanced_commercial_driving_license",
+        "enhanced_driving_license",
+        "enhanced_driving_license_under_18",
+        "enhanced_driving_license_under_21",
+        "enhanced_identity_card",
+        "enhanced_identity_card_under_18",
+        "enhanced_identity_card_under_21",
+        "enhanced_operators_license",
+        "firearms_permit",
+        "full_provisional_license",
+        "full_provisional_license_under_18",
+        "full_provisional_license_under_21",
+        "geneva_conventions_identity_card",
+        "graduated_driving_license_under_18",
+        "graduated_driving_license_under_21",
+        "graduated_instruction_permit_under_18",
+        "graduated_instruction_permit_under_21",
+        "graduated_license_under_18",
+        "graduated_license_under_21",
+        "handgun_carry_permit",
+        "identity_and_privilege_card",
+        "identity_card_mobility_impaired",
+        "identity_card_registered_offender",
+        "identity_card_temporary_visitor",
+        "identity_card_temporary_visitor_under_18",
+        "identity_card_temporary_visitor_under_21",
+        "identity_card_under_18",
+        "identity_card_under_21",
+        "ignition_interlock_permit",
+        "immigrant_visa",
+        "instruction_permit",
+        "instruction_permit_under_18",
+        "instruction_permit_under_21",
+        "interim_driving_license",
+        "interim_identity_card",
+        "intermediate_driving_license",
+        "intermediate_driving_license_under_18",
+        "intermediate_driving_license_under_21",
+        "junior_driving_license",
+        "learner_instructional_permit",
+        "learner_license",
+        "learner_license_under_18",
+        "learner_license_under_21",
+        "learner_permit",
+        "learner_permit_under_18",
+        "learner_permit_under_21",
+        "limited_license",
+        "limited_permit",
+        "limited_term_driving_license",
+        "limited_term_identity_card",
+        "liquor_identity_card",
+        "new_permit",
+        "new_permit_under_18",
+        "new_permit_under_21",
+        "non_us_citizen_driving_license",
+        "occupational_driving_license",
+        "oneida_tribe_of_indians_identity_card",
+        "operator_license",
+        "operator_license_under_18",
+        "operator_license_under_21",
+        "permanent_driving_license",
+        "permit_to_reenter",
+        "probationary_auto_license",
+        "probationary_driving_license_under_18",
+        "probationary_driving_license_under_21",
+        "probationary_vehicle_sales_person_license",
+        "provisional_driving_license",
+        "provisional_driving_license_under_18",
+        "provisional_driving_license_under_21",
+        "provisional_license",
+        "provisional_license_under_18",
+        "provisional_license_under_21",
+        "public_passenger_chauffeur_license",
+        "racing_and_gaming_comission_card",
+        "refugee_travel_document",
+        "renewal_permit",
+        "restricted_commercial_driver_license",
+        "restricted_driver_license",
+        "restricted_permit",
+        "seasonal_permit",
+        "seasonal_resident_identity_card",
+        "seasonal_citizen_identity_card",
+        "sex_offender",
+        "social_security_card",
+        "temporary_driving_license",
+        "temporary_driving_license_under_18",
+        "temporary_driving_license_under_21",
+        "temporary_identity_card",
+        "temporary_instruction_permit_identity_card",
+        "temporary_instruction_permit_identity_card_under_18",
+        "temporary_instruction_permit_identity_card_under_21",
+        "temporary_visitor_driving_license",
+        "temporary_visitor_driving_license_under_18",
+        "temporary_visitor_driving_license_under_21",
+        "uniformed_services_identity_card",
+        "vehicle_sales_person_license",
+        "worker_identification_credential",
+        "commercial_driving_license_novice",
+        "commercial_driving_license_novice_under_18",
+        "commercial_driving_license_novice_under_21",
+        "passport_card",
+        "passport_resident_card",
+        "personal_identification_verification",
+        "temporary_operator_license",
+        "driving_license_under_19",
+        "identity_card_under_19",
+        "visa",
+        "temporary_passport",
+        "voting_card",
+        "health_card",
+        "certificate_of_citizenship",
+        "address_card",
+        "airport_immigration_card",
+        "alien_registration_card",
+        "apeh_card",
+        "coupon_to_driving_license",
+        "crew_member_certificate",
+        "document_for_return",
+        "e_card",
+        "employment_card",
+        "hksar_immigration_form",
+        "immigrant_card",
+        "labour_card",
+        "laissez_passer",
+        "lawyer_identity_certificate",
+        "license_card",
+        "passport_stateless",
+        "passport_child",
+        "passport_consular",
+        "passport_diplomatic_service",
+        "passport_official",
+        "passport_provisional",
+        "passport_special",
+        "permission_to_the_local_border_traffic",
+        "registration_certificate",
+        "sedesol_card",
+        "social_card",
+        "tb_card",
+        "vehicle_passport",
+        "w_document",
+        "diplomatic_identity_card",
+        "consular_identity_card",
+        "income_tax_card",
+        "residence_permit",
+        "document_of_identity",
+        "border_crossing_permit",
+        "passport_limited_validity",
+        "sim_card",
+        "tax_card",
+        "company_card",
+        "domestic_passport",
+        "identity_certificate",
+        "resident_id_card",
+        "armed_forces_identity_card",
+        "professional_card",
+        "registration_stamp",
+        "driver_card",
+        "driver_training_certificate",
+        "qualification_driving_license",
+        "membership_card",
+        "public_vehicle_driver_authority_card",
+        "marine_license",
+        "temporary_learner_license",
+        "temporary_commercial_driving_license",
+        "interim_instructional_permit",
+        "certificate_of_competency",
+        "certificate_of_proficiency",
+        "trade_license",
+        "passport_page"
+      ]
+    },
+    "TaskDetail": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/TaskState"
+        },
+        "attempts": {
+          "type": "number",
+          "description": "The number of attempts made for this task.",
+          "minimum": 0
+        },
+        "attemptsInvoiced": {
+          "type": "number",
+          "description": "The number of attempts that have been invoiced.",
+          "minimum": 0
+        }
+      }
+    },
+    "TaskDocumentScanDetailExtended": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskDetail"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "document_scan"
+          ]
+        },
+        "documentScans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DocumentScanDetail"
+          }
+        }
+      }
+    },
+    "TaskFaceLivenessDetail": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskDetail"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "face_liveness"
+          ]
+        }
+      }
+    },
+    "TaskFaceMatchDetail": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskDetail"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "face_match"
+          ]
+        },
+        "score": {
+          "type": "number",
+          "description": "Similarity score",
+          "format": "float",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "TaskResultDocumentScanFileDocument": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskResultFile"
+        }
+      ],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "The file category"
+        },
+        "type": {
+          "$ref": "#/$defs/DocumentType"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the document."
+        },
+        "score": {
+          "$ref": "#/$defs/AuthenticityScore"
+        }
+      }
+    },
+    "TaskResultDocumentScanFileImage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskResultFile"
+        }
+      ],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "The file category"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of image"
+        }
+      }
+    },
+    "TaskResultDocumentScanFileRawImage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskResultFile"
+        }
+      ],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "The file category"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of image"
+        }
+      }
+    },
+    "TaskResultFile": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The url to download the image. This url also requires a valid JWT header."
+        }
+      }
+    },
+    "TaskState": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "aborted",
+        "maximum_attempts_exceeded"
+      ]
+    },
+    "TransactionDetailBase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the transaction",
+          "format": "uuid"
+        },
+        "state": {
+          "$ref": "#/$defs/TransactionState"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the transaction was created."
+        },
+        "expires": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the transaction expires."
+        },
+        "completed": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "The date the transaction was completed."
+        }
+      }
+    },
+    "TransactionState": {
+      "type": "string",
+      "description": "Current state of the transaction",
+      "enum": [
+        "pending",
+        "completed",
+        "failed"
+      ]
+    }
+  }
+}

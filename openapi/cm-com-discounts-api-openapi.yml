@@ -1,0 +1,255 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: ticketing@cm.com
+    name: CM.com Ticketing
+    url: https://www.cm.com
+  description: Integrate your own systems with CM.com Ticketing.
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  termsOfService: https://www.cm.com/terms-of-service/
+  title: External Ticketing Discounts API
+  version: '0.1'
+servers:
+- url: /ticketing/v1
+tags:
+- name: Discounts
+paths:
+  /events/{event_id}/discounts:
+    post:
+      description: 'Creates a discount campaign for an event. Set `discount_type` to choose the kind of discount. With `ORDER`, the discount applies to the whole order: provide a `rate`, a `rate_type` (`MONETARY` or `PERCENTAGE`) and the `discount_code` your customers will enter. With `PRODUCT`, the discount applies to specific products: provide `discount_campaign_products` with a `product_uuid`, `max_usage`, `rate` and `currency_id` for each product (each `rate_type` must be `MONETARY`); the discount code is generated for you. The response contains the campaign `id`, the `discount_code` (the one you supplied for `ORDER`, the generated one for `PRODUCT`) and the rate, or the per-product entries.'
+      operationId: CreateDiscount
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.createDiscountRequest'
+              description: Discount payload
+              summary: request
+        description: Discount payload
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.createDiscountResponse'
+          description: Created
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: discount_code_taken
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: product_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: Create discount campaign
+      tags:
+      - Discounts
+  /events/{event_id}/discounts/{discount_id}:
+    put:
+      description: Updates the `name`, `max_usage`, `online_from` and `online_till` of a discount campaign. The rate, currency, discount code and per-product entries cannot be changed after the campaign is created; to change them, create a new campaign. The response has the same shape as the create response.
+      operationId: UpdateDiscount
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Discount campaign ID (UUID)
+        in: path
+        name: discount_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.updateDiscountRequest'
+              description: Fields to update
+              summary: request
+        description: Fields to update
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.createDiscountResponse'
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found / discount_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: Update discount campaign
+      tags:
+      - Discounts
+components:
+  schemas:
+    handler.updateDiscountRequest:
+      properties:
+        max_usage:
+          type: integer
+        name:
+          type: string
+        online_from:
+          type: string
+        online_till:
+          type: string
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+    handler.createDiscountResponseProduct:
+      properties:
+        currency_id:
+          type: string
+        id:
+          type: integer
+        max_usage:
+          type: integer
+        product_uuid:
+          type: string
+        rate:
+          type: number
+        rate_type:
+          type: string
+      type: object
+    handler.createDiscountRequest:
+      properties:
+        currency_id:
+          type: string
+        discount_campaign_products:
+          description: Only for PRODUCT campaigns.
+          items:
+            $ref: '#/components/schemas/handler.createDiscountRequestProduct'
+          type: array
+          uniqueItems: false
+        discount_code:
+          description: Only for ORDER campaigns.
+          type: string
+        discount_type:
+          description: ORDER (discount on the whole order) or PRODUCT (discount on specific products)
+          type: string
+        max_usage:
+          type: integer
+        name:
+          type: string
+        online_from:
+          type: string
+        online_till:
+          type: string
+        rate:
+          type: number
+        rate_type:
+          type: string
+      type: object
+    handler.createDiscountRequestProduct:
+      properties:
+        currency_id:
+          type: string
+        max_usage:
+          type: integer
+        product_uuid:
+          type: string
+        rate:
+          type: number
+        rate_type:
+          type: string
+      type: object
+    handler.createDiscountResponse:
+      properties:
+        currency_id:
+          type: string
+        discount_campaign_products:
+          description: Only present for PRODUCT campaigns.
+          items:
+            $ref: '#/components/schemas/handler.createDiscountResponseProduct'
+          type: array
+          uniqueItems: false
+        discount_code:
+          description: 'The code customers enter at checkout. For ORDER campaigns this is the code you
+
+            supplied; for PRODUCT campaigns it is generated for you.'
+          type: string
+        discount_type:
+          type: string
+        id:
+          type: string
+        max_usage:
+          type: integer
+        name:
+          type: string
+        online_from:
+          type: string
+        online_till:
+          type: string
+        rate:
+          description: Only present for ORDER campaigns.
+          type: number
+        rate_type:
+          type: string
+      type: object
+  securitySchemes:
+    SystemTokenAuth:
+      description: Send your organisation's system token in this header.
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID
+      type: apiKey
+externalDocs:
+  description: ''
+  url: ''

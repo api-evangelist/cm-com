@@ -1,0 +1,841 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Products API
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Products across 3 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml, cm-com-live-event-ticketing-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+- url: /ticketing/v1
+tags:
+- name: Products
+  description: Products management and configuration
+paths:
+  /entrance/v1.0/organisations/{organisationUuid}/products:
+    post:
+      operationId: ProductsController_create_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a product
+      tags:
+      - Products
+    get:
+      operationId: ProductsController_findAllByOrganisation_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product type
+        schema:
+          example: REGULAR
+          type: string
+      - name: includeProductsWithoutEvent
+        required: false
+        in: query
+        description: If true will include products without event in the result, even if event filter params are provided. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all products for an organisation
+      tags:
+      - Products
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/products/{productUuid}:
+    get:
+      operationId: ProductsController_findOne_v1.0
+      parameters:
+      - name: productUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get a product by UUID
+      tags:
+      - Products
+    patch:
+      operationId: ProductsController_patch_v1.0
+      parameters:
+      - name: productUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a product
+      tags:
+      - Products
+    delete:
+      operationId: ProductsController_remove_v1.0
+      parameters:
+      - name: productUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a product
+      tags:
+      - Products
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/products:
+    post:
+      operationId: ProductsController_create_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a product
+      tags:
+      - Products
+    get:
+      operationId: ProductsController_findAllByOrganisation_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product type
+        schema:
+          example: REGULAR
+          type: string
+      - name: includeProductsWithoutEvent
+        required: false
+        in: query
+        description: If true will include products without event in the result, even if event filter params are provided. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all products for an organisation
+      tags:
+      - Products
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/products/{productUuid}:
+    get:
+      operationId: ProductsController_findOne_v2.0
+      parameters:
+      - name: productUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get a product by UUID
+      tags:
+      - Products
+    patch:
+      operationId: ProductsController_patch_v2.0
+      parameters:
+      - name: productUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a product
+      tags:
+      - Products
+    delete:
+      operationId: ProductsController_remove_v2.0
+      parameters:
+      - name: productUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a product
+      tags:
+      - Products
+    servers:
+    - url: https://api.cm.com
+  /events/{event_id}/products:
+    get:
+      description: Returns the active products (for example tickets) of an event, with their name in each language and their price.
+      operationId: ListProducts
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Number of items to skip (default 0)
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Page size (default 100)
+        in: query
+        name: take
+        schema:
+          type: integer
+      - description: Field to sort by
+        in: query
+        name: sort
+        schema:
+          enum:
+          - display_order
+          - name
+          - created_at
+          type: string
+      - description: Sort direction
+        in: query
+        name: order
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.listResponse-handler_productListItem'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: List products
+      tags:
+      - Products
+    servers:
+    - url: /ticketing/v1
+  /events/{event_id}/products/{product_id}:
+    get:
+      description: Returns the details of one product, including its remaining `stock` (reported as 0 when `has_unlimited_stock` is `true`) and the `capacity` of the pool it draws from, which can be shared with other products.
+      operationId: ViewProduct
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Product ID (UUID)
+        in: path
+        name: product_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.productResponse'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: product_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: View product
+      tags:
+      - Products
+    servers:
+    - url: /ticketing/v1
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
+      required:
+      - uuid
+      - externalId
+      - name
+      - productType
+    UpdateProductDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
+    CreateProductDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
+      required:
+      - externalId
+      - name
+      - productType
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    handler.productResponse:
+      properties:
+        additional_information:
+          additionalProperties:
+            type: string
+          type: object
+        capacity:
+          type: integer
+        description:
+          additionalProperties:
+            type: string
+          type: object
+        external_id_1:
+          type: string
+        external_id_2:
+          type: string
+        external_id_3:
+          type: string
+        has_unlimited_stock:
+          type: boolean
+        is_personalizable:
+          type: boolean
+        is_visible:
+          type: boolean
+        name:
+          additionalProperties:
+            type: string
+          type: object
+        price:
+          type: number
+        product_type:
+          type: string
+        sales_from:
+          type: string
+        sales_until:
+          type: string
+        stock:
+          type: integer
+        subtitle:
+          additionalProperties:
+            type: string
+          type: object
+        ticket_status_type_id:
+          type: string
+        uuid:
+          type: string
+        valid_from:
+          type: string
+        valid_until:
+          type: string
+      type: object
+    handler.productListItem:
+      properties:
+        name:
+          additionalProperties:
+            type: string
+          type: object
+        price:
+          type: number
+        uuid:
+          type: string
+      type: object
+    handler.listResponse-handler_productListItem:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/handler.productListItem'
+          type: array
+          uniqueItems: false
+        links:
+          properties:
+            first:
+              type: string
+            last:
+              type: string
+            next:
+              type: string
+            prev:
+              type: string
+            self:
+              type: string
+          type: object
+        page_size:
+          type: integer
+        total_items:
+          type: integer
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+    SystemTokenAuth:
+      description: Send your organisation's system token in this header.
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID
+      type: apiKey
+externalDocs:
+  description: ''
+  url: ''
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml
+- cm-com-live-event-ticketing-v1-openapi.yml

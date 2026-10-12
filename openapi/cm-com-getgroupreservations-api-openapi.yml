@@ -1,0 +1,256 @@
+openapi: 3.2.0
+info:
+  title: Scan Get Group Reservations API
+  version: '1.0'
+  description: Every operation is a `POST` request with an `application/x-www-form-urlencoded` body. Every request includes your public `apiKey` and an `HMACKey`. The `HMACKey` is calculated from the input fields; the calculation is listed on each operation as `Base64 encode - SHA256(...)`, where the fields between the brackets are concatenated. Only include optional parameters in the HMAC if you are using those parameters. A `*` after a field marks it as optional.
+servers:
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: GetGroupReservations
+paths:
+  /getGroupReservations:
+    post:
+      summary: /getGroupReservations
+      description: 'With this function you can retrieve the Groups and Education reservations for a specific date.
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + date + language)`'
+      operationId: getgroupreservations
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - HMACKey
+              - date
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + date + language).
+                date:
+                  type: string
+                  description: The date for which to retrieve reservations in the format YYYY-MM-DD
+                language:
+                  type: string
+                  description: The language in which results are returned
+                  default: nl
+                dateType:
+                  type: string
+                  description: 'Search for reservations by this type, valid values are: ''ticket'', ''purchase'' and ''update'''
+                  default: ticket
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    reservations:
+                    - reservationId: 1234
+                      reservationCode: a11aaa1a1aaaaaaa
+                      reservationDate: '2025-01-01'
+                      reservationTime: '14:00'
+                      totalPrice: '0.00'
+                      pricePaid: '0.00'
+                      currency: EUR
+                      vatPercentage: 9
+                      invoice: false
+                      paymentMethod: online
+                      tickets:
+                      - ticketTypeId: '1234'
+                        ticketTitle: Adult
+                        ticketPrice: '0.00'
+                        ticketNumber: '2'
+                      - ticketTypeId: '1235'
+                        ticketTitle: Children
+                        ticketPrice: '0.00'
+                        ticketNumber: '2'
+                      activity: Activity title
+                      expositionId: '-'
+                      durationInMinutes: 60
+                      group: John Doe and friends
+                      remarks: ''
+                      newsletter: true
+                      customField: ''
+                      contact:
+                        firstName: John
+                        insertion: ''
+                        surName: Doe
+                      address:
+                        street: Streetname
+                        houseNumber: '102'
+                        postalCode: 1234 AA
+                        city: Amsterdam
+                        country: NL
+                      status: active
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reservationId:
+                          type: integer
+                          example: 1234
+                          default: 0
+                        reservationCode:
+                          type: string
+                          example: a11aaa1a1aaaaaaa
+                        reservationDate:
+                          type: string
+                          example: 2025-01-01
+                        reservationTime:
+                          type: string
+                          example: 840
+                        totalPrice:
+                          type: string
+                          example: 0.0
+                        pricePaid:
+                          type: string
+                          example: 0.0
+                        currency:
+                          type: string
+                          example: EUR
+                        vatPercentage:
+                          type: integer
+                          example: 9
+                          default: 0
+                        invoice:
+                          type: boolean
+                          example: false
+                          default: true
+                        paymentMethod:
+                          type: string
+                          example: online
+                        tickets:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              ticketTypeId:
+                                type: string
+                                example: 1234
+                              ticketTitle:
+                                type: string
+                                example: Adult
+                              ticketPrice:
+                                type: string
+                                example: 0.0
+                              ticketNumber:
+                                type: string
+                                example: 2
+                        activity:
+                          type: string
+                          example: Activity title
+                        expositionId:
+                          type: string
+                          example: '-'
+                        durationInMinutes:
+                          type: integer
+                          example: 60
+                          default: 0
+                        group:
+                          type: string
+                          example: John Doe and friends
+                        remarks:
+                          type: string
+                          example: ''
+                        newsletter:
+                          type: boolean
+                          example: true
+                          default: true
+                        customField:
+                          type: string
+                          example: ''
+                        contact:
+                          type: object
+                          properties:
+                            firstName:
+                              type: string
+                              example: John
+                            insertion:
+                              type: string
+                              example: ''
+                            surName:
+                              type: string
+                              example: Doe
+                        address:
+                          type: object
+                          properties:
+                            street:
+                              type: string
+                              example: Streetname
+                            houseNumber:
+                              type: string
+                              example: 102
+                            postalCode:
+                              type: string
+                              example: 1234 AA
+                            city:
+                              type: string
+                              example: Amsterdam
+                            country:
+                              type: string
+                              example: NL
+                        status:
+                          type: string
+                          example: active
+        4XX:
+          description: 4XX
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    errorCode: 1
+                    errorMessage: contactInfo add was successfully.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  errorCode:
+                    type: integer
+                    example: 1
+                    default: 0
+                  errorMessage:
+                    type: string
+                    example: contactInfo add was successfully.
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: curl
+          code: 'curl --location ''https://www.globalticket.com/webservices/scanapi/getGroupReservations'' \
+
+            --form ''apiKey="XXX"'' \
+
+            --form ''date="2025-01-01"'' \
+
+            --form ''HMACKey="XXX"'''
+        samples-languages:
+        - curl
+      tags:
+      - GetGroupReservations
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

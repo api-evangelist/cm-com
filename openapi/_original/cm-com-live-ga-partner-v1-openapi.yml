@@ -1,0 +1,3952 @@
+# x-archived-from: cm-com-live-ga-partner-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: General Admission Partner API
+  version: "1.0"
+servers:
+  - url: https://api.ticketing.cm.com/partnerapi/v1.0
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+security:
+  - sec0: []
+paths:
+  /auth/signin:
+    post:
+      summary: Sign In
+      description: ''
+      operationId: sign-in
+      parameters:
+        - name: Content-Type
+          in: header
+          description: The content type which the application expects.
+          schema:
+            type: string
+            default: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'the e-mail address for your account. Example: john.doe@example.com'
+                password:
+                  type: string
+                  description: The password provided by CM.com
+            examples:
+              Request Example:
+                value:
+                  email: john.doe@example.com
+                  password: L6XXfQ8KTIRu4ZtH
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "access_token": "eyJ0eXBkf3jdSfFJhbGciOiJS...",
+                    "token_type": "Bearer",
+                    "expire_at": "2023-01-03T13:20:11+00:00"
+                    }
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJ0eXBkf3jdSfFJhbGciOiJS...
+                  token_type:
+                    type: string
+                    example: Bearer
+                  expire_at:
+                    type: string
+                    example: 2023-01-03T13:20:11+00:00
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      security: []
+  /events/{event_uuid}/reservations/generate:
+    post:
+      summary: Generate Reservation
+      description: This endpoint can be used to generate a reservation in your event. The reservation will be immediately completed and the order with barcodes is returned in the response. Note that this endpoint only generates **free** reservations and can only be used in combination with ticket types that have a price of 0.
+      operationId: generate-reservation
+      parameters:
+        - name: X-TF-PREFERREDLANGUAGEID
+          in: header
+          description: 'Preferred order language. Will be used to determine the language of the confirmation e-mail. Valid values are: EN/NL/DE/FR'
+          schema:
+            type: string
+            default: EN
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+        - name: X-TF-DISTRIBUTION-METHOD
+          in: header
+          description: 'Distribution method, available values: EMAIL/NONE'
+          schema:
+            type: string
+            default: EMAIL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticket_types:
+                  type: array
+                  description: Contains the tickets that will be added to the reservation
+                  items:
+                    properties:
+                      uuid:
+                        type: string
+                        description: The uuid of your ticket type
+                      amount:
+                        type: integer
+                        description: The amount of tickets that will be added
+                        format: int32
+                    type: object
+                external_batch_id:
+                  type: string
+                  description: Optional parameter which can be used to provide your own order reference. Max 40 characters. When filled in no confirmation e-mail will be sent out as CM assumes you already handled it in your own system.
+                customer_data:
+                  type: object
+                  description: Contains the customer details of the ticket buyer
+                  properties:
+                    first_name:
+                      type: string
+                      description: Required. Max 128 characters.
+                    initials:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    last_name:
+                      type: string
+                      description: Required. Max 128 characters.
+                    email:
+                      type: string
+                      description: Required. Max 255 characters.
+                    mobile:
+                      type: string
+                      description: Optional. Max 32 characters.
+                    gender:
+                      type: string
+                      description: Optional.
+                      enum:
+                        - M
+                        - F
+                        - ""
+                    address_line_1:
+                      type: string
+                      description: Optional. Max 255 characters
+                    adress_line_1_building_number:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    address_line_2:
+                      type: string
+                      description: Optional. Max 255 characters.
+                    address_line_2_building_number:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    zipcode:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    city:
+                      type: string
+                      description: Optional. Max 64 characters.
+                    state:
+                      type: string
+                      description: Optional. Max 64 characters.
+                    organization_name:
+                      type: string
+                      description: Optional. Max 128 characters.
+                    position_name:
+                      type: string
+                      description: Optional. Max 128 characters.
+                    date_of_birth:
+                      type: string
+                      description: Optional. Format yyyy-mm-dd.
+                      format: date
+                    custom_field_1:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+                    custom_field_2:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+                    custom_field_3:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "order_id": "V179946815",
+                    "order_uuid": "00000000-0000-0000-0000-000000000000",
+                    "external_batch_id": "1b5d34ae08a0",
+                    "total_balance_incl_vat": 0,
+                    "currency_id": "EUR",
+                    "requested_language_id": "EN",
+                      "download_url": "https://download-url.order.cm.com/",  
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "organisation": "CM.com",
+                    "email": "john.doe@example.com",
+                    "phone_number": "+31618895899",
+                    "custom_field_1": "Dietary preference: Vegetarian",
+                    "custom_field_2": null,
+                    "custom_field_3": null
+                    },
+                    "barcodes": [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "IANEDVJORX",
+                    "barcode_type_id": "QRCODE",
+                          "external_barcode_id": null,
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    },
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "FBCYGOCDES",
+                    "barcode_type_id": "QRCODE",
+                          "external_barcode_id": null,
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    }
+                    ]
+                    }
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    example: V179946815
+                  order_uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  external_batch_id:
+                    type: string
+                    example: 1b5d34ae08a0
+                  total_balance_incl_vat:
+                    type: integer
+                    example: 0
+                    default: 0
+                  currency_id:
+                    type: string
+                    example: EUR
+                  requested_language_id:
+                    type: string
+                    example: EN
+                  download_url:
+                    type: string
+                    example: https://download-url.order.cm.com/
+                  customer_data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        example: 00000000-0000-0000-0000-000000000000
+                      first_name:
+                        type: string
+                        example: John
+                      last_name:
+                        type: string
+                        example: Doe
+                      organisation:
+                        type: string
+                        example: CM.com
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      phone_number:
+                        type: string
+                        example: +31618895899
+                      custom_field_1:
+                        type: string
+                        example: 'Dietary preference: Vegetarian'
+                      custom_field_2: {}
+                      custom_field_3: {}
+                  barcodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          example: 00000000-0000-0000-0000-000000000000
+                        barcode_id:
+                          type: string
+                          example: IANEDVJORX
+                        barcode_type_id:
+                          type: string
+                          example: QRCODE
+                        external_barcode_id: {}
+                        price:
+                          type: integer
+                          example: 0
+                          default: 0
+                        currency_id:
+                          type: string
+                          example: EUR
+                        ticket_type:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            name:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: Entree Ticket
+                                en:
+                                  type: string
+                                  example: Entrance Ticket
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            subtitle:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: ''
+                                en:
+                                  type: string
+                                  example: ''
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            ticket_product_sub_type_id:
+                              type: string
+                              example: ENTRANCE_TICKET
+                            external_reference_2: {}
+                            external_reference_3: {}
+                        customer_data:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            organisation:
+                              type: string
+                              example: CM.com
+                            email:
+                              type: string
+                              example: john.doe@example.com
+                            phone_number:
+                              type: string
+                              example: +31618895899
+                            custom_field_1:
+                              type: string
+                              example: 'Dietary preference: Vegetarian'
+                            custom_field_2: {}
+                            custom_field_3: {}
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                        "error": {
+                            "message": "There is not enough stock left.",
+                            "error_code": 400157,
+                            "error_details": null
+                        }
+                    }
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: There is not enough stock left.
+                      error_code:
+                        type: integer
+                        example: 400157
+                        default: 0
+                      error_details: {}
+      deprecated: false
+  /events/{event_uuid}/orders/{order_id}/cancel:
+    post:
+      summary: Cancel Order
+      description: Can be used to cancel an existing reservation. This will cancel the entire reservation (including all tickets).
+      operationId: cancel-order
+      parameters:
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+        - name: order_id
+          in: path
+          description: 'Id of the order to cancel. Example: ZR36353102'
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "success": {
+                    "message": "Successfully canceled order: CM00000001."
+                    }
+                    }
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: 'Successfully canceled order: CM00000001.'
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "error": {
+                    "message": "Order can not be canceled, order is already canceled.",
+                    "error_code": 400305,
+                    "error_details": null
+                    }
+                    }
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Order can not be canceled, order is already canceled.
+                      error_code:
+                        type: integer
+                        example: 400305
+                        default: 0
+                      error_details: {}
+      deprecated: false
+  /events/{event_uuid}/orders/{order_id}/barcodes/{barcode_id}/cancel:
+    post:
+      summary: Cancel Barcode
+      description: Use this endpoint to cancel a single barcode in an order. Note that if you cancel the last remaining valid barcode, the entire order will also receive a canceled status.
+      operationId: cancel-barcode
+      parameters:
+        - name: event_uuid
+          in: path
+          description: 'Your event uuid. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+        - name: order_id
+          in: path
+          description: 'The id of the order. Example: ZR36353102'
+          schema:
+            type: string
+          required: true
+        - name: barcode_id
+          in: path
+          description: 'The barcode you wish to cancel. Example: N7CUFEZ5BW'
+          schema:
+            type: string
+          required: true
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "success": {
+                    "message": "Successfully canceled barcode: N7CUFEZ5BW."
+                    }
+                    }
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: 'Successfully canceled barcode: N7CUFEZ5BW.'
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "error": {
+                    "message": "Can not cancel barcode: barcode already canceled.",
+                    "error_code": 400284,
+                    "error_details": {
+                    "barcode_id": "N7CUFEZ5BW"
+                    }
+                    }
+                    }
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: 'Can not cancel barcode: barcode already canceled.'
+                      error_code:
+                        type: integer
+                        example: 400284
+                        default: 0
+                      error_details:
+                        type: object
+                        properties:
+                          barcode_id:
+                            type: string
+                            example: N7CUFEZ5BW
+      deprecated: false
+  /events:
+    get:
+      summary: Get Events
+      description: Use this endpoint to get list of your events
+      operationId: get-events
+      parameters:
+        - name: type
+          in: query
+          description: ALL, UPCOMING, PAST
+          schema:
+            type: string
+            default: ALL
+        - name: X-TF-PAGINATION-SKIP
+          in: header
+          description: Once you've called the endpoint, you'll get the first 20 items. In this header you can define the amount of items to skip for the next page.
+          schema:
+            type: integer
+            format: int32
+            default: 0
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >-
+                    [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Test Event",
+                    "description": null,
+                    "start_at": "2021-11-02T09:00:55+00:00",
+                    "end_at": "2021-11-03T06:00:55+00:00",
+                    "timezone": {
+                    "abbreviation": "CET",
+                    "country_id": "NL",
+                    "name": "Europe\/Amsterdam",
+                    "offset": "GMT+01:00",
+                    "offset_in_minutes": 60
+                    },
+                    "purchase_order_number": false,
+                    "is_downloadable": true,
+                    "download_from": null,
+                    "is_guest_list_using_stock": false,
+                    "is_order_invoicing_enabled": false,
+                    "is_visible": true,
+                    "minutes_to_order": 10,
+                    "venue": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "NieuweLocatie",
+                    "address_line_1": null,
+                    "address_line_2": null,
+                    "zipcode": null,
+                    "city": null,
+                    "country_id": "NL",
+                    "state": "NL"
+                    },
+                    "languages": [
+                    {
+                    "id": "DE",
+                    "name": "German"
+                    },
+                    {
+                    "id": "EN",
+                    "name": "English"
+                    },
+                    {
+                    "id": "FR",
+                    "name": "French"
+                    },
+                    {
+                    "id": "NL",
+                    "name": "Dutch; Flemish"
+                    }
+                    ]
+                    }
+                    ]
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                      example: 00000000-0000-0000-0000-000000000000
+                    name:
+                      type: string
+                      example: Test Event
+                    description: {}
+                    start_at:
+                      type: string
+                      example: 2021-11-02T09:00:55+00:00
+                    end_at:
+                      type: string
+                      example: 2021-11-03T06:00:55+00:00
+                    timezone:
+                      type: object
+                      properties:
+                        abbreviation:
+                          type: string
+                          example: CET
+                        country_id:
+                          type: string
+                          example: NL
+                        name:
+                          type: string
+                          example: Europe/Amsterdam
+                        offset:
+                          type: string
+                          example: GMT+01:00
+                        offset_in_minutes:
+                          type: integer
+                          example: 60
+                          default: 0
+                    purchase_order_number:
+                      type: boolean
+                      example: false
+                      default: true
+                    is_downloadable:
+                      type: boolean
+                      example: true
+                      default: true
+                    download_from: {}
+                    is_guest_list_using_stock:
+                      type: boolean
+                      example: false
+                      default: true
+                    is_order_invoicing_enabled:
+                      type: boolean
+                      example: false
+                      default: true
+                    is_visible:
+                      type: boolean
+                      example: true
+                      default: true
+                    minutes_to_order:
+                      type: integer
+                      example: 10
+                      default: 0
+                    venue:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          example: 00000000-0000-0000-0000-000000000000
+                        name:
+                          type: string
+                          example: NieuweLocatie
+                        address_line_1: {}
+                        address_line_2: {}
+                        zipcode: {}
+                        city: {}
+                        country_id:
+                          type: string
+                          example: NL
+                        state:
+                          type: string
+                          example: NL
+                    languages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: DE
+                          name:
+                            type: string
+                            example: German
+      deprecated: false
+  /events/{event_uuid}:
+    get:
+      summary: Get Event Details
+      description: Use this endpoint to get the event details
+      operationId: get-event-details
+      parameters:
+        - name: event_uuid
+          in: path
+          description: Event uuid
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Test Event",
+                    "description": null,
+                    "start_at": "2021-11-02T09:00:55+00:00",
+                    "end_at": "2021-11-03T06:00:55+00:00",
+                    "timezone": {
+                    "abbreviation": "CET",
+                    "country_id": "NL",
+                    "name": "Europe\/Amsterdam",
+                    "offset": "GMT+01:00",
+                    "offset_in_minutes": 60
+                    },
+                    "purchase_order_number": false,
+                    "is_downloadable": true,
+                    "download_from": null,
+                    "is_guest_list_using_stock": false,
+                    "is_order_invoicing_enabled": false,
+                    "is_visible": true,
+                    "minutes_to_order": 10,
+                    "venue": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "NieuweLocatie",
+                    "address_line_1": null,
+                    "address_line_2": null,
+                    "zipcode": null,
+                    "city": null,
+                    "country_id": "NL",
+                    "state": "NL"
+                    },
+                    "languages": [
+                    {
+                    "id": "DE",
+                    "name": "German"
+                    },
+                    {
+                    "id": "EN",
+                    "name": "English"
+                    },
+                    {
+                    "id": "FR",
+                    "name": "French"
+                    },
+                    {
+                    "id": "NL",
+                    "name": "Dutch; Flemish"
+                    }
+                    ]
+                    }
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  name:
+                    type: string
+                    example: Test Event
+                  description: {}
+                  start_at:
+                    type: string
+                    example: 2021-11-02T09:00:55+00:00
+                  end_at:
+                    type: string
+                    example: 2021-11-03T06:00:55+00:00
+                  timezone:
+                    type: object
+                    properties:
+                      abbreviation:
+                        type: string
+                        example: CET
+                      country_id:
+                        type: string
+                        example: NL
+                      name:
+                        type: string
+                        example: Europe/Amsterdam
+                      offset:
+                        type: string
+                        example: GMT+01:00
+                      offset_in_minutes:
+                        type: integer
+                        example: 60
+                        default: 0
+                  purchase_order_number:
+                    type: boolean
+                    example: false
+                    default: true
+                  is_downloadable:
+                    type: boolean
+                    example: true
+                    default: true
+                  download_from: {}
+                  is_guest_list_using_stock:
+                    type: boolean
+                    example: false
+                    default: true
+                  is_order_invoicing_enabled:
+                    type: boolean
+                    example: false
+                    default: true
+                  is_visible:
+                    type: boolean
+                    example: true
+                    default: true
+                  minutes_to_order:
+                    type: integer
+                    example: 10
+                    default: 0
+                  venue:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        example: 00000000-0000-0000-0000-000000000000
+                      name:
+                        type: string
+                        example: NieuweLocatie
+                      address_line_1: {}
+                      address_line_2: {}
+                      zipcode: {}
+                      city: {}
+                      country_id:
+                        type: string
+                        example: NL
+                      state:
+                        type: string
+                        example: NL
+                  languages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: DE
+                        name:
+                          type: string
+                          example: German
+      deprecated: false
+  /events/{event_uuid}/barcodes:
+    get:
+      summary: Get Barcodes
+      description: Use this endpoint to get list of the event barcodes
+      operationId: get-barcodes
+      parameters:
+        - name: product_sub_type
+          in: query
+          description: ACCOMODATION,ENTRANCE_TICKET,FOOD_AND_BEVERAGE,LOCKERS,MERCHANDISE,OTHER,PARKING,TOKENS,TRANSPORTATION
+          schema:
+            type: string
+        - name: X-TF-PAGINATION-SKIP
+          in: header
+          description: Once you've called the endpoint, you'll get the first 20 items. In this header you can define the amount of items to skip for the next page.
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: event_uuid
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: status
+          in: query
+          description: COMPLETED, CANCELLED, REFUNDED, RESELL_SOLD
+          schema:
+            type: string
+        - name: ticket_type_uuid
+          in: query
+          description: The result can be filtered based on the ticket type UUID, and you can also send multiple ticket types separated by ",".
+          schema:
+            type: string
+        - name: issued_at_range
+          in: query
+          description: 'Example: 2021-03-22T14:30:00,2021-03-30T17:45:00 (time is represented in UTC)'
+          schema:
+            type: string
+        - name: refunded_at_range
+          in: query
+          description: 'Example: 2021-03-22T14:30:00,2021-03-30T17:45:00 (time is represented in UTC)'
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >-
+                    [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "XXXXXXXXX",
+                    "external_barcode_id": null,
+                    "expire_at": null,
+                    "created_at": "2023-01-17T10:32:04+00:00",
+                    "order_id": "YXCYYYYY",
+                    "personalized_at": null,
+                    "canceled_at": null,
+                        "used_discount_code_id": "CMDISCOUNTCODEID",
+                        "used_discount_code_external_id" : "EXTERNAL_CMDISCOUNTCODEID",
+                        "used_access_key_id": "CMACCESSKEYID",
+                        "scan_count": 1,
+                        "last_scanned_at": "2023-01-17T10:32:04+00:00",
+                    "status": "COMPLETED",
+                    "ticket_type_price_incl_vat": 0,
+                    "ticket_type_price_with_discount_incl_vat": 0,
+                        "currency_id": "EUR",
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doeh",
+                    "email": "john.doeh@cm.com",
+                    "mobile": null
+                    },
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Beer \/ Soft Drinks",
+                    "en": "Beer \/ Soft Drinks",
+                    "fr": "Beer \/ Soft Drinks",
+                    "de": "Beer \/ Soft Drinks",
+                    "ar": "Beer \/ Soft Drinks",
+                    "es": "Beer \/ Soft Drinks"
+                    },
+                    "ticket_product_sub_type": "FOOD_AND_BEVERAGE",
+                    "is_checkin_allowed": true,
+                    "validation_max_checkins": 1,
+                    "sales_from": null,
+                    "sales_until": null,
+                    "valid_from": null,
+                    "valid_until": null,
+                    "ticket_type_price_incl_vat": 12,
+                          "external_id_1": null,
+                          "external_id_2": null,
+                          "external_id_3": null
+                    },
+                    "event": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Pyramid Warm Up 2023"
+                    },
+                    "venue": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Venue Name"
+                    },
+                        "tracking_parameters": [
+                        {
+                    "name": "UTM_REFERRER",
+                    "value: "Maxcorp",
+                          }
+                        ]
+                    }
+                    ]
+      deprecated: false
+  /events/{event_uuid}/barcodes/{barcode_id}:
+    get:
+      summary: Get Barcode Details
+      description: Use this endpoint to get the barcode details
+      operationId: get-barcode-details
+      parameters:
+        - name: event_uuid
+          in: path
+          description: Event uuid
+          schema:
+            type: string
+          required: true
+        - name: barcode_id
+          in: path
+          description: Barcode Id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "XXXXXXXXX",
+                    "external_barcode_id": null,
+                    "expire_at": null,
+                    "created_at": "2023-01-17T10:32:04+00:00",
+                    "order_id": "YXCYYYYY",
+                    "personalized_at": null,
+                    "canceled_at": null,
+                        "used_discount_code_id": "CMDISCOUNTCODEID",
+                        "used_discount_code_external_id" : "EXTERNAL_CMDISCOUNTCODEID",
+                        "used_access_key_id": "CMACCESSKEYID",
+                        "scan_count": 1,
+                        "last_scanned_at": "2023-01-17T10:32:04+00:00",
+                    "status": "COMPLETED",
+                    "ticket_type_price_incl_vat": 0,
+                    "ticket_type_price_with_discount_incl_vat": 0,
+                        "currency_id": "EUR",
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doeh",
+                    "email": "john.doeh@cm.com",
+                    "mobile": null
+                    },
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Beer \/ Soft Drinks",
+                    "en": "Beer \/ Soft Drinks",
+                    "fr": "Beer \/ Soft Drinks",
+                    "de": "Beer \/ Soft Drinks",
+                    "ar": "Beer \/ Soft Drinks",
+                    "es": "Beer \/ Soft Drinks"
+                    },
+                    "ticket_product_sub_type": "FOOD_AND_BEVERAGE",
+                    "is_checkin_allowed": true,
+                    "validation_max_checkins": 1,
+                    "sales_from": null,
+                    "sales_until": null,
+                    "valid_from": null,
+                    "valid_until": null,
+                    "ticket_type_price_incl_vat": 12,
+                          "external_id_1": null,
+                          "external_id_2": null,
+                          "external_id_3": null
+                    },
+                    "event": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Pyramid Warm Up 2023"
+                    },
+                    "venue": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Venue Name"
+                    },
+                        "tracking_parameters": [
+                        {
+                    "name": "UTM_REFERRER",
+                    "value: "Maxcorp",
+                          }
+                        ]
+                    }
+      deprecated: false
+  /events/{event_uuid}/orders:
+    get:
+      summary: Get Orders
+      description: Use this endpoint to get list of the event orders
+      operationId: get-orders
+      parameters:
+        - name: X-TF-PAGINATION-SKIP
+          in: header
+          description: Once you've called the endpoint, you'll get the first 20 items. In this header you can define the amount of items to skip for the next page.
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: event_uuid
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: guest_list_orders
+          in: query
+          description: 'value: true'
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: COMPLETED, CANCELLED, REFUNDED
+          schema:
+            type: string
+        - name: ticket_type_uuid
+          in: query
+          description: The result can be filtered based on the ticket type UUID, and you can also send multiple ticket types separated by ",".
+          schema:
+            type: string
+        - name: completed_at_range
+          in: query
+          description: 'Example: 2022-11-09,2023-12-19'
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >-
+                    [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "batch_id": "XXXXXXX",
+                    "status": "RELEASED",
+                    "external_batch_id": null,
+                    "completed_at": null,
+                    "personalized_at": null,
+                    "canceled_at": null,
+                    "refunded_at": null,
+                    "currency_id": "EUR",
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doeh",
+                    "email": "john.doeh@example.com",
+                    "mobile": "06123456789"
+                    },
+                    "total_balance": 2.41,
+                    "download_url": "https:\/\/cm.com\/xxxxxxx",
+                    "is_guest_list_order": false,
+                    "requested_language_id": "EN",
+                    "tickets": [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Bingokaart",
+                    "en": "Bingokaart",
+                    "fr": "Bingokaart",
+                    "de": "Bingokaart",
+                    "ar": ""
+                    },
+                    "amount": 0,
+                    "cancellations": 1,
+                    "ticket_type_price_incl_vat": 0,
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET"
+                    }
+                    ]
+                    } 
+                    ]
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                      example: 00000000-0000-0000-0000-000000000000
+                    batch_id:
+                      type: string
+                      example: XXXXXXX
+                    status:
+                      type: string
+                      example: RELEASED
+                    external_batch_id: {}
+                    completed_at: {}
+                    personalized_at: {}
+                    canceled_at: {}
+                    refunded_at: {}
+                    currency_id:
+                      type: string
+                      example: EUR
+                    customer_data:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          example: 00000000-0000-0000-0000-000000000000
+                        first_name:
+                          type: string
+                          example: John
+                        last_name:
+                          type: string
+                          example: Doeh
+                        email:
+                          type: string
+                          example: john.doeh@example.com
+                        mobile:
+                          type: string
+                          example: 06123456789
+                    total_balance:
+                      type: number
+                      example: 2.41
+                      default: 0
+                    download_url:
+                      type: string
+                      example: https://cm.com/xxxxxxx
+                    is_guest_list_order:
+                      type: boolean
+                      example: false
+                      default: true
+                    requested_language_id:
+                      type: string
+                      example: EN
+                    tickets:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          uuid:
+                            type: string
+                            example: 00000000-0000-0000-0000-000000000000
+                          name:
+                            type: object
+                            properties:
+                              nl:
+                                type: string
+                                example: Bingokaart
+                              en:
+                                type: string
+                                example: Bingokaart
+                              fr:
+                                type: string
+                                example: Bingokaart
+                              de:
+                                type: string
+                                example: Bingokaart
+                              ar:
+                                type: string
+                                example: ''
+                          amount:
+                            type: integer
+                            example: 0
+                            default: 0
+                          cancellations:
+                            type: integer
+                            example: 1
+                            default: 0
+                          ticket_type_price_incl_vat:
+                            type: integer
+                            example: 0
+                            default: 0
+                          ticket_product_sub_type_id:
+                            type: string
+                            example: ENTRANCE_TICKET
+      deprecated: false
+  /events/{event_uuid}/orders/{order_id}:
+    get:
+      summary: Get Order Details
+      description: Use this endpoint to get details of the order
+      operationId: get-order-details
+      parameters:
+        - name: event_uuid
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: order_id
+          in: path
+          description: Order Id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "batch_id": "XXXXXXX",
+                    "status": "RELEASED",
+                        "external_batch_id": null,
+                    "payment_method": "IDEAL"
+                    "completed_at": null,
+                    "personalized_at": null,
+                    "canceled_at": null,
+                    "refunded_at": null,
+                    "currency_id": "EUR",
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doeh",
+                    "email": "john.doeh@example.com",
+                    "mobile": "06123456789"
+                    },
+                    "total_balance": 2.41,
+                    "download_url": "https:\/\/cm.com\/xxxxxxx",
+                    "is_guest_list_order": false,
+                    "requested_language_id": "EN",
+                    "tickets": [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Bingokaart",
+                    "en": "Bingokaart",
+                    "fr": "Bingokaart",
+                    "de": "Bingokaart",
+                    "ar": ""
+                    },
+                    "amount": 0,
+                    "cancellations": 1,
+                    "ticket_type_price_incl_vat": 0,
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET"
+                    }
+                    ]
+                    }
+      deprecated: false
+  /events/{event_uuid}/orders/{order_id}/consents:
+    get:
+      summary: Get Order Consents
+      description: Use this endpoint to get the list of order consents
+      operationId: get-order-consents
+      parameters:
+        - name: event_uuid
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: order_id
+          in: path
+          description: Order Id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >
+                    [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "CM Default",
+                    "is_accepted": true
+                    },
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Privacy etc.",
+                    "is_accepted": true
+                    }
+                    ]
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                      example: 00000000-0000-0000-0000-000000000000
+                    name:
+                      type: string
+                      example: CM Default
+                    is_accepted:
+                      type: boolean
+                      example: true
+                      default: true
+      deprecated: false
+  /customerdata/{customer_uuid}:
+    get:
+      summary: Get Customer Data
+      description: Use this endpoint to get the details of the customer information.
+      operationId: get-customer-data
+      parameters:
+        - name: customer_uuid
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "external_id": null,
+                    "first_name": "John",
+                    "last_name": "Doeh",
+                    "email": "john.doeh@example.com",
+                    "mobile": "06123456789",
+                    "gender": "M",
+                    "address_line_1": null,
+                    "address_line_1_building_number": null,
+                    "address_line_2": null,
+                    "address_line_2_building_number": null,
+                    "zipcode": null,
+                    "city": "Breda",
+                    "state": null,
+                    "organisation_name": null,
+                    "position_name": null,
+                    "date_of_birth": "1990-01-01",
+                    "custom_field_1": null,
+                    "custom_field_2": null,
+                    "custom_field_3": null,
+                    "has_accepted_newsletter": false,
+                    "created_at": "2021-06-30T10:01:58+00:00",
+                    "updated_at": "2021-06-30T10:08:27+00:00",
+                    "country_id": null
+                    }
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  external_id: {}
+                  first_name:
+                    type: string
+                    example: John
+                  last_name:
+                    type: string
+                    example: Doeh
+                  email:
+                    type: string
+                    example: john.doeh@example.com
+                  mobile:
+                    type: string
+                    example: 06123456789
+                  gender:
+                    type: string
+                    example: M
+                  address_line_1: {}
+                  address_line_1_building_number: {}
+                  address_line_2: {}
+                  address_line_2_building_number: {}
+                  zipcode: {}
+                  city:
+                    type: string
+                    example: Breda
+                  state: {}
+                  organisation_name: {}
+                  position_name: {}
+                  date_of_birth:
+                    type: string
+                    example: 1990-01-01
+                  custom_field_1: {}
+                  custom_field_2: {}
+                  custom_field_3: {}
+                  has_accepted_newsletter:
+                    type: boolean
+                    example: false
+                    default: true
+                  created_at:
+                    type: string
+                    example: 2021-06-30T10:01:58+00:00
+                  updated_at:
+                    type: string
+                    example: 2021-06-30T10:08:27+00:00
+                  country_id: {}
+      deprecated: false
+  /barcodes:
+    get:
+      summary: Get Account Barcodes
+      description: Use this endpoint to get list of the barcodes based on your account configuration.
+      operationId: get-account-barcodes
+      parameters:
+        - name: product_sub_type
+          in: query
+          description: ACCOMODATION,ENTRANCE_TICKET,FOOD_AND_BEVERAGE,LOCKERS,MERCHANDISE,OTHER,PARKING,TOKENS,TRANSPORTATION
+          schema:
+            type: string
+        - name: X-TF-PAGINATION-SKIP
+          in: header
+          description: Once you've called the endpoint, you'll get the first 20 items. In this header you can define the amount of items to skip for the next page.
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: status
+          in: query
+          description: COMPLETED, CANCELLED, REFUNDED, RESELL_SOLD
+          schema:
+            type: string
+        - name: ticket_type_uuid
+          in: query
+          description: The result can be filtered based on the ticket type UUID, and you can also send multiple ticket types separated by ",".
+          schema:
+            type: string
+        - name: issued_at_range
+          in: query
+          description: 'Example: 2021-03-22T14:30:00,2021-03-30T17:45:00 (time is represented in UTC)'
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >-
+                    [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "XXXXXXXXX",
+                    "external_barcode_id": null,
+                    "expire_at": null,
+                    "created_at": "2023-01-17T10:32:04+00:00",
+                    "order_id": "YXCYYYYY",
+                    "personalized_at": null,
+                    "canceled_at": null,
+                        "used_discount_code_id": "CMDISCOUNTCODEID",
+                        "used_discount_code_external_id" : "EXTERNAL_CMDISCOUNTCODEID",
+                        "used_access_key_id": "CMACCESSKEYID",
+                        "scan_count": 1,
+                        "last_scanned_at": "2023-01-17T10:32:04+00:00",
+                    "status": "COMPLETED",
+                    "ticket_type_price_incl_vat": 0,
+                    "ticket_type_price_with_discount_incl_vat": 0,
+                        "currency_id": "EUR",
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doeh",
+                    "email": "john.doeh@cm.com",
+                    "mobile": null
+                    },
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Beer \/ Soft Drinks",
+                    "en": "Beer \/ Soft Drinks",
+                    "fr": "Beer \/ Soft Drinks",
+                    "de": "Beer \/ Soft Drinks",
+                    "ar": "Beer \/ Soft Drinks",
+                    "es": "Beer \/ Soft Drinks"
+                    },
+                    "ticket_product_sub_type": "FOOD_AND_BEVERAGE",
+                    "is_checkin_allowed": true,
+                    "validation_max_checkins": 1,
+                    "sales_from": null,
+                    "sales_until": null,
+                    "valid_from": null,
+                    "valid_until": null,
+                    "ticket_type_price_incl_vat": 12,
+                          "external_id_1": null,
+                          "external_id_2": null,
+                          "external_id_3": null
+                    },
+                    "event": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Pyramid Warm Up 2023"
+                    },
+                    "venue": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": "Venue Name"
+                    },
+                        "tracking_parameters": [
+                        {
+                    "name": "UTM_REFERRER",
+                    "value: "Maxcorp",
+                          }
+                        ]
+                    }
+                    ]
+      deprecated: false
+  /events/{event_uuid}/products:
+    get:
+      summary: Get Products
+      description: Use this endpoint to get list of the event products.
+      operationId: get-products
+      parameters:
+        - name: X-TF-PAGINATION-SKIP
+          in: header
+          description: Once you've called the endpoint, you'll get the first 20 items. In this header you can define the amount of items to skip for the next page.
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: event_uuid
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >-
+                    [
+                        {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "name": {
+                                "nl": "Regular Ticket",
+                                "en": "Regular Ticket",
+                                "fr": "Regular Ticket",
+                                "de": "Regular Ticket"
+                            },
+                            "is_personalizable": true,
+                            "price": 0,
+                            "is_visible": true,
+                            "ticket_status_type_id": "ONLINE",
+                            "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                            "sales_from": null,
+                            "sales_until": null,
+                            "valid_from": null,
+                            "valid_until": null,
+                            "has_unlimited_stock": false,
+                            "stock": 850,
+                            "capacity": 20000,
+                            "external_id_1": null,
+                           "external_id_2": null,
+                            "external_id_3": null
+                        },
+                    ]
+      deprecated: false
+  /events/{event_uuid}/products/{product_uuid}:
+    get:
+      summary: Get Product Details
+      description: Use this endpoint to get details of the product.
+      operationId: get-products-details
+      parameters:
+        - name: event_uuid
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: product_uuid
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: >-
+                    {
+                      "uuid": "00000000-0000-0000-0000-000000000000",
+                      "name": {
+                        "nl": "Regular Ticket",
+                        "en": "Regular Ticket",
+                        "fr": "Regular Ticket",
+                        "de": "Regular Ticket"
+                      },
+                      "is_personalizable": true,
+                      "price": 0,
+                      "is_visible": true,
+                      "ticket_status_type_id": "ONLINE",
+                      "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                      "sales_from": null,
+                      "sales_until": null,
+                      "valid_from": null,
+                      "valid_until": null,
+                      "has_unlimited_stock": false,
+                      "stock": 850,
+                      "capacity": 20000,
+                      "external_id_1": null,
+                      "external_id_2": null,
+                      "external_id_3": null
+                    }
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  name:
+                    type: object
+                    properties:
+                      nl:
+                        type: string
+                        example: Regular Ticket
+                      en:
+                        type: string
+                        example: Regular Ticket
+                      fr:
+                        type: string
+                        example: Regular Ticket
+                      de:
+                        type: string
+                        example: Regular Ticket
+                  is_personalizable:
+                    type: boolean
+                    example: true
+                    default: true
+                  price:
+                    type: integer
+                    example: 0
+                    default: 0
+                  is_visible:
+                    type: boolean
+                    example: true
+                    default: true
+                  ticket_status_type_id:
+                    type: string
+                    example: ONLINE
+                  ticket_product_sub_type_id:
+                    type: string
+                    example: ENTRANCE_TICKET
+                  sales_from: {}
+                  sales_until: {}
+                  valid_from: {}
+                  valid_until: {}
+                  has_unlimited_stock:
+                    type: boolean
+                    example: false
+                    default: true
+                  stock:
+                    type: integer
+                    example: 850
+                    default: 0
+                  capacity:
+                    type: integer
+                    example: 20000
+                    default: 0
+                  external_id_1: {}
+                  external_id_2: {}
+                  external_id_3: {}
+      deprecated: false
+  /events/{event_uuid}/reservations/create:
+    post:
+      summary: Create Reservation
+      description: This endpoint can be used to create a reservation in your event. This will not directly complete the reservation into an complete order.
+      operationId: create-reservation
+      parameters:
+        - name: X-TF-PREFERREDLANGUAGEID
+          in: header
+          description: 'Preferred order language. Will be used to determine the language of the confirmation e-mail. Valid values are: EN/NL/DE/FR'
+          schema:
+            type: string
+            default: EN
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+        - name: X-TF-DISTRIBUTION-METHOD
+          in: header
+          description: 'Distribution method, available values: EMAIL/NONE'
+          schema:
+            type: string
+            default: EMAIL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticket_types:
+                  type: array
+                  description: Contains the tickets that will be added to the reservation
+                  items:
+                    properties:
+                      uuid:
+                        type: string
+                        description: The uuid of your ticket type
+                      amount:
+                        type: integer
+                        description: The amount of tickets that will be added
+                        format: int32
+                    type: object
+                external_batch_id:
+                  type: string
+                  description: Optional parameter which can be used to provide your own order reference. Max 40 characters. When filled in no confirmation e-mail will be sent out as CM assumes you already handled it in your own system.
+                customer_data:
+                  type: object
+                  description: Contains the customer details of the ticket buyer
+                  properties:
+                    first_name:
+                      type: string
+                      description: Required. Max 128 characters.
+                    initials:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    last_name:
+                      type: string
+                      description: Required. Max 128 characters.
+                    email:
+                      type: string
+                      description: Required. Max 255 characters.
+                    mobile:
+                      type: string
+                      description: Optional. Max 32 characters.
+                    gender:
+                      type: string
+                      description: Optional.
+                      enum:
+                        - M
+                        - F
+                        - ""
+                    address_line_1:
+                      type: string
+                      description: Optional. Max 255 characters
+                    adress_line_1_building_number:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    address_line_2:
+                      type: string
+                      description: Optional. Max 255 characters.
+                    address_line_2_building_number:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    zipcode:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    city:
+                      type: string
+                      description: Optional. Max 64 characters.
+                    state:
+                      type: string
+                      description: Optional. Max 64 characters.
+                    organization_name:
+                      type: string
+                      description: Optional. Max 128 characters.
+                    position_name:
+                      type: string
+                      description: Optional. Max 128 characters.
+                    date_of_birth:
+                      type: string
+                      description: Optional. Format yyyy-mm-dd.
+                      format: date
+                    custom_field_1:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+                    custom_field_2:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+                    custom_field_3:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "order_id": "V179946815",
+                    "order_uuid": "00000000-0000-0000-0000-000000000000",
+                    "external_batch_id": "1b5d34ae08a0",
+                    "total_balance_incl_vat": 0,
+                    "currency_id": "EUR",
+                    "requested_language_id": "EN",
+                      "download_url": null,    
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "organisation": "CM.com",
+                    "email": "john.doe@example.com",
+                    "phone_number": "+31618895899",
+                    "custom_field_1": "Dietary preference: Vegetarian",
+                    "custom_field_2": null,
+                    "custom_field_3": null
+                    },
+                    "barcodes": [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "IANEDVJORX",
+                    "barcode_type_id": "QRCODE",
+                          "external_barcode_id": null,
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    },
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "FBCYGOCDES",
+                    "barcode_type_id": "QRCODE",
+                          "external_barcode_id": null,
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    }
+                    ]
+                    }
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    example: V179946815
+                  order_uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  external_batch_id:
+                    type: string
+                    example: 1b5d34ae08a0
+                  total_balance_incl_vat:
+                    type: integer
+                    example: 0
+                    default: 0
+                  currency_id:
+                    type: string
+                    example: EUR
+                  requested_language_id:
+                    type: string
+                    example: EN
+                  download_url: {}
+                  customer_data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        example: 00000000-0000-0000-0000-000000000000
+                      first_name:
+                        type: string
+                        example: John
+                      last_name:
+                        type: string
+                        example: Doe
+                      organisation:
+                        type: string
+                        example: CM.com
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      phone_number:
+                        type: string
+                        example: +31618895899
+                      custom_field_1:
+                        type: string
+                        example: 'Dietary preference: Vegetarian'
+                      custom_field_2: {}
+                      custom_field_3: {}
+                  barcodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          example: 00000000-0000-0000-0000-000000000000
+                        barcode_id:
+                          type: string
+                          example: IANEDVJORX
+                        barcode_type_id:
+                          type: string
+                          example: QRCODE
+                        external_barcode_id: {}
+                        price:
+                          type: integer
+                          example: 0
+                          default: 0
+                        currency_id:
+                          type: string
+                          example: EUR
+                        ticket_type:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            name:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: Entree Ticket
+                                en:
+                                  type: string
+                                  example: Entrance Ticket
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            subtitle:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: ''
+                                en:
+                                  type: string
+                                  example: ''
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            ticket_product_sub_type_id:
+                              type: string
+                              example: ENTRANCE_TICKET
+                            external_reference_2: {}
+                            external_reference_3: {}
+                        customer_data:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            organisation:
+                              type: string
+                              example: CM.com
+                            email:
+                              type: string
+                              example: john.doe@example.com
+                            phone_number:
+                              type: string
+                              example: +31618895899
+                            custom_field_1:
+                              type: string
+                              example: 'Dietary preference: Vegetarian'
+                            custom_field_2: {}
+                            custom_field_3: {}
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                        "error": {
+                            "message": "There is not enough stock left.",
+                            "error_code": 400157,
+                            "error_details": null
+                        }
+                    }
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: There is not enough stock left.
+                      error_code:
+                        type: integer
+                        example: 400157
+                        default: 0
+                      error_details: {}
+      deprecated: false
+  /events/{event_uuid}/reservations/{reservation_id}/complete:
+    post:
+      summary: Complete Reservation
+      description: This endpoint can be used to complete a created reservation in your event. This will complete the order and mark it as 'cleared by merchant'.
+      operationId: complete-reservation
+      parameters:
+        - name: X-TF-PREFERREDLANGUAGEID
+          in: header
+          description: 'Preferred order language. Will be used to determine the language of the confirmation e-mail. Valid values are: EN/NL/DE/FR'
+          schema:
+            type: string
+            default: EN
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+        - name: X-TF-DISTRIBUTION-METHOD
+          in: header
+          description: 'Distribution method, available values: EMAIL/NONE'
+          schema:
+            type: string
+            default: EMAIL
+        - name: reservation_id
+          in: path
+          schema:
+            type: string
+            default: Reservation/Order Id
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "order_id": "V179946815",
+                    "order_uuid": "00000000-0000-0000-0000-000000000000",
+                    "external_batch_id": "1b5d34ae08a0",
+                    "total_balance_incl_vat": 0,
+                    "currency_id": "EUR",
+                    "requested_language_id": "EN",
+                      "download_url": "https://download-url.order.cm.com/",    
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "organisation": "CM.com",
+                    "email": "john.doe@example.com",
+                    "phone_number": "+31618895899",
+                    "custom_field_1": "Dietary preference: Vegetarian",
+                    "custom_field_2": null,
+                    "custom_field_3": null
+                    },
+                    "barcodes": [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "IANEDVJORX",
+                    "barcode_type_id": "QRCODE",
+                          "external_barcode_id": null,
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    },
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "FBCYGOCDES",
+                    "barcode_type_id": "QRCODE",
+                          "external_barcode_id": null,
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    }
+                    ]
+                    }
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    example: V179946815
+                  order_uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  external_batch_id:
+                    type: string
+                    example: 1b5d34ae08a0
+                  total_balance_incl_vat:
+                    type: integer
+                    example: 0
+                    default: 0
+                  currency_id:
+                    type: string
+                    example: EUR
+                  requested_language_id:
+                    type: string
+                    example: EN
+                  download_url:
+                    type: string
+                    example: https://download-url.order.cm.com/
+                  customer_data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        example: 00000000-0000-0000-0000-000000000000
+                      first_name:
+                        type: string
+                        example: John
+                      last_name:
+                        type: string
+                        example: Doe
+                      organisation:
+                        type: string
+                        example: CM.com
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      phone_number:
+                        type: string
+                        example: +31618895899
+                      custom_field_1:
+                        type: string
+                        example: 'Dietary preference: Vegetarian'
+                      custom_field_2: {}
+                      custom_field_3: {}
+                  barcodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          example: 00000000-0000-0000-0000-000000000000
+                        barcode_id:
+                          type: string
+                          example: IANEDVJORX
+                        barcode_type_id:
+                          type: string
+                          example: QRCODE
+                        external_barcode_id: {}
+                        price:
+                          type: integer
+                          example: 0
+                          default: 0
+                        currency_id:
+                          type: string
+                          example: EUR
+                        ticket_type:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            name:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: Entree Ticket
+                                en:
+                                  type: string
+                                  example: Entrance Ticket
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            subtitle:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: ''
+                                en:
+                                  type: string
+                                  example: ''
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            ticket_product_sub_type_id:
+                              type: string
+                              example: ENTRANCE_TICKET
+                            external_reference_2: {}
+                            external_reference_3: {}
+                        customer_data:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            organisation:
+                              type: string
+                              example: CM.com
+                            email:
+                              type: string
+                              example: john.doe@example.com
+                            phone_number:
+                              type: string
+                              example: +31618895899
+                            custom_field_1:
+                              type: string
+                              example: 'Dietary preference: Vegetarian'
+                            custom_field_2: {}
+                            custom_field_3: {}
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                        "error": {
+                            "message": "There is not enough stock left.",
+                            "error_code": 400157,
+                            "error_details": null
+                        }
+                    }
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: There is not enough stock left.
+                      error_code:
+                        type: integer
+                        example: 400157
+                        default: 0
+                      error_details: {}
+      deprecated: false
+  /events/{event_uuid}/guestlist/reservations/generate:
+    post:
+      summary: Generate Guest List Reservation
+      description: This endpoint can be used to generate a guest list reservation in your event. The reservation will be immediately completed and the order with barcodes is returned in the response. Note that this endpoint only generates **free** guest list reservations.
+      operationId: generate-guest-list-reservation
+      parameters:
+        - name: X-TF-PREFERREDLANGUAGEID
+          in: header
+          description: 'Preferred order language. Will be used to determine the language of the confirmation e-mail. Valid values are: EN/NL/DE/FR'
+          schema:
+            type: string
+            default: EN
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+        - name: X-TF-DISTRIBUTION-METHOD
+          in: header
+          description: 'Distribution method, available values: EMAIL/NONE'
+          schema:
+            type: string
+            default: EMAIL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticket_types:
+                  type: array
+                  description: Contains the tickets that will be added to the reservation
+                  items:
+                    properties:
+                      uuid:
+                        type: string
+                        description: The uuid of your ticket type
+                      amount:
+                        type: integer
+                        description: The amount of tickets that will be added
+                        format: int32
+                    type: object
+                external_batch_id:
+                  type: string
+                  description: Optional parameter which can be used to provide your own order reference. Max 40 characters. When filled in no confirmation e-mail will be sent out as CM assumes you already handled it in your own system.
+                customer_data:
+                  type: object
+                  description: Contains the customer details of the ticket buyer
+                  properties:
+                    first_name:
+                      type: string
+                      description: Required. Max 128 characters.
+                    initials:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    last_name:
+                      type: string
+                      description: Required. Max 128 characters.
+                    email:
+                      type: string
+                      description: Required. Max 255 characters.
+                    mobile:
+                      type: string
+                      description: Optional. Max 32 characters.
+                    gender:
+                      type: string
+                      description: Optional.
+                      enum:
+                        - M
+                        - F
+                        - ""
+                    address_line_1:
+                      type: string
+                      description: Optional. Max 255 characters
+                    adress_line_1_building_number:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    address_line_2:
+                      type: string
+                      description: Optional. Max 255 characters.
+                    address_line_2_building_number:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    zipcode:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    city:
+                      type: string
+                      description: Optional. Max 64 characters.
+                    state:
+                      type: string
+                      description: Optional. Max 64 characters.
+                    organization_name:
+                      type: string
+                      description: Optional. Max 128 characters.
+                    position_name:
+                      type: string
+                      description: Optional. Max 128 characters.
+                    date_of_birth:
+                      type: string
+                      description: Optional. Format yyyy-mm-dd.
+                      format: date
+                    custom_field_1:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+                    custom_field_2:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+                    custom_field_3:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "order_id": "V179946815",
+                    "order_uuid": "00000000-0000-0000-0000-000000000000",
+                    "external_batch_id": "1b5d34ae08a0",
+                    "total_balance_incl_vat": 0,
+                    "currency_id": "EUR",
+                    "requested_language_id": "EN",
+                      "download_url": "https://download-url.order.cm.com/",  
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "organisation": "CM.com",
+                    "email": "john.doe@example.com",
+                    "phone_number": "+31618895899",
+                    "custom_field_1": "Dietary preference: Vegetarian",
+                    "custom_field_2": null,
+                    "custom_field_3": null
+                    },
+                    "barcodes": [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "IANEDVJORX",
+                    "barcode_type_id": "QRCODE",
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    },
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "FBCYGOCDES",
+                    "barcode_type_id": "QRCODE",
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    }
+                    ]
+                    }
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    example: V179946815
+                  order_uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  external_batch_id:
+                    type: string
+                    example: 1b5d34ae08a0
+                  total_balance_incl_vat:
+                    type: integer
+                    example: 0
+                    default: 0
+                  currency_id:
+                    type: string
+                    example: EUR
+                  requested_language_id:
+                    type: string
+                    example: EN
+                  download_url:
+                    type: string
+                    example: https://download-url.order.cm.com/
+                  customer_data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        example: 00000000-0000-0000-0000-000000000000
+                      first_name:
+                        type: string
+                        example: John
+                      last_name:
+                        type: string
+                        example: Doe
+                      organisation:
+                        type: string
+                        example: CM.com
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      phone_number:
+                        type: string
+                        example: +31618895899
+                      custom_field_1:
+                        type: string
+                        example: 'Dietary preference: Vegetarian'
+                      custom_field_2: {}
+                      custom_field_3: {}
+                  barcodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          example: 00000000-0000-0000-0000-000000000000
+                        barcode_id:
+                          type: string
+                          example: IANEDVJORX
+                        barcode_type_id:
+                          type: string
+                          example: QRCODE
+                        price:
+                          type: integer
+                          example: 0
+                          default: 0
+                        currency_id:
+                          type: string
+                          example: EUR
+                        ticket_type:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            name:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: Entree Ticket
+                                en:
+                                  type: string
+                                  example: Entrance Ticket
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            subtitle:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: ''
+                                en:
+                                  type: string
+                                  example: ''
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            ticket_product_sub_type_id:
+                              type: string
+                              example: ENTRANCE_TICKET
+                            external_reference_2: {}
+                            external_reference_3: {}
+                        customer_data:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            organisation:
+                              type: string
+                              example: CM.com
+                            email:
+                              type: string
+                              example: john.doe@example.com
+                            phone_number:
+                              type: string
+                              example: +31618895899
+                            custom_field_1:
+                              type: string
+                              example: 'Dietary preference: Vegetarian'
+                            custom_field_2: {}
+                            custom_field_3: {}
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                        "error": {
+                            "message": "There is not enough stock left.",
+                            "error_code": 400157,
+                            "error_details": null
+                        }
+                    }
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: There is not enough stock left.
+                      error_code:
+                        type: integer
+                        example: 400157
+                        default: 0
+                      error_details: {}
+      deprecated: false
+  /events/{event_uuid}/guestlist/reservations/generate/tickets:
+    post:
+      summary: Generate Guest List Reservation (Per Ticket)
+      description: This endpoint can be used to generate a guest list reservation in your event. The reservation will be immediately completed and the order with barcodes is returned in the response. Note that this endpoint only generates **free** guest list reservations.
+      operationId: generate-guest-list-reservation-tickets
+      parameters:
+        - name: X-TF-PREFERREDLANGUAGEID
+          in: header
+          description: 'Preferred order language. Will be used to determine the language of the confirmation e-mail. Valid values are: EN/NL/DE/FR'
+          schema:
+            type: string
+            default: EN
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+        - name: X-TF-DISTRIBUTION-METHOD
+          in: header
+          description: 'Distribution method, available values: EMAIL/NONE'
+          schema:
+            type: string
+            default: EMAIL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tickets:
+                  type: array
+                  description: Contains the tickets that will be added to the reservation
+                  items:
+                    properties:
+                      ticket_type_uuid:
+                        type: string
+                        description: The ticket type uuid of a product.
+                        default: 00000000-0000-0000-0000-000000000000
+                      external_barcode_id:
+                        type: string
+                        description: Optional parameter which can be used to provide your own barcode reference. Max 80 characters.
+                    type: object
+                external_batch_id:
+                  type: string
+                  description: Optional parameter which can be used to provide your own order reference. Max 40 characters. When filled in no confirmation e-mail will be sent out as CM assumes you already handled it in your own system.
+                customer_data:
+                  type: object
+                  description: Contains the customer details of the ticket buyer
+                  properties:
+                    first_name:
+                      type: string
+                      description: Required. Max 128 characters.
+                    initials:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    last_name:
+                      type: string
+                      description: Required. Max 128 characters.
+                    email:
+                      type: string
+                      description: Required. Max 255 characters.
+                    mobile:
+                      type: string
+                      description: Optional. Max 32 characters.
+                    gender:
+                      type: string
+                      description: Optional.
+                      enum:
+                        - M
+                        - F
+                        - ""
+                    address_line_1:
+                      type: string
+                      description: Optional. Max 255 characters
+                    adress_line_1_building_number:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    address_line_2:
+                      type: string
+                      description: Optional. Max 255 characters.
+                    address_line_2_building_number:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    zipcode:
+                      type: string
+                      description: Optional. Max 20 characters.
+                    city:
+                      type: string
+                      description: Optional. Max 64 characters.
+                    state:
+                      type: string
+                      description: Optional. Max 64 characters.
+                    organization_name:
+                      type: string
+                      description: Optional. Max 128 characters.
+                    position_name:
+                      type: string
+                      description: Optional. Max 128 characters.
+                    date_of_birth:
+                      type: string
+                      description: Optional. Format yyyy-mm-dd.
+                      format: date
+                    custom_field_1:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+                    custom_field_2:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+                    custom_field_3:
+                      type: string
+                      description: Optional. Max 255 characters. Can be used for additional details not covered in other fields.
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                    "order_id": "V179946815",
+                    "order_uuid": "00000000-0000-0000-0000-000000000000",
+                    "external_batch_id": "1b5d34ae08a0",
+                    "total_balance_incl_vat": 0,
+                    "currency_id": "EUR",
+                    "requested_language_id": "EN",
+                      "download_url": "https://download-url.order.cm.com/",  
+                    "customer_data": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "organisation": "CM.com",
+                    "email": "john.doe@example.com",
+                    "phone_number": "+31618895899",
+                    "custom_field_1": "Dietary preference: Vegetarian",
+                    "custom_field_2": null,
+                    "custom_field_3": null
+                    },
+                    "barcodes": [
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "IANEDVJORX",
+                    "barcode_type_id": "QRCODE",
+                          "external_barcode_id" : null,
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    },
+                    {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "barcode_id": "FBCYGOCDES",
+                    "barcode_type_id": "QRCODE",
+                          "external_barcode_id" : "EXTERNAL_BARCODE_01100011_01101101",
+                    "price": 0,
+                    "currency_id": "EUR",
+                    "ticket_type": {
+                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "name": {
+                    "nl": "Entree Ticket",
+                    "en": "Entrance Ticket",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "subtitle": {
+                    "nl": "",
+                    "en": "",
+                    "fr": "",
+                    "de": ""
+                    },
+                    "ticket_product_sub_type_id": "ENTRANCE_TICKET",
+                    "external_reference_2": null,
+                    "external_reference_3": null
+                    },
+                    "customer_data": {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "organisation": "CM.com",
+                            "email": "john.doe@example.com",
+                            "phone_number": "+31618895899",
+                            "custom_field_1": "Dietary preference: Vegetarian",
+                            "custom_field_2": null,
+                            "custom_field_3": null
+                    }
+                    }
+                    ]
+                    }
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    example: V179946815
+                  order_uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  external_batch_id:
+                    type: string
+                    example: 1b5d34ae08a0
+                  total_balance_incl_vat:
+                    type: integer
+                    example: 0
+                    default: 0
+                  currency_id:
+                    type: string
+                    example: EUR
+                  requested_language_id:
+                    type: string
+                    example: EN
+                  download_url:
+                    type: string
+                    example: https://download-url.order.cm.com/
+                  customer_data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        example: 00000000-0000-0000-0000-000000000000
+                      first_name:
+                        type: string
+                        example: John
+                      last_name:
+                        type: string
+                        example: Doe
+                      organisation:
+                        type: string
+                        example: CM.com
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      phone_number:
+                        type: string
+                        example: +31618895899
+                      custom_field_1:
+                        type: string
+                        example: 'Dietary preference: Vegetarian'
+                      custom_field_2: {}
+                      custom_field_3: {}
+                  barcodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          example: 00000000-0000-0000-0000-000000000000
+                        barcode_id:
+                          type: string
+                          example: IANEDVJORX
+                        barcode_type_id:
+                          type: string
+                          example: QRCODE
+                        external_barcode_id: {}
+                        price:
+                          type: integer
+                          example: 0
+                          default: 0
+                        currency_id:
+                          type: string
+                          example: EUR
+                        ticket_type:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            name:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: Entree Ticket
+                                en:
+                                  type: string
+                                  example: Entrance Ticket
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            subtitle:
+                              type: object
+                              properties:
+                                nl:
+                                  type: string
+                                  example: ''
+                                en:
+                                  type: string
+                                  example: ''
+                                fr:
+                                  type: string
+                                  example: ''
+                                de:
+                                  type: string
+                                  example: ''
+                            ticket_product_sub_type_id:
+                              type: string
+                              example: ENTRANCE_TICKET
+                            external_reference_2: {}
+                            external_reference_3: {}
+                        customer_data:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              example: 00000000-0000-0000-0000-000000000000
+                            first_name:
+                              type: string
+                              example: John
+                            last_name:
+                              type: string
+                              example: Doe
+                            organisation:
+                              type: string
+                              example: CM.com
+                            email:
+                              type: string
+                              example: john.doe@example.com
+                            phone_number:
+                              type: string
+                              example: +31618895899
+                            custom_field_1:
+                              type: string
+                              example: 'Dietary preference: Vegetarian'
+                            custom_field_2: {}
+                            custom_field_3: {}
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                        "error": {
+                            "message": "There is not enough stock left.",
+                            "error_code": 400157,
+                            "error_details": null
+                        }
+                    }
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: There is not enough stock left.
+                      error_code:
+                        type: integer
+                        example: 400157
+                        default: 0
+                      error_details: {}
+      deprecated: false
+  /events/overview:
+    get:
+      summary: Get Events Overview
+      description: Use this endpoint to retrieve a simpel list of your events
+      operationId: get-events-overview
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    [
+                        {
+                            "uuid": "10000000-0000-0000-0000-000000000000",
+                            "name": "Festival",
+                            "description": {
+                                "nl": "This is a NL description.",
+                                "en": "This is a EN description.",
+                                "fr": "This is a FR description.",
+                                "de": "This is a DE description.",
+                                "ar": "This is a AR description.",
+                                "es": "This is a ES description."
+                            }
+                        },
+                        {
+                            "uuid": "20000000-0000-0000-0000-000000000000",
+                            "name": "Conference",
+                            "description": {
+                                "nl": "This is a NL description.",
+                                "en": "This is a EN description.",
+                                "fr": "This is a FR description.",
+                                "de": "This is a DE description.",
+                                "ar": "This is a AR description.",
+                                "es": "This is a ES description."
+                            }
+                        }
+                    ]
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                      example: 10000000-0000-0000-0000-000000000000
+                    name:
+                      type: string
+                      example: Festival
+                    description:
+                      type: object
+                      properties:
+                        nl:
+                          type: string
+                          example: This is a NL description.
+                        en:
+                          type: string
+                          example: This is a EN description.
+                        fr:
+                          type: string
+                          example: This is a FR description.
+                        de:
+                          type: string
+                          example: This is a DE description.
+                        ar:
+                          type: string
+                          example: This is a AR description.
+                        es:
+                          type: string
+                          example: This is a ES description.
+      deprecated: false
+  /events/{event_uuid}/products/overview:
+    get:
+      summary: Get Products Overview
+      description: Use this endpoint to retrieve a simpel list of your event products
+      operationId: get-products-overview
+      parameters:
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n    {\n        \"uuid\": \"10000000-0000-0000-0000-000000000001\",\n        \"name\": {\n            \"nl\": \"Earlybird\",\n            \"en\": \"Earlybird\",\n            \"fr\": \"Earlybird\",\n            \"de\": \"Earlybird\",\n            \"ar\": \"Earlybird\",\n            \"es\": \"Earlybird\"\n        },\n        \"price\": 30\n    },\n    {\n        \"uuid\": \"10000000-0000-0000-0000-000000000002\",\n        \"name\": {\n            \"nl\": \"Regular Ticket\",\n            \"en\": \"Regular Ticket\",\n            \"fr\": \"Regular Ticket\",\n            \"de\": \"Regular Ticket\",\n            \"ar\": \"Regular Ticket\",\n            \"es\": \"Regular Ticket\"\n        },\n        \"price\": 50\n    }\n]  "
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                      example: 10000000-0000-0000-0000-000000000001
+                    name:
+                      type: object
+                      properties:
+                        nl:
+                          type: string
+                          example: Earlybird
+                        en:
+                          type: string
+                          example: Earlybird
+                        fr:
+                          type: string
+                          example: Earlybird
+                        de:
+                          type: string
+                          example: Earlybird
+                        ar:
+                          type: string
+                          example: Earlybird
+                        es:
+                          type: string
+                          example: Earlybird
+                    price:
+                      type: integer
+                      example: 30
+                      default: 0
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /events/{event_uuid}/paymentmethods:
+    get:
+      summary: Get Payment Methods
+      description: Get activated payment methods of an event
+      operationId: get-payment-methods
+      parameters:
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {}[
+                        {
+                            "uuid": "00000000-0000-1000-0000-000000000000",
+                            "name": "Ideal",
+                            "currency_id": "EUR",
+                            "image_uri": "https://api.ticketing.cm.com/ticketingresourceapi/v2.0/resource/6b16bf74-f0eb-4302-8930-21612039c38e/content"
+                        },
+                        {
+                            "uuid": "00000000-0000-1000-0000-000000000001",
+                            "name": "Visa Card",
+                            "currency_id": "EUR",
+                            "image_uri": "https://api.ticketing.cm.com/ticketingresourceapi/v2.0/resource/2005dca6-c09e-4dd5-b864-d8966fd87055/content"
+                        },
+                        {
+                            "uuid": "00000000-0000-1000-0000-000000000003",
+                            "name": "Master Card",
+                            "currency_id": "EUR",
+                            "image_uri": "https://api.ticketing.cm.com/ticketingresourceapi/v2.0/resource/acbd57f1-c17e-4fb2-8cd0-9d3d22efdc28/content"
+                        },
+                        {
+                            "uuid": "00000000-0000-1000-0000-000000000004",
+                            "name": "Bancontact",
+                            "currency_id": "EUR",
+                            "image_uri": "https://api.ticketing.cm.com/ticketingresourceapi/v2.0/resource/a24b563b-7aa3-456e-9dd6-2350e75ca438/content"
+                        },
+                        {
+                            "uuid": "00000000-0000-1000-0000-000000000005",
+                            "name": "Paypal",
+                            "currency_id": "EUR",
+                            "image_uri": "https://api.ticketing.cm.com/ticketingresourceapi/v2.0/resource/0c50390f-1ae9-4329-858d-aedd0fd5b535/content"
+                        },
+                        {
+                            "uuid": "00000000-0000-1000-0000-000000000006",
+                            "name": "Apple Pay",
+                            "currency_id": "EUR",
+                            "image_uri": "https://api.ticketing.cm.com/ticketingresourceapi/v2.0/resource/f8d7e54e-5da9-4a01-b8ac-86640ee1f0b3/content"
+                        }
+                    ]
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /events/{event_uuid}/discountcampaigns/order/singlediscountcode:
+    post:
+      summary: Create Discount Campaign (Order - Single Discount Code)
+      description: This endpoint can be used to create a discount campaign using a single custom discount code. This discount campaign will create the discount code on order level and can have a MONETARY or a PERCENTAGE rate type. When the MAX_USAGE is null, the code can be used unlimited.
+      operationId: create-discount-campaign-order-single-discount-code
+      parameters:
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Discount Campaign Name
+                discount_code:
+                  type: string
+                  description: DISCOUNTCODE-_123
+                max_usage:
+                  type: number
+                  description: Can be an integer or null (when null the discount code can be used an unlimited amount times)
+                  format: float
+                online_from:
+                  type: string
+                  description: ISO date - discount can be used from a moment in time
+                online_till:
+                  type: string
+                  description: ISO date - discount can be used until a moment in time
+                rate:
+                  type: number
+                  description: Is either a fixed rate or a percentage rate
+                  format: float
+                rate_type_id:
+                  type: string
+                  enum:
+                    - MONETARY
+                    - PERCENTAGE
+                currency_id:
+                  type: string
+            examples:
+              Request Example:
+                value:
+                  name: Discount Campaign Name
+                  discount_code: DISCOUNTCODE-_123
+                  max_usage:
+                  online_from: 2025-03-24T09:34:35+00:00
+                  online_till: 2025-03-28T09:34:35+00:00
+                  rate: 3
+                  rate_type_id: MONETARY
+                  currency_id: EUR
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                        "uuid": "00000000-0000-0000-0000-000000000000",
+                        "name": "Discount Campaign Name",
+                        "online_from": "2025-03-24T09:34:35+00:00",
+                        "online_till": "2025-03-28T09:34:35+00:00",
+                        "discount_codes_amount": 1,
+                        "discount_codes_amount_used": 0,
+                        "max_usage": null,
+                        "rate": 3,
+                        "rate_type_id": "MONETARY",
+                        "currency_id": "EUR",
+                        "discount_type_id": "DISCOUNT_ORDER",
+                        "created_at": "2025-03-24T12:03:03+00:00",
+                        "updated_at": "2025-03-24T12:03:03+00:00",
+                        "discount_campaign_products": null
+                    }
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  name:
+                    type: string
+                    example: Discount Campaign Name
+                  online_from:
+                    type: string
+                    example: 2025-03-24T09:34:35+00:00
+                  online_till:
+                    type: string
+                    example: 2025-03-28T09:34:35+00:00
+                  discount_codes_amount:
+                    type: integer
+                    example: 1
+                    default: 0
+                  discount_codes_amount_used:
+                    type: integer
+                    example: 0
+                    default: 0
+                  max_usage: {}
+                  rate:
+                    type: integer
+                    example: 3
+                    default: 0
+                  rate_type_id:
+                    type: string
+                    example: MONETARY
+                  currency_id:
+                    type: string
+                    example: EUR
+                  discount_type_id:
+                    type: string
+                    example: DISCOUNT_ORDER
+                  created_at:
+                    type: string
+                    example: 2025-03-24T12:03:03+00:00
+                  updated_at:
+                    type: string
+                    example: 2025-03-24T12:03:03+00:00
+                  discount_campaign_products: {}
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /events/{event_uuid}/discountcampaigns/product/singlediscountcode:
+    post:
+      summary: Create Discount Campaign (Product - Single Discount Code)
+      description: This endpoint can be used to create a discount campaign using a single custom discount code. This discount campaign will create the discount code on product level and can have a MONETARY rate type only. When the MAX_USAGE is null, the code can be used unlimited.
+      operationId: create-discount-campaign-product-single-discount-code
+      parameters:
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Discount Campaign Name
+                max_usage:
+                  type: number
+                  description: Can be an integer or null (when null the discount code can be used an unlimited amount times)
+                  format: float
+                online_from:
+                  type: string
+                  description: ISO date - discount can be used from a moment in time
+                online_till:
+                  type: string
+                  description: ISO date - discount can be used until a moment in time
+                currency_id:
+                  type: string
+                discount_campaign_products:
+                  type: array
+                  items:
+                    properties:
+                      product_uuid:
+                        type: string
+                        description: Reference id from the get products/ get products overview endpoint
+                      max_usage:
+                        type: number
+                        description: This is an integer, this represents the amount of times the discount is applied on a product.
+                        format: float
+                      rate:
+                        type: number
+                        description: Is either a fixed rate or a percentage rate
+                        format: float
+                      rate_type_id:
+                        type: string
+                        enum:
+                          - MONETARY
+                      currency_id:
+                        type: string
+                    type: object
+            examples:
+              Request Example:
+                value:
+                  name: Discount Campaign Name
+                  discount_code: DISCOUNTCODE-_123
+                  max_usage: 1
+                  online_from: 2025-03-24T09:34:35+00:00
+                  online_till: 2025-03-28T09:34:35+00:00
+                  currency_id: EUR
+                  discount_campaign_products:
+                    - product_uuid: 00000000-0000-0000-0000-000000000000
+                      max_usage: 1
+                      rate: 5
+                      rate_type_id: MONETARY
+                      currency_id: EUR
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                        "uuid": "00000000-0000-0000-0000-000000000000",
+                        "name": "Test",
+                        "online_from": "2025-03-24T09:34:35+00:00",
+                        "online_till": "2025-03-28T09:34:35+00:00",
+                        "discount_codes_amount": 1,
+                        "discount_codes_amount_used": 0,
+                        "max_usage": null,
+                        "rate": null,
+                        "rate_type_id": null,
+                        "currency_id": "EUR",
+                        "discount_type_id": "DISCOUNT_TICKET_TYPE",
+                        "created_at": "2025-03-24T12:04:54+00:00",
+                        "updated_at": "2025-03-24T12:04:54+00:00",
+                        "discount_campaign_products": [
+                            {
+                                "product_uuid": "00000000-0000-0000-0000-000000000000",
+                                "max_usage": 1,
+                                "rate": 5,
+                                "rate_type_id": "MONETARY",
+                                "currency_id": "EUR"
+                            }
+                        ]
+                    }
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  name:
+                    type: string
+                    example: Test
+                  online_from:
+                    type: string
+                    example: 2025-03-24T09:34:35+00:00
+                  online_till:
+                    type: string
+                    example: 2025-03-28T09:34:35+00:00
+                  discount_codes_amount:
+                    type: integer
+                    example: 1
+                    default: 0
+                  discount_codes_amount_used:
+                    type: integer
+                    example: 0
+                    default: 0
+                  max_usage: {}
+                  rate: {}
+                  rate_type_id: {}
+                  currency_id:
+                    type: string
+                    example: EUR
+                  discount_type_id:
+                    type: string
+                    example: DISCOUNT_TICKET_TYPE
+                  created_at:
+                    type: string
+                    example: 2025-03-24T12:04:54+00:00
+                  updated_at:
+                    type: string
+                    example: 2025-03-24T12:04:54+00:00
+                  discount_campaign_products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_uuid:
+                          type: string
+                          example: 00000000-0000-0000-0000-000000000000
+                        max_usage:
+                          type: integer
+                          example: 1
+                          default: 0
+                        rate:
+                          type: integer
+                          example: 5
+                          default: 0
+                        rate_type_id:
+                          type: string
+                          example: MONETARY
+                        currency_id:
+                          type: string
+                          example: EUR
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /events/{event_uuid}/channels:
+    get:
+      summary: Get Channels
+      description: ''
+      operationId: get-channels
+      parameters:
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    [
+                        {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "url": "https://sales.ticketing.cm.com/my-sales-channel"
+                        },
+                        {
+                            "uuid": "00000000-0000-0000-0000-000000000000",
+                            "url": "https://store.ticketing.cm.com/my-store-channel"
+                        }
+                    ]
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                      example: 00000000-0000-0000-0000-000000000000
+                    url:
+                      type: string
+                      example: https://sales.ticketing.cm.com/my-sales-channel
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+  /events/{event_uuid}/discountcampaigns/{discount_campaign_uuid}:
+    get:
+      summary: Patch Discount Campaign
+      description: ''
+      operationId: patch-discount-campaign
+      parameters:
+        - name: event_uuid
+          in: path
+          description: 'Uuid of your event. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+        - name: discount_campaign_uuid
+          in: path
+          description: 'Uuid of your discount campaign. Example: 00000000-0000-0000-0000-000000000000'
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Discount Campaign Name
+                max_usage:
+                  type: string
+                  description: Can be an integer or null (when null the discount code can be used an unlimited amount times)
+                online_from:
+                  type: string
+                  description: ISO date - discount can be used from a moment in time
+                online_till:
+                  type: string
+                  description: ISO date - discount can be used until a moment in time
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: >-
+                    {
+                        "uuid": "00000000-0000-0000-0000-000000000000",
+                        "name": "Discount Campaign Name",
+                        "online_from": null,
+                        "online_till": null,
+                        "discount_codes_amount": 1,
+                        "discount_codes_amount_used": 0,
+                        "max_usage": null,
+                        "rate": 3,
+                        "rate_type_id": "MONETARY",
+                        "currency_id": "EUR",
+                        "discount_type_id": "DISCOUNT_ORDER",
+                        "created_at": "2025-03-24T12:03:03+00:00",
+                        "updated_at": "2025-03-24T12:03:03+00:00",
+                        "discount_campaign_products": null
+                    }
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    example: 00000000-0000-0000-0000-000000000000
+                  name:
+                    type: string
+                    example: Discount Campaign Name
+                  online_from: {}
+                  online_till: {}
+                  discount_codes_amount:
+                    type: integer
+                    example: 1
+                    default: 0
+                  discount_codes_amount_used:
+                    type: integer
+                    example: 0
+                    default: 0
+                  max_usage: {}
+                  rate:
+                    type: integer
+                    example: 3
+                    default: 0
+                  rate_type_id:
+                    type: string
+                    example: MONETARY
+                  currency_id:
+                    type: string
+                    example: EUR
+                  discount_type_id:
+                    type: string
+                    example: DISCOUNT_ORDER
+                  created_at:
+                    type: string
+                    example: 2025-03-24T12:03:03+00:00
+                  updated_at:
+                    type: string
+                    example: 2025-03-24T12:03:03+00:00
+                  discount_campaign_products: {}
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+x-readme:
+  headers:
+    - key: X-TF-PREFERREDLANGUAGEID
+      value: Language ID
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

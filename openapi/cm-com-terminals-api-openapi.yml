@@ -1,0 +1,644 @@
+openapi: 3.2.0
+info:
+  title: Merchant Terminals API
+  description: '## Payment Acceptance Made Easy
+
+    The MerchantAPI allows merchants to interact with and retrieve information from the PayPlaza payment system.'
+  contact:
+    name: Development
+    url: https://www.payplaza.com
+    email: development@payplaza.com
+  version: 1.9.0
+servers:
+- url: /merchant/v1
+security:
+- ApiKeyAuth: []
+tags:
+- name: Terminals
+  description: Operations related to terminals
+paths:
+  /terminals:
+    get:
+      operationId: listTerminals
+      tags:
+      - Terminals
+      summary: List all terminals
+      parameters:
+      - name: page
+        in: query
+        description: The page number of your query result, starting at 1
+        required: false
+        schema:
+          format: int32
+          default: 1
+          minimum: 1
+          type: integer
+      - name: size
+        in: query
+        description: The amount of results per page, maximum 100 (defaults to 10)
+        required: false
+        schema:
+          format: int32
+          default: 10
+          maximum: 100
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          description: OK.
+          headers:
+            Link:
+              description: Multiple links providing information about how to navigate through the entries. Links are seperated by a comma ',' Format is compliant with [https://datatracker.ietf.org/doc/html/rfc8288](RFC 8288 Web Linking)
+              required: true
+              allowEmptyValue: true
+              style: simple
+              schema:
+                type: string
+            X-Total-Count:
+              description: Total number of entries available
+              required: true
+              allowEmptyValue: false
+              style: simple
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Terminal'
+        '400':
+          description: Bad request.
+        '500':
+          description: Internal server error.
+  /terminals/{manufacturer}-{model}-{serial}:
+    get:
+      operationId: getTerminal
+      tags:
+      - Terminals
+      summary: Get terminal by manufacturer, model & serial
+      parameters:
+      - name: manufacturer
+        in: path
+        description: Manufacturer name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: model
+        in: path
+        description: Model name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: serial
+        in: path
+        description: Serial(number) of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '400':
+          description: Bad request.
+        '500':
+          description: Internal server error.
+  /terminals/{manufacturer}-{model}-{serial}/daytotals/today:
+    get:
+      operationId: getTerminalDayTotals
+      tags:
+      - Terminals
+      summary: Get the day totals for the terminal by manufacturer, model & serial
+      parameters:
+      - name: manufacturer
+        in: path
+        description: Manufacturer name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: model
+        in: path
+        description: Model name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: serial
+        in: path
+        description: Serial(number) of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        '400':
+          description: Bad request.
+        '500':
+          description: Internal server error.
+  /terminals/{manufacturer}-{model}-{serial}/transactions:
+    get:
+      operationId: listTerminalTransactions
+      tags:
+      - Terminals
+      summary: List transactions by terminal
+      parameters:
+      - name: manufacturer
+        in: path
+        description: Manufacturer name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: model
+        in: path
+        description: Model name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: serial
+        in: path
+        description: Serial(number) of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: page
+        in: query
+        description: The page number of your query result, starting at 1
+        required: false
+        schema:
+          format: int32
+          default: 1
+          minimum: 1
+          type: integer
+      - name: size
+        in: query
+        description: The amount of results per page, maximum 100 (defaults to 10)
+        required: false
+        schema:
+          format: int32
+          default: 10
+          maximum: 100
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          description: OK.
+          headers:
+            Link:
+              description: Multiple links providing information about how to navigate through the entries. Links are seperated by a comma ',' Format is compliant with RFC 8288 Web Linking
+              required: true
+              allowEmptyValue: true
+              style: simple
+              schema:
+                type: string
+            X-Total-Count:
+              description: Total number of entries available
+              required: true
+              allowEmptyValue: false
+              style: simple
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request.
+        '500':
+          description: Internal server error.
+    post:
+      operationId: createTerminalTransaction
+      tags:
+      - Terminals
+      summary: Create new transaction for terminal
+      description: 'The Merchant-API will make sure only one newly created transaction is available for a specific terminal.
+
+        This means that when creating a new transaction, previous transaction(s) with status CREATED will be aborted.
+
+        So given transactions A and B, when transaction A has not been retrieved by the terminal when creating transaction B the Merchant API will abort transaction A, and the terminal will receive transaction B.'
+      parameters:
+      - name: manufacturer
+        in: path
+        description: Manufacturer name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: model
+        in: path
+        description: Model name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: serial
+        in: path
+        description: Serial(number) of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTransaction'
+            examples:
+              Purchase:
+                value:
+                  type: PURCHASE
+                  merchant_order_reference: '1234'
+                  amount:
+                    value: 0.01
+                    currency: EUR
+              Unreferenced refund:
+                value:
+                  type: REFUND
+                  merchant_order_reference: '1234'
+                  amount:
+                    value: 0.01
+                    currency: EUR
+              Referenced refund:
+                value:
+                  type: REFUND
+                  merchant_order_reference: '1234'
+                  amount:
+                    value: 0.01
+                    currency: EUR
+                  reference:
+                    id: '12345678'
+      responses:
+        '201':
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request.
+        '500':
+          description: Internal server error.
+        '501':
+          description: Not yet implemented.
+  /terminals/{manufacturer}-{model}-{serial}/transactions/{id}:
+    get:
+      operationId: getTerminalTransaction
+      tags:
+      - Terminals
+      summary: Get transaction by terminal and id
+      parameters:
+      - name: manufacturer
+        in: path
+        description: Manufacturer name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: model
+        in: path
+        description: Model name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: serial
+        in: path
+        description: Serial(number) of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: id
+        in: path
+        description: Identifier of a transaction
+        required: true
+        schema:
+          maxLength: 31
+          minLength: 31
+          pattern: '[0-9]{31}'
+          type: string
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request.
+        '404':
+          description: Not found.
+        '500':
+          description: Internal server error.
+    delete:
+      operationId: deleteTerminalTransaction
+      tags:
+      - Terminals
+      summary: Abort a transaction by terminal and id
+      parameters:
+      - name: manufacturer
+        in: path
+        description: Manufacturer name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: model
+        in: path
+        description: Model name of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: serial
+        in: path
+        description: Serial(number) of the terminal
+        required: true
+        schema:
+          maxLength: 255
+          minLength: 1
+          type: string
+      - name: id
+        in: path
+        description: Identifier of a transaction
+        required: true
+        schema:
+          maxLength: 31
+          minLength: 31
+          pattern: '[0-9]{31}'
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not found.
+        '409':
+          description: Conflict. The transaction is in a state that can't be aborted
+components:
+  schemas:
+    Store1:
+      title: StoreSummary
+      description: Information about Store where merchant can do transactions.
+      required:
+      - uuid
+      - name
+      type: object
+      properties:
+        uuid:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          - description: Identifier of the store
+        name:
+          description: Name of the store
+          maxLength: 255
+          minLength: 1
+          type: string
+    Device:
+      required:
+      - manufacturer
+      - model
+      - serial
+      type: object
+      properties:
+        manufacturer:
+          description: Manufacturer name of the device
+          maxLength: 255
+          minLength: 1
+          type: string
+        model:
+          description: Model name of the device
+          maxLength: 255
+          minLength: 1
+          type: string
+        serial:
+          description: Serial(number) of the device
+          maxLength: 255
+          minLength: 1
+          type: string
+    TransactionStatus:
+      description: <strong>Current state of a transaction.</strong><dl><dt>CREATED</dt><dd>Transaction is created and waiting authorization.</dd><dt>AUTHORIZED</dt><dd>Transaction is authorized and awaiting clearance.</dd><dt>CLEARED</dt><dd>Transaction is cleared and is completed successfully.</dd><dt>CANCELLED</dt><dd>Transaction is cancelled and is completed unsuccessfully.</dd>
+      enum:
+      - CREATED
+      - AUTHORIZED
+      - CLEARED
+      - CANCELLED
+      type: string
+    ZonedDateTime:
+      format: date-time
+      type: string
+      example: '2022-03-10T12:15:50-04:00'
+    Receipt:
+      required:
+      - receipt
+      type: object
+      properties:
+        receipt:
+          description: List of lines for the receipt
+          type: string
+    TransactionResult:
+      description: Final outcome of processing the transaction.<dl><dt>APPROVED</dt><dd>Indicates that the bank of the consumer authorized the payment.</dd><dt>DECLINED</dt><dd>Indicates that the bank of the consumer does NOT approve the payment.</dd></dl>
+      enum:
+      - APPROVED
+      - DECLINED
+      type: string
+    Amount:
+      description: Describes how much money the transaction should be.<br />'value' is a number value with a dot (.) as decimal separator. It should NOT have any digit grouping or thousands separators<br />'currency' is a 3-letter-code, compliant with <a href="https://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a>
+      required:
+      - value
+      - currency
+      type: object
+      properties:
+        value:
+          pattern: \d+\.\d{2}
+          type: number
+        currency:
+          description: Currency Code
+          enum:
+          - EUR
+          - USD
+          - GBP
+          type: string
+      example:
+        value: 10298.75
+        currency: EUR
+    TransactionType:
+      description: <dl><dt>PURCHASE</dt><dd>Indicates a purchase where the money will flow from the consumer to the merchant</dd><dt>PRE_AUTH</dt><dd>Indicates a claim on a certain amount of money on the bankaccount of the consumer</dd><dt>REFUND</dt><dd>Indicates a refunds where the money will flow from the merchant back to the consumer</dd></dl>
+      enum:
+      - PURCHASE
+      - PRE_AUTH
+      - REFUND
+      type: string
+    Transaction:
+      description: A transaction
+      required:
+      - id
+      - creation_datetime
+      - merchant_order_reference
+      - merchant_id
+      - type
+      - status
+      - store
+      - amount
+      type: object
+      properties:
+        id:
+          description: Unique identifier generated by PayPlaza for this transaction.<br />Format will be 31 numeric characters
+          pattern: '[0-9]{31}'
+          type: string
+        creation_datetime:
+          allOf:
+          - $ref: '#/components/schemas/ZonedDateTime'
+          - description: 'Datetime identifying the moment the transaction was created at CM.com and in CM.com timezone.<br />The creation date is specified in the <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.<br />The date on the receipt is formatted to the store timezone. pattern: "ISO 8601: "YYYY-MM-DD''T''hh:mm:ssZ"'
+            example: '2022-01-19T12:58:00Z'
+        merchant_order_reference:
+          description: Identifier provided by the merchant when creating the transaction.
+          maxLength: 14
+          minLength: 1
+          pattern: ([0-9a-zA-Z]|-|_){1,14}}
+          type: string
+          example: '''TEN-103_1'', ''3987462423900'', ''Q99PM-2QHFW-FQ'''
+        brand:
+          description: Optional field, which will only be filled if this transaction is authorized by a processor.<br /><br />Identifies the brand on the bankcard of the consumer, possible values:<br />AMEX, CIRRUS, CUP, DINERS, DISCOVER, JCB, MAESTRO, MASTERCARD, VISA, V_PAY.
+          type:
+          - string
+          - 'null'
+        system_trace_audit_number:
+          description: Optional field, which will only be filled if this transaction is authorized by a processor.<br /><br />Identifier generated by PayPlaza to trace a transaction through its lifecycle with a processor.<br />* Format is a 6 digit number, but should be treated as a string.<br />* Unique per day per processor, so not unique for merchants.
+          type:
+          - string
+          - 'null'
+        receipt:
+          description: Optional field, which will only be filled if this transaction cleared or cancelled.<br /><br />Plain text description of the transaction, contains required information needed to print a proof of the transaction of the consumer.
+          type:
+          - string
+          - 'null'
+        merchant_receipt:
+          description: Optional field.<br /><br />Plain text description of the transaction, contains required information needed to print a proof of the transaction of the merchant.
+          type:
+          - string
+          - 'null'
+        original_id:
+          description: Optional field, which will only be filled if this transaction is a REFUND.<br /><br />This field contains the id of the original PURCHASE transaction to which this transaction is a refund.
+          pattern: '[0-9]{31}'
+          type:
+          - string
+          - 'null'
+        authorization_code:
+          description: Optional field, which will only be filled if this transaction is authorized by a processor.<br /><br />This field contains the authentication provided by the processor of the transaction.
+          pattern: '[0-9]{6}'
+          type:
+          - string
+          - 'null'
+        merchant_id:
+          description: Identifier of the merchant that initiated this transaction.
+          type: string
+        processor_terminal_id:
+          description: Optional field, which will only be filled after this transaction is authorized.<br /><br />Terminal ID provided by the processor of the transaction.
+          type:
+          - string
+          - 'null'
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        store:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/Store1'
+        result:
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/TransactionResult'
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+    TransactionReference:
+      description: Reference object that represents a unique identifier for a transaction
+      type: object
+      properties:
+        id:
+          description: Unique identifier that identifies a transaction
+          type: string
+    Terminal:
+      required:
+      - device
+      type: object
+      properties:
+        device:
+          $ref: '#/components/schemas/Device'
+    UUID:
+      format: uuid
+      pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+      type: string
+    NewTransaction:
+      description: Information for Transaction to be created at PayPlaza
+      required:
+      - merchant_order_reference
+      - type
+      - amount
+      type: object
+      properties:
+        merchant_order_reference:
+          description: Reference provided by the Merchant for future identification of this Transaction<br />This field may contain all letters in lowercase and uppercase, digit, underscore '_' and <a href="https://en.wikipedia.org/wiki/Hyphen-minus">hyphen-minus</a> '-'Usually a unique identifier generated by the Merchant<br />
+          maxLength: 14
+          minLength: 1
+          pattern: ([0-9a-zA-Z]|-|_){1,14}
+          type: string
+          example: '''TEN-103_1'', ''3987462423900'', ''Q99PM-2QHFW-FQ'''
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        reference:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/TransactionReference'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: Authentication via the API Key provided by PayPlaza
+      name: API-Key
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

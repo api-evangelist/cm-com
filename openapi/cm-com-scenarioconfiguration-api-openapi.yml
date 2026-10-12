@@ -1,0 +1,1090 @@
+openapi: 3.2.0
+info:
+  title: Channels Scenario Configuration API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: ScenarioConfiguration
+paths:
+  /channels/v1/administration/scenarioconfiguration/scenarios:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Get scenario configuration scenarios
+      operationId: ScenarioConfiguration_GetScenarioConfigScenariosAdministrationAsync
+      parameters:
+      - name: q
+        in: query
+        description: The input.
+        required: false
+        schema:
+          type: string
+      - name: activeOnly
+        in: query
+        description: The active only.
+        required: false
+        schema:
+          type: boolean
+      - name: countryCode
+        in: query
+        description: The country code.
+        required: false
+        schema:
+          type: string
+      - name: shortcode
+        in: query
+        description: The shortcode.
+        required: false
+        schema:
+          type: string
+      - name: alias
+        in: query
+        description: The alias.
+        required: false
+        schema:
+          type: string
+      - name: medium
+        in: query
+        description: The medium (use string value 'null' to search for scenarios with medium null).
+        required: false
+        schema:
+          type: string
+      - name: customer
+        in: query
+        description: The customer.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+    post:
+      tags:
+      - ScenarioConfiguration
+      summary: Add a scenario configuration scenario
+      operationId: ScenarioConfiguration_AddScenarioConfigScenarioAdministrationAsync
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+        description: The scenario.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+  /channels/v1/administration/scenarioconfiguration/scenarios/{scenarioId}:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Get a scenario by ID
+      operationId: ScenarioConfiguration_GetScenarioConfigScenarioAdministrationAsync
+      parameters:
+      - name: scenarioId
+        in: path
+        description: The scenario identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+    put:
+      tags:
+      - ScenarioConfiguration
+      summary: Update a scenario configuration scenario
+      operationId: ScenarioConfiguration_UpdateScenarioConfigScenarioAdministrationAsync
+      parameters:
+      - name: scenarioId
+        in: path
+        description: The scenario identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base'
+        description: The scenario update.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2'
+    delete:
+      tags:
+      - ScenarioConfiguration
+      summary: Deletes the scenario configuration scenario by ID
+      operationId: ScenarioConfiguration_DeleteScenarioConfigScenarioAdministrationAsync
+      parameters:
+      - name: scenarioId
+        in: path
+        description: The scenario identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/administration/scenarioconfiguration/scenarios/{scenarioId}/mohandlers:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Get a scenario configuration scenario's handlers
+      operationId: ScenarioConfiguration_GetScenarioConfigScenarioHandlersAdministrationAsync
+      parameters:
+      - name: scenarioId
+        in: path
+        description: The scenario identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+  /channels/v1/administration/scenarioconfiguration/scenarios/{scenarioId}/events:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Get a scenario configuration scenario's events
+      operationId: ScenarioConfiguration_GetScenarioConfigScenarioEventsAdministrationAsync
+      parameters:
+      - name: scenarioId
+        in: path
+        description: The scenario identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsScenarioEventAdmin'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsScenarioEventAdmin'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsScenarioEventAdmin'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsScenarioEventAdmin'
+  /channels/v1/administration/scenarioconfiguration/countries:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Gets scenario configuration countries
+      operationId: ScenarioConfiguration_GetScenarioConfigCountriesAdministrationAsync
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.Country'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.Country'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.Country'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.Country'
+  /channels/v1/administration/scenarioconfiguration/mediums:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Get scenario configuration mediums
+      operationId: ScenarioConfiguration_GetScenarioConfigMediumsAdministrationAsync
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/xml:
+              schema:
+                type: array
+                items:
+                  type: string
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: string
+  /channels/v1/administration/scenarioconfiguration/mohandlers:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Gets the mo handlers administration asynchronous
+      operationId: ScenarioConfiguration_GetMoHandlersAdministrationAsync
+      parameters:
+      - name: q
+        in: query
+        description: The q.
+        required: false
+        schema:
+          type: string
+      - name: customer
+        in: query
+        description: The customer.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+    post:
+      tags:
+      - ScenarioConfiguration
+      summary: Add a new MoHandler
+      operationId: ScenarioConfiguration_AddMoHandlerAdministrationAsync
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+        description: The new mo handler.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+  /channels/v1/administration/scenarioconfiguration/mohandlers/{moHandlerId}:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Get an MoHandler by ID
+      operationId: ScenarioConfiguration_GetMoHandlerAdministrationAsync
+      parameters:
+      - name: moHandlerId
+        in: path
+        description: The mo handler identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+    put:
+      tags:
+      - ScenarioConfiguration
+      summary: Update an MoHandler
+      operationId: ScenarioConfiguration_UpdateMoHandlerAdministrationAsync
+      parameters:
+      - name: moHandlerId
+        in: path
+        description: The mo handler identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base'
+        description: The updated mo handler.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2'
+    delete:
+      tags:
+      - ScenarioConfiguration
+      summary: Delete an MoHandler
+      operationId: ScenarioConfiguration_DeleteMoHandlerAdministrationAsync
+      parameters:
+      - name: moHandlerId
+        in: path
+        description: The mo handler identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/administration/scenarioconfiguration/mohandlers/{moHandlerId}/events:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Get an MoHandler's events
+      operationId: ScenarioConfiguration_GetMoHandlerEventsAdministrationAsync
+      parameters:
+      - name: moHandlerId
+        in: path
+        description: The mo handler identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsMoHandlerEventAdmin'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsMoHandlerEventAdmin'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsMoHandlerEventAdmin'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsMoHandlerEventAdmin'
+  /channels/v1/administration/scenarioconfiguration/mohandlers/{moHandlerId}/scenarios:
+    put:
+      tags:
+      - ScenarioConfiguration
+      summary: Link (a) scenario(s) to an MoHandler by ID
+      operationId: ScenarioConfiguration_LinkScenariosToMoHandlerAdministrationAsync
+      parameters:
+      - name: moHandlerId
+        in: path
+        description: The mo handler identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                format: int32
+                type: integer
+          text/json:
+            schema:
+              type: array
+              items:
+                format: int32
+                type: integer
+          text/xml:
+            schema:
+              type: array
+              items:
+                format: int32
+                type: integer
+          multipart/form-data:
+            schema:
+              type: array
+              items:
+                format: int32
+                type: integer
+          application/x-www-form-urlencoded:
+            schema:
+              type: array
+              items:
+                format: int32
+                type: integer
+        description: The scenario ids.
+        required: true
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/administration/scenarioconfiguration/mohandlers/{moHandlerId}/scenarios/{scenarioId}:
+    delete:
+      tags:
+      - ScenarioConfiguration
+      summary: Unlinks the scenarios from mo handler administration asynchronous
+      operationId: ScenarioConfiguration_UnlinkScenariosFromMoHandlerAdministrationAsync
+      parameters:
+      - name: moHandlerId
+        in: path
+        description: The mo handler identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: scenarioId
+        in: path
+        description: The scenario identifier to unlink.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/administration/scenarioconfiguration/mohandlers/templates:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Gets the mo handler templates administration asynchronous
+      operationId: ScenarioConfiguration_GetMoHandlerTemplatesAdministrationAsync
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplate'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplate'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplate'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplate'
+  /channels/v1/administration/scenarioconfiguration/mohandlers/platformlocations:
+    get:
+      tags:
+      - ScenarioConfiguration
+      summary: Gets the mo handler platform locations administration asynchronous
+      operationId: ScenarioConfiguration_GetMoHandlerPlatformLocationsAdministrationAsync
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2PlatformLocation'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2PlatformLocation'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2PlatformLocation'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2PlatformLocation'
+components:
+  schemas:
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplatePropertyMetadata:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfig:
+      type: object
+      properties:
+        motemplateid:
+          format: int32
+          type: integer
+        url:
+          type: string
+        deleteonexception:
+          type: boolean
+        emailaddresses:
+          type: array
+          items:
+            type: string
+        amountofretries:
+          format: int32
+          type: integer
+        retryintervalinseconds:
+          format: int32
+          type: integer
+        httpHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        oauthsettingsid:
+          format: int32
+          type: integer
+        mtreplyconfig:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfigMtReplyConfig'
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfigMtReplyConfig:
+      type: object
+      properties:
+        from:
+          type: string
+        message:
+          type: string
+        tariff:
+          format: int32
+          type: integer
+        customGrouping:
+          type: string
+        customGrouping2:
+          type: string
+        customGrouping3:
+          type: string
+        allowedChannels:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2PlatformLocation:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+    CM.Platform.Channels.Models.EventLogging.ApiChannelsMoHandlerEventAdmin:
+      required:
+      - id
+      - moHandlerId
+      - eventType
+      - entityState
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        moHandlerId:
+          format: int32
+          type: integer
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        ssoAccountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        eventType:
+          type: string
+        eventSubType:
+          type: string
+        entityState:
+          type: object
+        eventMetaData:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData'
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.Country:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        iso3166code:
+          type: string
+        nameen:
+          type: string
+        namenl:
+          type: string
+        prefix:
+          type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base:
+      type: object
+      properties:
+        customer:
+          format: int32
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        destination:
+          type: string
+        platformlocation:
+          format: int32
+          type: integer
+        protocol:
+          enum:
+          - HTTP
+          - SMPP
+          type: string
+        configuration:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfig'
+        customConfiguration:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig'
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        created:
+          format: date-time
+          type: string
+        generatedbyapi:
+          type: boolean
+        customer:
+          format: int32
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        destination:
+          type: string
+        platformlocation:
+          format: int32
+          type: integer
+        protocol:
+          enum:
+          - HTTP
+          - SMPP
+          type: string
+        configuration:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfig'
+        customConfiguration:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig'
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        created:
+          format: date-time
+          type: string
+        generatedbyapi:
+          type: boolean
+        country:
+          type: string
+        shortcode:
+          type: string
+        alias:
+          type: string
+        keyword:
+          type: string
+        thirdWord:
+          type: string
+        customer:
+          format: int32
+          type: integer
+        reference:
+          type: string
+        usemosession:
+          type: boolean
+        active:
+          type: boolean
+        start:
+          format: date-time
+          type: string
+        stop:
+          format: date-time
+          type: string
+        mosessiononly:
+          type: boolean
+        customgrouping:
+          type: string
+        customgrouping2:
+          type: string
+        customgrouping3:
+          type: string
+        mccmnc:
+          type: string
+        serviceid:
+          format: int32
+          type: integer
+        mtsessiononly:
+          type: boolean
+        islegislationscenario:
+          type: boolean
+        taxongames:
+          type: boolean
+        medium:
+          type: string
+        regularexpressions:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.EventLogging.ApiChannelsScenarioEventAdmin:
+      required:
+      - id
+      - scenarioId
+      - eventType
+      - entityState
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        scenarioId:
+          format: int32
+          type: integer
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        ssoAccountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        eventType:
+          type: string
+        eventSubType:
+          type: string
+        entityState:
+          type: object
+        eventMetaData:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData'
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData:
+      required:
+      - from
+      - to
+      type: object
+      properties:
+        from:
+          type: object
+        to:
+          type: object
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig:
+      type: object
+      properties:
+        url:
+          type: string
+        method:
+          type: string
+        data:
+          type: string
+        encoding:
+          type: string
+        httpHeaders:
+          type: object
+          additionalProperties:
+            type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplate:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+        data:
+          type: string
+        httpheaders:
+          type: object
+          additionalProperties:
+            type: string
+        type:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplatePropertyMetadata'
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base:
+      type: object
+      properties:
+        country:
+          type: string
+        shortcode:
+          type: string
+        alias:
+          type: string
+        keyword:
+          type: string
+        thirdWord:
+          type: string
+        customer:
+          format: int32
+          type: integer
+        reference:
+          type: string
+        usemosession:
+          type: boolean
+        active:
+          type: boolean
+        start:
+          format: date-time
+          type: string
+        stop:
+          format: date-time
+          type: string
+        mosessiononly:
+          type: boolean
+        customgrouping:
+          type: string
+        customgrouping2:
+          type: string
+        customgrouping3:
+          type: string
+        mccmnc:
+          type: string
+        serviceid:
+          format: int32
+          type: integer
+        mtsessiononly:
+          type: boolean
+        islegislationscenario:
+          type: boolean
+        taxongames:
+          type: boolean
+        medium:
+          type: string
+        regularexpressions:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-data-core-profiles-api-models-api-profile-schema.json",
+  "title": "CM.Data.Core.Profiles.Api.Models.ApiProfile",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-cdp-profiles-v1-openapi.yml#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "imageUrl": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "oldestEventDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "latestEventDate": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "properties": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/CM.Data.Core.Profiles.Shared.BoxedValue"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "CM.Data.Core.Profiles.Shared.BoxedValue": {
+      "type": "object",
+      "additionalProperties": false
+    }
+  }
+}

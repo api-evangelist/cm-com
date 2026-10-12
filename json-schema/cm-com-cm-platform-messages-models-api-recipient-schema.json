@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-platform-messages-models-api-recipient-schema.json",
+  "title": "CM.Platform.Messages.Models.ApiRecipient",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-mmc-campaigns-v1-openapi.yml#/components/schemas/CM.Platform.Messages.Models.ApiRecipient",
+  "type": "object",
+  "properties": {
+    "contact": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "group": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "msisdn": {
+      "type": "string"
+    },
+    "pushId": {
+      "type": "string"
+    }
+  }
+}

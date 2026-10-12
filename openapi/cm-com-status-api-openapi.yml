@@ -1,0 +1,153 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Status API
+  version: v1
+  description: 'Operations tagged Status across 2 of this provider''s published API definitions: cm-com-messaging-channels-api-v1-2-openapi.yml, cm-com-mobile-marketing-cloud-mmc-campaigns-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+  description: Production Server
+tags:
+- name: Status
+paths:
+  /channels/v1/status:
+    get:
+      tags:
+      - Status
+      summary: Gets the status
+      operationId: Status_GetStatus
+      responses:
+        '200':
+          description: OK
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+  /messages/v1/status:
+    post:
+      tags:
+      - Status
+      summary: Processes Status Reports
+      operationId: Status_ProcessStatusReportsAsync
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiStatusReport'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiStatusReport'
+          text/xml:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiStatusReport'
+          application/x-www-form-urlencoded:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiStatusReport'
+        description: Status Reports
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                format: int32
+                type: integer
+            text/json:
+              schema:
+                format: int32
+                type: integer
+            text/xml:
+              schema:
+                format: int32
+                type: integer
+      deprecated: true
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    CM.Platform.Messages.Models.ApiStatusReport:
+      type: object
+      properties:
+        Account:
+          format: int32
+          type: integer
+        AdditionalInfo:
+          type: string
+        Converted:
+          format: date-time
+          type: string
+        Customer:
+          format: int32
+          type: integer
+        CustomGrouping:
+          type: string
+        CustomGrouping2:
+          type: string
+        CustomGrouping3:
+          type: string
+        Description:
+          type: string
+        ExternalReference:
+          type: string
+        LastRetry:
+          format: date-time
+          type: string
+        LastUpdated:
+          format: date-time
+          type: string
+        Parts:
+          format: int32
+          type: integer
+        Priority:
+          format: int32
+          type: integer
+        OptedOut:
+          format: date-time
+          type: string
+        ReadByRecipient:
+          format: date-time
+          type: string
+        Recipient:
+          type: string
+        Reference:
+          format: int32
+          type: integer
+        RetryCost:
+          format: double
+          type: number
+        SentToOperator:
+          format: date-time
+          type: string
+        StandardError:
+          format: int32
+          type: integer
+        Status:
+          enum:
+          - Accepted
+          - Rejected
+          - Delivered
+          - Failed
+          - Overdue
+          - AcceptedByGateWay
+          - RejectedByGateWay
+          type: string
+        Ticket:
+          type: string
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header
+x-refined-from:
+- cm-com-messaging-channels-api-v1-2-openapi.yml
+- cm-com-mobile-marketing-cloud-mmc-campaigns-v1-openapi.yml

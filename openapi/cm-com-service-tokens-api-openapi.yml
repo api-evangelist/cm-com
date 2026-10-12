@@ -1,0 +1,288 @@
+openapi: 3.2.0
+info:
+  title: Entrance Management Service tokens API
+  description: Entrance Management API description
+  version: '2.0'
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Service tokens
+  description: Machine-to-machine service token management
+paths:
+  /entrance/v2.0/organisations/{organisationUuid}/service-tokens:
+    get:
+      operationId: ServiceTokenController_getTokens_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListServiceTokenResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List service tokens for an organisation
+      tags:
+      - Service tokens
+    post:
+      operationId: ServiceTokenController_createToken_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateServiceTokenDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceTokenResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a service token
+      tags:
+      - Service tokens
+  /entrance/v2.0/organisations/{organisationUuid}/service-tokens/{ulid}/reveal:
+    get:
+      operationId: ServiceTokenController_revealToken_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: ulid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Reveal a decrypted service token
+      tags:
+      - Service tokens
+  /entrance/v2.0/organisations/{organisationUuid}/service-tokens/{ulid}:
+    patch:
+      operationId: ServiceTokenController_updateToken_v2.0
+      parameters:
+      - name: ulid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateServiceTokenDto'
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a service token name
+      tags:
+      - Service tokens
+    delete:
+      operationId: ServiceTokenController_deleteToken_v2.0
+      parameters:
+      - name: ulid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a service token
+      tags:
+      - Service tokens
+components:
+  schemas:
+    UpdateServiceTokenDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - name
+    ServiceTokenResponseDto:
+      type: object
+      properties:
+        ulid:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+      required:
+      - ulid
+      - name
+      - token
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    CreateServiceTokenDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - name
+    ListServiceTokenResponseDto:
+      type: object
+      properties:
+        ulid:
+          type: string
+        name:
+          type: string
+      required:
+      - ulid
+      - name
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid

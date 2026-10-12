@@ -1,0 +1,169 @@
+openapi: 3.2.0
+info:
+  title: Global Reseller Get Available Users API
+  version: '1.0'
+  description: The Global Reseller API allows API users to pull availability and ticket types for connected clients.
+servers:
+- url: https://globalreseller.nl/webservices
+security:
+- {}
+tags:
+- name: GetAvailableUsers
+paths:
+  /getAvailableUsers:
+    post:
+      summary: /getAvailableUsers
+      description: 'This functionality allows you to get all available users within the system.
+
+
+        **Note**
+
+
+        Best practise is to cache this information and reload the availableUsers periodically (for example: once a day).
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + environment)`'
+      operationId: getavailableusers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - environment
+              - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: public apiKey
+                environment:
+                  type: string
+                  description: '"test" or "production"'
+                  enum:
+                  - production
+                  - test
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + environment).
+            examples:
+              Example input:
+                value:
+                  apiKey: PUT-YOUR-PUBLIC-API-KEY-HERE
+                  environment: test
+                  HMACKey: PUT-YOUR-CALCULATED-HMAC-KEY-HERE
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    success: true
+                    users:
+                    - userId: '1'
+                      userName: Van Gogh Museum
+                      userAddress:
+                        streetName: Museumplein
+                        houseNumber: '6'
+                        postalCode: 1071 DJ
+                        cityName: Amsterdam
+                        country: NL
+                      userCoordinates:
+                        latitude: '52.3584088'
+                        longitude: '4.8815176'
+                      userPhoneNumber: 020 570 5200
+                      userWebsite: http://www.vangoghmuseum.nl/
+                      userImages:
+                        logo: https://globalreseller.nl/web/image.php?path=clientsavatars/594c9b23bee5674a6.png
+                      userTerms: https://www.artis.nl/nl/footer/algemene-voorwaarden/online-kaartverkoop/
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                          example: 1
+                        userName:
+                          type: string
+                          example: Van Gogh Museum
+                        userAddress:
+                          type: object
+                          properties:
+                            streetName:
+                              type: string
+                              example: Museumplein
+                            houseNumber:
+                              type: string
+                              example: 6
+                            postalCode:
+                              type: string
+                              example: 1071 DJ
+                            cityName:
+                              type: string
+                              example: Amsterdam
+                            country:
+                              type: string
+                              example: NL
+                        userCoordinates:
+                          type: object
+                          properties:
+                            latitude:
+                              type: string
+                              example: 52.3584088
+                            longitude:
+                              type: string
+                              example: 4.8815176
+                        userPhoneNumber:
+                          type: string
+                          example: 020 570 5200
+                        userWebsite:
+                          type: string
+                          example: http://www.vangoghmuseum.nl/
+                        userImages:
+                          type: object
+                          properties:
+                            logo:
+                              type: string
+                              example: https://globalreseller.nl/web/image.php?path=clientsavatars/594c9b23bee5674a6.png
+                        userTerms:
+                          type: string
+                          example: https://www.artis.nl/nl/footer/algemene-voorwaarden/online-kaartverkoop/
+        4XX:
+          description: 4XX
+          content:
+            application/json:
+              examples:
+                Error:
+                  value:
+                    success: false
+                    error message: text
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  error message:
+                    type: string
+                    example: text
+      deprecated: false
+      tags:
+      - GetAvailableUsers
+x-readme:
+  headers:
+  - key: Cache-Control
+    value: no-cache
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

@@ -1,0 +1,155 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Get Ticket Types API
+  version: '1.0'
+  description: 'Operations tagged GetTicketTypes across 2 of this provider''s published API definitions: cm-com-live-museum-park-reseller-v1-openapi.yml, cm-com-live-museum-park-scan-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://globalreseller.nl/webservices
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: GetTicketTypes
+paths:
+  /getTicketTypes:
+    post:
+      summary: /getTicketTypes
+      description: 'This functionality allows you to get all available tickettypes of a selected user (museum).
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + environment + language + ticketDate + userId)`
+
+
+        **Note**
+
+
+        Please note: optional fields only needs to be included when an optional field is used.'
+      operationId: gettickettypes-1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - environment
+              - userId
+              - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                environment:
+                  type: string
+                  description: '"test" or "production"'
+                  enum:
+                  - test
+                  - production
+                userId:
+                  type: integer
+                  description: The userId is a reference to the user (museum / attraction). The userId can be requested via getAvailableUsers and can be cached in your application.
+                  format: int32
+                language:
+                  type: string
+                  description: Language code by the ISO 639-1 (most users only supply "nl" and "en")
+                ticketDate:
+                  type: string
+                  description: it is advisable to implement this to correctly display any adjusted prices after a specific date.
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + environment + language + ticketDate + userId).
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    ticketTypes:
+                    - ticketTypeId: 1
+                      ticketTypeName: Volwassene
+                      ticketTypePrice: 19
+                      cancelationPolicy:
+                        cancelCompleteReservationMinutesBeforeTicketDate: 1440
+                        cancelCompleteReservationMinutesAfterReservationDate: 0
+                    - ticketTypeId: 2
+                      ticketTypeName: Kind
+                      ticketTypePrice: 0
+                      cancelationPolicy:
+                        cancelCompleteReservationMinutesBeforeTicketDate: 1440
+                        cancelCompleteReservationMinutesAfterReservationDate: 0
+                    - ticketTypeId: 85
+                      ticketTypeName: Volwassene Multimediatour
+                      ticketTypePrice: 22
+                      cancelationPolicy:
+                        cancelCompleteReservationMinutesBeforeTicketDate: 1440
+                        cancelCompleteReservationMinutesAfterReservationDate: 0
+                    - ticketTypeId: 88
+                      ticketTypeName: Kind Multimediatour
+                      ticketTypePrice: 0
+                      cancelationPolicy:
+                        cancelCompleteReservationMinutesBeforeTicketDate: 1440
+                        cancelCompleteReservationMinutesAfterReservationDate: 0
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  ticketTypes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ticketTypeId:
+                          type: integer
+                          example: 1
+                          default: 0
+                        ticketTypeName:
+                          type: string
+                          example: Volwassene
+                        ticketTypePrice:
+                          type: integer
+                          example: 19
+                          default: 0
+                        cancelationPolicy:
+                          type: object
+                          properties:
+                            cancelCompleteReservationMinutesBeforeTicketDate:
+                              type: integer
+                              example: 1440
+                              default: 0
+                            cancelCompleteReservationMinutesAfterReservationDate:
+                              type: integer
+                              example: 0
+                              default: 0
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: false
+                    errorMessage: Invalid HMAC Key.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: Invalid HMAC Key.
+      deprecated: false
+      tags:
+      - GetTicketTypes
+    servers:
+    - url: https://globalreseller.nl/webservices
+x-refined-from:
+- cm-com-live-museum-park-reseller-v1-openapi.yml
+- cm-com-live-museum-park-scan-v1-openapi.yml

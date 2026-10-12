@@ -1,0 +1,740 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-handover-input-schema.json",
+  "title": "HandoverInput",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-halo-core-v1-openapi.yml#/components/schemas/HandoverInput",
+  "oneOf": [
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TextRouterHandoverInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "text_router_v2"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TextMscHandoverInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "text_msc"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TextMarketplaceHandoverInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "text_marketplace"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TextLoggingHandoverInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "text_logging"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/VoiceMscHandoverInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "voice_msc_handover"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/VoiceForwardInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "voice_forward"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/VoiceTransferInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "voice_transfer"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/VoiceCustomHandoverInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "voice_custom"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/VoiceLoggingHandoverInput"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "voice_logging"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "ContentPart": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "text"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "redacted": {
+              "type": "boolean"
+            },
+            "signature": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "thinking"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "json_value",
+            "type"
+          ],
+          "properties": {
+            "json_value": {
+              "$ref": "#/$defs/Value"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "json"
+              ]
+            }
+          }
+        },
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/MediaContentPart"
+            },
+            {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "media"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "description": "OpenAI Responses API `phase: \"commentary\"` text: an intermediate\npreamble emitted before a tool call, distinct from the turn's final\nanswer. Plain assistant-authored text, not hidden reasoning like\n`Thinking`.",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "commentary"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "DematerializedMediaContentPart": {
+      "type": "object",
+      "required": [
+        "mime_type",
+        "data_uri",
+        "data_hash"
+      ],
+      "properties": {
+        "data_hash": {
+          "type": "string"
+        },
+        "data_uri": {
+          "$ref": "#/$defs/MediaDataUri"
+        },
+        "metadata": {
+          "$ref": "#/$defs/Value"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "MaterializedMediaContentPart": {
+      "type": "object",
+      "required": [
+        "mime_type",
+        "data",
+        "data_uri",
+        "data_hash",
+        "metadata"
+      ],
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "data_hash": {
+          "type": "string"
+        },
+        "data_uri": {
+          "$ref": "#/$defs/MediaDataUri"
+        },
+        "metadata": {
+          "$ref": "#/$defs/Value"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "MediaContentPart": {
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "A new media content part which is not yet uploaded into HALO",
+          "required": [
+            "Transient"
+          ],
+          "properties": {
+            "Transient": {
+              "$ref": "#/$defs/TransientMediaContentPart",
+              "description": "A new media content part which is not yet uploaded into HALO"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "description": "A media content part with data, and can be dematerialized",
+          "required": [
+            "Materialized"
+          ],
+          "properties": {
+            "Materialized": {
+              "$ref": "#/$defs/MaterializedMediaContentPart",
+              "description": "A media content part with data, and can be dematerialized"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "description": "A media content part without data, but it can be downloaded",
+          "required": [
+            "Dematerialized"
+          ],
+          "properties": {
+            "Dematerialized": {
+              "$ref": "#/$defs/DematerializedMediaContentPart",
+              "description": "A media content part without data, but it can be downloaded"
+            }
+          }
+        }
+      ]
+    },
+    "MediaDataUri": {
+      "type": "string"
+    },
+    "TextLoggingHandoverInput": {
+      "type": "object",
+      "description": "Logging-only handover input for text channels.\nCan optionally include a goodbye message to send before logging.",
+      "properties": {
+        "goodbye_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ContentPart"
+          }
+        }
+      }
+    },
+    "TextMarketplaceHandoverInput": {
+      "type": "object",
+      "required": [
+        "messaging_adapter_id"
+      ],
+      "properties": {
+        "context": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          },
+          "propertyNames": {
+            "type": "string"
+          }
+        },
+        "goodbye_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ContentPart"
+          }
+        },
+        "marketplace_adapter_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "messaging_adapter_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "routing": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "TextMscHandoverInput": {
+      "type": "object",
+      "required": [
+        "messaging_adapter_id",
+        "name",
+        "email"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "goodbye_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ContentPart"
+          }
+        },
+        "messaging_adapter_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "msc_profile": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          },
+          "propertyNames": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "routing_keywords": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "web_store_referrer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "TextRouterHandoverInput": {
+      "type": "object",
+      "required": [
+        "target_state_name_id",
+        "context"
+      ],
+      "properties": {
+        "context": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "propertyNames": {
+            "type": "string"
+          }
+        },
+        "goodbye_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ContentPart"
+          }
+        },
+        "target_state_name_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "TransientMediaContentPart": {
+      "type": "object",
+      "required": [
+        "mime_type",
+        "data",
+        "data_hash"
+      ],
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "data_hash": {
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/Value"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Value": {},
+    "VoiceCustomHandoverInput": {
+      "type": "object",
+      "required": [
+        "custom_type",
+        "custom_config"
+      ],
+      "properties": {
+        "custom_config": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "propertyNames": {
+            "type": "string"
+          }
+        },
+        "custom_type": {
+          "type": "string"
+        },
+        "goodbye_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ContentPart"
+          }
+        }
+      }
+    },
+    "VoiceForwardInput": {
+      "type": "object",
+      "required": [
+        "callee_id"
+      ],
+      "properties": {
+        "anonymous": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "callee_id": {
+          "type": "string"
+        },
+        "caller_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "goodbye_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ContentPart"
+          }
+        }
+      }
+    },
+    "VoiceLoggingHandoverInput": {
+      "type": "object",
+      "description": "Logging-only handover input for voice channels.\nJust logs to analytics without sending any messages."
+    },
+    "VoiceMscHandoverInput": {
+      "type": "object",
+      "required": [
+        "environment",
+        "msc_api_key"
+      ],
+      "properties": {
+        "environment": {
+          "type": "string"
+        },
+        "goodbye_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ContentPart"
+          }
+        },
+        "msc_api_key": {
+          "type": "string"
+        },
+        "routing_keywords": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "web_store_referrer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "VoiceTransferInput": {
+      "type": "object",
+      "required": [
+        "distribution_group",
+        "distribution_group_algorithm"
+      ],
+      "properties": {
+        "cm_context_variables": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {},
+          "propertyNames": {
+            "type": "string"
+          }
+        },
+        "distribution_group": {
+          "type": "string"
+        },
+        "distribution_group_algorithm": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0
+        },
+        "goodbye_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ContentPart"
+          }
+        }
+      }
+    }
+  }
+}

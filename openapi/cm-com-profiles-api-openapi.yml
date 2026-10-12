@@ -1,0 +1,533 @@
+openapi: 3.2.0
+info:
+  title: Profiles API
+  version: v1.0
+tags:
+- name: Profiles
+paths:
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: sortOn
+        in: query
+        schema:
+          type: string
+      - name: reverse
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+      summary: Get profile tenants by tenant id profiletypes by profile type id profiles
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfiles
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/_query:
+    post:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: sortOn
+        in: query
+        schema:
+          type: string
+      - name: reverse
+        in: query
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+      summary: Create profile tenants by tenant id profiletypes by profile type id profiles…
+      x-summary-source: derived
+      operationId: postProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesQuery
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/_count:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int64
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            text/json:
+              schema:
+                type: integer
+                format: int64
+      summary: Get profile tenants by tenant id profiletypes by profile type id profiles count
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesCount
+      x-operation-id-source: derived
+    post:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int64
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            text/json:
+              schema:
+                type: integer
+                format: int64
+      summary: Create profile tenants by tenant id profiletypes by profile type id profiles…
+      x-summary-source: derived
+      operationId: postProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesCount
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/{segmentId}/count:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: segmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileCount'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileCount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileCount'
+      summary: Get profile tenants by tenant id profiletypes by profile type id segments by…
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdSegmentsBySegmentIdCount
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/{segmentId}/profiles:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: segmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: sortOn
+        in: query
+        schema:
+          type: string
+      - name: reverse
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+      summary: Get profile tenants by tenant id profiletypes by profile type id segments by…
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdSegmentsBySegmentIdProfiles
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/bytoken/{profileToken}:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileToken
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+      summary: Get profile tenants by tenant id profiletypes by profile type id profiles…
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesBytokenByProfileToken
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/bytoken/{profileToken}/details:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileToken
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+      summary: Get profile tenants by tenant id profiletypes by profile type id profiles…
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesBytokenByProfileTokenDetails
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/bytoken/{profileToken}/_hard:
+    delete:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileToken
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+      summary: Delete profile tenants by tenant id profiletypes by profile type id profiles…
+      x-summary-source: derived
+      operationId: deleteProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesBytokenByProfileTokenHard
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/byquery/_hard:
+    post:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+      responses:
+        '204':
+          description: No Content
+      summary: Create profile tenants by tenant id profiletypes by profile type id profiles…
+      x-summary-source: derived
+      operationId: postProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesByqueryHard
+      x-operation-id-source: derived
+components:
+  schemas:
+    CM.Data.Core.Profiles.Api.Models.ApiProfileCount:
+      type: object
+      properties:
+        capped:
+          type: integer
+          format: int64
+        uncapped:
+          type: integer
+          format: int64
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfile:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        imageUrl:
+          type:
+          - string
+          - 'null'
+        oldestEventDate:
+          type: string
+          format: date-time
+        latestEventDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        properties:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Shared.BoxedValue'
+      additionalProperties: false
+    CM.Data.QueryLanguage.Nodes.Node:
+      type: object
+      additionalProperties: false
+    CM.Data.Core.Profiles.Shared.BoxedValue:
+      type: object
+      additionalProperties: false
+    CM.Data.QueryLanguage.Tree:
+      type: object
+      properties:
+        root:
+          $ref: '#/components/schemas/CM.Data.QueryLanguage.Nodes.Node'
+      additionalProperties: false

@@ -1,0 +1,257 @@
+openapi: 3.2.0
+info:
+  title: Segments API
+  version: v1.0
+tags:
+- name: Segments
+paths:
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments:
+    get:
+      tags:
+      - Segments
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: filter
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+      summary: Get profile tenants by tenant id profiletypes by profile type id segments
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdSegments
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/{segmentId}:
+    get:
+      tags:
+      - Segments
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: segmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+      summary: Get profile tenants by tenant id profiletypes by profile type id segments by…
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdSegmentsBySegmentId
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/_count:
+    get:
+      tags:
+      - Segments
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+      summary: Get profile tenants by tenant id profiletypes by profile type id segments count
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdSegmentsCount
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/{segmentId}/_rename:
+    put:
+      tags:
+      - Segments
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: segmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+      summary: Replace profile tenants by tenant id profiletypes by profile type id segments…
+      x-summary-source: derived
+      operationId: putProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdSegmentsBySegmentIdRename
+      x-operation-id-source: derived
+components:
+  schemas:
+    CM.Data.QueryLanguage.Tree:
+      type: object
+      properties:
+        root:
+          $ref: '#/components/schemas/CM.Data.QueryLanguage.Nodes.Node'
+      additionalProperties: false
+    CM.Data.QueryLanguage.Nodes.Node:
+      type: object
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    CM.Data.Core.Profiles.Api.Models.ApiSegment:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        name:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        queryTree:
+          $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+        consentPurposeId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        shouldBeSynchronizedToAddressBook:
+          type: boolean
+        addressBookStatus:
+          $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus'
+      additionalProperties: false

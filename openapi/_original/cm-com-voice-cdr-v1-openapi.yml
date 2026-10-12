@@ -1,0 +1,288 @@
+# x-archived-from: cm-com-voice-cdr-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: CDR API
+  version: v1
+servers:
+- url: https://api.cm.com
+paths:
+  /cdrapi/v1/{voiceAccountGuid}/conversations:
+    get:
+      tags:
+      - Conversations
+      summary: Get Conversations
+      description: Retrieve a list of conversations that matches the given filter settings.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: From
+        in: query
+        description: The UTC start date and time from which to start taking conversations in ISO 8601 format.
+        required: true
+        schema:
+          type: string
+          description: The UTC start date and time from which to start taking conversations in ISO 8601 format.
+          format: date-time
+          example: '2018-03-01T07:46:46Z'
+        example: '2018-03-01T07:46:46Z'
+      - name: To
+        in: query
+        description: The UTC end date and time from which to stop taking conversations in ISO 8601 format. Maximum range is 1 week.
+        required: true
+        schema:
+          type: string
+          description: The UTC end date and time from which to stop taking conversations in ISO 8601 format. Maximum range is 1 week.
+          format: date-time
+          example: '2018-03-01T07:46:46Z'
+        example: '2018-03-01T07:46:46Z'
+      - name: Skip
+        in: query
+        description: Amount of items being skipped.
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+          description: Amount of items being skipped.
+          format: int32
+          example: 0
+        example: 0
+      - name: Take
+        in: query
+        description: Amount of items being retrieved.
+        required: true
+        schema:
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+          description: Amount of items being retrieved.
+          format: int32
+          example: 10
+        example: 10
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-CM-PAGINATION-SKIP:
+              description: The amount of items that have been skipped
+              schema:
+                type: number
+            X-CM-PAGINATION-TAKE:
+              description: The amount of items that have been taken
+              schema:
+                type: number
+            X-CM-PAGINATION-TOTAL:
+              description: The total amount of available items
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiConversation'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    ApiConversation:
+      title: Conversation
+      type: object
+      properties:
+        answeredOn:
+          type: string
+          description: The timestamp the call was answered.
+          format: date-time
+          nullable: true
+        apiAccount:
+          type: string
+          description: API account user name. (if applicable)
+          nullable: true
+        calleeDestination:
+          type: string
+          description: The callee's destination.
+          nullable: true
+        calleeDestinationId:
+          type: string
+          description: The callee's destination ID.
+          format: uuid
+          nullable: true
+        calleeId:
+          type: string
+          description: The phone number identifying the callee.
+          nullable: true
+        callerId:
+          type: string
+          description: The phone number identifying the caller.
+          nullable: true
+        callId:
+          type: string
+          description: The unique call ID identifying the call.
+          nullable: true
+        cost:
+          type: number
+          description: Call cost, precision of 4.
+          format: double
+          nullable: true
+        currency:
+          type: string
+          description: Currency of the call cost.
+          nullable: true
+        direction:
+          type: string
+          description: The direction of the call.
+          nullable: true
+        durationInSeconds:
+          type: integer
+          description: The duration in seconds.
+          format: int32
+        externalReference:
+          type: string
+          description: Unique identifier of the call. (if applicable)
+          nullable: true
+        finishedOn:
+          type: string
+          description: The timestamp the call was finished.
+          format: date-time
+        isAnonymous:
+          type: boolean
+          description: Whether the call was anonymous.
+        sipAccount:
+          type: string
+          description: SIP Account user name. (if applicable)
+          nullable: true
+        customSipAccountName:
+          type: string
+          description: Custom name of the SIP Account. (if applicable)
+          nullable: true
+        startedOn:
+          type: string
+          description: The timestamp the call started.
+          format: date-time
+        surchargeAmount:
+          type: number
+          description: The surcharge amount, precision of 4. (if applicable)
+          format: double
+          nullable: true
+        surchargeType:
+          type: string
+          description: Can be either 'penalty surcharge' or 'Non-EER to EER'. (if applicable)
+          nullable: true
+        surchargeUnitPrice:
+          type: number
+          description: Surcharge unit price per minute, precision of 4. (if applicable)
+          format: double
+          nullable: true
+        unitPrice:
+          type: number
+          description: Call cost per minute, precision of 4.
+          format: double
+          nullable: true
+        voiceAccountId:
+          type: string
+          description: The unique identifier of the Voice Account.
+          nullable: true
+        voiceAccountName:
+          type: string
+          description: The name of the Voice Account.
+          nullable: true
+        customResellerPrice:
+          type: number
+          description: Custom reseller price of the call, precision of 4. (only included for Voice Resellers)
+          format: double
+          nullable: true
+        customResellerSetupCost:
+          type: number
+          description: Custom reseller setup cost of the call, precision of 4 (if applicable). (only included for Voice Resellers)
+          format: double
+          nullable: true
+        customResellerUnitPrice:
+          type: number
+          description: Custom reseller unit price per minute, precision of 4. (only included for Voice Resellers)
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: Details of a conversation.
+    ConversationFilter:
+      required:
+      - from
+      - skip
+      - take
+      - to
+      type: object
+      properties:
+        from:
+          type: string
+          description: The UTC start date and time from which to start taking conversations in ISO 8601 format.
+          format: date-time
+          example: '2018-03-01T07:46:46Z'
+        to:
+          type: string
+          description: The UTC end date and time from which to stop taking conversations in ISO 8601 format. Maximum range is 1 week.
+          format: date-time
+          example: '2018-03-01T07:46:46Z'
+        skip:
+          minimum: 0
+          type: integer
+          description: Amount of items being skipped.
+          format: int32
+          example: 0
+        take:
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+          description: Amount of items being retrieved.
+          format: int32
+          example: 10
+      additionalProperties: false
+      description: Class containing details of a conversation filter.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

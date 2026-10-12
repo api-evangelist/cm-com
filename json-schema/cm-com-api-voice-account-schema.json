@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-voice-account-schema.json",
+  "title": "Voice Account",
+  "description": "A Voice Account is the central account for all things Voice related. Among others, phone numbers and SIP trunks will be linked to a certain Voice Account. **Please note** that a Voice Account is different from a Logical Account. You will be able to create multiple Voice Accounts with one Logical Account.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-voice-accounts-v1-openapi.yml#/components/schemas/ApiVoiceAccount",
+  "type": "object",
+  "properties": {
+    "createdOn": {
+      "type": "string",
+      "description": "Date and time on which the Voice Account was created.",
+      "format": "date-time"
+    },
+    "guid": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The unique identifier of the Voice Account."
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The name of the Voice Account."
+    },
+    "externalId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional external ID of the Voice Account that can be set by the customer for external references outside of the CM.com Platform."
+    },
+    "externalName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional external name of the Voice Account that can be set by the customer for external references outside of the CM.com Platform."
+    },
+    "prepaidInfo": {
+      "$ref": "#/$defs/PrepaidInfo"
+    },
+    "apiKey": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The API key for authentication when making Voice application requests.\r\nThis will only be returned ONCE, please make sure to store it securely and handle it responsibly."
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Whether or not the Voice Account is set to Active."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "PrepaidInfo": {
+      "title": "Prepaid Info",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "The amount of prepaid credit currently in the wallet.",
+          "format": "double"
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The currency of the credit."
+        }
+      },
+      "additionalProperties": false,
+      "description": "The prepaid credit of the Voice Account. Only returned if the the given Voice Account billing type is set to prepaid."
+    }
+  }
+}

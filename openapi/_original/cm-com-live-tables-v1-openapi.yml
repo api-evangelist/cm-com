@@ -1,0 +1,151 @@
+# x-archived-from: cm-com-live-tables-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: 'Tables Partner Api'
+  description: 'This is an OpenAPI spec of the CM.com Tables API. The CM.com Tables API provides programmatic access to venue and event data for third-party integrations. All endpoints require authentication using Bearer tokens.'
+  license:
+    name: Proprietary
+    identifier: LicenseRef-CM.com-Proprietary
+  version: '1.0'
+servers:
+  -
+    url: 'https://api.cm.com'
+    description: 'Production Server'
+paths:
+  /tablespartnerapi/v1/venues:
+    get:
+      tags:
+        - Venues
+      summary: 'Get all venues'
+      description: 'Retrieve a list of all venues accessible with the current API token.'
+      operationId: 944871ef1480c64d427e3a152fa81be5
+      responses:
+        '200':
+          description: 'Get list of venue objects.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PartnerApiVenue'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+      security:
+        -
+          BearerAuth: []
+components:
+  schemas:
+    PartnerApiErrorResponse:
+      title: 'Error Response'
+      description: 'Standard error response structure for CM.com Tables API'
+      required:
+        - message
+        - error_code
+      properties:
+        message:
+          description: 'Human-readable error message'
+          type: string
+          example: 'Api token not found.'
+        error_code:
+          description: 'Error code identifier (first 3 digits represent HTTP status code)'
+          type: integer
+          example: 401100
+        error_details:
+          description: 'Additional error details (optional)'
+          type:
+            - object
+            - 'null'
+          example: null
+      type: object
+    PartnerApiVenue:
+      title: Venue
+      description: 'Venue resource representation'
+      required:
+        - uuid
+        - name
+        - timezone_id
+      properties:
+        uuid:
+          description: 'Unique identifier of the venue'
+          type: string
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          description: 'Name of the venue'
+          type: string
+          example: 'Grand Concert Hall'
+        timezone_id:
+          description: 'Timezone identifier of the venue'
+          type: string
+          example: Europe/Amsterdam
+      type: object
+  responses:
+    UnauthorizedResponse:
+      description: 'Unauthorized - API token not found or not in active state.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PartnerApiErrorResponse'
+          examples:
+            TokenNotFound:
+              summary: 'API token not found'
+              value:
+                message: 'Api token not found.'
+                error_code: 401100
+                error_details: null
+            TokenNotActive:
+              summary: 'API token not in active state'
+              value:
+                message: 'Api token is not in an active state.'
+                error_code: 401101
+                error_details: null
+    ForbiddenResponse:
+      description: 'Forbidden - API token does not have the required ability for this endpoint.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PartnerApiErrorResponse'
+          examples:
+            InsufficientAbility:
+              summary: 'API token lacks required ability'
+              value:
+                message: 'Api token does not have the required ability for this endpoint.'
+                error_code: 403101
+                error_details: null
+    TooManyRequestsResponse:
+      description: 'Rate limit exceeded - Maximum 10 requests per minute.'
+      headers:
+        X-RateLimit-Limit:
+          description: 'Request limit per minute'
+          schema:
+            type: integer
+            example: 10
+        X-RateLimit-Remaining:
+          description: 'Remaining requests in current window'
+          schema:
+            type: integer
+            example: 0
+        Retry-After:
+          description: 'Seconds until rate limit resets'
+          schema:
+            type: integer
+            example: 60
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PartnerApiErrorResponse'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: 'API authentication using Bearer tokens. To access the Partner API, you need an API token that can be obtained from your venue organiser through the CM.com Tables dashboard. Once you have your token, include it in the Authorization header of each request using the Bearer authentication scheme. Example: `Authorization: Bearer tbls_someSuperSecretTablesPartnerApiToken`. The token must be in an active state and have the required abilities (permissions) for the endpoints you wish to access. Tokens can be managed and revoked by the venue organiser at any time.'
+      bearerFormat: 'API Token'
+      scheme: bearer
+tags:
+  -
+    name: Venues
+    description: 'Operations related to venues'

@@ -1,0 +1,225 @@
+# x-archived-from: cm-com-verification-otp-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: '3.1.1'
+
+servers:
+  - url: https://api.cm.com/v1.0/otp
+
+security:
+  - ProductToken: [ ]
+
+tags:
+  - name: OTP
+
+info:
+  version: '1.0'
+  title: OTP API v1
+  description: |
+    Protect your organisation and users against fraudulent login attempts and potential catastrophic effects on your business. CM.com offers a unique Hybrid Two-factor, One Time Password solution that can be delivered via our high quality SMS routes, to your app via Push or via a Voice call.
+
+    **How to start**
+    - [Register](https://www.cm.com/register/) for an account.
+    - Retrieve your API product token via the [Messaging Gateway](https://www.cm.com/app/gateway/) app.
+
+paths:
+  /generate:
+    post:
+      operationId: create_otp
+      summary: Generate code
+      description: Generate code
+      tags: [ OTP ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateRequest'
+      responses:
+        '200':
+          description: The code has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/UnknownError'
+
+  /verify:
+    post:
+      operationId: verify_otp
+      summary: Verify code
+      description: Verify code
+      tags: [ OTP ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequest'
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/UnknownError'
+
+components:
+  schemas:
+    GenerateRequest:
+      type: object
+      title: Generate request
+      properties:
+        recipient:
+          type: string
+          description: Phone number in international format without +.
+          examples: [ '0031601234567' ]
+        sender:
+          type: string
+          description: >
+            The name or phone number of the sender. Please note that alphanumeric sender is not supported in all countries.
+            If `allowVoice` is `true`, sender must be a phone number. For alphanumeric senders, the length should be between 3 and 11 characters.
+          examples: [ My company ]
+        length:
+          type: integer
+          description: The length of the code.
+          minimum: 4
+          maximum: 10
+          default: 5
+        expiry:
+          type: integer
+          description: The expiry in seconds.
+          minimum: 10
+          maximum: 3600
+          default: 60
+        allowVoice:
+          type: boolean
+          description: Send the code via a voice call.
+        voiceLanguage:
+          type: string
+          description: Change the language of the voice call.
+          enum:
+            - de
+            - en
+            - es
+            - fr
+            - it
+            - nl
+          default: en
+        allowPush:
+          type: boolean
+          description: Allow code to be send via push notification. When allowPush is set to `true`, a valid app key is required.
+          default: false
+        appKey:
+          type: string
+          description: The app key GUID.
+          format: uuid
+        message:
+          type: string
+          description: |
+            Set a custom message. You can use the placeholder {code} which will be replaced by the actual code. e.g. Your code is: {code}."
+      required: [ recipient, sender ]
+      examples:
+        - recipient: '0031601234567'
+          sender: My company
+
+    GenerateResponse:
+      type: object
+      title: Generate response
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the code. Use this in combination with the received code to verify the code.
+          readOnly: true
+        createdAt:
+          type: string
+          description: The date the code was created.
+          format: date-time
+          readOnly: true
+        expireAt:
+          type: string
+          description: The date the code will expire.
+          format: date-time
+          readOnly: true
+
+    VerifyRequest:
+      type: object
+      title: Verify request
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the code.
+        code:
+          type: string
+          description: The code received via SMS/Push or Voice.
+          examples: [ '12345' ]
+
+    VerifyResponse:
+      type: object
+      title: Verify response
+      properties:
+        valid:
+          type: boolean
+          description: Indicates if the code was valid. Once a code has been successfully validated, it cannot be validated again.
+          readOnly: true
+
+    ErrorResponse:
+      title: Error response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples: [ 400 ]
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          examples: [ The request is invalid ]
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: The request is invalid
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+    UnknownError:
+      description: Unknown error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: An unknown error occurred.
+
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-ProductToken

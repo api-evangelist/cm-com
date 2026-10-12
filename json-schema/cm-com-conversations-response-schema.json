@@ -1,0 +1,677 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-conversations-response-schema.json",
+  "title": "ConversationsResponse",
+  "description": "Paginated response for conversations list",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-halo-analytics-v1-openapi.yml#/components/schemas/ConversationsResponse",
+  "type": "object",
+  "required": [
+    "data",
+    "total_count",
+    "page_index",
+    "page_size",
+    "possible_language_filters",
+    "possible_product_filters",
+    "possible_channel_filters",
+    "possible_conversation_product_filters"
+  ],
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConversationOverview"
+      }
+    },
+    "page_index": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "page_size": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "possible_channel_filters": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "possible_conversation_product_filters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConversationProduct"
+      }
+    },
+    "possible_language_filters": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "possible_product_filters": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "total_count": {
+      "type": "integer",
+      "format": "int64"
+    }
+  },
+  "$defs": {
+    "CarouselItem": {
+      "type": "object",
+      "required": [
+        "image_src",
+        "image_alt"
+      ],
+      "properties": {
+        "buttons": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/CarouselItemButton"
+          }
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "image_alt": {
+          "type": "string"
+        },
+        "image_src": {
+          "type": "string"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "CarouselItemButton": {
+      "type": "object",
+      "required": [
+        "text",
+        "value"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "CarouselResponse": {
+      "type": "object",
+      "properties": {
+        "carousel": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/CarouselItem"
+          }
+        }
+      }
+    },
+    "ConversationFeedback": {
+      "type": "string",
+      "description": "Enum for conversation feedback rating in API responses",
+      "enum": [
+        "FEEDBACK_VERY_SATISFIED",
+        "FEEDBACK_SATISFIED",
+        "FEEDBACK_NEUTRAL",
+        "FEEDBACK_UNSATISFIED",
+        "FEEDBACK_VERY_UNSATISFIED",
+        "FEEDBACK_NOT_GIVEN"
+      ]
+    },
+    "ConversationItemSummary": {
+      "type": "object",
+      "description": "Simplified conversation item for list views",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "buttons": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ConversationOption"
+          }
+        },
+        "created": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "image_carousel": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/CarouselResponse"
+            }
+          ]
+        },
+        "interaction_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "json_content": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/Value"
+          }
+        },
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "match": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "media": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/MediaMessageContentPart"
+          }
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "role": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "show_feedback": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text_content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "ConversationOption": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "ConversationOverview": {
+      "type": "object",
+      "description": "Conversation overview for list views",
+      "required": [
+        "conversation_id",
+        "matched_items",
+        "total_items",
+        "recognition_rate",
+        "conversation_products",
+        "messages"
+      ],
+      "properties": {
+        "conversation_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "conversation_products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConversationProduct"
+          }
+        },
+        "created": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "ended": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "environment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "external_handover": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/Value"
+            }
+          ]
+        },
+        "feedback": {
+          "$ref": "#/$defs/ConversationFeedback"
+        },
+        "feedback_comment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "first_user_message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "manual_resolution": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ManualResolution"
+            }
+          ]
+        },
+        "matched_items": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConversationItemSummary"
+          }
+        },
+        "most_common_channel": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "most_common_language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "most_common_origin": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "most_common_product": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "profile_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recognition_rate": {
+          "type": "number",
+          "format": "double"
+        },
+        "redacted": {
+          "type": "boolean",
+          "description": "True for retention skeletons: content/PII has been redacted, `external_handover` may hold\nthe `{\"redacted\":true}` sentinel rather than real handover data. Lets list/export consumers\ndistinguish skeletons from ordinary conversations with empty content."
+        },
+        "resolution": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ConversationResolution"
+            }
+          ]
+        },
+        "resolution_reasoning": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "started": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "subtopic": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/Subtopic"
+            }
+          ]
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "topic": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/Topic"
+            }
+          ]
+        },
+        "total_items": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "visited_agent_ids": {
+          "type": "array",
+          "items": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          }
+        },
+        "visited_agents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VisitedAgent"
+          }
+        },
+        "visited_tool_ids": {
+          "type": "array",
+          "items": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          }
+        },
+        "visited_tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VisitedTool"
+          }
+        }
+      }
+    },
+    "ConversationProduct": {
+      "type": "string",
+      "enum": [
+        "HALO",
+        "AICLOUD",
+        "FAQ"
+      ]
+    },
+    "ConversationResolution": {
+      "type": "string",
+      "description": "Enum for conversation resolution status in API responses",
+      "enum": [
+        "RESOLUTION_SUCCESSFUL",
+        "RESOLUTION_HANDOVER",
+        "RESOLUTION_UNSUCCESSFUL",
+        "RESOLUTION_UNDETERMINED",
+        "RESOLUTION_PENDING"
+      ]
+    },
+    "ManualResolution": {
+      "type": "object",
+      "description": "Manual resolution override for a conversation",
+      "required": [
+        "id",
+        "conversation_id",
+        "new_label",
+        "is_active",
+        "created",
+        "user_email"
+      ],
+      "properties": {
+        "conversation_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "new_label": {
+          "$ref": "#/$defs/ConversationResolution"
+        },
+        "original_label": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ConversationResolution"
+            }
+          ]
+        },
+        "profile_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "reasoning": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "user_email": {
+          "type": "string"
+        },
+        "user_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "MediaMessageContentPart": {
+      "type": "object",
+      "description": "Media message content part",
+      "required": [
+        "mime_type"
+      ],
+      "properties": {
+        "data_uri": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Subtopic": {
+      "type": "object",
+      "description": "Subtopic (child topic in taxonomy)",
+      "required": [
+        "id",
+        "name",
+        "definition"
+      ],
+      "properties": {
+        "definition": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Topic": {
+      "type": "object",
+      "description": "Topic (parent topic in taxonomy)",
+      "required": [
+        "id",
+        "name",
+        "definition"
+      ],
+      "properties": {
+        "definition": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Value": {},
+    "VisitedAgent": {
+      "type": "object",
+      "description": "Agent info for visited agents",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "VisitedTool": {
+      "type": "object",
+      "description": "Tool info for visited tools",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

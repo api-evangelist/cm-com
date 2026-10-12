@@ -1,0 +1,185 @@
+openapi: 3.2.0
+info:
+  title: Scan Update Reservation API
+  version: '1.0'
+  description: Every operation is a `POST` request with an `application/x-www-form-urlencoded` body. Every request includes your public `apiKey` and an `HMACKey`. The `HMACKey` is calculated from the input fields; the calculation is listed on each operation as `Base64 encode - SHA256(...)`, where the fields between the brackets are concatenated. Only include optional parameters in the HMAC if you are using those parameters. A `*` after a field marks it as optional.
+servers:
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: UpdateReservation
+paths:
+  /updateReservation:
+    post:
+      summary: /updateReservation
+      description: 'With this functionality you can update a reservation. Update a reservation for a single ticket type, or for multiple ticket types by sending the `tickets` object.
+
+
+        **HMACKey:**
+
+        - Single ticket type: `Base64 encode - SHA256(apiKey + reservationId + ticketTypeId + ticketNumber + ticketDate + ticketTime)`
+
+        - Multiple ticket types: `Base64 encode - SHA256(apiKey + reservationId + ticketDate + tickets)`
+
+
+        **HMAC calculation of the `tickets` array**
+
+
+        Sort the entries by ticketTypeId ascending and the keys within each entry alphabetically, then concatenate the values. Example (PHP):
+
+
+        ```php
+
+        $tickets = [
+
+        ''321'' => [ ''ticketNumber'' => 2, ''ticketTime'' => ''10:00'' ],
+
+        ''123'' => [ ''ticketTime'' => ''12:00'', ''ticketNumber'' => 3 ],
+
+        ];
+
+
+        // sorted and concatenated:
+
+        $result = ''123312:00321210:00'';
+
+        ```'
+      operationId: updatereservation
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+              - type: object
+                title: Single ticket type
+                required:
+                - apiKey
+                - reservationId
+                - ticketTypeId
+                - ticketNumber
+                - HMACKey
+                properties:
+                  apiKey:
+                    type: string
+                    description: Your public apiKey needs to be included in every request
+                  reservationId:
+                    type: integer
+                    description: The reservation identifier to update
+                    format: int32
+                  ticketTypeId:
+                    type: integer
+                    description: Unique identifier for a particular tickettype
+                    format: int32
+                  ticketNumber:
+                    type: integer
+                    description: Number of tickets for which a reservation is to be created
+                    format: int32
+                  ticketDate:
+                    type: string
+                    description: Date of the tickets that the reservation has to be created for
+                    default: current date
+                    format: date
+                  ticketTime:
+                    type: string
+                    description: Timeslot of tickets for which a reservation is to be created
+                    format: date-time
+                  HMACKey:
+                    type: string
+                    description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + reservationId + ticketTypeId + ticketNumber + ticketDate + ticketTime). Only include optional params in the HMAC if you are using those params.
+              - type: object
+                title: Multiple ticket types
+                required:
+                - apiKey
+                - reservationId
+                - tickets
+                - HMACKey
+                properties:
+                  apiKey:
+                    type: string
+                    description: Your public apiKey needs to be included in every request
+                  reservationId:
+                    type: integer
+                    description: The reservation identifier to update
+                    format: int32
+                  ticketDate:
+                    type: string
+                    description: Date of the tickets that the reservation has to be created for
+                    default: current date
+                    format: date
+                  tickets:
+                    type: object
+                    description: Object keyed by ticketTypeId; each entry holds the ticketNumber and ticketTime for that ticket type.
+                    additionalProperties:
+                      type: object
+                      properties:
+                        ticketNumber:
+                          type: integer
+                          description: The number of ticket for a ticket type
+                          format: int32
+                        ticketTime:
+                          type: string
+                          description: The timeslot for a ticket type
+                    example:
+                      '321':
+                        ticketNumber: 2
+                        ticketTime: '10:00'
+                      '123':
+                        ticketTime: '12:00'
+                        ticketNumber: 3
+                  HMACKey:
+                    type: string
+                    description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + reservationId + ticketDate + tickets). ticketTypeId sorted ascending, and data array keys are sorted alphabetically, values are concatenated. For the example tickets the result is 123312:00321210:00. Only include optional params in the HMAC if you are using those params.
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    reservationId: 1
+                    reservationValidUntil: '2026-05-29 10:00:00'
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservationId:
+                    type: integer
+                    example: 1
+                    default: 0
+                  reservationValidUntil:
+                    type: string
+                    description: Reservations are by default valid for 15 minutes. Use reservationValidUntil to prevent errors at the completeReservation method.
+                    example: 2026-05-29 10:00:00
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: false
+                    errorMessage: No tickets available.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: No tickets available.
+      deprecated: false
+      tags:
+      - UpdateReservation
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

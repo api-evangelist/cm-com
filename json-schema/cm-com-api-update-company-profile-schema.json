@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-update-company-profile-schema.json",
+  "title": "Update Company Profile",
+  "description": "Update model for a company profile.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-company-profiles-v1-openapi.yml#/components/schemas/ApiUpdateCompanyProfile",
+  "type": "object",
+  "properties": {
+    "profileName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The name of the company profile. This name does not have to be equal to your company name, it's just to make\r\nthis profile more easily identifiable in our tooling. If the company has multiple branches, this profile\r\ncan be named 'Amsterdam Office' for example."
+    },
+    "companyName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The name of the company that will be using the phone numbers requested with this profile."
+    },
+    "registrationNumber": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Business register number of the company (e.g. KVK number for Dutch companies)."
+    },
+    "representativeFirstName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "First name of company’s representative that is authorized to sign contracts for the company."
+    },
+    "representativeLastName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Last name of company’s representative that is authorized to sign contracts for the company"
+    },
+    "representativePhoneNumber": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Phone number of company’s representative that is authorized to sign contracts for the company"
+    },
+    "requiredFields": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Depending on the country of the company address, we might require additional information that needs to be\r\nsupplied with the API call. See the `Verify Required Fields` endpoint documentation for more information."
+    },
+    "phoneNumberCountryCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The country code of the country this company profile will request numbers for. For example, if you supply\r\n`NL`, you will only be able to request Dutch phone numbers with this profile."
+    },
+    "phoneNumberTypes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "The types of phone numbers this profile is able to request. This can be `LOCAL`, `NATIONAL` and `TOLLFREE`."
+    },
+    "contactFirstName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "First name of the person that CM.com will be able to contact regarding this profile. This contact can be about\r\nthe approval status of your profile or a request for additional information."
+    },
+    "contactLastName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Last name of the person that CM.com will be able to contact regarding this profile. This contact can be about\r\nthe approval status of your profile or a request for additional information."
+    },
+    "emailAddresses": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "One or more email addresses that CM.com will be able to contact regarding this profile. This contact can be about\r\nthe approval status of your profile or a request for additional information."
+    },
+    "callbackUrl": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "URL that we'll send a POST request to when the status of the request has been updated. The body of this post\r\nrequest will contain the entire company profile, including the updated status."
+    },
+    "documents": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/ApiDocument"
+      },
+      "description": "List of documents that are legaly required for us to be able to request phone numbers."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiDocument": {
+      "title": "Document",
+      "type": "object",
+      "properties": {
+        "requirementKey": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The key of the requirement which this document represents."
+        },
+        "documentGuid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique identifier of the document in the Voice Documents API.",
+          "format": "uuid"
+        },
+        "approved": {
+          "type": "boolean",
+          "description": "Whether or not the document was approved by CM.com."
+        },
+        "approvalComment": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Additional information on the documents approval status, should only be filled in when the document has been\r\ndenied."
+        }
+      },
+      "additionalProperties": false,
+      "description": "A document that's required by rules and regulations of a specific country for requesting and operating phone\r\nnumbers."
+    }
+  }
+}

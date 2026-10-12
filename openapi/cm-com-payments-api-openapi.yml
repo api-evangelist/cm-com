@@ -1,0 +1,417 @@
+openapi: 3.2.0
+info:
+  title: Channels Payments API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: Payments
+paths:
+  /channels/v1/accounts/{accountId}/payments/{channelRequestId}/credentials:
+    get:
+      tags:
+      - Payments
+      summary: Gets the payments credentials asynchronous
+      operationId: Payments_GetAllPaymentsCredentialsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: type
+        in: query
+        description: The type.
+        required: false
+        schema:
+          type: string
+          enum:
+          - CMPAYMENTS
+          - WEBCHECKOUT
+          - IDEALPLATFORM
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+    post:
+      tags:
+      - Payments
+      summary: Adds the payments credentials asynchronous
+      operationId: Payments_AddPaymentsCredentialsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+  /channels/v1/accounts/{accountId}/payments/{channelRequestId}/credentials/{credentialsId}:
+    get:
+      tags:
+      - Payments
+      summary: Gets the payments credentials by identifier asynchronous
+      operationId: Payments_GetPaymentsCredentialsByIdAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: credentialsId
+        in: path
+        description: The credentials identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: withAttributes
+        in: query
+        description: Flag to ask for the Credentials Attributes.
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+    put:
+      tags:
+      - Payments
+      summary: Updates the payments credentials asynchronous
+      operationId: Payments_UpdatePaymentsCredentialsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: credentialsId
+        in: path
+        description: The credentials identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse'
+    delete:
+      tags:
+      - Payments
+      summary: Deletes the payments credentials asynchronous
+      operationId: Payments_DeletePaymentsCredentialsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: credentialsId
+        in: path
+        description: The credentials identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+components:
+  schemas:
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiIdealPlatformAttributes:
+      required:
+      - accessToken
+      type: object
+      properties:
+        accessToken:
+          type: string
+        isMock:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutAttributes:
+      required:
+      - username
+      - password
+      - clientId
+      - secret
+      - settings
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        clientId:
+          type: string
+        secret:
+          type: string
+        settings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutSettings'
+        isMock:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiCmPaymentsAttributes:
+      required:
+      - key
+      - secret
+      type: object
+      properties:
+        key:
+          type: string
+        secret:
+          type: string
+        isMock:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsResponse:
+      required:
+      - id
+      - name
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        type:
+          enum:
+          - CMPAYMENTS
+          - WEBCHECKOUT
+          - IDEALPLATFORM
+          type: string
+        attributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsAttributes'
+        cmPaymentsAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiCmPaymentsAttributes'
+        webCheckoutAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutAttributes'
+        idealPlatformAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiIdealPlatformAttributes'
+        isActive:
+          type: boolean
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsAttributes:
+      type: object
+      properties:
+        isMock:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutSettings:
+      type: object
+      properties:
+        countries:
+          type: array
+          items:
+            type: string
+        languages:
+          type: array
+          items:
+            type: string
+        templates:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest:
+      required:
+      - name
+      - isActive
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          enum:
+          - CMPAYMENTS
+          - WEBCHECKOUT
+          - IDEALPLATFORM
+          type: string
+        cmPaymentsAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiCmPaymentsAttributes'
+        webCheckoutAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutAttributes'
+        idealPlatformAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiIdealPlatformAttributes'
+        isActive:
+          type: boolean
+  requestBodies:
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest'
+      description: The credentials.
+      required: true
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

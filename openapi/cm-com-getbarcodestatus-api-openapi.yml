@@ -1,0 +1,129 @@
+openapi: 3.2.0
+info:
+  title: Scan Get Barcode Status API
+  version: '1.0'
+  description: Every operation is a `POST` request with an `application/x-www-form-urlencoded` body. Every request includes your public `apiKey` and an `HMACKey`. The `HMACKey` is calculated from the input fields; the calculation is listed on each operation as `Base64 encode - SHA256(...)`, where the fields between the brackets are concatenated. Only include optional parameters in the HMAC if you are using those parameters. A `*` after a field marks it as optional.
+servers:
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: GetBarcodeStatus
+paths:
+  /getBarcodeStatus:
+    post:
+      summary: /getBarcodeStatus
+      description: 'This function allows you to get the status of a barcode (valid / invalid) and information about the ticket(s).
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + barcodeNumber)`'
+      operationId: set-status
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - HMACKey
+              - barcodeNumber
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + barcodeNumber).
+                barcodeNumber:
+                  type: string
+                  description: The barcode number of the ticket for which the status is to be checked
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    barcodeValid: true
+                    dateOfPurchase: '2012-04-21T18:25:43Z'
+                    dateCheckedIn: '2012-04-21T18:25:43-05:00'
+                    numberOfTickets: 1
+                    numberOfTicketTypes: 1
+                    totalPrice: 1.1
+                    tickets:
+                    - ticketTypeId: 1
+                      description: Volwassene
+                      ticketTypePrice: 1.19
+                      numberOfTickets: 1
+              schema:
+                type: object
+                properties:
+                  barcodeValid:
+                    type: boolean
+                    example: true
+                    default: true
+                  dateOfPurchase:
+                    type: string
+                    example: 2012-04-21 18:25:43+00:00
+                  dateCheckedIn:
+                    type: string
+                    example: 2012-04-21 18:25:43-05:00
+                  numberOfTickets:
+                    type: integer
+                    example: 1
+                    default: 0
+                  numberOfTicketTypes:
+                    type: integer
+                    example: 1
+                    default: 0
+                  totalPrice:
+                    type: number
+                    example: 1.1
+                    default: 0
+                  tickets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ticketTypeId:
+                          type: integer
+                          example: 1
+                          default: 0
+                        description:
+                          type: string
+                          example: Volwassene
+                        ticketTypePrice:
+                          type: number
+                          example: 1.19
+                          default: 0
+                        numberOfTickets:
+                          type: integer
+                          example: 1
+                          default: 0
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    errorCode: INVALID_AUTHENTICATION
+                    errorMessage: Please check your apiKey and IP addresses. - 54.242.111.53
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    example: INVALID_AUTHENTICATION
+                  errorMessage:
+                    type: string
+                    example: Please check your apiKey and IP addresses. - 54.242.111.53
+      deprecated: false
+      tags:
+      - GetBarcodeStatus
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

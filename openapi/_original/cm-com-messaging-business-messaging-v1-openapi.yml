@@ -1,0 +1,82 @@
+# x-archived-from: cm-com-messaging-business-messaging-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: Business Messaging API
+  description: 'Send and receive messages across SMS, WhatsApp, RCS, Apple Messages, Viber, and more from a single API.'
+  license:
+    name: Proprietary
+    identifier: LicenseRef-CM.com-Proprietary
+  version: '1.0'
+servers:
+  - url: 'https://gw.cmtelecom.com'
+    description: Production Server
+paths:
+  /v1.0/message/health:
+    get:
+      tags:
+        - Health
+      summary: Health check
+      description: Verify that the Messaging API is reachable and your credentials are valid.
+      operationId: messaging-health-check
+      responses:
+        '200':
+          description: Service is healthy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+      security:
+        - ProductToken: []
+components:
+  schemas:
+    HealthResponse:
+      title: Health Response
+      description: Standard health check response
+      required:
+        - status
+        - service
+        - version
+      properties:
+        status:
+          description: Service health status
+          type: string
+          example: ok
+        service:
+          description: Service name
+          type: string
+          example: messaging
+        version:
+          description: API version
+          type: string
+          example: v1
+      type: object
+    ErrorResponse:
+      title: Error Response
+      description: Standard error response
+      required:
+        - message
+      properties:
+        message:
+          description: Human-readable error message
+          type: string
+          example: Unauthorized
+      type: object
+  responses:
+    UnauthorizedResponse:
+      description: Unauthorized - invalid or missing credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: 'Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.'
+      name: producttoken
+      in: header
+tags:
+  - name: Health
+    description: Service health check endpoints

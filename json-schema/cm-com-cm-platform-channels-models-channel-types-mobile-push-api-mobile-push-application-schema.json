@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-platform-channels-models-channel-types-mobile-push-api-mobile-push-application-schema.json",
+  "title": "CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-messaging-channels-api-v1-2-openapi.yml#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication",
+  "required": [
+    "id",
+    "accountId",
+    "isActive",
+    "isPending",
+    "requiresSettings",
+    "createdOnUtc"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "channelId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "accountId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "applicationID": {
+      "type": "string"
+    },
+    "isIosExpired": {
+      "type": "boolean",
+      "readOnly": true
+    },
+    "isIosActivated": {
+      "type": "boolean"
+    },
+    "isAndroidActivated": {
+      "type": "boolean"
+    },
+    "applicationOtpSender": {
+      "type": "string"
+    },
+    "applicationName": {
+      "type": "string"
+    },
+    "androidSettings": {
+      "type": "string"
+    },
+    "isActive": {
+      "type": "boolean"
+    },
+    "entityStatus": {
+      "enum": [
+        "ACTIVE",
+        "PENDING",
+        "ELIGIBLE",
+        "NOT_VALIDATED",
+        "CUSTOMER_ACTION_REQUIRED",
+        "EXPIRED",
+        "REJECTED",
+        "CANCELLED",
+        "DELETED"
+      ],
+      "type": "string"
+    },
+    "iosSettings": {
+      "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication"
+    },
+    "isPending": {
+      "type": "boolean"
+    },
+    "requiresSettings": {
+      "type": "boolean",
+      "readOnly": true
+    },
+    "fulfilledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "createdOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "rejectedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "cancelledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "deletedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "iosExpiresOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "rejectionReason": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication": {
+      "type": "object",
+      "properties": {
+        "privateKey": {
+          "type": "string"
+        },
+        "certificate": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "expiresOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

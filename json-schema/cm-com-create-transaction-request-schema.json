@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-create-transaction-request-schema.json",
+  "title": "CreateTransactionRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-identity-hub-v1-openapi.yml#/components/schemas/CreateTransactionRequest",
+  "type": "object",
+  "properties": {
+    "returnUrl": {
+      "type": "string",
+      "format": "url",
+      "maxLength": 255,
+      "description": "The URL the end-user will be redirected to after completing the transaction. The `transactionId` and `state` are appended as query parameters, e.g. `https://example.com/transaction/return?transactionId=b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b&state=success`."
+    },
+    "callbackUrl": {
+      "type": "string",
+      "format": "url",
+      "maxLength": 255,
+      "description": "Updates regarding the transaction will be sent to the callback URL. It must begin with `https://`. See the [Transaction state](#tag/Callbacks/operation/callback_transaction_state) callback for the payload that is sent."
+    },
+    "locale": {
+      "$ref": "#/$defs/Locale",
+      "default": "en-US",
+      "description": "Supported locales for the hosted transaction UI:\n  * `nl-NL` - Dutch\n  * `en-US` - English\n  * `fr-FR` - French\n  * `de-DE` - German\n  * `hu-HU` - Hungarian\n  * `it-IT` - Italian\n  * `ja-JP` - Japanese\n  * `pl-PL` - Polish\n  * `pt-PT` - Portuguese\n  * `ro-RO` - Romanian\n  * `sk-SK` - Slovakian\n  * `es-ES` - Spanish\n"
+    },
+    "requestedFields": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The list of fields to collect from the end-user during the transaction. The collected values are returned via the `data` property once the transaction is successful.",
+      "items": {
+        "$ref": "#/$defs/RequestedField"
+      }
+    }
+  },
+  "required": [
+    "returnUrl",
+    "requestedFields"
+  ],
+  "$defs": {
+    "Locale": {
+      "type": "string",
+      "enum": [
+        "nl-NL",
+        "en-US",
+        "fr-FR",
+        "de-DE",
+        "hu-HU",
+        "it-IT",
+        "ja-JP",
+        "pl-PL",
+        "pt-PT",
+        "ro-RO",
+        "sk-SK",
+        "es-ES"
+      ]
+    },
+    "RequestedField": {
+      "type": "string",
+      "description": "Requested field description:\n\n * `givenName` - The end-user's given name(s).\n * `middleName` - The end-user's middle name(s).\n * `familyName` - The end-user's family name.\n * `gender` - The end-user's gender.\n * `birthdate` - The end-user's date of birth.\n * `email` - The end-user's email address.\n * `phoneNumber` - The end-user's phone number.\n * `address` - The end-user's address.\n * `nationality` - The end-user's nationality.\n * `identifier` - A stable user identifier that is unique per identification method. Not available for all methods.\n",
+      "enum": [
+        "givenName",
+        "middleName",
+        "familyName",
+        "gender",
+        "birthdate",
+        "email",
+        "phoneNumber",
+        "address",
+        "nationality",
+        "identifier"
+      ]
+    }
+  }
+}

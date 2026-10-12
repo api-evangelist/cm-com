@@ -1,0 +1,2465 @@
+# x-archived-from: cm-com-mobile-marketing-cloud-cdp-profiles-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: API
+  version: v1.0
+paths:
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/{profileId}/events:
+    get:
+      tags:
+      - Events
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: cursor
+        in: query
+        schema:
+          type: string
+      - name: search
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileChild'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileChild'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileChild'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/{profileId}/events/_summary:
+    get:
+      tags:
+      - Events
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileEventsSummary'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileEventsSummary'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileEventsSummary'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/{profileId}/events/_overview:
+    get:
+      tags:
+      - Events
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: take
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 25
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileEventsOverviewItem'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileEventsOverviewItem'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileEventsOverviewItem'
+  /profile/v1.0/tenants/{tenantId}/events:
+    post:
+      tags:
+      - Events
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventsQuery'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventsQuery'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventsQuery'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventsQuery'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEvent'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEvent'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEvent'
+  /profile/v1.0/tenants/{tenantId}/events/_count:
+    post:
+      tags:
+      - Events
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventsQuery'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventsQuery'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventsQuery'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventsQuery'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int64
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            text/json:
+              schema:
+                type: integer
+                format: int64
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/events/{eventId}:
+    get:
+      tags:
+      - Events
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEvent'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEvent'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEvent'
+  /profile/v1.0/tenants/{tenantId}/eventtypes:
+    get:
+      tags:
+      - EventTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: isMapped
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: isUnmapped
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: dependencyKey
+        in: query
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+        '404':
+          description: Not Found
+    post:
+      tags:
+      - EventTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/eventtypes:
+    get:
+      tags:
+      - EventTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+        '404':
+          description: Not Found
+  /profile/v1.0/tenants/{tenantId}/eventtypes/{eventTypeId}:
+    get:
+      tags:
+      - EventTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+        '404':
+          description: Not Found
+    put:
+      tags:
+      - EventTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: ignoreDependencyLinkValidation
+        in: query
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+    patch:
+      tags:
+      - EventTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventType'
+    delete:
+      tags:
+      - EventTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/csv:
+    post:
+      tags:
+      - Exports
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+            text/json:
+              schema:
+                type: string
+                format: binary
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/{profileId}/export:
+    get:
+      tags:
+      - Exports
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileExport'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileExport'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileExport'
+  /profile/v1.0/tenants/{tenantId}/exportevents:
+    get:
+      tags:
+      - Exports
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: queryString
+        in: query
+        schema:
+          type: string
+      - name: unordered
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: excludeProfile
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+            text/json:
+              schema:
+                type: string
+                format: binary
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: sortOn
+        in: query
+        schema:
+          type: string
+      - name: reverse
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/_query:
+    post:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: sortOn
+        in: query
+        schema:
+          type: string
+      - name: reverse
+        in: query
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/_count:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int64
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            text/json:
+              schema:
+                type: integer
+                format: int64
+    post:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int64
+            application/json:
+              schema:
+                type: integer
+                format: int64
+            text/json:
+              schema:
+                type: integer
+                format: int64
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/{segmentId}/count:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: segmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileCount'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileCount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileCount'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/{segmentId}/profiles:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: segmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: sortOn
+        in: query
+        schema:
+          type: string
+      - name: reverse
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/bytoken/{profileToken}:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileToken
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/bytoken/{profileToken}/details:
+    get:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileToken
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfile'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/bytoken/{profileToken}/_hard:
+    delete:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileToken
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/byquery/_hard:
+    post:
+      tags:
+      - Profiles
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+      responses:
+        '204':
+          description: No Content
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/properties:
+    get:
+      tags:
+      - ProfileTypeProperties
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+        '404':
+          description: Not Found
+    post:
+      tags:
+      - ProfileTypeProperties
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/properties/{propertyId}:
+    get:
+      tags:
+      - ProfileTypeProperties
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: propertyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+        '404':
+          description: Not Found
+    put:
+      tags:
+      - ProfileTypeProperties
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: propertyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+    delete:
+      tags:
+      - ProfileTypeProperties
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: propertyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /profile/v1.0/tenants/{tenantId}/profiletypes:
+    get:
+      tags:
+      - ProfileTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+        '404':
+          description: Not Found
+    post:
+      tags:
+      - ProfileTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/main:
+    get:
+      tags:
+      - ProfileTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+        '404':
+          description: Not Found
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/children:
+    get:
+      tags:
+      - ProfileTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+        '404':
+          description: Not Found
+  /profile/v1.0/tenants/{tenantId}/eventtypes/{eventTypeId}/sessiontype:
+    get:
+      tags:
+      - ProfileTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+        '404':
+          description: Not Found
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}:
+    get:
+      tags:
+      - ProfileTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+        '404':
+          description: Not Found
+    put:
+      tags:
+      - ProfileTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileType'
+    delete:
+      tags:
+      - ProfileTypes
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments:
+    get:
+      tags:
+      - Segments
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 2147483647
+      - name: filter
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/{segmentId}:
+    get:
+      tags:
+      - Segments
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: segmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/_count:
+    get:
+      tags:
+      - Segments
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: integer
+                format: int32
+            application/json:
+              schema:
+                type: integer
+                format: int32
+            text/json:
+              schema:
+                type: integer
+                format: int32
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/segments/{segmentId}/_rename:
+    put:
+      tags:
+      - Segments
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: segmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiSegment'
+  /profile/v1.0/tenants/{tenantId}/workflows/_count:
+    get:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+  /profile/v1.0/tenants/{tenantId}/workflows/_query:
+    post:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter'
+      responses:
+        '200':
+          description: Success
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}:
+    get:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow'
+      responses:
+        '200':
+          description: Success
+    delete:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_copy:
+    post:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_manual:
+    post:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_enable:
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_disable:
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_favorite:
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_unfavorite:
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+components:
+  schemas:
+    CM.Data.Core.Profiles.Api.Models.ApiEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        dateOfEvent:
+          type: string
+          format: date-time
+        object:
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiEventExport:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        data:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Shared.BoxedValue'
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiEventType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventTypeProperty'
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiEventTypeProperty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        priority:
+          type: integer
+          format: int32
+        type:
+          $ref: '#/components/schemas/CM.Data.Domain.Enums.PropertyType'
+        isOptional:
+          type: boolean
+        isNotIndexed:
+          type: boolean
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiEventsQuery:
+      type: object
+      properties:
+        eventTypeIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        oldestEventDate:
+          type: string
+          format: date-time
+        latestEventDate:
+          type: string
+          format: date-time
+          nullable: true
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Shared.BoxedValue'
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileChild:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+          readOnly: true
+        id:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        dateOfEvent:
+          type: string
+          format: date-time
+        object:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileChildProperty'
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileChildProperty:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CM.Data.Domain.Enums.PropertyType'
+        value:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileCount:
+      type: object
+      properties:
+        capped:
+          type: integer
+          format: int64
+        uncapped:
+          type: integer
+          format: int64
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileEventsOverviewItem:
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        eventTypeName:
+          type: string
+          nullable: true
+        dateOfEvent:
+          type: string
+          format: date-time
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileEventsSummary:
+      type: object
+      properties:
+        oldestEventDate:
+          type: string
+          format: date-time
+        numberOfEvents:
+          type: integer
+          format: int64
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileExport:
+      type: object
+      properties:
+        profile:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Shared.BoxedValue'
+          nullable: true
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventExport'
+          nullable: true
+        oldestEventDate:
+          type: string
+          format: date-time
+        latestEventDate:
+          type: string
+          format: date-time
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        isMain:
+          type: boolean
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty'
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileTypeProperty:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/CM.Data.Domain.Enums.PropertyType'
+        possibleOriginTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Data.Domain.Enums.PropertyType'
+          nullable: true
+        isKey:
+          type: boolean
+        externalKey:
+          $ref: '#/components/schemas/CM.Data.Core.Profiles.Shared.Enums.ExternalKey'
+        isNotIndexed:
+          type: boolean
+        maxOccurences:
+          type: integer
+          format: int32
+          nullable: true
+        displayModel:
+          $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiPropertyDisplayModel'
+        operatorName:
+          type: string
+          nullable: true
+        sourceEventTypeIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          nullable: true
+        sourceProfileTypeIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiPropertyDisplayModel:
+      type: object
+      properties:
+        index:
+          type: integer
+          format: int32
+          nullable: true
+        isVisible:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiSegment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        queryTree:
+          $ref: '#/components/schemas/CM.Data.QueryLanguage.Tree'
+        consentPurposeId:
+          type: string
+          format: uuid
+          nullable: true
+        shouldBeSynchronizedToAddressBook:
+          type: boolean
+        addressBookStatus:
+          $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus'
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    CM.Data.Core.Profiles.Shared.BoxedValue:
+      type: object
+      additionalProperties: false
+    CM.Data.Core.Profiles.Shared.Enums.ExternalKey:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 22
+      - 23
+      - 24
+      type: integer
+      format: int32
+    CM.Data.Core.Workflows.Api.Models.ApiGoal:
+      type: object
+      properties:
+        eventTypeId:
+          type: string
+          format: uuid
+        propertyName:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+        stopWorkflowWhenGoalIsMet:
+          type: boolean
+      additionalProperties: false
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchEnabledStatus:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      format: int32
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter:
+      type: object
+      properties:
+        nameContains:
+          type: string
+          nullable: true
+        enabledStatus:
+          $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchEnabledStatus'
+        sortOn:
+          $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSortOrder'
+        reverse:
+          type: boolean
+          nullable: true
+        favorites:
+          $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter'
+      additionalProperties: false
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSortOrder:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    CM.Data.Core.Workflows.Api.Models.Steps.ApiStep:
+      type: object
+      properties:
+        jsonType:
+          type: string
+          nullable: true
+          readOnly: true
+        id:
+          type: string
+          format: uuid
+        nextStepId:
+          type: string
+          format: uuid
+          nullable: true
+        summary:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow:
+      type: object
+      properties:
+        jsonType:
+          type: string
+          nullable: true
+          readOnly: true
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        consentPurposeId:
+          type: string
+          format: uuid
+          nullable: true
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Steps.ApiStep'
+          nullable: true
+        goal:
+          $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiGoal'
+        enabled:
+          type: boolean
+        isReady:
+          type: boolean
+        createdBy:
+          type: string
+          format: uuid
+          nullable: true
+        createdOn:
+          type: string
+          format: date-time
+          nullable: true
+        modifiedBy:
+          type: string
+          format: uuid
+          nullable: true
+        modifiedOn:
+          type: string
+          format: date-time
+          nullable: true
+        isFavorite:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    CM.Data.Domain.Enums.PropertyType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 100
+      - 101
+      - 102
+      - 103
+      - 104
+      type: integer
+      format: int32
+    CM.Data.QueryLanguage.Nodes.Node:
+      type: object
+      additionalProperties: false
+    CM.Data.QueryLanguage.Tree:
+      type: object
+      properties:
+        root:
+          $ref: '#/components/schemas/CM.Data.QueryLanguage.Nodes.Node'
+      additionalProperties: false

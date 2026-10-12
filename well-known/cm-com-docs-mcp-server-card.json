@@ -1,0 +1,24 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  "name": "docs.cm.com/mcp",
+  "title": "CM.com Documentation",
+  "description": "Search and read CM.com API documentation and OpenAPI specifications. Read-only.",
+  "version": "1.1.0",
+  "websiteUrl": "https://docs.cm.com",
+  "icons": [
+    {
+      "src": "https://docs.cm.com/img/cm-logo-dark.svg",
+      "mimeType": "image/svg+xml"
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://docs.cm.com/mcp",
+      "supportedProtocolVersions": [
+        "2025-11-25",
+        "2025-06-18"
+      ]
+    }
+  ]
+}

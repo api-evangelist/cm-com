@@ -1,0 +1,139 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Create Reservation API
+  version: '1.0'
+  description: 'Operations tagged CreateReservation across 2 of this provider''s published API definitions: cm-com-live-museum-park-reseller-v1-openapi.yml, cm-com-live-museum-park-scan-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://globalreseller.nl/webservices
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: CreateReservation
+paths:
+  /createReservation:
+    post:
+      summary: /createReservation
+      description: 'This functionality allows you to start a ticket reservation. It''s possible to reserve multiple tickets in one call / reservation.
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + environment + ticketDate + ticketTime + tickets + userId)`
+
+
+        Please note: optional fields only needs to be included when an optional field is used.'
+      operationId: createreservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - environment
+              - userId
+              - tickets
+              - ticketDate
+              - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                environment:
+                  type: string
+                  description: '"test" or "production"'
+                  enum:
+                  - test
+                  - production
+                userId:
+                  type: integer
+                  description: The userId is a reference to the user (museum / attraction). The userId can be requested via getAvailableUsers and can be cached in your application.
+                  format: int32
+                tickets:
+                  type: array
+                  description: '{"ticketTypeId":1001,"ticketNumber":2}'
+                  items:
+                    type: integer
+                    format: int32
+                ticketTypeid:
+                  type: integer
+                  description: '"ticketTypeid":123'
+                  format: int32
+                ticketNumber:
+                  type: string
+                  description: '"ticketNumber":2'
+                ticketDate:
+                  type: string
+                  description: The ticket date must comply with the yyyy-mm-dd format.
+                  format: date
+                ticketTime:
+                  type: string
+                  description: (optional) 24 hours format (hh:mm), this field is optional based on the user.
+                  format: date-time
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + environment + ticketDate + ticketTime + tickets + userId).
+            examples:
+              Input:
+                value:
+                  apiKey: PUT-YOUR-PUBLIC-API-KEY-HERE
+                  environment: test
+                  userId: 1
+                  tickets:
+                  - ticketTypeId: 1001
+                    ticketNumber: 2
+                  - ticketTypeId: 1002
+                    ticketNumber: 1
+                  ticketDate: 2017-01-02
+                  HMACKey: PUT-YOUR-CALCULATED-HMAC-KEY-HERE
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    reservationId: 687073
+                    reservationValidUntil: '2018-11-16 21:06:14'
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservationId:
+                    type: integer
+                    example: 687073
+                    default: 0
+                  reservationValidUntil:
+                    type: string
+                    example: 2018-11-16 21:06:14
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: false
+                    error message: text
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  error message:
+                    type: string
+                    example: text
+      deprecated: false
+      tags:
+      - CreateReservation
+    servers:
+    - url: https://globalreseller.nl/webservices
+x-refined-from:
+- cm-com-live-museum-park-reseller-v1-openapi.yml
+- cm-com-live-museum-park-scan-v1-openapi.yml

@@ -1,0 +1,47 @@
+openapi: 3.2.0
+info:
+  title: Merchant Version API
+  description: '## Payment Acceptance Made Easy
+
+    The MerchantAPI allows merchants to interact with and retrieve information from the PayPlaza payment system.'
+  contact:
+    name: Development
+    url: https://www.payplaza.com
+    email: development@payplaza.com
+  version: 1.9.0
+servers:
+- url: /merchant/v1
+security:
+- ApiKeyAuth: []
+tags:
+- name: Version
+  description: Retrieves system information
+paths:
+  /version:
+    get:
+      operationId: getVersion
+      tags:
+      - Version
+      summary: Retrieving the system version
+      responses:
+        '400':
+          description: Bad request.
+        '500':
+          description: Internal server error.
+        default:
+          description: OK.
+          content:
+            application/json:
+              schema:
+                type: string
+              example: 1.0.0
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: Authentication via the API Key provided by PayPlaza
+      name: API-Key
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

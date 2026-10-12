@@ -1,0 +1,300 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Sign Archive API
+  description: 'Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via this link. This will grant you access to the sandbox environment.
+
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Archive
+  description: Manage archive
+paths:
+  /archive:
+    get:
+      operationId: list_archive
+      summary: Get all dossiers
+      description: Retrieve all dossiers in the archive
+      tags:
+      - Archive
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Archive'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /archive/{archiveId}:
+    parameters:
+    - $ref: '#/components/parameters/ArchiveId'
+    delete:
+      operationId: delete_archive
+      summary: Delete dossier
+      description: Delete a dossier from the archive
+      tags:
+      - Archive
+      responses:
+        '201':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /archive/{archiveId}/files/{fileId}:
+    parameters:
+    - $ref: '#/components/parameters/ArchiveId'
+    - $ref: '#/components/parameters/FileId'
+    get:
+      operationId: get_archive_file
+      summary: Download file
+      description: Download a file from a dossier
+      tags:
+      - Archive
+      responses:
+        '200':
+          description: Success
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: File download error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    InviteeId:
+      $ref: '#/components/schemas/InviteeReference'
+      readOnly: true
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: The total number of items
+          minimum: 1
+          examples:
+          - 1
+        perPage:
+          type: integer
+          description: The number of items per page
+          examples:
+          - 10
+        currentPage:
+          type: integer
+          description: The current page number
+          examples:
+          - 1
+        lastPage:
+          type: integer
+          description: The page number of the last available page
+          examples:
+          - 1
+        from:
+          type: integer
+          description: The number of the first item in the current page
+          examples:
+          - 1
+        to:
+          type: integer
+          description: The number of the last item in the current page
+          examples:
+          - 1
+    Archive:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  $ref: '#/components/schemas/DossierId'
+                name:
+                  type: string
+                  description: Name of the dossier
+                  examples:
+                  - Purchase contract
+                invitees:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ArchiveInvitee'
+                files:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ArchiveFile'
+                updatedAt:
+                  type: string
+                  format: date-time
+                  description: The date the dossier was updated
+                  readOnly: true
+                createdAt:
+                  type: string
+                  format: date-time
+                  description: The date the dossier was created
+                  readOnly: true
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    DossierReference:
+      type: string
+      format: uuid
+      description: Id of the dossier
+      examples:
+      - 22470767-904e-4553-9586-d7ed4f2b330e
+    DossierId:
+      $ref: '#/components/schemas/DossierReference'
+      readOnly: true
+    InviteeReference:
+      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
+      type: string
+      format: uuid
+      examples:
+      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
+    ArchiveFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the file
+          examples:
+          - 730c6ec8-755b-450f-9ab6-f57111ab2a76
+          readOnly: true
+        name:
+          type: string
+          description: Original name of the file without extension
+          maxLength: 255
+          examples:
+          - Purchase contract
+        contentType:
+          type: string
+          description: The content type identifying the type of file
+          examples:
+          - application/pdf
+          readOnly: true
+        size:
+          type: integer
+          description: The size of the file in bytes
+          examples:
+          - 3028
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date the file was updated
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the file was created
+          readOnly: true
+    ArchiveInvitee:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/InviteeId'
+        name:
+          type: string
+          description: Name of the person invited to read and/or sign the document
+          maxLength: 255
+          examples:
+          - Peter Invitee
+        email:
+          type: string
+          format: email
+          description: A valid email address
+          maxLength: 255
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date the invitee was updated
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the invitee was created
+          readOnly: true
+  parameters:
+    ArchiveId:
+      name: archiveId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies an archived dossier
+
+        '
+      example: a4dfcba2-cfaa-4240-8e48-5baa7a25bcac
+    FileId:
+      name: fileId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a file
+
+        '
+      example: 22470767-904e-4553-9586-d7ed4f2b331f
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

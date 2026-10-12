@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-create-number-request-schema.json",
+  "title": "Create Number Request",
+  "description": "Request model for requesting new phone numbers.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-number-requests-v1-openapi.yml#/components/schemas/ApiCreateNumberRequest",
+  "type": "object",
+  "properties": {
+    "companyProfileGuid": {
+      "type": "string",
+      "description": "Unique identifier of the company profile that will be operating the requested numbers.",
+      "format": "uuid"
+    },
+    "quantity": {
+      "maximum": 1000,
+      "minimum": 1,
+      "type": "integer",
+      "description": "The quantity of numbers to be requested.",
+      "format": "int32"
+    },
+    "rangeSize": {
+      "type": "integer",
+      "description": "The size of the range to be requested. **Only required if a range of numbers is requested.\r\nRequires number ranges to be supported. See the order restrictions endpoint for the allowed ranges**",
+      "format": "int32"
+    },
+    "numberType": {
+      "$ref": "#/$defs/ApiNumberType"
+    },
+    "areaCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The area code to request numbers for. Required when city is not provided.\r\nIf the city is also provided, this will be used in combination with city."
+    },
+    "city": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "City to request numbers for. Required when area code is not provided.\r\nIf the area code is also provided, this will be used in combination with area code."
+    },
+    "region": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Region to request numbers for. Only required for NANPA."
+    },
+    "comment": {
+      "maxLength": 500,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Additional comment for customers to for example add a distribution group or IP address."
+    },
+    "callbackUrl": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire number request order including the updated status."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiNumberType": {
+      "title": "Number Type",
+      "enum": [
+        "Local",
+        "National",
+        "TollFree"
+      ],
+      "type": "string",
+      "description": "Phone number type"
+    }
+  }
+}

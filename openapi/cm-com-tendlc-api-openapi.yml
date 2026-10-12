@@ -1,0 +1,1197 @@
+openapi: 3.2.0
+info:
+  title: Channels Ten Dlc API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: TenDlc
+paths:
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/brands:
+    get:
+      tags:
+      - TenDlc
+      summary: Get 10DLC brands
+      operationId: TenDlc_GetTenDlcBrandsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The q.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandBase'
+    post:
+      tags:
+      - TenDlc
+      summary: Add 10DLC brand
+      operationId: TenDlc_AddTenDlcBrandAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/brands/{brandId}:
+    get:
+      tags:
+      - TenDlc
+      summary: Get a 10DLC brand
+      operationId: TenDlc_GetTenDlcBrandAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+    delete:
+      tags:
+      - TenDlc
+      summary: Cancel a 10DLC brand
+      operationId: TenDlc_CancelTenDlcBrandAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/brands/{brandId}/forminput:
+    get:
+      tags:
+      - TenDlc
+      summary: Get 10DLC brand form input
+      operationId: TenDlc_GetTenDlcBrandFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputResponse'
+    put:
+      tags:
+      - TenDlc
+      summary: Add 10DLC brand form input
+      operationId: TenDlc_AddTenDlcBrandFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand'
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/brands/{brandId}/vetting:
+    get:
+      tags:
+      - TenDlc
+      summary: Gets the ten DLC brand vetting status asynchronous
+      operationId: TenDlc_GetTenDlcBrandVettingStatusAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandVettingStatus'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandVettingStatus'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandVettingStatus'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandVettingStatus'
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/campaigns:
+    get:
+      tags:
+      - TenDlc
+      summary: Gets the ten DLC campaigns asynchronous
+      operationId: TenDlc_GetTenDlcCampaignsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The q.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/brands/{brandId}/campaigns:
+    get:
+      tags:
+      - TenDlc
+      summary: Get 10DLC campaigns asynchronous
+      operationId: TenDlc_GetTenDlcCampaignsByBrandAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The q.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
+    post:
+      tags:
+      - TenDlc
+      summary: Add 10DLC campaign asynchronous
+      operationId: TenDlc_AddTenDlcCampaignAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/brands/{brandId}/campaigns/{campaignId}:
+    get:
+      tags:
+      - TenDlc
+      summary: Get a 10DLC campaign asynchronous
+      operationId: TenDlc_GetTenDlcCampaignByBrandAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignId
+        in: path
+        description: The campaign identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+    delete:
+      tags:
+      - TenDlc
+      summary: Cancel a 10DLC campaign asynchronous
+      operationId: TenDlc_CancelTenDlcCampaignAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignId
+        in: path
+        description: The campaign identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/brands/{brandId}/campaigns/{campaignId}/forminput:
+    get:
+      tags:
+      - TenDlc
+      summary: Get 10DLC campaign form input asynchronous
+      operationId: TenDlc_GetTenDlcCampaignFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignId
+        in: path
+        description: The campaign identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+    put:
+      tags:
+      - TenDlc
+      summary: Add 10DLC campaign form input asynchronous
+      operationId: TenDlc_AddTenDlcCampaignFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: brandId
+        in: path
+        description: The brand identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignId
+        in: path
+        description: The campaign identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign'
+  /channels/v1/accounts/{accountId}/sms/{channelRequestId}/10dlc/campaigns/{campaignId}:
+    get:
+      tags:
+      - TenDlc
+      summary: Search for a 10DLC campaign
+      operationId: TenDlc_GetTenDlcCampaignAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignId
+        in: path
+        description: The campaign identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
+components:
+  schemas:
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign:
+      required:
+      - id
+      - accountId
+      - channelId
+      - brandId
+      - description
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        brandId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        campaignRegistryId:
+          type: string
+        campaignRegistryStatus:
+          enum:
+          - APPROVED
+          - REJECTED
+          - EXPIRED
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        phoneNumberRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        rejectionReason:
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        expiredOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        approvedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandBase:
+      required:
+      - id
+      - accountId
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        campaignRegistryId:
+          type: string
+        campaignRegistryStatus:
+          enum:
+          - SELF_DECLARED
+          - UNVERIFIED
+          - VERIFIED
+          - VETTED_VERIFIED
+          type: string
+        companyName:
+          type: string
+        campaignRegistryBrandRelationship:
+          enum:
+          - BASIC_ACCOUNT
+          - SMALL_ACCOUNT
+          - MEDIUM_ACCOUNT
+          - LARGE_ACCOUNT
+          - KEY_ACCOUNT
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand:
+      required:
+      - id
+      - accountId
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        campaignRegistryId:
+          type: string
+        campaignRegistryStatus:
+          enum:
+          - SELF_DECLARED
+          - UNVERIFIED
+          - VERIFIED
+          - VETTED_VERIFIED
+          type: string
+        companyName:
+          type: string
+        campaignRegistryBrandRelationship:
+          enum:
+          - BASIC_ACCOUNT
+          - SMALL_ACCOUNT
+          - MEDIUM_ACCOUNT
+          - LARGE_ACCOUNT
+          - KEY_ACCOUNT
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        vettingScore:
+          format: int32
+          type: integer
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        rejectionReason:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase:
+      required:
+      - id
+      - accountId
+      - brandId
+      - description
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        brandId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        campaignRegistryId:
+          type: string
+        campaignRegistryStatus:
+          enum:
+          - APPROVED
+          - REJECTED
+          - EXPIRED
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        phoneNumberRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        expiredOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        approvedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandVettingStatus:
+      type: object
+      properties:
+        vettingScore:
+          format: int32
+          maximum: 100
+          minimum: 0
+          type: integer
+        vettingClass:
+          type: string
+        vettingStatus:
+          type: string
+        reasons:
+          type: array
+          items:
+            type: string
+        vettedDateUtc:
+          format: date-time
+          type: string
+        createDateUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+  requestBodies:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

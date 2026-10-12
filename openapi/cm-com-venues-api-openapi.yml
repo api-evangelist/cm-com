@@ -1,0 +1,1361 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Venues API
+  version: '1.0'
+  description: 'Operations tagged Venues across 3 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml, cm-com-live-tables-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+tags:
+- name: Venues
+  description: Venue configuration
+paths:
+  /entrance/v1.0/organisations/{organisationUuid}/venues:
+    post:
+      operationId: VenuesController_create_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVenueDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a venue
+      tags:
+      - Venues
+    get:
+      operationId: VenuesController_findAllByOrganisation_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List venues for an organisation
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/venues/{venueUuid}:
+    get:
+      operationId: VenuesController_findOne_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get a venue by UUID
+      tags:
+      - Venues
+    patch:
+      operationId: VenuesController_patch_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVenueDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a venue
+      tags:
+      - Venues
+    delete:
+      operationId: VenuesController_remove_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: VenueSections cascade, so are also removed upon deleting venue
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a venue
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/venues/{venueUuid}/plans:
+    get:
+      operationId: VenuesController_findVenueEntrancePlans_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/EntrancePlan'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List entrance plans for a venue
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/venues/{venueUuid}/sections/{sectionUuid}:
+    delete:
+      operationId: VenuesController_removeSection_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: sectionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a venue section
+      tags:
+      - Venues
+    patch:
+      operationId: VenuesController_patchSection_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: sectionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVenueSectionDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VenueSection'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a venue section
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/venues/{venueUuid}/sections:
+    post:
+      operationId: VenuesController_addSection_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVenueSectionDto'
+      responses:
+        '201':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Add a section to a venue
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/venues:
+    post:
+      operationId: VenuesController_create_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVenueDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a venue
+      tags:
+      - Venues
+    get:
+      operationId: VenuesController_findAllByOrganisation_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List venues for an organisation
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/venues/{venueUuid}:
+    get:
+      operationId: VenuesController_findOne_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get a venue by UUID
+      tags:
+      - Venues
+    patch:
+      operationId: VenuesController_patch_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVenueDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a venue
+      tags:
+      - Venues
+    delete:
+      operationId: VenuesController_remove_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: VenueSections cascade, so are also removed upon deleting venue
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a venue
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/venues/{venueUuid}/plans:
+    get:
+      operationId: VenuesController_findVenueEntrancePlans_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/EntrancePlan'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List entrance plans for a venue
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/venues/{venueUuid}/sections/{sectionUuid}:
+    delete:
+      operationId: VenuesController_removeSection_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: sectionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a venue section
+      tags:
+      - Venues
+    patch:
+      operationId: VenuesController_patchSection_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: sectionUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVenueSectionDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VenueSection'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a venue section
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/venues/{venueUuid}/sections:
+    post:
+      operationId: VenuesController_addSection_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVenueSectionDto'
+      responses:
+        '201':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Add a section to a venue
+      tags:
+      - Venues
+    servers:
+    - url: https://api.cm.com
+  /tablespartnerapi/v1/venues:
+    get:
+      tags:
+      - Venues
+      summary: Get all venues
+      description: Retrieve a list of all venues accessible with the current API token.
+      operationId: 944871ef1480c64d427e3a152fa81be5
+      responses:
+        '200':
+          description: Get list of venue objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PartnerApiVenue'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+      security:
+      - BearerAuth: []
+    servers:
+    - url: https://api.cm.com
+      description: Production Server
+components:
+  schemas:
+    UpdateVenueSectionDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: Northside Stand
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    Venue:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueSection'
+      required:
+      - uuid
+      - externalId
+      - name
+      - venueSections
+    Event:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Festival 2024
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+      required:
+      - uuid
+      - externalId
+      - name
+      - startAt
+      - endAt
+    UpdateVenueDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateVenueSectionDto'
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    EntrancePlan:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Main Entrance
+        description:
+          type: string
+          maxLength: 255
+          example: Entrance plan for main entrance
+        isDefault:
+          type: boolean
+          description: Marks an entrancePlan as default plan.
+        isActive:
+          type: boolean
+          description: Sets an entrancePlan as active/inactive.
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+        scanMode:
+          type: string
+          enum:
+          - OFFLINE_SYNC
+          - ONLINE
+          example: OFFLINE_SYNC
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - NO_RULES
+          example: ACTIVE
+        children:
+          type: array
+          items:
+            type: object
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        venues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Venue'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        organisation:
+          type: object
+      required:
+      - uuid
+      - name
+      - isDefault
+      - isActive
+      - scanMode
+    Condition:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Must be scanned once on entrance plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Value to compare the condition operator to.
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        entrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
+      - uuid
+      - name
+      - subject
+      - operator
+      - value
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    Rule:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Scanning Rule All VIP tickets scannable twice
+        maxValidations:
+          type: number
+          minimum: 0
+          description: Amount a ticket can be validated (successfully scanned) on the rule. When 0 the ticket cannot be scanned.
+        maxValidationScope:
+          type: string
+          enum:
+          - UNRESTRICTED
+          - DAILY
+          - SAME_DAY
+          example: UNRESTRICTED
+          description: 'Defines the scope of maxValidations. UNRESTRICTED: total limit across entire validity period, DAILY: limit resets each day, SAME_DAY: all scans must occur on the same calendar day.'
+        validFrom:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned from this date onwards
+        validUntil:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned until this date.
+        daysValidAfterPurchase:
+          type: number
+          description: Amount of days a barcode can be validated after its issued date (whole days, timestamp is not taken into account)
+        shouldValidateTimeslotMoment:
+          type: boolean
+          description: If set to true a barcode with a timeslot can only be scanned on the (whole) day of the timeslot
+        minutesBeforeTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes before the timeslot moment a barcode may be scanned. When set (together with/or minutesAfterTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        minutesAfterTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes after the timeslot moment a barcode may be scanned. When set (together with/or minutesBeforeTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        shouldValidateOnParent:
+          type: boolean
+          description: If set to true barcodes will be validated on the top-level parent of the entrance plan.
+        scanColour:
+          type: string
+          default: '#3ddc97'
+          description: Colour (hexcode) that is used on scanner display for successful checkins (Default is green).
+        scanMessage:
+          type: string
+          maxLength: 255
+          default: Barcode successfully checked in.
+          description: Message displayed on successful checkin.
+        requiresPhotoVerification:
+          type: boolean
+          description: If set to true a successful checkin requires staff to verify the visitor against a photo (e.g. Museumpass Belgium) before it is registered.
+        requiresConfirmationQuestion:
+          type: boolean
+          description: If set to true a successful checkin requires staff to answer a confirmation question before it is registered.
+        confirmationQuestion:
+          type: string
+          maxLength: 80
+          example: Does this visitor meet the 18+ age requirement?
+          description: Question shown to staff when requiresConfirmationQuestion is true.
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of event the rule applies to
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of venueSection the rule applies to
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of product the rule applies to
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+      required:
+      - uuid
+      - name
+      - maxValidations
+      - maxValidationScope
+      - shouldValidateTimeslotMoment
+      - shouldValidateOnParent
+      - requiresPhotoVerification
+      - requiresConfirmationQuestion
+    VenueSection:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Northside Stand
+      required:
+      - uuid
+      - externalId
+      - name
+    CreateVenueSectionDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: Northside Stand
+      required:
+      - externalId
+      - name
+    CreateVenueDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateVenueSectionDto'
+      required:
+      - externalId
+      - name
+      - venueSections
+    PartnerApiVenue:
+      title: Venue
+      description: Venue resource representation
+      required:
+      - uuid
+      - name
+      - timezone_id
+      properties:
+        uuid:
+          description: Unique identifier of the venue
+          type: string
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          description: Name of the venue
+          type: string
+          example: Grand Concert Hall
+        timezone_id:
+          description: Timezone identifier of the venue
+          type: string
+          example: Europe/Amsterdam
+      type: object
+    PartnerApiErrorResponse:
+      title: Error Response
+      description: Standard error response structure for CM.com Tables API
+      required:
+      - message
+      - error_code
+      properties:
+        message:
+          description: Human-readable error message
+          type: string
+          example: Api token not found.
+        error_code:
+          description: Error code identifier (first 3 digits represent HTTP status code)
+          type: integer
+          example: 401100
+        error_details:
+          description: Additional error details (optional)
+          type:
+          - object
+          - 'null'
+          example: null
+      type: object
+  responses:
+    ForbiddenResponse:
+      description: Forbidden - API token does not have the required ability for this endpoint.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PartnerApiErrorResponse'
+          examples:
+            InsufficientAbility:
+              summary: API token lacks required ability
+              value:
+                message: Api token does not have the required ability for this endpoint.
+                error_code: 403101
+                error_details: null
+    TooManyRequestsResponse:
+      description: Rate limit exceeded - Maximum 10 requests per minute.
+      headers:
+        X-RateLimit-Limit:
+          description: Request limit per minute
+          schema:
+            type: integer
+            example: 10
+        X-RateLimit-Remaining:
+          description: Remaining requests in current window
+          schema:
+            type: integer
+            example: 0
+        Retry-After:
+          description: Seconds until rate limit resets
+          schema:
+            type: integer
+            example: 60
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PartnerApiErrorResponse'
+    UnauthorizedResponse:
+      description: Unauthorized - API token not found or not in active state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PartnerApiErrorResponse'
+          examples:
+            TokenNotFound:
+              summary: API token not found
+              value:
+                message: Api token not found.
+                error_code: 401100
+                error_details: null
+            TokenNotActive:
+              summary: API token not in active state
+              value:
+                message: Api token is not in an active state.
+                error_code: 401101
+                error_details: null
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+    BearerAuth:
+      type: http
+      description: 'API authentication using Bearer tokens. To access the Partner API, you need an API token that can be obtained from your venue organiser through the CM.com Tables dashboard. Once you have your token, include it in the Authorization header of each request using the Bearer authentication scheme. Example: `Authorization: Bearer tbls_someSuperSecretTablesPartnerApiToken`. The token must be in an active state and have the required abilities (permissions) for the endpoints you wish to access. Tokens can be managed and revoked by the venue organiser at any time.'
+      bearerFormat: API Token
+      scheme: bearer
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml
+- cm-com-live-tables-v1-openapi.yml

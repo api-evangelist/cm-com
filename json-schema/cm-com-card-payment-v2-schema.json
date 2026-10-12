@@ -1,0 +1,413 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-card-payment-v2-schema.json",
+  "title": "CardPaymentV2",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml#/components/schemas/CardPaymentV2",
+  "allOf": [
+    {
+      "$ref": "#/$defs/Payment"
+    },
+    {
+      "type": "object",
+      "required": [
+        "clientSideEncryptedCard",
+        "consumer"
+      ],
+      "properties": {
+        "clientSideEncryptedCard": {
+          "type": "string",
+          "description": "Encrypted cardholder credit card details using the provided CSE javascript library."
+        },
+        "consumer": {
+          "$ref": "#/$defs/CreditCardConsumerV2"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "Address": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AddressWithStateAndAdditionalData"
+        },
+        {
+          "type": "object",
+          "required": [
+            "countryCode"
+          ]
+        }
+      ]
+    },
+    "AddressWithStateAndAdditionalData": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AddressWithoutMandatoryCountry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "state": {
+              "description": "The state or province of the consumer's billing address associated with the card used for this purchase. The value must be the country subdivision code (e.g., 'NH') or the official state/province name (e.g., 'Noord Holland') as defined in ISO 3166-2.",
+              "type": "string",
+              "maxLength": 40
+            },
+            "additionalData": {
+              "description": "The consumers house number addition.",
+              "type": "string",
+              "maxLength": 35
+            }
+          }
+        }
+      ]
+    },
+    "AddressWithoutMandatoryCountry": {
+      "type": "object",
+      "description": "The consumers address.",
+      "properties": {
+        "street": {
+          "description": "The consumers street name.",
+          "type": "string",
+          "maxLength": 100
+        },
+        "houseNumber": {
+          "description": "The consumers house number.",
+          "type": "string",
+          "maxLength": 35
+        },
+        "postalCode": {
+          "description": "The consumers postal code.",
+          "type": "string",
+          "maxLength": 35
+        },
+        "city": {
+          "description": "The consumers city.",
+          "type": "string",
+          "maxLength": 35
+        },
+        "countryCode": {
+          "$ref": "#/$defs/Country"
+        }
+      }
+    },
+    "Amount": {
+      "description": "Denomination in the smallest currency subunit, as for example euro cents.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99999999
+    },
+    "BaseWebhook": {
+      "type": "object",
+      "description": "A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.",
+      "required": [
+        "url",
+        "events"
+      ],
+      "properties": {
+        "url": {
+          "description": "The URL the request must be send to.",
+          "type": "string",
+          "format": "url"
+        },
+        "events": {
+          "description": "Type of events that will trigger a webhook.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Country": {
+      "description": "Country of the consumer (ISO-3166)",
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "CreditCardConsumerV2": {
+      "type": "object",
+      "required": [
+        "billingAddress"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "email"
+          ]
+        },
+        {
+          "required": [
+            "mobilePhone"
+          ]
+        }
+      ],
+      "description": "Cardholder personal information\n* **Either `email` and/or `MobilePhone` must be provided**\n* `billingAddress` conditional on the market\n",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Cardholder email address\n"
+        },
+        "mobilePhone": {
+          "type": "object",
+          "properties": {
+            "countryCallingCode": {
+              "type": "string",
+              "description": "Phone number country calling code"
+            },
+            "number": {
+              "type": "string",
+              "description": "Phone number"
+            }
+          }
+        },
+        "billingAddress": {
+          "description": "Cardholder billing address.",
+          "allOf": [
+            {
+              "$ref": "#/$defs/Address"
+            }
+          ]
+        },
+        "shippingAddress": {
+          "description": "Cardholder shipping address.",
+          "allOf": [
+            {
+              "$ref": "#/$defs/Address"
+            }
+          ]
+        }
+      }
+    },
+    "Currency": {
+      "description": "ISO 4217 currency code.",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 3,
+      "default": "EUR"
+    },
+    "Datetime": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 20,
+      "description": "ISO 8601 date and time."
+    },
+    "Description": {
+      "description": "Description of the underlying value or reason of the payment.",
+      "type": "string",
+      "maxLength": 255
+    },
+    "FinalStatusEvent": {
+      "description": "* `FINALSTATUS` - This value is deprecated and shouldn't be used anymore. Use `STATUS_CHANGE` instead.\n",
+      "type": "string",
+      "enum": [
+        "FINALSTATUS"
+      ]
+    },
+    "Language": {
+      "description": "Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).",
+      "type": "string",
+      "default": "nl",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "Payment": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PaymentWithoutDescriptionAndExpiresAt"
+        },
+        {
+          "type": "object",
+          "required": [
+            "description"
+          ],
+          "properties": {
+            "description": {
+              "$ref": "#/$defs/Description"
+            },
+            "expiresAt": {
+              "$ref": "#/$defs/Datetime",
+              "description": "ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**."
+            }
+          }
+        }
+      ]
+    },
+    "PaymentWithoutDescriptionAndExpiresAt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PaymentWithoutDescriptionExpiresAtAndWebhooks"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "webhooks": {
+              "$ref": "#/$defs/TransactionWebhooks"
+            }
+          }
+        }
+      ]
+    },
+    "PaymentWithoutDescriptionExpiresAtAndWebhooks": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "language": {
+              "$ref": "#/$defs/Language"
+            }
+          }
+        }
+      ]
+    },
+    "PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ReturnURLOneOf"
+        },
+        {
+          "type": "object",
+          "required": [
+            "reference",
+            "amount"
+          ],
+          "properties": {
+            "reference": {
+              "$ref": "#/$defs/Reference"
+            },
+            "amount": {
+              "$ref": "#/$defs/Amount"
+            },
+            "currency": {
+              "$ref": "#/$defs/Currency"
+            }
+          }
+        }
+      ]
+    },
+    "Reference": {
+      "description": "The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "RefundStatusEvent": {
+      "description": "* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.\n",
+      "type": "string",
+      "enum": [
+        "REFUND_STATUS"
+      ]
+    },
+    "ReturnURLOneOf": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "returnUrls"
+          ],
+          "properties": {
+            "returnUrls": {
+              "$ref": "#/$defs/ReturnUrls"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "returnUrl"
+          ],
+          "properties": {
+            "returnUrl": {
+              "$ref": "#/$defs/ReturnUrl"
+            }
+          }
+        }
+      ]
+    },
+    "ReturnUrl": {
+      "description": "URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.\n\nWith this implementation you are responsible to fetch the payment status and incorporated into your site.",
+      "type": "string",
+      "format": "url",
+      "maxLength": 2000
+    },
+    "ReturnUrls": {
+      "type": "object",
+      "description": "URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.\n\nWith this object we can redirect consumer to a dedicated page per payment result status. Either this object or the returnUrl field is mandatory.",
+      "required": [
+        "success",
+        "cancelled",
+        "expired",
+        "failed"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "cancelled": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "expired": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "failed": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        }
+      }
+    },
+    "StatusChangeEvent": {
+      "description": "* `STATUS_CHANGE` - Triggered when the status of a transaction changes.\n",
+      "type": "string",
+      "enum": [
+        "STATUS_CHANGE"
+      ]
+    },
+    "TransactionWebhook": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseWebhook"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "events": {
+              "items": {
+                "description": "* `STATUS_CHANGE` - Triggered when the status of a transaction changes.\n* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.\n* `FINALSTATUS` - This value is deprecated and shouldn't be used anymore. Use `STATUS_CHANGE` instead.\n",
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/StatusChangeEvent"
+                  },
+                  {
+                    "$ref": "#/$defs/RefundStatusEvent"
+                  },
+                  {
+                    "$ref": "#/$defs/FinalStatusEvent"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "TransactionWebhooks": {
+      "description": "Array of webhooks that enables receiving a web request once a given event occurs. We won't do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.\n",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TransactionWebhook"
+      }
+    }
+  }
+}

@@ -1,0 +1,121 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Get Availability API
+  version: '1.0'
+  description: 'Operations tagged GetAvailability across 2 of this provider''s published API definitions: cm-com-live-museum-park-reseller-v1-openapi.yml, cm-com-live-museum-park-scan-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://globalreseller.nl/webservices
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: GetAvailability
+paths:
+  /getAvailability:
+    post:
+      summary: /getAvailability
+      description: 'This functionality allow you to get the availability of a specified period. Some clients allow to make a reservation for a day, others require you to also select a time (for example het Van Gogh Museum). This depends on what availability type is set within the system for this client.
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + endDate + environment + showTicketsAllocation + startDate + userId)`
+
+
+        **Please note**
+
+
+        There are three types of availability:
+
+
+        - Timeslots
+
+        - Date
+
+        - Period'
+      operationId: getavailability
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - environment
+              - userId
+              - startDate
+              - endDate
+              - showTicketsAllocation
+              - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                environment:
+                  type: string
+                  description: '"test" or "production"'
+                  enum:
+                  - test
+                  - production
+                userId:
+                  type: integer
+                  description: The userId is a reference to the user (museum / attraction). The userId can be requested via getAvailableUsers and can be cached in your application.
+                  format: int32
+                startDate:
+                  type: string
+                  description: 'Date format: yyyy-mm-dd.'
+                  format: date
+                endDate:
+                  type: string
+                  description: 'Date format: yyyy-mm-dd.'
+                  format: date
+                showTicketsAllocation:
+                  type: integer
+                  description: When set to 1 the response will include the amount of available tickets instead of a boolean.
+                  format: int32
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + endDate + environment + showTicketsAllocation + startDate + userId).
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Success:
+                  value:
+                    success: true
+                    availability:
+                    - '2018-05-16'
+                    availabilityType: date
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  availability:
+                    type: array
+                    items:
+                      type: string
+                      example: 2018-05-16
+                  availabilityType:
+                    type: string
+                    example: date
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: {}
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - GetAvailability
+    servers:
+    - url: https://globalreseller.nl/webservices
+x-refined-from:
+- cm-com-live-museum-park-reseller-v1-openapi.yml
+- cm-com-live-museum-park-scan-v1-openapi.yml

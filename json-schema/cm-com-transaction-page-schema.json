@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-transaction-page-schema.json",
+  "title": "TransactionPage",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-id-scan-v1-openapi.yml#/components/schemas/TransactionPage",
+  "type": "object",
+  "properties": {
+    "nextCursor": {
+      "type": "string",
+      "description": "The cursor pointing to the next page."
+    },
+    "nextUrl": {
+      "type": "string",
+      "description": "The URL to get the next page of transactions. The URL includes all previously provided parameters and the cursor for the next page."
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TransactionPageDetail"
+      }
+    }
+  },
+  "$defs": {
+    "TaskDetail": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/TaskState"
+        },
+        "attempts": {
+          "type": "number",
+          "description": "The number of attempts made for this task.",
+          "minimum": 0
+        },
+        "attemptsInvoiced": {
+          "type": "number",
+          "description": "The number of attempts that have been invoiced.",
+          "minimum": 0
+        }
+      }
+    },
+    "TaskDocumentScanDetail": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskDetail"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "document_scan"
+          ]
+        }
+      }
+    },
+    "TaskFaceLivenessDetail": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskDetail"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "face_liveness"
+          ]
+        }
+      }
+    },
+    "TaskFaceMatchDetail": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TaskDetail"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "face_match"
+          ]
+        },
+        "score": {
+          "type": "number",
+          "description": "Similarity score",
+          "format": "float",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "TaskState": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "aborted",
+        "maximum_attempts_exceeded"
+      ]
+    },
+    "TransactionDetailBase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the transaction",
+          "format": "uuid"
+        },
+        "state": {
+          "$ref": "#/$defs/TransactionState"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the transaction was created."
+        },
+        "expires": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the transaction expires."
+        },
+        "completed": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "The date the transaction was completed."
+        }
+      }
+    },
+    "TransactionPageDetail": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/TransactionDetailBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tasks": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/TaskDocumentScanDetail"
+                  },
+                  {
+                    "$ref": "#/$defs/TaskFaceLivenessDetail"
+                  },
+                  {
+                    "$ref": "#/$defs/TaskFaceMatchDetail"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "TransactionState": {
+      "type": "string",
+      "description": "Current state of the transaction",
+      "enum": [
+        "pending",
+        "completed",
+        "failed"
+      ]
+    }
+  }
+}

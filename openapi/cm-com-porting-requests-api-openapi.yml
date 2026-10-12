@@ -1,0 +1,683 @@
+openapi: 3.2.0
+info:
+  title: Phone Number Request Porting Requests API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Porting Requests
+paths:
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests:
+    get:
+      tags:
+      - Porting Requests
+      summary: Get Porting Requests
+      description: Get all porting request orders for the given Account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: skip
+        in: query
+        description: Amount of items being skipped.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+        example: 0
+      - name: take
+        in: query
+        description: Amount of items being retrieved.
+        schema:
+          type: integer
+          format: int32
+          default: 30
+        example: 30
+      - name: q
+        in: query
+        description: Search for order ID.
+        schema:
+          type: string
+          default: ''
+      - name: statuses
+        in: query
+        description: Filter on given statusses.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-CM-PAGINATION-SKIP:
+              description: The amount of items that have been skipped
+              schema:
+                type: number
+            X-CM-PAGINATION-TAKE:
+              description: The amount of items that have been taken
+              schema:
+                type: number
+            X-CM-PAGINATION-TOTAL:
+              description: The total amount of available items
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoicePhonenumberrequestapiV1ByAccountGuidPortingrequests
+      x-operation-id-source: derived
+    post:
+      tags:
+      - Porting Requests
+      summary: Create Porting Request
+      description: 'This endpoint allows you to request one or more phone numbers to be ported from your current number provider, to CM.com.
+
+
+        After your porting request has been created, we will keep you informed on the status of your order via the supplied email address and (if given) via the supplied callback URL. If your porting request has been completed, the phone numbers will be directly available for use inside our platform.'
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: CM.Voice.PhoneNumberRequestApi.Models.Api.PortingRequest.ApiCreatePortingRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCreatePortingRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiCreatePortingRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiCreatePortingRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: postVoicePhonenumberrequestapiV1ByAccountGuidPortingrequests
+      x-operation-id-source: derived
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}:
+    get:
+      tags:
+      - Porting Requests
+      summary: Get Porting Request
+      description: Get a specific porting request based on the given order ID.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order, this can be found in your confirmation email or the Voice Management App.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoicePhonenumberrequestapiV1ByAccountGuidPortingrequestsByOrderId
+      x-operation-id-source: derived
+  /voice-phonenumberrequestapi/v1/portingrequests/statuses:
+    get:
+      tags:
+      - Porting Requests
+      summary: Get Porting Request Statuses
+      description: A phone porting request goes through a set of predefined statuses during its lifespan. With this request you can retrieve all possible statuses to check the current status of your request based on the status ID.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPortingRequestOrderStatus'
+      operationId: getVoicePhonenumberrequestapiV1PortingrequestsStatuses
+      x-operation-id-source: derived
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}/perform:
+    post:
+      tags:
+      - Porting Requests
+      summary: Perform Porting Request
+      description: '**IMPORTANT NOTE: Performing a porting is only possible for dutch numbers.**
+
+
+        This endpoint allows you to perform (and thus complete) your porting request, once its status is set to `Ready to be ported`. After calling this endpoint, the order will be finalized and the phone numbers coupled to the given porting request will be activated on our platform.'
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order, this can be found in your confirmation email or the Voice Management App.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: postVoicePhonenumberrequestapiV1ByAccountGuidPortingrequestsByOrderIdPerform
+      x-operation-id-source: derived
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}/cancel:
+    post:
+      tags:
+      - Porting Requests
+      summary: Cancel Porting Request
+      description: This endpoint allows you to cancel an ongoing porting request, once its status is set to `Ready to be ported`. After calling this endpoint, the ongoing order process will be stopped.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order, this can be found in your confirmation email or the Voice Management App.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: postVoicePhonenumberrequestapiV1ByAccountGuidPortingrequestsByOrderIdCancel
+      x-operation-id-source: derived
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}/documents:
+    post:
+      tags:
+      - Porting Requests
+      summary: Upload Porting Request Document
+      description: Upload a document (LoA, Telco Invoice, etc.) for a porting request
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Document upload information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiUploadPortingRequestDocument'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiUploadPortingRequestDocument'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiUploadPortingRequestDocument'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPortingRequestDocument'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: postVoicePhonenumberrequestapiV1ByAccountGuidPortingrequestsByOrderIdDocuments
+      x-operation-id-source: derived
+  /voice-phonenumberrequestapi/v1/{accountGuid}/portingrequests/{orderId}/documents/{documentType}:
+    delete:
+      tags:
+      - Porting Requests
+      summary: Delete Porting Request Document
+      description: Delete a document from a porting request
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: orderId
+        in: path
+        description: Unique identifier of the porting request order.
+        required: true
+        schema:
+          type: string
+      - name: documentType
+        in: path
+        description: Type of document to delete (LoA, TelcoInvoice, Other)
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: deleteVoicePhonenumberrequestapiV1ByAccountGuidPortingrequestsByOrderIdDocumentsByDocumentType
+      x-operation-id-source: derived
+components:
+  schemas:
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ApiPortingRequestOrderStatus:
+      title: Porting Request Order Status
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier
+          format: int32
+        key:
+          type:
+          - string
+          - 'null'
+          description: Status key
+        displayValue:
+          type:
+          - string
+          - 'null'
+          description: The value to display
+      additionalProperties: false
+      description: The status of a porting request
+    ApiPortingRequestDocument:
+      title: Porting Request Document
+      type: object
+      properties:
+        documentType:
+          type:
+          - string
+          - 'null'
+          description: Type of document (LoA, TelcoInvoice, Other)
+          example: LoA
+        documentGuid:
+          type: string
+          description: Unique identifier of the document
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        uploadedAt:
+          type: string
+          description: Date and time when the document was uploaded
+          format: date-time
+        status:
+          type:
+          - string
+          - 'null'
+          description: Current status of the document (Pending, Approved, Rejected)
+          example: Pending
+        approvedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time when the document was approved (if applicable)
+          format: date-time
+        rejectionReason:
+          type:
+          - string
+          - 'null'
+          description: Reason for rejection if the document was rejected
+          example: Document is not legible
+        fileName:
+          type:
+          - string
+          - 'null'
+          description: Original filename of the document
+          example: letter_of_authorization.pdf
+      additionalProperties: false
+      description: Represents a document associated with a porting request
+    ApiUploadPortingRequestDocument:
+      title: Upload Porting Request Document
+      required:
+      - documentGuid
+      - documentType
+      type: object
+      properties:
+        documentType:
+          minLength: 1
+          type: string
+          description: Type of document (LoA, TelcoInvoice, Other)
+          example: LoA
+        documentGuid:
+          minLength: 1
+          type: string
+          description: Unique identifier of the document from the documents API
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+      additionalProperties: false
+      description: Document upload information for porting requests
+    ApiPortingPhoneNumber:
+      title: Porting Phone Number
+      type: object
+      properties:
+        phoneNumber:
+          type: integer
+          description: The (first) phone number to be ported.
+          format: int64
+          example: 31765727000
+          exclusiveMinimum: 0
+        lastPhoneNumber:
+          type:
+          - integer
+          - 'null'
+          description: When a range of phone numbers are being ported, this number should be the last number in the range. If you are porting a single number, this value can be left empty.
+          format: int64
+          example: 31765727009
+      additionalProperties: false
+      description: Phone number to be ported
+    ApiPortingRequest:
+      title: Porting Request
+      type: object
+      properties:
+        phoneNumbers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiPortingPhoneNumber'
+          description: Phone numbers to be ported over.
+        providerCompanyName:
+          type:
+          - string
+          - 'null'
+          description: Company name of the current number provider.
+          example: T-Mobile
+        preferredPortingDateTime:
+          type:
+          - string
+          - 'null'
+          description: '**Only used for porting non-dutch numbers.** Preferred date and time to port the phone number(s) in UTC time. Will be picked up between 6:00 and 20:00 UTC time. Should be null when the porting request should be handled as soon as possible.'
+          format: date-time
+        companyProfileGuid:
+          type: string
+          description: Unique identifier of the company profile that will be operating the ported numbers.
+          format: uuid
+        comment:
+          type:
+          - string
+          - 'null'
+          description: Additional comment for customers to for example add a distribution group or IP address.
+          example: Room for extra comments or requests regarding this phone number request
+        callbackUrl:
+          type:
+          - string
+          - 'null'
+          description: URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire porting request order including the updated status.
+          example: https://www.example.com
+      additionalProperties: false
+      description: A porting requests that allows you to port you phone numbers from your current provider to the CM.com platform.
+    ApiPortingRequestOrder:
+      title: Porting Request Order
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          format: uuid
+        orderId:
+          type:
+          - string
+          - 'null'
+          description: The order id
+        createdOn:
+          type: string
+          description: Date and time of creation
+          format: date-time
+        portingData:
+          $ref: '#/components/schemas/ApiPortingRequest'
+        firstPossibleDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time of the first possible date on which the porting can be performed
+          format: date-time
+        status:
+          $ref: '#/components/schemas/ApiPortingRequestOrderStatus'
+        statusReason:
+          type:
+          - string
+          - 'null'
+          description: Optional comment describing the reason for the current status of the porting request
+        errorDetails:
+          type:
+          - string
+          - 'null'
+          description: Optional error details showing the details of why a porting request has been blocked automatically
+        documents:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiPortingRequestDocument'
+          description: Documents associated with this porting request (LoA, Telco Invoice, etc.)
+      additionalProperties: false
+      description: Order for porting request retrieved from administration api
+    ApiCreatePortingRequest:
+      title: Create Porting Request
+      required:
+      - providerCompanyName
+      type: object
+      properties:
+        phoneNumbers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiPortingPhoneNumber'
+          description: Phone numbers to be ported over.
+        providerCompanyName:
+          minLength: 1
+          type: string
+          description: Company name of the current number provider.
+          example: T-Mobile
+        preferredPortingDateTime:
+          type:
+          - string
+          - 'null'
+          description: '**Only used for porting non-dutch numbers.** Preferred date and time to port the phone number(s) in UTC time. Will be picked up between 6:00 and 20:00 UTC time. Should be null when the porting request should be handled as soon as possible.'
+          format: date-time
+        companyProfileGuid:
+          type: string
+          description: Unique identifier of the company profile that will be operating the ported numbers.
+          format: uuid
+        comment:
+          maxLength: 500
+          type:
+          - string
+          - 'null'
+          description: Additional comment for customers to for example add a distribution group or IP address.
+          example: Room for extra comments or requests regarding this phone number request
+        callbackUrl:
+          type:
+          - string
+          - 'null'
+          description: URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire porting request order including the updated status.
+          example: https://www.example.com
+        documents:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiUploadPortingRequestDocument'
+          description: Optional documents to upload with the porting request (LoA, Telco Invoice, etc.)
+      additionalProperties: false
+      description: A porting requests that allows you to port you phone numbers from your current provider to the CM.com platform.
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,1408 @@
+openapi: 3.2.0
+info:
+  title: Payments Gateway Riverty API
+  description: Common payments API
+  version: 1.27.22
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+- url: /api/v1
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: Riverty
+  description: Riverty is a payment method that allows customers to pay for their purchases in installments or at a later date.
+  externalDocs:
+    url: https://docs.riverty.com/bnpl
+paths:
+  /paymentmethods/riverty/v1/transactions:
+    post:
+      operationId: createRivertyTransaction
+      description: Create a Riverty transaction. After receiving a HTTP status 201 you have to redirect the consumer to the url given in **action.redirect.url**. The **id** field in the response can be used in future calls as **transactionId** to reference this transaction (for instance in a capture, cancellation or refund).
+      tags:
+      - Riverty
+      summary: Create Riverty payment
+      requestBody:
+        description: Create Riverty Transaction
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RivertyPayment'
+            examples:
+              standardRiverty:
+                $ref: '#/components/examples/standardAuthorization'
+      responses:
+        '201':
+          description: The Riverty transaction was created successfully. The response contains the transaction details and a redirect URL to complete the payment.
+          headers:
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RivertyTransaction'
+              examples:
+                pendingRiverty:
+                  $ref: '#/components/examples/pendingAuthorization'
+                success:
+                  $ref: '#/components/examples/successAuthorization'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/riverty/v1/transactions/{transactionId}:
+    get:
+      operationId: getRivertyTransaction
+      description: Retrieve details for an existing Riverty transaction. This endpoint must be used to obtain the status for a transaction.
+      tags:
+      - Riverty
+      summary: Fetch Riverty payment
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          description: Returns the transaction details for the Riverty transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RivertyTransaction'
+              examples:
+                standardRiverty:
+                  $ref: '#/components/examples/successAuthorization'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/riverty/v1/transactions/{transactionId}/captures:
+    post:
+      operationId: createRivertyCapture
+      description: '**Important:** This endpoint isn''t available for customers who enabled auto capture in their Riverty account.
+
+
+        Create a capture for an existing Riverty transaction. The **transactionId** parameter must be the ID of the transaction to be captured.
+
+
+        For an amount equal to the full amount of the transaction, **items** is optional, otherwise it has to be provided.
+
+        The amount cannot exceed the remaining uncaptured amount of the transaction.'
+      tags:
+      - Riverty
+      summary: Create a Riverty capture
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RivertyCapture-2'
+            examples:
+              fullCapture:
+                $ref: '#/components/examples/fullCapture'
+              partialCapture:
+                $ref: '#/components/examples/partialCapture'
+      responses:
+        '201':
+          description: The Riverty capture was created successfully. Money will be transferred to the merchant's account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RivertyCapture'
+              examples:
+                fullCaptureResponse:
+                  $ref: '#/components/examples/fullCapture-2'
+                partialCaptureResponse:
+                  $ref: '#/components/examples/partialCapture-2'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+    get:
+      operationId: getRivertyCaptures
+      tags:
+      - Riverty
+      summary: Fetch Riverty transaction captures
+      description: Retrieve captures for an existing Riverty transaction.
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          description: A list of captures for the specified Riverty transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RivertyCaptures'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/riverty/v1/transactions/{transactionId}/cancellations:
+    post:
+      operationId: createRivertyCancellation
+      description: 'Cancel an existing Riverty transaction. The **transactionId** parameter must be the ID of the transaction to be cancelled.
+
+
+        **Important:** A transaction cannot be cancelled if it has already been partially or fully captured. Cancellation is only possible for authorized transactions that have not yet been captured.
+
+
+        Leaving the amount field empty will cancel the full amount of the transaction. If an amount is specified, it must be a positive value and not exceed the remaining uncancelled amount of the transaction.'
+      tags:
+      - Riverty
+      summary: Cancel an authorization
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RivertyCancellation'
+            examples:
+              fullCancellation:
+                $ref: '#/components/examples/fullCancellation'
+              partialCancellation:
+                $ref: '#/components/examples/partialCancellation'
+      responses:
+        '201':
+          description: The Riverty cancellation was created successfully. Money will be transferred back to the consumers account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RivertyCancellation-2'
+              examples:
+                fullCancellation:
+                  $ref: '#/components/examples/fullCancellation-2'
+                partialCancellation:
+                  $ref: '#/components/examples/partialCancellation-2'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/riverty/v1/transactions/{transactionId}/refunds:
+    post:
+      operationId: createRivertyRefund
+      description: 'Create a refund for a specific capture within an existing Riverty transaction.
+
+
+        The **captureId** field is required for transactions with multiple captures, and optional for transactions with a single capture.
+
+
+        The **items** field is optional. If omitted, all items of the capture will be refunded.'
+      tags:
+      - Riverty
+      summary: Create Riverty refund
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      - in: header
+        name: X-Idempotency-Key
+        description: 'A unique client-supplied key to safely retry a request without creating a duplicate operation.
+
+
+          Can include letters, numbers, hyphens and underscores, up to 50 characters long.'
+        required: false
+        schema:
+          type: string
+          maxLength: 50
+          pattern: ^[A-Za-z0-9_-]+$
+        example: refund-2024-06-01-a1b2c3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RivertyRefund-2'
+            examples:
+              fullRefundSingleCapture:
+                $ref: '#/components/examples/fullRefundSingleCapture'
+              fullRefundMultiCapture:
+                $ref: '#/components/examples/fullRefundMultiCapture'
+              partialRefundSingleCapture:
+                $ref: '#/components/examples/partialRefundSingleCapture'
+              partialRefundMultiCapture:
+                $ref: '#/components/examples/partialRefundMultiCapture'
+      responses:
+        '201':
+          description: The Riverty refund was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RivertyRefund'
+              examples:
+                fullRefund:
+                  $ref: '#/components/examples/refund'
+                partialRefund:
+                  $ref: '#/components/examples/partialRefund'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+    get:
+      operationId: getRivertyRefunds
+      tags:
+      - Riverty
+      summary: Fetch Riverty transaction refunds
+      description: Retrieve refunds for an existing Riverty transaction.
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          description: A list of refunds for the specified Riverty transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RivertyRefunds'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    RedirectAction:
+      description: URL where consumer should be redirected to by the merchant to perform the payment.
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          description: URL where consumer should be redirected to by the merchant to perform the payment.
+          type: string
+          format: url
+          example: https://issuer.tld/ideal/start?trxid=213981209381209390821&random=wreq0dq90vgq0ew923123
+    RivertyItems:
+      description: Array of order items. Maximum allowed 500 items.
+      type: array
+      minItems: 1
+      maxItems: 500
+      items:
+        $ref: '#/components/schemas/RivertyItem'
+    Description:
+      description: Description of the underlying value or reason of the payment.
+      type: string
+      maxLength: 255
+      example: Order at yourdomain.tld
+    Email:
+      description: The email address of the consumer.
+      type: string
+      format: email
+      example: john.doe@email.tld
+    RivertyCapture-2:
+      type: object
+      required:
+      - amount
+      - netAmount
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount-2'
+        netAmount:
+          $ref: '#/components/schemas/NetAmount'
+        items:
+          description: 'List of items to be captured. Mandatory for partial captures. If not provided, the full amount will be captured. If provided, the total amount of all items must match the amount in the capture request.
+
+            '
+          $ref: '#/components/schemas/RivertyItems'
+    RivertyTransaction:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - type: object
+        required:
+        - id
+        - status
+        - orderNumber
+        - type
+        - netAmount
+        - created
+        - updated
+        - action
+        properties:
+          id:
+            $ref: '#/components/schemas/TransactionId'
+          status:
+            description: The status of the transaction.
+            oneOf:
+            - $ref: '#/components/schemas/StatusSuccess'
+            - $ref: '#/components/schemas/StatusCancelled'
+            - $ref: '#/components/schemas/StatusExpired'
+            - $ref: '#/components/schemas/StatusFailure'
+            - $ref: '#/components/schemas/StatusPending'
+          orderNumber:
+            description: Order number. Unique order number provided by the merchant.
+            type: string
+            maxLength: 50
+            example: order123
+          type:
+            type: string
+            format: enum
+            description: The type of the Riverty payment method.
+            enum:
+            - Invoice
+            example: Invoice
+          netAmount:
+            $ref: '#/components/schemas/NetAmount'
+          created:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time when the transaction was created.
+          updated:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time when the transaction was last updated.
+          merchantImageURL:
+            description: 'Image URL for the merchants brand. This image is shown at the top of the order page in Riverty. Supported image formats are: gif, jpeg (jpg), png, webp.
+
+              '
+            type: string
+            format: url
+            example: https://merchant.tld/images/logo.png
+          additionalMerchantData:
+            type: string
+            maxLength: 4096
+            description: 'Additional information about the merchant Format: Base64 encoded JSON'
+          consumer:
+            $ref: '#/components/schemas/Consumer-3'
+          items:
+            $ref: '#/components/schemas/RivertyItems'
+          webhooks:
+            $ref: '#/components/schemas/RivertyWebhooks'
+          action:
+            description: Next action to be performed by merchant (or consumer) to complete the payment.
+            type: object
+            properties:
+              redirect:
+                $ref: '#/components/schemas/RedirectAction'
+    ReturnUrls:
+      type: object
+      description: 'URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this object we can redirect consumer to a dedicated page per payment result status. Either this object or the returnUrl field is mandatory.'
+      required:
+      - success
+      - cancelled
+      - expired
+      - failed
+      properties:
+        success:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-success.html
+        cancelled:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-cancelled.html
+        expired:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-expired.html
+        failed:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-failed.html
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
+    RefundStatus:
+      description: '* `SUCCESS`    - Refund has succeeded.
+
+        * `PENDING`    - Refund is waiting to be processed.
+
+        * `FAILURE`    - Refund has failed.
+
+        * `CANCELLED`  - Refund has been cancelled.
+
+        '
+      type: string
+      enum:
+      - SUCCESS
+      - PENDING
+      - FAILURE
+      - CANCELLED
+      example: SUCCESS
+    AddressWithoutMandatoryCountry:
+      type: object
+      description: The consumers address.
+      properties:
+        street:
+          description: The consumers street name.
+          type: string
+          maxLength: 100
+          example: Rustenburgerlaan
+        houseNumber:
+          description: The consumers house number.
+          type: string
+          maxLength: 35
+          example: '25'
+        postalCode:
+          description: The consumers postal code.
+          type: string
+          maxLength: 35
+          example: 2012AL
+        city:
+          description: The consumers city.
+          type: string
+          maxLength: 35
+          example: Haarlem
+        countryCode:
+          $ref: '#/components/schemas/Country'
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
+
+        '
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    ReturnURLOneOf:
+      oneOf:
+      - type: object
+        required:
+        - returnUrls
+        properties:
+          returnUrls:
+            $ref: '#/components/schemas/ReturnUrls'
+      - type: object
+        required:
+        - returnUrl
+        properties:
+          returnUrl:
+            $ref: '#/components/schemas/ReturnUrl'
+    RivertyRefunds:
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RivertyRefund'
+    StatusFailure:
+      description: The transaction has failed.
+      type: string
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
+    Country:
+      description: Country of the consumer (ISO-3166)
+      type: string
+      example: NL
+      minLength: 2
+      maxLength: 2
+    PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - reference
+        - amount
+        properties:
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
+    StatusExpired:
+      description: The transaction has expired.
+      type: string
+      format: enum
+      enum:
+      - EXPIRED
+      example: EXPIRED
+    Currency:
+      description: ISO 4217 currency code.
+      type: string
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    LastName:
+      description: Consumer's last name.
+      type: string
+      maxLength: 35
+      example: Doe
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
+    NetAmount:
+      allOf:
+      - $ref: '#/components/schemas/Amount'
+      - description: 'Total net amount of order in the smallest currency subunit, as for example euro cents (excluding taxes and fees).
+
+
+          The validation will fail if: netAmount ≠ Σ(netUnitPrice × quantity)
+
+          '
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    ShopperIP:
+      type: string
+      minLength: 1
+      maxLength: 39
+      description: IPv4 or IPv6 address for the consumer
+      example: 1.1.1.1
+    RivertyRefund-2:
+      type: object
+      properties:
+        captureId:
+          description: 'Unique identifier of the capture to be refunded, received in the capture response.
+
+
+            Required for transactions with multiple captures.
+
+            '
+          $ref: '#/components/schemas/Uuid'
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+        items:
+          $ref: '#/components/schemas/RivertyItems'
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
+      type: string
+      format: enum
+      enum:
+      - CANCELLED
+      example: CANCELLED
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    RivertyCapture:
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - netAmount
+      - created
+      - updated
+      properties:
+        id:
+          description: Unique identifier received in the POST capture response root object.
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/TransactionId'
+        amount:
+          $ref: '#/components/schemas/Amount-2'
+        netAmount:
+          $ref: '#/components/schemas/NetAmount'
+        created:
+          $ref: '#/components/schemas/Datetime'
+          description: ISO 8601 date and time when the capture was created.
+        updated:
+          $ref: '#/components/schemas/Datetime'
+          description: ISO 8601 date and time when the capture was last updated.
+        items:
+          description: List of items that were captured. Only present for partial captures.
+          $ref: '#/components/schemas/RivertyItems'
+    Consumer-3:
+      description: The person initiating the checkout, typically the buyer who places the order.
+      allOf:
+      - $ref: '#/components/schemas/GenderlessConsumer'
+      - type: object
+        required:
+        - name
+        - email
+        - phone
+        - dateOfBirth
+        - billingAddress
+        - shopperIp
+        properties:
+          name:
+            allOf:
+            - $ref: '#/components/schemas/Name'
+            - type: object
+              properties:
+                firstName:
+                  maxLength: 50
+                lastName:
+                  maxLength: 50
+          shopperIp:
+            $ref: '#/components/schemas/ShopperIP'
+          billingAddress:
+            allOf:
+            - $ref: '#/components/schemas/AddressWithOptCountryAndHouseNumberAdditional'
+            - description: 'The address of the consumer. This is used for shipping and billing purposes.
+
+                It must include all required fields such as street, house number, postal code, city, and country code.
+
+                If the shipping address is different from the billing address, it should be specified in the `shippingAddress` field.'
+              type: object
+              required:
+              - street
+              - houseNumber
+              - postalCode
+              - city
+              - countryCode
+          shippingAddress:
+            allOf:
+            - $ref: '#/components/schemas/AddressWithOptCountryAndHouseNumberAdditional'
+            - type: object
+              properties:
+                type:
+                  description: 'Type of shipping address. These values don''t have an effect on the Riverty processing, but can
+
+                    be used to improve order handling.
+
+                    '
+                  type: string
+                  enum:
+                  - Standard
+                  - ShipTo
+                  - PickUpPoint
+                  - InStore
+                  example: PickUpPoint
+                pickUpPoint:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: Type of pickup point
+                      enum:
+                      - NotSet
+                      - ParcelLocker
+                      - ServicePoint
+                      - NeighbourhoodPoint
+                      - CarrierDepot
+                      example: ParcelLocker
+                    name:
+                      type: string
+                      description: Name of the pickup point
+                      maxLength: 255
+              required:
+              - street
+              - houseNumber
+              - postalCode
+              - city
+              - countryCode
+    GenderlessConsumer:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+        phone:
+          $ref: '#/components/schemas/Phone'
+        dateOfBirth:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          example: '1990-05-23'
+          description: Date of birth in ISO 8601 format (YYYY-MM-DD).
+    Phone:
+      description: The phonenumber of the consumer (E.164 format).
+      type: string
+      maxLength: 16
+      example: '+31695613259'
+    RivertyCancellation-2:
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - netAmount
+      - created
+      - updated
+      properties:
+        id:
+          description: Unique identifier received in the POST cancellation response root object.
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/TransactionId'
+        amount:
+          $ref: '#/components/schemas/Amount-2'
+        netAmount:
+          $ref: '#/components/schemas/NetAmount'
+        created:
+          $ref: '#/components/schemas/Datetime'
+          description: ISO 8601 date and time when the cancellation was created.
+        updated:
+          $ref: '#/components/schemas/Datetime'
+          description: ISO 8601 date and time when the cancellation was last updated.
+        items:
+          description: List of items that were cancelled. Only present for partial cancellations.
+          $ref: '#/components/schemas/RivertyItems'
+    RivertyItem:
+      allOf:
+      - $ref: '#/components/schemas/Item'
+      - type: object
+        required:
+        - description
+        - netUnitPrice
+        properties:
+          netUnitPrice:
+            description: Price per unit in cents (excluding vat)
+            $ref: '#/components/schemas/Amount'
+          imageUrl:
+            type: string
+            format: url
+            example: https://example.com/product-image.jpg
+            description: URL for the product image, will be used as a thumbnail in Riverty on the invoice line. Must be rectangular or square with a width between 100-1280 pixels. Supported formats, gif, jpeg(jpg), png, webp
+          productUrl:
+            type: string
+            description: URL to the product page
+            format: url
+            example: https://example.com/product-page
+    RivertyCaptures:
+      type: object
+      required:
+      - captures
+      properties:
+        captures:
+          type: array
+          items:
+            $ref: '#/components/schemas/RivertyCapture'
+    PaymentWithoutDescriptionExpiresAtAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
+      - type: object
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+    RivertyRefund:
+      type: object
+      required:
+      - id
+      - captureId
+      - transactionId
+      - status
+      - created
+      - updated
+      properties:
+        id:
+          description: Unique identifier received in the POST refund response root object.
+          $ref: '#/components/schemas/Uuid'
+        captureId:
+          description: Unique identifier of the capture that was refunded.
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/TransactionId'
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+        created:
+          $ref: '#/components/schemas/Datetime'
+          description: ISO 8601 date and time when the refund was created.
+        updated:
+          $ref: '#/components/schemas/Datetime'
+          description: ISO 8601 date and time when the refund was last updated.
+        items:
+          description: List of items that were refunded. Only present for partial refunds.
+          $ref: '#/components/schemas/RivertyItems'
+    RivertyPayment:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - type: object
+        required:
+        - orderNumber
+        - type
+        - netAmount
+        - consumer
+        - items
+        properties:
+          orderNumber:
+            description: 'Order number. Unique order number provided by the merchant. A valid order number can include alphanumeric characters, dashes and underscores.
+
+              '
+            type: string
+            maxLength: 50
+            example: order123
+          amount:
+            $ref: '#/components/schemas/Amount-2'
+          currency:
+            $ref: '#/components/schemas/Currency-2'
+          language:
+            description: 'The language code used for client communication. If not provided, Riverty will default to the language configured for the client.
+
+              '
+            format: enum
+            enum:
+            - 'no'
+            - sv
+            - fi
+            - da
+            - en
+            - de
+            - nl
+            - fr
+          type:
+            type: string
+            format: enum
+            description: The type of the Riverty payment method.
+            enum:
+            - Invoice
+            example: Invoice
+          netAmount:
+            $ref: '#/components/schemas/NetAmount'
+          merchantImageURL:
+            description: 'Image URL for the merchants brand. This image is shown at the top of the order page in Riverty. Supported image formats are: gif, jpeg (jpg), png, webp.
+
+              '
+            type: string
+            format: url
+            example: https://merchant.tld/images/logo.png
+          additionalMerchantData:
+            type: string
+            maxLength: 4096
+            description: 'Additional information about the merchant Format: Base64 encoded JSON
+
+              '
+          consumer:
+            $ref: '#/components/schemas/Consumer-3'
+          items:
+            $ref: '#/components/schemas/RivertyItems'
+          webhooks:
+            $ref: '#/components/schemas/RivertyWebhooks'
+    AddressWithOptCountryAndHouseNumberAdditional:
+      allOf:
+      - $ref: '#/components/schemas/AddressWithoutMandatoryCountry'
+      - type: object
+        properties:
+          houseNumberAdditional:
+            description: Field to support addresses that need to add more information about the house number.
+            type: string
+            maxLength: 10
+            example: 674A
+    Amount-2:
+      allOf:
+      - $ref: '#/components/schemas/Amount'
+      - description: 'Total gross amount of order in the smallest currency subunit, as for example euro cents (including taxes and fees).
+
+
+          This is the amount that will be charged to the consumer.
+
+
+          The validation will fail if: amount ≠ Σ(unitPrice × quantity)
+
+          '
+    Currency-2:
+      $ref: '#/components/schemas/Currency'
+      format: enum
+      enum:
+      - EUR
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
+    Item:
+      description: 'Item object that can be used to provide details of the items in the order.
+
+        This is only used by payment methods that support it, like Klarna and Riverty.'
+      type: object
+      required:
+      - code
+      - unitPrice
+      - quantity
+      - vatAmount
+      - vatRate
+      properties:
+        code:
+          description: Merchant Product identification. Each item code must be unique per transaction.
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: SDC4/32GB-2ADP
+        description:
+          description: A human readable description of the item.
+          $ref: '#/components/schemas/Description'
+        unitPrice:
+          description: Unit price (including VAT) of the item, specified in the smallest currency subunit, as for example euro cents.
+          $ref: '#/components/schemas/Amount'
+        quantity:
+          description: The number of items of this type.
+          type: integer
+          minimum: 1
+          maximum: 1000000000
+          example: 2
+        vatAmount:
+          description: 'Total VAT amount of the orderline, specified in the smallest currency subunit as for example euro cents.
+
+            '
+          $ref: '#/components/schemas/Amount'
+        vatRate:
+          description: 'Percentage of VAT applied.
+
+            Only the first decimal value will be taken into account, the rest will be ignored.
+
+            '
+          type: number
+          minimum: 0
+          maximum: 99.9
+          example: 20
+          multipleOf: 0.1
+    RivertyCancellation:
+      type: object
+      required:
+      - amount
+      - netAmount
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount-2'
+        netAmount:
+          $ref: '#/components/schemas/NetAmount'
+        items:
+          description: 'List of items to be cancelled. Mandatory for partial cancellations. If not provided, the full order will be cancelled. If provided, the total amount of all items must match the amount in the cancel request.
+
+            '
+          $ref: '#/components/schemas/RivertyItems'
+    RivertyWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                '
+              allOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              example: STATUS_CHANGE
+    StatusPending:
+      description: The transaction is pending, meaning it could not be completed yet; waiting for something.
+      type: string
+      format: enum
+      enum:
+      - PENDING
+      example: PENDING
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+      type: string
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
+    Name:
+      description: Consumer's name.
+      type: object
+      required:
+      - firstName
+      - lastName
+      properties:
+        firstName:
+          description: Consumer's first name.
+          type: string
+          maxLength: 35
+          example: John
+        lastName:
+          $ref: '#/components/schemas/LastName'
+        middleName:
+          description: Consumer's middle name.
+          type: string
+          maxLength: 35
+          example: A
+  examples:
+    fullCapture:
+      summary: Full capture of a Riverty transaction
+      value:
+        amount: 2400
+        netAmount: 2000
+    fullCancellation-2:
+      summary: Fully cancelled authorization
+      value:
+        id: fbd7e1c9-3039-4f79-a57b-bd1257e03c5f
+        transactionId: 3fec0a41-6073-452f-b59c-8e7c7faf7b85
+        amount: 42400
+        netAmount: 38000
+        created: '2025-10-25T20:38:49Z'
+        updated: '2025-10-25T20:38:49Z'
+    partialCapture:
+      summary: Partial capture of a Riverty transaction
+      value:
+        amount: 1200
+        netAmount: 1000
+        items:
+        - code: SDC4/32GB-2ADP
+          description: Order at yourdomain.tld
+          unitPrice: 1200
+          netUnitPrice: 1000
+          quantity: 1
+          vatAmount: 200
+          vatRate: 20
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+    partialCapture-2:
+      summary: Partially captured authorization
+      value:
+        id: 19ab319e-01d4-41d4-a6f1-3a41f29547ab
+        transactionId: bee7b465-2152-45d7-8545-5354afe4ba59
+        amount: 1200
+        netAmount: 1000
+        created: '2025-10-25T20:38:49Z'
+        updated: '2025-10-25T20:38:49Z'
+        items:
+        - code: SDC4/32GB-2ADP
+          description: Order at yourdomain.tld
+          unitPrice: 1200
+          netUnitPrice: 1000
+          quantity: 1
+          vatAmount: 200
+          vatRate: 20
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+    partialRefundSingleCapture:
+      summary: Partial refund for single-capture transaction (captureId optional)
+      value:
+        items:
+        - description: Order at yourdomain.tld
+          quantity: 1
+          vatAmount: 4000
+          vatRate: 10
+          code: ProLiteXC83494WQSN
+          unitPrice: 40000
+          netUnitPrice: 36000
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+    partialCancellation:
+      summary: Partial cancellation of a Riverty transaction
+      value:
+        amount: 1200
+        netAmount: 1000
+        items:
+        - code: SDC4/32GB-2ADP
+          description: Order at yourdomain.tld
+          unitPrice: 1200
+          netUnitPrice: 1000
+          quantity: 1
+          vatAmount: 200
+          vatRate: 20
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+    partialRefundMultiCapture:
+      summary: Partial refund for multi-capture transaction (captureId required)
+      value:
+        captureId: bba62ce5-3d52-4409-aeba-1d21a7c2f785
+        items:
+        - description: Order at yourdomain.tld
+          quantity: 1
+          vatAmount: 4000
+          vatRate: 10
+          code: ProLiteXC83494WQSN
+          unitPrice: 40000
+          netUnitPrice: 36000
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+    partialRefund:
+      summary: Partially refunded capture
+      value:
+        id: 6fa3a570-cb95-484d-83da-d2c7144225a2
+        transactionId: 180cad56-0da1-4ee8-ac49-c44d36286f84
+        captureId: bba62ce5-3d52-4409-aeba-1d21a7c2f785
+        status: SUCCESS
+        created: '2025-10-19T20:38:49Z'
+        updated: '2025-10-19T20:38:49Z'
+        items:
+        - code: ProLiteXC83494WQSN
+          description: Order at yourdomain.tld
+          unitPrice: 40000
+          netUnitPrice: 36000
+          quantity: 1
+          vatAmount: 4000
+          vatRate: 10
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+    standardAuthorization:
+      summary: Standard transaction with webhook subscription
+      value:
+        orderNumber: '2106961751126491'
+        reference: f372f69c-4ad9-4d22-9de1-dfd3faaa148c
+        amount: 42400
+        currency: EUR
+        type: Invoice
+        netAmount: 38000
+        consumer:
+          email: john.doe@email.tld
+          dateOfBirth: '1996-12-01'
+          name:
+            firstName: John
+            lastName: Doe
+          phone: '+31695613259'
+          billingAddress:
+            street: Rustenburgerlaan
+            houseNumber: '25'
+            postalCode: 2012AL
+            city: Haarlem
+            countryCode: NL
+          shopperIp: 1.1.1.1
+        items:
+        - description: Order at yourdomain.tld
+          quantity: 2
+          vatAmount: 200
+          vatRate: 20
+          code: SDC4/32GB-2ADP
+          unitPrice: 1200
+          netUnitPrice: 1000
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+        - description: Order at yourdomain.tld
+          quantity: 1
+          vatAmount: 4000
+          vatRate: 10
+          code: ProLiteXC83494WQSN
+          unitPrice: 40000
+          netUnitPrice: 36000
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+        webhooks:
+        - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+        returnUrl: https://yourdomain.tld/order/payment-success.html
+    fullCancellation:
+      summary: Full cancellation of a Riverty transaction
+      value:
+        amount: 2400
+        netAmount: 2000
+    successAuthorization:
+      summary: Successful Authorization
+      value:
+        reference: 88e850be-118d-47ab-b183-1fb2eba48023
+        orderNumber: '3874395132905155'
+        type: Invoice
+        amount: 2400
+        netAmount: 2000
+        currency: EUR
+        created: '2025-10-25T20:38:49Z'
+        updated: '2025-10-25T20:38:49Z'
+        consumer:
+          name:
+            firstName: John
+            lastName: Doe
+          email: john.doe@email.tld
+          phone: '+31695613259'
+          dateOfBirth: '1996-12-01'
+          billingAddress:
+            street: Rustenburgerlaan
+            houseNumber: '25'
+            postalCode: 2012AL
+            city: Haarlem
+            countryCode: NL
+          shopperIp: 1.1.1.1
+        items:
+        - code: SDC4/32GB-2ADP
+          description: Order at yourdomain.tld
+          unitPrice: 1200
+          netUnitPrice: 1000
+          quantity: 2
+          vatAmount: 200
+          vatRate: 20
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+        action:
+          redirect:
+            url: https://hosted-checkout.bnpl-pt.riverty.io/pay/nl/431caf2c6b52435694a379e9d51fa623?token=EXAMPLE_CHECKOUT_TOKEN
+        id: dd698725-6114-4d88-92c8-90b3e4ca7db0
+        status: SUCCESS
+        webhooks:
+        - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+        returnUrl: https://yourdomain.tld/order/return?orderID=order123
+    partialCancellation-2:
+      summary: Partially cancelled authorization
+      value:
+        id: fbd7e1c9-3039-4f79-a57b-bd1257e03c5f
+        transactionId: 3fec0a41-6073-452f-b59c-8e7c7faf7b85
+        amount: 1200
+        netAmount: 1000
+        created: '2025-10-25T20:38:49Z'
+        updated: '2025-10-25T20:38:49Z'
+        items:
+        - code: SDC4/32GB-2ADP
+          description: Order at yourdomain.tld
+          unitPrice: 1200
+          netUnitPrice: 1000
+          quantity: 2
+          vatAmount: 200
+          vatRate: 20
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+    pendingAuthorization:
+      summary: Pending Authorization
+      value:
+        reference: f372f69c-4ad9-4d22-9de1-dfd3faaa148c
+        orderNumber: '2106961751126491'
+        type: Invoice
+        amount: 42400
+        netAmount: 38000
+        currency: EUR
+        created: '2025-10-25T20:38:49Z'
+        updated: '2025-10-25T20:38:49Z'
+        consumer:
+          name:
+            firstName: John
+            lastName: Doe
+          email: john.doe@email.tld
+          phone: '+31695613259'
+          dateOfBirth: '1996-12-01'
+          billingAddress:
+            street: Rustenburgerlaan
+            houseNumber: '25'
+            postalCode: 2012AL
+            city: Haarlem
+            countryCode: NL
+          shopperIp: 1.1.1.1
+        items:
+        - code: SDC4/32GB-2ADP
+          description: Order at yourdomain.tld
+          unitPrice: 1200
+          netUnitPrice: 1000
+          quantity: 2
+          vatAmount: 200
+          vatRate: 20
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+        - code: ProLiteXC83494WQSN
+          description: Order at yourdomain.tld
+          unitPrice: 40000
+          netUnitPrice: 36000
+          quantity: 1
+          vatAmount: 4000
+          vatRate: 10
+          imageUrl: https://example.com/product-image.jpg
+          productUrl: https://example.com/product-page
+        action:
+          redirect:
+            url: https://hosted-checkout.bnpl-pt.riverty.io/pay/nl/61f11964c5f740e48ebfafa0e2c8e8a4?token=EXAMPLE_CHECKOUT_TOKEN
+        id: e4b23c76-867f-4839-b7a4-358c3454d59f
+        status: PENDING
+        webhooks:
+        - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+        returnUrl: https://yourdomain.tld/order/payment-success.html
+    refund:
+      summary: Fully refunded capture
+      value:
+        id: 76840859-3388-4573-beb6-ed02e10a2679
+        transactionId: cb3ae4bb-1085-4c34-9e48-ecb1a31aaef3
+        captureId: 385720a9-4118-481b-b431-a4797496c8a9
+        status: SUCCESS
+        created: '2025-10-19T20:38:49Z'
+        updated: '2025-10-19T20:38:49Z'
+    fullCapture-2:
+      summary: Fully captured authorization
+      value:
+        id: 5b84c8e5-3c8d-45c4-8fe1-7f549c1972b3
+        transactionId: 5b84c8e5-3c8d-45c4-8fe1-7f549c1972b3
+        amount: 2400
+        netAmount: 2000
+        created: '2025-10-25T20:38:49Z'
+        updated: '2025-10-25T20:38:49Z'
+    fullRefundMultiCapture:
+      summary: Full refund for multi-capture transaction (captureId required)
+      value:
+        captureId: bba62ce5-3d52-4409-aeba-1d21a7c2f784
+    fullRefundSingleCapture:
+      summary: Full refund for single-capture transaction (captureId optional)
+      value: {}
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+  responses:
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+  parameters:
+    TransactionId:
+      name: transactionId
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/TransactionId'
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 Client Credentials Grant.
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/authorization/oauth2/token
+          scopes: {}

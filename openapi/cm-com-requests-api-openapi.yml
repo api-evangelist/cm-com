@@ -1,0 +1,144 @@
+openapi: 3.2.0
+info:
+  title: Phone Number Request Requests API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Requests
+paths:
+  /voice-phonenumberrequestapi/v1/{countryCode}/requiredfields:
+    get:
+      tags:
+      - Requests
+      summary: Get Required Fields
+      description: 'Because of different rules and regulations in different countries, we may need certain additional information along with your request depending on the country related to the request. These required fields can be fetched with this endpoint, together with an example value describing the format in which it should be supplied.
+
+
+        If the response contains only an empty array, it means the country that the request is bound to does not require any required fields to be added.'
+      parameters:
+      - name: countryCode
+        in: path
+        description: Country code to retrieve the required fields for in ISO 3166 alpha-2 format.
+        required: true
+        schema:
+          type: string
+        example: NL
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRequiredField'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoicePhonenumberrequestapiV1ByCountryCodeRequiredfields
+      x-operation-id-source: derived
+  /voice-phonenumberrequestapi/v1/blocked-countries:
+    get:
+      tags:
+      - Requests
+      summary: Get Blocked Countries
+      description: Get a list of countries that are currently unavailable for phone number requests and phone number porting.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiBlockedCountry'
+      operationId: getVoicePhonenumberrequestapiV1BlockedCountries
+      x-operation-id-source: derived
+components:
+  schemas:
+    ApiRequiredField:
+      title: Required Field
+      type: object
+      properties:
+        field:
+          type:
+          - string
+          - 'null'
+          description: The name of the required field.
+          example: btw_number
+        exampleValue:
+          type:
+          - string
+          - 'null'
+          description: Example value that shows the format we expect the value of the field to be in.
+          example: BE0999999999
+      additionalProperties: false
+      description: A country specific required field containing additional required information for either a number or porting request.
+    ApiBlockedCountry:
+      title: Blocked Country
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: The country code (ISO 2-char)
+        name:
+          type:
+          - string
+          - 'null'
+          description: English name of the country.
+        reason:
+          type:
+          - string
+          - 'null'
+          description: The reason why the country is blocked. Can be null.
+      additionalProperties: false
+      description: Country that is blocked for number requests and porting requests.
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,438 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-reassign-request-schema.json",
+  "title": "ReassignRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-sign-v1-openapi.yml#/components/schemas/ReassignRequest",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID of the reassign request"
+    },
+    "url": {
+      "type": "string",
+      "format": "url",
+      "description": "Url to open the reassign request."
+    },
+    "state": {
+      "type": "string",
+      "description": "State of the reassign request",
+      "$ref": "#/$defs/ReassignRequestState"
+    },
+    "dossier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "ID of the dossier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the dossier"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Name of the team, if the dossier was sent on behalf of a team, or the dossier owner"
+        }
+      }
+    },
+    "originalInvitee": {
+      "$ref": "#/$defs/Invitee"
+    },
+    "newInvitee": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the new invitee"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "email",
+          "description": "Email of the new invitee."
+        },
+        "phoneNumber": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The phone number of the new invitee in E.164 format."
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000,
+          "description": "The custom message to be sent to the new invitee."
+        }
+      }
+    },
+    "reason": {
+      "type": "string",
+      "description": "The reason for requesting reassignment."
+    },
+    "declineReason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The reason for declining the reassign request. Required when declining the reassign request."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the reassignment was requested in ISO 8601 format."
+    }
+  },
+  "$defs": {
+    "Field": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/FieldId"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        {
+          "$ref": "#/$defs/FieldBase"
+        }
+      ]
+    },
+    "FieldBase": {
+      "title": "Field",
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/FieldType"
+        },
+        "required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates if the field is required and must be filled in by the user. When required is `true` and type is `checkbox` the field must be checked. For the `checkbox` type, the default value is `false`."
+        },
+        "file": {
+          "$ref": "#/$defs/FileReference"
+        },
+        "tag": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "The tag acts as a placeholder; the range and locations of the field are automatically determined based on the location(s) of the tag in the document. Add the tag to every page the field should include in case of initials. The tag should be hidden, for example by making it white."
+        },
+        "tagRequired": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates if the tag must be present in the document. When this is set to `false` and the tag is not found in the document it will skip this field."
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FieldLocation"
+          }
+        },
+        "invitee": {
+          "$ref": "#/$defs/InviteeReference",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "type",
+        "file"
+      ]
+    },
+    "FieldId": {
+      "$ref": "#/$defs/FieldReference",
+      "readOnly": true
+    },
+    "FieldLocation": {
+      "type": "object",
+      "properties": {
+        "range": {
+          "type": "string",
+          "pattern": "^\\d+(-\\d+)?$",
+          "maxLength": 64,
+          "description": "The page number within the PDF that this field occupies (e.g. `1`), or range for a initials field (e.g. `1-3`)."
+        },
+        "x": {
+          "type": "number",
+          "format": "float",
+          "description": "X position of the field in points."
+        },
+        "y": {
+          "type": "number",
+          "format": "float",
+          "description": "Y position of the field in points."
+        },
+        "width": {
+          "type": "number",
+          "format": "float",
+          "description": "Width of the field in points."
+        },
+        "height": {
+          "type": "number",
+          "format": "float",
+          "description": "Height of the field in points."
+        }
+      }
+    },
+    "FieldReference": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique Id of a field"
+    },
+    "FieldType": {
+      "type": "string",
+      "description": "The type of field for the invitee.",
+      "enum": [
+        "signature",
+        "signatureDate",
+        "initials",
+        "text",
+        "textarea",
+        "label",
+        "checkbox",
+        "radio",
+        "stamp"
+      ]
+    },
+    "FileReference": {
+      "type": "string",
+      "format": "uuid",
+      "description": "A unique reference number for this file."
+    },
+    "IdentificationMethod": {
+      "type": "string",
+      "enum": [
+        "idin",
+        "iban",
+        "otp_sms",
+        "otp_email",
+        "otp_whatsapp",
+        "otp_voice",
+        "qualified"
+      ],
+      "description": "Additional user identification is required. When you select `qualified` it cannot be used with other identification methods. Please note that this is only available when configured for your account."
+    },
+    "Invitee": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/InviteeId"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        {
+          "$ref": "#/$defs/InviteeBase"
+        }
+      ]
+    },
+    "InviteeBase": {
+      "title": "Invitee",
+      "description": "An invitee is someone who has been invited to review and/or sign the dossier.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the person invited to read and/or sign the document",
+          "maxLength": 255
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "A valid email address",
+          "maxLength": 255
+        },
+        "locale": {
+          "$ref": "#/$defs/Locale",
+          "description": "Locale of the language to be used in invitations.",
+          "nullable": true
+        },
+        "position": {
+          "type": "integer",
+          "description": "Set the order of signing. For example if there are two invitees set position `1` for the first invitee and position `2` for the second invitee. It is possible to set multiple invitees on the same position. Make sure there is no gap between the positions."
+        },
+        "authenticationMethods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "otp_sms",
+              "otp_email",
+              "otp_whatsapp",
+              "otp_voice"
+            ],
+            "description": "Additional user authentication is required before the user can view the dossier. Please note that this is only available when configured for your account."
+          }
+        },
+        "identificationMethod": {
+          "$ref": "#/$defs/IdentificationMethod",
+          "deprecated": true
+        },
+        "identificationMethods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IdentificationMethod"
+          }
+        },
+        "notifications": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string",
+            "enum": [
+              "invite",
+              "signed",
+              "reviewed",
+              "declined",
+              "completed"
+            ],
+            "description": "Determines which notifications should be sent over the configured channel. By default all notifications are sent."
+          }
+        },
+        "payments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Payment"
+          },
+          "description": "Additional payment is required. Please note that this is only available when configured for your account."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The phone number of the invitee in E.164 format. Required when identificationMethod is otp."
+        },
+        "reference": {
+          "type": "string",
+          "description": "A reference to an external identifier of your invitee.",
+          "maxLength": 255
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Indicates that this invitee needs to review the dossier, instead of signing it",
+          "default": false
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "declined"
+          ],
+          "description": "The invitee has approved or declined the dossier"
+        },
+        "stateComment": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "When the invitee declined the dossier this field may contain the reason for declining.",
+          "default": null,
+          "readOnly": true
+        },
+        "stateChanged": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "The date the invitee state has changed",
+          "default": null,
+          "readOnly": true
+        },
+        "redirectUrl": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "url",
+          "description": "URL to redirect the invitee to after signing, approving or declining the dossier. If not set, the default confirmation page will be shown.",
+          "default": null
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Field"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "InviteeId": {
+      "$ref": "#/$defs/InviteeReference",
+      "readOnly": true
+    },
+    "InviteeReference": {
+      "description": "Optional. Indicates that only a particular invitee is allowed/required to use a field.",
+      "type": "string",
+      "format": "uuid"
+    },
+    "Locale": {
+      "type": "string",
+      "enum": [
+        "de-DE",
+        "en-US",
+        "es-ES",
+        "fr-FR",
+        "hu-HU",
+        "it-IT",
+        "ja-JP",
+        "nl-NL",
+        "pl-PL",
+        "pt-PT",
+        "ro-RO",
+        "sk-SK"
+      ],
+      "default": "en-US"
+    },
+    "Payment": {
+      "title": "Payment",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "description": "The payment amount in cents",
+          "minimum": 1
+        },
+        "currency": {
+          "type": "string",
+          "enum": [
+            "EUR"
+          ],
+          "description": "The payment currency"
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ]
+    },
+    "ReassignRequestState": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "declined",
+        "pending"
+      ]
+    }
+  }
+}

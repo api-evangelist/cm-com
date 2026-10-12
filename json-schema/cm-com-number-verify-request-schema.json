@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-number-verify-request-schema.json",
+  "title": "NumberVerifyRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-mobile-identity-v1-openapi.yml#/components/schemas/NumberVerifyRequest",
+  "type": "object",
+  "properties": {
+    "phoneNumber": {
+      "type": "string",
+      "description": "The phone number to verify. Must be in E.164 format."
+    },
+    "callbackUrl": {
+      "type": "string",
+      "description": "Updates regarding the number verify transaction will be sent to the callback URL. It must begin with `https://`. See the [Number verify state](#tag/Callbacks/operation/callback_number_verify_state) callback for the payload that is sent.",
+      "format": "url"
+    }
+  },
+  "required": [
+    "phoneNumber",
+    "callbackUrl"
+  ]
+}

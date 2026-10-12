@@ -1,0 +1,1322 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Scanning Rules API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Scanning Rules across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Scanning Rules
+  description: Rules governing scan behaviour
+paths:
+  /entrance/v1.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/rules:
+    post:
+      operationId: RulesController_create_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRuleDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a scanning rule
+      tags:
+      - Scanning Rules
+    get:
+      operationId: RulesController_findAllByEntrancePlan_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/RuleDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all rules for an entrance plan
+      tags:
+      - Scanning Rules
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/rules/bulk:
+    post:
+      operationId: RulesController_createMany_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRulesBulkDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Bulk-create scanning rules
+      tags:
+      - Scanning Rules
+    patch:
+      operationId: RulesController_patchMany_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkUpdateRulesDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Bulk-update scan-config of multiple scanning rules
+      tags:
+      - Scanning Rules
+    delete:
+      operationId: RulesController_removeMany_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRuleUuidsDto'
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Bulk-delete scanning rules
+      tags:
+      - Scanning Rules
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/rules/{ruleUuid}:
+    get:
+      operationId: RulesController_findOne_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: ruleUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get a scanning rule by UUID
+      tags:
+      - Scanning Rules
+    patch:
+      operationId: RulesController_patch_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: ruleUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRuleDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a scanning rule
+      tags:
+      - Scanning Rules
+    delete:
+      operationId: RulesController_remove_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: ruleUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a scanning rule
+      tags:
+      - Scanning Rules
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/rules:
+    post:
+      operationId: RulesController_create_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRuleDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a scanning rule
+      tags:
+      - Scanning Rules
+    get:
+      operationId: RulesController_findAllByEntrancePlan_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/RuleDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all rules for an entrance plan
+      tags:
+      - Scanning Rules
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/rules/bulk:
+    post:
+      operationId: RulesController_createMany_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRulesBulkDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Bulk-create scanning rules
+      tags:
+      - Scanning Rules
+    patch:
+      operationId: RulesController_patchMany_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkUpdateRulesDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Bulk-update scan-config of multiple scanning rules
+      tags:
+      - Scanning Rules
+    delete:
+      operationId: RulesController_removeMany_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRuleUuidsDto'
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Bulk-delete scanning rules
+      tags:
+      - Scanning Rules
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/plans/{entrancePlanUuid}/rules/{ruleUuid}:
+    get:
+      operationId: RulesController_findOne_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: ruleUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get a scanning rule by UUID
+      tags:
+      - Scanning Rules
+    patch:
+      operationId: RulesController_patch_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: ruleUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRuleDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a scanning rule
+      tags:
+      - Scanning Rules
+    delete:
+      operationId: RulesController_remove_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: ruleUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a scanning rule
+      tags:
+      - Scanning Rules
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    CreateRulesBulkDto:
+      type: object
+      properties:
+        rules:
+          description: Array of scanning rules to create in a single call.
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateRuleDto'
+      required:
+      - rules
+    RuleDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Scanning Rule All VIP tickets scannable twice
+        maxValidations:
+          type: number
+          minimum: 0
+          description: Amount a ticket can be validated (successfully scanned) on the rule. When 0 the ticket cannot be scanned.
+        maxValidationScope:
+          type: string
+          enum:
+          - UNRESTRICTED
+          - DAILY
+          - SAME_DAY
+          example: UNRESTRICTED
+          description: 'Defines the scope of maxValidations. UNRESTRICTED: total limit across entire validity period, DAILY: limit resets each day, SAME_DAY: all scans must occur on the same calendar day.'
+        validFrom:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned from this date onwards
+        validUntil:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned until this date.
+        daysValidAfterPurchase:
+          type: number
+          description: Amount of days a barcode can be validated after its issued date (whole days, timestamp is not taken into account)
+        shouldValidateTimeslotMoment:
+          type: boolean
+          description: If set to true a barcode with a timeslot can only be scanned on the (whole) day of the timeslot
+        minutesBeforeTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes before the timeslot moment a barcode may be scanned. When set (with or without minutesAfterTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        minutesAfterTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes after the timeslot moment a barcode may be scanned. When set (with or without minutesBeforeTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        shouldValidateOnParent:
+          type: boolean
+          description: If set to true barcodes will be validated on the top-level parent of the entrance plan.
+        scanColour:
+          type: string
+          default: '#3ddc97'
+          description: Colour (hexcode) that is used on scanner display for successful checkins (Default is green).
+        scanMessage:
+          type: string
+          maxLength: 255
+          default: Barcode successfully checked in.
+          description: Message displayed on successful checkin.
+        requiresPhotoVerification:
+          type: boolean
+          description: If set to true a successful checkin requires staff to verify the visitor against a photo (e.g. Museumpass Belgium) before it is registered.
+        requiresConfirmationQuestion:
+          type: boolean
+          description: If set to true a successful checkin requires staff to answer a confirmation question before it is registered.
+        confirmationQuestion:
+          type: string
+          maxLength: 80
+          example: Does this visitor meet the 18+ age requirement?
+          description: Question shown to staff. Required when requiresConfirmationQuestion is true.
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of venueSection the rule applies to
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of event the rule applies to
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of product the rule applies to
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+      required:
+      - uuid
+      - name
+      - maxValidations
+      - maxValidationScope
+      - shouldValidateTimeslotMoment
+      - shouldValidateOnParent
+      - requiresPhotoVerification
+      - requiresConfirmationQuestion
+    BulkRuleUuidsDto:
+      type: object
+      properties:
+        ruleUuids:
+          description: UUIDs of the rules the operation should be applied to.
+          type: array
+          items:
+            type: array
+      required:
+      - ruleUuids
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    BulkUpdateRulesDto:
+      type: object
+      properties:
+        ruleUuids:
+          description: UUIDs of the rules the operation should be applied to.
+          type: array
+          items:
+            type: array
+        changes:
+          description: Scan-config changes applied to every rule listed in ruleUuids.
+          allOf:
+          - $ref: '#/components/schemas/BulkRuleChangesDto'
+      required:
+      - ruleUuids
+      - changes
+    UpdateRuleDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: Scanning Rule All VIP tickets scannable twice
+        maxValidations:
+          type: number
+          minimum: 0
+          description: Amount a ticket can be validated (successfully scanned) on the rule. When 0 the ticket cannot be scanned.
+        maxValidationScope:
+          type: string
+          enum:
+          - UNRESTRICTED
+          - DAILY
+          - SAME_DAY
+          example: UNRESTRICTED
+          description: 'Defines the scope of maxValidations. UNRESTRICTED: total limit across entire validity period, DAILY: limit resets each day, SAME_DAY: all scans must occur on the same calendar day.'
+        validFrom:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned from this date onwards
+        validUntil:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned until this date.
+        daysValidAfterPurchase:
+          type: number
+          description: Amount of days a barcode can be validated after its issued date (whole days, timestamp is not taken into account)
+        shouldValidateTimeslotMoment:
+          type: boolean
+          description: If set to true a barcode with a timeslot can only be scanned on the (whole) day of the timeslot
+        minutesBeforeTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes before the timeslot moment a barcode may be scanned. When set (with or without minutesAfterTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        minutesAfterTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes after the timeslot moment a barcode may be scanned. When set (with or without minutesBeforeTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        shouldValidateOnParent:
+          type: boolean
+          description: If set to true barcodes will be validated on the top-level parent of the entrance plan.
+        scanColour:
+          type: string
+          default: '#3ddc97'
+          description: Colour (hexcode) that is used on scanner display for successful checkins (Default is green).
+        scanMessage:
+          type: string
+          maxLength: 255
+          default: Barcode successfully checked in.
+          description: Message displayed on successful checkin.
+        requiresPhotoVerification:
+          type: boolean
+          description: If set to true a successful checkin requires staff to verify the visitor against a photo (e.g. Museumpass Belgium) before it is registered.
+        requiresConfirmationQuestion:
+          type: boolean
+          description: If set to true a successful checkin requires staff to answer a confirmation question before it is registered.
+        confirmationQuestion:
+          type: string
+          maxLength: 80
+          example: Does this visitor meet the 18+ age requirement?
+          description: Question shown to staff. Required when requiresConfirmationQuestion is true.
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of venueSection the rule applies to
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of event the rule applies to
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of product the rule applies to
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    CreateRuleDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: Scanning Rule All VIP tickets scannable twice
+        maxValidations:
+          type: number
+          minimum: 0
+          description: Amount a ticket can be validated (successfully scanned) on the rule. When 0 the ticket cannot be scanned.
+        maxValidationScope:
+          type: string
+          enum:
+          - UNRESTRICTED
+          - DAILY
+          - SAME_DAY
+          example: UNRESTRICTED
+          description: 'Defines the scope of maxValidations. UNRESTRICTED: total limit across entire validity period, DAILY: limit resets each day, SAME_DAY: all scans must occur on the same calendar day.'
+        validFrom:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned from this date onwards
+        validUntil:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned until this date.
+        daysValidAfterPurchase:
+          type: number
+          description: Amount of days a barcode can be validated after its issued date (whole days, timestamp is not taken into account)
+        shouldValidateTimeslotMoment:
+          type: boolean
+          description: If set to true a barcode with a timeslot can only be scanned on the (whole) day of the timeslot
+        minutesBeforeTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes before the timeslot moment a barcode may be scanned. When set (with or without minutesAfterTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        minutesAfterTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes after the timeslot moment a barcode may be scanned. When set (with or without minutesBeforeTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        shouldValidateOnParent:
+          type: boolean
+          description: If set to true barcodes will be validated on the top-level parent of the entrance plan.
+        scanColour:
+          type: string
+          default: '#3ddc97'
+          description: Colour (hexcode) that is used on scanner display for successful checkins (Default is green).
+        scanMessage:
+          type: string
+          maxLength: 255
+          default: Barcode successfully checked in.
+          description: Message displayed on successful checkin.
+        requiresPhotoVerification:
+          type: boolean
+          description: If set to true a successful checkin requires staff to verify the visitor against a photo (e.g. Museumpass Belgium) before it is registered.
+        requiresConfirmationQuestion:
+          type: boolean
+          description: If set to true a successful checkin requires staff to answer a confirmation question before it is registered.
+        confirmationQuestion:
+          type: string
+          maxLength: 80
+          example: Does this visitor meet the 18+ age requirement?
+          description: Question shown to staff. Required when requiresConfirmationQuestion is true.
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of event the rule applies to
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        productIds:
+          description: Array of product externalIds the rule applies to
+          type: array
+          items:
+            type: array
+        venueSectionIds:
+          description: Array of venue section externalIds the rule applies to
+          type: array
+          items:
+            type: array
+      required:
+      - name
+      - maxValidations
+      - maxValidationScope
+      - shouldValidateTimeslotMoment
+      - shouldValidateOnParent
+      - requiresPhotoVerification
+      - requiresConfirmationQuestion
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    Rule:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Scanning Rule All VIP tickets scannable twice
+        maxValidations:
+          type: number
+          minimum: 0
+          description: Amount a ticket can be validated (successfully scanned) on the rule. When 0 the ticket cannot be scanned.
+        maxValidationScope:
+          type: string
+          enum:
+          - UNRESTRICTED
+          - DAILY
+          - SAME_DAY
+          example: UNRESTRICTED
+          description: 'Defines the scope of maxValidations. UNRESTRICTED: total limit across entire validity period, DAILY: limit resets each day, SAME_DAY: all scans must occur on the same calendar day.'
+        validFrom:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned from this date onwards
+        validUntil:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned until this date.
+        daysValidAfterPurchase:
+          type: number
+          description: Amount of days a barcode can be validated after its issued date (whole days, timestamp is not taken into account)
+        shouldValidateTimeslotMoment:
+          type: boolean
+          description: If set to true a barcode with a timeslot can only be scanned on the (whole) day of the timeslot
+        minutesBeforeTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes before the timeslot moment a barcode may be scanned. When set (together with/or minutesAfterTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        minutesAfterTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes after the timeslot moment a barcode may be scanned. When set (together with/or minutesBeforeTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        shouldValidateOnParent:
+          type: boolean
+          description: If set to true barcodes will be validated on the top-level parent of the entrance plan.
+        scanColour:
+          type: string
+          default: '#3ddc97'
+          description: Colour (hexcode) that is used on scanner display for successful checkins (Default is green).
+        scanMessage:
+          type: string
+          maxLength: 255
+          default: Barcode successfully checked in.
+          description: Message displayed on successful checkin.
+        requiresPhotoVerification:
+          type: boolean
+          description: If set to true a successful checkin requires staff to verify the visitor against a photo (e.g. Museumpass Belgium) before it is registered.
+        requiresConfirmationQuestion:
+          type: boolean
+          description: If set to true a successful checkin requires staff to answer a confirmation question before it is registered.
+        confirmationQuestion:
+          type: string
+          maxLength: 80
+          example: Does this visitor meet the 18+ age requirement?
+          description: Question shown to staff when requiresConfirmationQuestion is true.
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of event the rule applies to
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of venueSection the rule applies to
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of product the rule applies to
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+      required:
+      - uuid
+      - name
+      - maxValidations
+      - maxValidationScope
+      - shouldValidateTimeslotMoment
+      - shouldValidateOnParent
+      - requiresPhotoVerification
+      - requiresConfirmationQuestion
+    BulkRuleChangesDto:
+      type: object
+      properties:
+        maxValidations:
+          type: number
+          minimum: 0
+          description: Amount a ticket can be validated (successfully scanned) on the rule. When 0 the ticket cannot be scanned.
+        maxValidationScope:
+          type: string
+          enum:
+          - UNRESTRICTED
+          - DAILY
+          - SAME_DAY
+          example: UNRESTRICTED
+          description: 'Defines the scope of maxValidations. UNRESTRICTED: total limit across entire validity period, DAILY: limit resets each day, SAME_DAY: all scans must occur on the same calendar day.'
+        validFrom:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned from this date onwards
+        validUntil:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned until this date.
+        daysValidAfterPurchase:
+          type: number
+          description: Amount of days a barcode can be validated after its issued date (whole days, timestamp is not taken into account)
+        shouldValidateTimeslotMoment:
+          type: boolean
+          description: If set to true a barcode with a timeslot can only be scanned on the (whole) day of the timeslot
+        minutesBeforeTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes before the timeslot moment a barcode may be scanned. When set (with or without minutesAfterTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        minutesAfterTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes after the timeslot moment a barcode may be scanned. When set (with or without minutesBeforeTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        shouldValidateOnParent:
+          type: boolean
+          description: If set to true barcodes will be validated on the top-level parent of the entrance plan.
+        scanColour:
+          type: string
+          default: '#3ddc97'
+          description: Colour (hexcode) that is used on scanner display for successful checkins (Default is green).
+        scanMessage:
+          type: string
+          maxLength: 255
+          default: Barcode successfully checked in.
+          description: Message displayed on successful checkin.
+        requiresPhotoVerification:
+          type: boolean
+          description: If set to true a successful checkin requires staff to verify the visitor against a photo (e.g. Museumpass Belgium) before it is registered.
+        requiresConfirmationQuestion:
+          type: boolean
+          description: If set to true a successful checkin requires staff to answer a confirmation question before it is registered.
+        confirmationQuestion:
+          type: string
+          maxLength: 80
+          example: Does this visitor meet the 18+ age requirement?
+          description: Question shown to staff. Required when requiresConfirmationQuestion is true.
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of venueSection the rule applies to
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of event the rule applies to
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of product the rule applies to
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

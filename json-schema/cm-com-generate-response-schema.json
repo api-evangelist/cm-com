@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-generate-response-schema.json",
+  "title": "Generate response",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-otp-v1-openapi.yml#/components/schemas/GenerateResponse",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The unique identifier for the code. Use this in combination with the received code to verify the code.",
+      "readOnly": true
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "The date the code was created.",
+      "format": "date-time",
+      "readOnly": true
+    },
+    "expireAt": {
+      "type": "string",
+      "description": "The date the code will expire.",
+      "format": "date-time",
+      "readOnly": true
+    }
+  }
+}

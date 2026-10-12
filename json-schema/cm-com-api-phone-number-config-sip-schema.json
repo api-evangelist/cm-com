@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-phone-number-config-sip-schema.json",
+  "title": "Phone Number Config Sip",
+  "description": "Configuration settings for configuring a Phone Number for SIP trunking.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-phone-numbers-v1-openapi.yml#/components/schemas/ApiPhoneNumberConfigSip",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "#/$defs/ApiPhoneNumberConfig"
+    }
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+    },
+    "distributionGroupGuid": {
+      "type": "string",
+      "description": "Unique identifier of the Distribution Group.",
+      "format": "uuid"
+    },
+    "algorithm": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The algorithm for the distribution group that should be applied, can be either `RoundRobin` or `FailOver`."
+    },
+    "fallbackDistributionGroupGuid": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unique identifier of the fallback Distribution Group.",
+      "format": "uuid"
+    },
+    "fallbackAlgorithm": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The algorithm for the fallback Distribution Group that should be applied, can be either `RoundRobin` or `FailOver`."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiPhoneNumberConfig": {
+      "title": "Phone Number Config",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.",
+          "readOnly": true
+        },
+        "phoneNumber": {
+          "type": "integer",
+          "description": "The Phone Number that the current configuration applies to.",
+          "format": "int64"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents the config of a phone number"
+    }
+  }
+}

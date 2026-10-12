@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-branding-schema.json",
+  "title": "Branding",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-sign-v1-openapi.yml#/components/schemas/Branding",
+  "type": "object",
+  "properties": {
+    "buttonBackgroundColor": {
+      "type": "string",
+      "description": "The hex color code for the button background color"
+    },
+    "buttonTextColor": {
+      "type": "string",
+      "description": "The hex color code for the button text color"
+    },
+    "themePrimaryColor": {
+      "type": "string",
+      "description": "The hex color code for the primary color in the Sign front-end"
+    },
+    "themeSuccessColor": {
+      "type": "string",
+      "description": "The hex color code for the success color in the Sign front-end"
+    },
+    "logo": {
+      "type": "string",
+      "description": "Base64 encoded PNG image in Data URL format"
+    },
+    "logoEmail": {
+      "type": "string",
+      "description": "Base64 encoded PNG image in Data URL format"
+    }
+  }
+}

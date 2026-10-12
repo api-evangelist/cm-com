@@ -1,0 +1,432 @@
+openapi: 3.2.0
+info:
+  title: Workflows API
+  version: v1.0
+tags:
+- name: Workflows
+paths:
+  /profile/v1.0/tenants/{tenantId}/workflows/_count:
+    get:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Get profile tenants by tenant id workflows count
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdWorkflowsCount
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/workflows/_query:
+    post:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter'
+      responses:
+        '200':
+          description: Success
+      summary: Create profile tenants by tenant id workflows query
+      x-summary-source: derived
+      operationId: postProfileV10TenantsByTenantIdWorkflowsQuery
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}:
+    get:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Get profile tenants by tenant id workflows by id
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdWorkflowsById
+      x-operation-id-source: derived
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow'
+      responses:
+        '200':
+          description: Success
+      summary: Replace profile tenants by tenant id workflows by id
+      x-summary-source: derived
+      operationId: putProfileV10TenantsByTenantIdWorkflowsById
+      x-operation-id-source: derived
+    delete:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Delete profile tenants by tenant id workflows by id
+      x-summary-source: derived
+      operationId: deleteProfileV10TenantsByTenantIdWorkflowsById
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_copy:
+    post:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Create profile tenants by tenant id workflows by id copy
+      x-summary-source: derived
+      operationId: postProfileV10TenantsByTenantIdWorkflowsByIdCopy
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_manual:
+    post:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Create profile tenants by tenant id workflows by id manual
+      x-summary-source: derived
+      operationId: postProfileV10TenantsByTenantIdWorkflowsByIdManual
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_enable:
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Replace profile tenants by tenant id workflows by id enable
+      x-summary-source: derived
+      operationId: putProfileV10TenantsByTenantIdWorkflowsByIdEnable
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_disable:
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Replace profile tenants by tenant id workflows by id disable
+      x-summary-source: derived
+      operationId: putProfileV10TenantsByTenantIdWorkflowsByIdDisable
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_favorite:
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Replace profile tenants by tenant id workflows by id favorite
+      x-summary-source: derived
+      operationId: putProfileV10TenantsByTenantIdWorkflowsByIdFavorite
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/workflows/{id}/_unfavorite:
+    put:
+      tags:
+      - Workflows
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+      summary: Replace profile tenants by tenant id workflows by id unfavorite
+      x-summary-source: derived
+      operationId: putProfileV10TenantsByTenantIdWorkflowsByIdUnfavorite
+      x-operation-id-source: derived
+components:
+  schemas:
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter:
+      type: object
+      properties:
+        nameContains:
+          type:
+          - string
+          - 'null'
+        enabledStatus:
+          $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchEnabledStatus'
+        sortOn:
+          $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowSortOrder'
+        reverse:
+          type:
+          - boolean
+          - 'null'
+        favorites:
+          $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter'
+      additionalProperties: false
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSortOrder:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    CM.Data.Core.Workflows.Api.Models.Steps.ApiStep:
+      type: object
+      properties:
+        jsonType:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        id:
+          type: string
+          format: uuid
+        nextStepId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        summary:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CM.Data.Core.Workflows.Api.Models.Workflows.ApiWorkflow:
+      type: object
+      properties:
+        jsonType:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        id:
+          type: string
+          format: uuid
+        name:
+          type:
+          - string
+          - 'null'
+        consentPurposeId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        steps:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.Steps.ApiStep'
+        goal:
+          $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiGoal'
+        enabled:
+          type: boolean
+        isReady:
+          type: boolean
+        createdBy:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        createdOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        modifiedBy:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        modifiedOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        isFavorite:
+          type:
+          - boolean
+          - 'null'
+      additionalProperties: false
+    CM.Data.Core.Workflows.Api.Models.ApiGoal:
+      type: object
+      properties:
+        eventTypeId:
+          type: string
+          format: uuid
+        propertyName:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        stopWorkflowWhenGoalIsMet:
+          type: boolean
+      additionalProperties: false
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchEnabledStatus:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      format: int32

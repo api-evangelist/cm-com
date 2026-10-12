@@ -1,0 +1,129 @@
+generated: '2026-10-13'
+method: derived
+source: openapi/cm-com-conversational-ai-v1-openapi.yml, openapi/cm-com-conversational-router-v1-openapi.yml,
+  openapi/cm-com-conversational-router-v2-openapi.yml, openapi/cm-com-customer-engagement-v1-openapi.yml,
+  openapi/cm-com-email-gateway-api-v1-openapi.yml, openapi/cm-com-halo-analytics-v1-openapi.yml,
+  openapi/cm-com-halo-core-v1-openapi.yml, openapi/cm-com-live-entrance-management-v1-openapi.yml,
+  openapi/cm-com-live-entrance-management-v2-openapi.yml, openapi/cm-com-live-event-apps-v1-openapi.yml,
+  openapi/cm-com-live-event-ticketing-v1-openapi.yml, openapi/cm-com-live-ga-partner-v1-openapi.yml
+  ...
+summary:
+  types:
+  - apiKey
+  - http
+  - oauth2
+  api_key_in:
+  - cookie
+  - header
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: API Token
+  description: API authentication using Bearer tokens from your Conversational AI dashboard.
+  sources:
+  - openapi/cm-com-conversational-ai-v1-openapi.yml
+  - openapi/cm-com-conversational-router-v1-openapi.yml
+  - openapi/cm-com-conversational-router-v2-openapi.yml
+  - openapi/cm-com-customer-engagement-v1-openapi.yml
+  - openapi/cm-com-live-event-apps-v1-openapi.yml
+  - openapi/cm-com-live-tables-v1-openapi.yml
+  - openapi/cm-com-marketplace-cdp-integration-v1-openapi.yml
+  - openapi/cm-com-marketplace-cms-integrations-v1-openapi.yml
+  - openapi/cm-com-marketplace-crm-integrations-v1-openapi.yml
+  - openapi/cm-com-marketplace-internal-comms-integrations-v1-openapi.yml
+  - openapi/cm-com-marketplace-live-chat-integrations-v1-openapi.yml
+  - openapi/cm-com-marketplace-product-feed-integrations-v1-openapi.yml
+  - openapi/cm-com-sign-seal-v1-openapi.yml
+  - openapi/cm-com-sign-v1-openapi.yml
+  - openapi/cm-com-verification-id-scan-v1-openapi.yml
+  - openapi/cm-com-verification-identity-hub-v1-openapi.yml
+  - openapi/cm-com-verification-mobile-identity-v1-openapi.yml
+  - openapi/cm-com-verification-number-validation-v1-openapi.yml
+- name: ProductToken
+  type: apiKey
+  in: header
+  parameter: X-CM-PRODUCTTOKEN
+  description: Your CM.com product token. Find it in the Email Gateway App → Settings → Integration.
+  sources:
+  - openapi/cm-com-email-gateway-api-v1-openapi.yml
+  - openapi/cm-com-voice-audio-manager-v1-openapi.yml
+  - openapi/cm-com-voice-cdr-v1-openapi.yml
+  - openapi/cm-com-voice-company-profiles-v1-openapi.yml
+  - openapi/cm-com-voice-distribution-groups-v1-openapi.yml
+  - openapi/cm-com-voice-documents-v1-openapi.yml
+  - openapi/cm-com-voice-number-requests-v1-openapi.yml
+  - openapi/cm-com-voice-phone-numbers-v1-openapi.yml
+  - openapi/cm-com-voice-sip-accounts-v1-openapi.yml
+  - openapi/cm-com-voice-sip-thresholds-v1-openapi.yml
+  - openapi/cm-com-voice-tts-v1-openapi.yml
+  - openapi/cm-com-voice-voice-accounts-v1-openapi.yml
+  - openapi/cm-com-voice-voice-api-v2-openapi.yml
+  - openapi/cm-com-voice-voice-insights-v1-openapi.yml
+- name: X-CM-SSO-ACCOUNTGUID
+  type: apiKey
+  in: header
+  parameter: X-CM-SSO-ACCOUNTGUID
+  sources:
+  - openapi/cm-com-halo-analytics-v1-openapi.yml
+  - openapi/cm-com-halo-core-v1-openapi.yml
+  - openapi/cm-com-live-event-ticketing-v1-openapi.yml
+- name: cookie
+  type: apiKey
+  in: cookie
+  parameter: connect.sid
+  sources:
+  - openapi/cm-com-live-entrance-management-v1-openapi.yml
+  - openapi/cm-com-live-entrance-management-v2-openapi.yml
+- name: sec0
+  type: oauth2
+  flows: []
+  sources:
+  - openapi/cm-com-live-ga-partner-v1-openapi.yml
+- name: ProductToken
+  type: apiKey
+  in: header
+  parameter: producttoken
+  description: Product token for authentication. Obtain from your CM.com dashboard under Messaging
+    > Product Tokens.
+  sources:
+  - openapi/cm-com-messaging-business-messaging-v1-openapi.yml
+  - openapi/cm-com-messaging-channels-api-v1-2-openapi.yml
+- name: oAuth2ClientCredentials
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+    scopes: 0
+  description: OAuth 2.0 Client Credentials Grant.
+  sources:
+  - openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: API-Key
+  description: Authentication via the API Key provided by PayPlaza
+  sources:
+  - openapi/cm-com-payments-pos-cloud-api-v1-9-0-openapi.yml
+- name: HMAC
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: |-
+    Used on callbacks sent by Identity Hub to your `callbackUrl`. The header contains the HMAC-SHA256 signature of the request body, calculated with your client secret as the secret key, prefixed with `HMAC `:
+
+    ```
+    Authorization: HMAC MIi9ZMyar2v+o7H7LD7oNolO5LrTJaC+8uKvYUGqJvM=
+    ```
+  sources:
+  - openapi/cm-com-verification-identity-hub-v1-openapi.yml
+  - openapi/cm-com-verification-mobile-identity-v1-openapi.yml
+- name: ProductToken
+  type: apiKey
+  in: header
+  parameter: X-CM-ProductToken
+  sources:
+  - openapi/cm-com-verification-otp-v1-openapi.yml
+  - openapi/cm-com-verification-otp-v2-openapi.yml

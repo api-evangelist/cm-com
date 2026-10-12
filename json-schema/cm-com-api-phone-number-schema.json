@@ -1,0 +1,532 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-phone-number-schema.json",
+  "title": "Phone Number",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-phone-numbers-v1-openapi.yml#/components/schemas/ApiPhoneNumber",
+  "type": "object",
+  "properties": {
+    "number": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Number."
+    },
+    "originalNumber": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Original number."
+    },
+    "customerAlias": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Custom name."
+    },
+    "voiceAccount": {
+      "$ref": "#/$defs/ApiVoiceAccount"
+    },
+    "application": {
+      "$ref": "#/$defs/ApiApplication"
+    },
+    "appConfig": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ApiPhoneNumberConfigDirectForwarding"
+        },
+        {
+          "$ref": "#/$defs/ApiPhoneNumberConfigFlowBuilder"
+        },
+        {
+          "$ref": "#/$defs/ApiPhoneNumberConfigNone"
+        },
+        {
+          "$ref": "#/$defs/ApiPhoneNumberConfigNotification"
+        },
+        {
+          "$ref": "#/$defs/ApiPhoneNumberConfigSip"
+        },
+        {
+          "$ref": "#/$defs/ApiPhoneNumberConfigHalo"
+        }
+      ],
+      "description": "Configuration model.",
+      "nullable": true
+    },
+    "distributionGroup": {
+      "$ref": "#/$defs/ApiDistributionGroup"
+    },
+    "country": {
+      "$ref": "#/$defs/Country"
+    },
+    "validFrom": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Number valid from.",
+      "format": "date-time"
+    },
+    "validTo": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Number valid till.",
+      "format": "date-time"
+    },
+    "numberType": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Type of number."
+    },
+    "updatedOn": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Last updated on.",
+      "format": "date-time"
+    },
+    "status": {
+      "$ref": "#/$defs/ApiPhoneNumberStatus"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiApplication": {
+      "title": "Application",
+      "type": "object",
+      "properties": {
+        "guid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique id"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Name of the application"
+        },
+        "isConfigurable": {
+          "type": "boolean",
+          "description": "Can be configured in the frontend"
+        },
+        "displayCode": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Unique id for frontend",
+          "format": "int32"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Application"
+    },
+    "ApiDistributionGroup": {
+      "title": "Distribution Group",
+      "type": "object",
+      "properties": {
+        "guid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique identifier of the Distribution Group."
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Name of the Distribution Group."
+        },
+        "createdOn": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Date and time the Distribution Group was created.",
+          "format": "date-time"
+        },
+        "updatedOn": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Date and time the Distribution Group was last updated.",
+          "format": "date-time"
+        },
+        "voiceAccountGuid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique identifier of the Voice Account."
+        }
+      },
+      "additionalProperties": false,
+      "description": "DistributionGroup API model"
+    },
+    "ApiPhoneNumberConfig": {
+      "title": "Phone Number Config",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`.",
+          "readOnly": true
+        },
+        "phoneNumber": {
+          "type": "integer",
+          "description": "The Phone Number that the current configuration applies to.",
+          "format": "int64"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents the config of a phone number"
+    },
+    "ApiPhoneNumberConfigDirectForwarding": {
+      "title": "Phone Number Config Direct Forwarding",
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "integer",
+          "description": "The Phone Number that the current configuration applies to.",
+          "format": "int64"
+        },
+        "appAccountGuid": {
+          "type": "string",
+          "description": "The unique identifier of the application can be found in the Voice Management App in the API Settings section.",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+        },
+        "destinationNumber": {
+          "type": "integer",
+          "description": "The Phone Number that the call will be forwarded to.",
+          "format": "int64"
+        },
+        "customCallerId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Optional caller ID (CLI) that will be used when the call is forwarded.",
+          "format": "int64"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration settings for configuring a Phone Number for Direct Forwarding."
+    },
+    "ApiPhoneNumberConfigFlowBuilder": {
+      "title": "Phone Number Config Flow Builder",
+      "required": [
+        "appAccountGuid",
+        "callFlowId"
+      ],
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "minimum": 100000,
+          "type": "integer",
+          "description": "The Phone Number that the current configuration applies to.",
+          "format": "int64"
+        },
+        "appAccountGuid": {
+          "minLength": 1,
+          "type": "string",
+          "description": "The unique identifier of the application can be found in the Voice Management App in the API Settings section.",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+        },
+        "callFlowId": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique Identifier of the callflow that should be used. Can be found in the Voice FlowBuilder application."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration settings for configuring a Phone Number for the Voice FlowBuilder Application."
+    },
+    "ApiPhoneNumberConfigHalo": {
+      "title": "Phone Number Config Halo",
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "integer",
+          "description": "The Phone Number that the current configuration applies to.",
+          "format": "int64"
+        },
+        "appAccountGuid": {
+          "type": "string",
+          "description": "The unique identifier of the application can be found in the Voice Management App in the API Settings section.",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+        },
+        "haloProfileId": {
+          "minimum": 1,
+          "type": "integer",
+          "description": "Numeric identifier of the Halo profile that should be used",
+          "format": "int32"
+        },
+        "cultureCode": {
+          "maxLength": 36,
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The culture code that should be used for this Halo configuration\r\nFormatted as a standard IETF BCP 47 language tag\r\n<example>en-GB</example>"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration settings for configuring a Phone Number for Halo"
+    },
+    "ApiPhoneNumberConfigNone": {
+      "title": "Phone Number Config None",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/ApiPhoneNumberConfig"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration settings for configuring a Phone Number to no application, meaning it's not actively used."
+    },
+    "ApiPhoneNumberConfigNotification": {
+      "title": "Phone Number Config Notification",
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "integer",
+          "description": "The Phone Number that the current configuration applies to.",
+          "format": "int64"
+        },
+        "appAccountGuid": {
+          "type": "string",
+          "description": "The unique identifier of the application can be found in the Voice Management App in the API Settings section.",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+        },
+        "promptType": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The type of prompt that should be played in the notification. Can be either `file` for a custom audio file in the Voice Audio Manager, or `tts` for a text-to-speech message."
+        },
+        "prompt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The text-to-speech message if the PromptType property is set to `tts`, or the path of the audio file in the Voice Audio Manager if the PromptType property is set to `file`."
+        },
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The language of the text-to-speech voice that will be used in ISO 639-1 format. Only relevant if the PromptType value is set to `tts`."
+        },
+        "gender": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The gender of the text-to-speech voice that will be used. Can be either `male` or `female`. Only relevant if the PromptType value is set to `tts`."
+        },
+        "voiceNumber": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The specific text-to-speech voice that will be used for the given Language and Gender combination. Only relevant if the PromptType value is set to `tts`. Should in most cases be set to 1.",
+          "format": "int32"
+        },
+        "callbackUrl": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Callback URL that will be called after the Notification was completed."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration settings for configuring a Phone Number for the Voice Notification Application."
+    },
+    "ApiPhoneNumberConfigSip": {
+      "title": "Phone Number Config Sip",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/ApiPhoneNumberConfig"
+        }
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+        },
+        "distributionGroupGuid": {
+          "type": "string",
+          "description": "Unique identifier of the Distribution Group.",
+          "format": "uuid"
+        },
+        "algorithm": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The algorithm for the distribution group that should be applied, can be either `RoundRobin` or `FailOver`."
+        },
+        "fallbackDistributionGroupGuid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique identifier of the fallback Distribution Group.",
+          "format": "uuid"
+        },
+        "fallbackAlgorithm": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The algorithm for the fallback Distribution Group that should be applied, can be either `RoundRobin` or `FailOver`."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Configuration settings for configuring a Phone Number for SIP trunking."
+    },
+    "ApiPhoneNumberStatus": {
+      "title": "Phone Number Status",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Name of the status."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Details of a phone number status."
+    },
+    "ApiVoiceAccount": {
+      "title": "Voice Account",
+      "type": "object",
+      "properties": {
+        "createdOn": {
+          "type": "string",
+          "description": "Date and time on which the Voice Account was created.",
+          "format": "date-time"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The name of the Voice Account."
+        },
+        "productAccountId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The unique identifier of the Voice Account."
+        },
+        "externalId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Optional external ID of the Voice Account that can be set by the customer for external references outside of the CM.com Platform."
+        },
+        "externalName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Optional external name of the Voice Account that can be set by the customer for external references outside of the CM.com Platform."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether or not the Voice Account is set to Active."
+        }
+      },
+      "additionalProperties": false,
+      "description": "A Voice Account is the central account for all things Voice related. Among others, phone numbers and SIP trunks will be linked to a certain Voice Account. **Please note** that a Voice Account is different from a Logical Account. You will be able to create multiple Voice Accounts with one Logical Account."
+    },
+    "Country": {
+      "title": "Country",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Country code."
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Country name."
+        },
+        "prefix": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Country prefix."
+        },
+        "zone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Whether the country is in the European Union."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Details of a Country."
+    }
+  }
+}

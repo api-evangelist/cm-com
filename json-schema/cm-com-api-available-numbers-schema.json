@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-available-numbers-schema.json",
+  "title": "Available Numbers",
+  "description": "Result of checking for number availability",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-number-requests-v1-openapi.yml#/components/schemas/ApiAvailableNumbers",
+  "type": "object",
+  "properties": {
+    "quantity": {
+      "type": "integer",
+      "description": "The amount of number blocks.",
+      "format": "int32"
+    },
+    "rangeSize": {
+      "type": "integer",
+      "description": "The size of the number blocks.",
+      "format": "int32"
+    },
+    "countryCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The country code in ISO 3166-1 alpha-2 format."
+    },
+    "numberType": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The phone number type (Local, National, TollFree)."
+    },
+    "areaCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The area code."
+    },
+    "city": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The city or town."
+    },
+    "region": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The region or state, only for NANPA."
+    },
+    "hasAvailableNumbers": {
+      "type": "boolean",
+      "description": "If true, the phone numbers to request are available"
+    },
+    "immediatelyAvailable": {
+      "type": "boolean",
+      "description": "If true, the numbers are available for immediate provisioning, otherwise there may be a delay"
+    }
+  },
+  "additionalProperties": false
+}

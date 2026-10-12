@@ -1,0 +1,151 @@
+openapi: 3.2.0
+info:
+  title: Phone Number Range API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Phone Number Range
+paths:
+  /voice-phonenumberapi/v1/phonenumberranges/{accountGuid}/phonenumbers/{phoneNumber}/customeralias:
+    put:
+      tags:
+      - Phone Number Range
+      summary: Update Phone Number alias
+      description: Update the Phone Number alias to help identify it from other numbers.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: phoneNumber
+        in: path
+        description: The Phone Number to be updated.
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 31761000000
+      requestBody:
+        description: CM.Voice.PhoneNumberApi.Models.Api.ApiCustomerAliasCustomerRequest
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerAliasCustomerRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerAliasCustomerRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerAliasCustomerRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerAliasCustomerRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCustomerAliasPhoneNumber'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: putVoicePhonenumberapiV1PhonenumberrangesByAccountGuidPhonenumbersByPhoneNumberCustomeralias
+      x-operation-id-source: derived
+components:
+  schemas:
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    ApiCustomerAliasCustomerRequest:
+      type: object
+      properties:
+        customerAlias:
+          pattern: ^[a-zA-Z0-9À-ÿ\-@'().\/\+?&|\s]*$
+          type:
+          - string
+          - 'null'
+          description: New Phone Number alias that can be used to differentiate a Phone Number.
+          example: Breda Office Front Desk
+      additionalProperties: false
+      description: Details of an customerAlias request.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ApiCustomerAliasPhoneNumber:
+      title: Customer Alias Phone Number
+      type: object
+      properties:
+        originalNumber:
+          type:
+          - integer
+          - 'null'
+          description: Original number, geographical number meant for Belgian customers, who want to use a service number.
+          format: int64
+          example: 32760000000
+        number:
+          type: integer
+          description: Phone number that the customer alias is assigned to.
+          format: int64
+          example: 32700000000
+        customerAlias:
+          type:
+          - string
+          - 'null'
+          description: Custom name to help identify a phone number.
+          example: Breda office front desk
+      additionalProperties: false
+      description: Details of a phone number.
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,1059 @@
+openapi: 3.2.0
+info:
+  title: Channels Mobile Push API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: MobilePush
+paths:
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/applications/{mobilePushApplicationId}/android:
+    get:
+      tags:
+      - MobilePush
+      summary: Gets the mobile push android application asynchronous
+      operationId: MobilePush_GetMobilePushAndroidApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+            text/xml:
+              schema:
+                type: string
+            multipart/form-data:
+              schema:
+                type: string
+    put:
+      tags:
+      - MobilePush
+      summary: Updates the mobile push android application asynchronous
+      operationId: MobilePush_UpdateMobilePushAndroidApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAndroidApplication'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAndroidApplication'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAndroidApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAndroidApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAndroidApplication'
+        description: The mobile push android application.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+    delete:
+      tags:
+      - MobilePush
+      summary: Deletes the mobile push android application asynchronous
+      operationId: MobilePush_DeleteMobilePushAndroidApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/applications:
+    get:
+      tags:
+      - MobilePush
+      summary: Gets the mobile push applications asynchronous
+      operationId: MobilePush_GetMobilePushApplicationsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The q.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationBase'
+    post:
+      tags:
+      - MobilePush
+      summary: Adds the mobile push application asynchronous
+      operationId: MobilePush_AddMobilePushApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/applications/{mobilePushApplicationId}:
+    get:
+      tags:
+      - MobilePush
+      summary: Gets the mobile push application asynchronous
+      operationId: MobilePush_GetMobilePushApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+    put:
+      tags:
+      - MobilePush
+      summary: Updates the mobile push application asynchronous
+      operationId: MobilePush_UpdateMobilePushApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication'
+    delete:
+      tags:
+      - MobilePush
+      summary: Deletes the mobile push application asynchronous
+      operationId: MobilePush_DeleteMobilePushApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/applications/{mobilePushApplicationId}/ios:
+    get:
+      tags:
+      - MobilePush
+      summary: Gets the mobile push ios application asynchronous
+      operationId: MobilePush_GetMobilePushIosApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+    put:
+      tags:
+      - MobilePush
+      summary: Updates the mobile push ios application asynchronous
+      operationId: MobilePush_UpdateMobilePushIosApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+        description: The mobile push ios application.
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+    delete:
+      tags:
+      - MobilePush
+      summary: Deletes the mobile push ios application asynchronous
+      operationId: MobilePush_DeleteMobilePushIosApplicationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: NoContent
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/applications/{mobilePushApplicationId}/ios/csr:
+    get:
+      tags:
+      - MobilePush
+      summary: Gets the mobile push ios application CSR asynchronous
+      operationId: MobilePush_GetMobilePushIosApplicationCsrAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+            text/json:
+              schema:
+                type: object
+            text/xml:
+              schema:
+                type: object
+            multipart/form-data:
+              schema:
+                type: object
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/applications/{mobilePushApplicationId}/ios/cert:
+    post:
+      tags:
+      - MobilePush
+      summary: Posts the mobile push ios application cert asynchronous
+      operationId: MobilePush_PostMobilePushIosApplicationCertAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushApplicationId
+        in: path
+        description: The mobile push application identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/account:
+    get:
+      tags:
+      - MobilePush
+      summary: ø Gets the mobile push account asynchronous
+      operationId: MobilePush_GetMobilePushAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount'
+    post:
+      tags:
+      - MobilePush
+      summary: Adds the mobile push account asynchronous
+      operationId: MobilePush_AddMobilePushAccountAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Created
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/account/forminput:
+    get:
+      tags:
+      - MobilePush
+      summary: Gets the mobile push account form input asynchronous
+      operationId: MobilePush_GetMobilePushAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse'
+  /channels/v1/accounts/{accountId}/mobilepush/{channelRequestId}/account/{mobilePushAccountId}/forminput:
+    put:
+      tags:
+      - MobilePush
+      summary: Adds the mobile push account form input asynchronous
+      operationId: MobilePush_AddMobilePushAccountFormInputAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelRequestId
+        in: path
+        description: The channel request identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: mobilePushAccountId
+        in: path
+        description: The mobile push account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount'
+components:
+  schemas:
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication:
+      type: object
+      properties:
+        privateKey:
+          type: string
+        certificate:
+          type: string
+        password:
+          type: string
+        expiresOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationBase:
+      required:
+      - id
+      - accountId
+      - isActive
+      - isPending
+      - requiresSettings
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        applicationID:
+          type: string
+        isIosExpired:
+          type: boolean
+          readOnly: true
+        isIosActivated:
+          type: boolean
+        isAndroidActivated:
+          type: boolean
+        applicationOtpSender:
+          type: string
+        applicationName:
+          type: string
+        androidSettings:
+          type: string
+        isActive:
+          type: boolean
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        iosSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+        isPending:
+          type: boolean
+        requiresSettings:
+          type: boolean
+          readOnly: true
+        createdOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        iosExpiresOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication:
+      required:
+      - id
+      - accountId
+      - isActive
+      - isPending
+      - requiresSettings
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        applicationID:
+          type: string
+        isIosExpired:
+          type: boolean
+          readOnly: true
+        isIosActivated:
+          type: boolean
+        isAndroidActivated:
+          type: boolean
+        applicationOtpSender:
+          type: string
+        applicationName:
+          type: string
+        androidSettings:
+          type: string
+        isActive:
+          type: boolean
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        iosSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+        isPending:
+          type: boolean
+        requiresSettings:
+          type: boolean
+          readOnly: true
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        iosExpiresOnUtc:
+          format: date-time
+          type: string
+        rejectionReason:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest:
+      type: object
+      properties:
+        applicationID:
+          type: string
+        applicationOtpSender:
+          type: string
+        applicationName:
+          type: string
+        androidSettings:
+          type: string
+        iosSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAndroidApplication:
+      type: object
+      properties:
+        certificate:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount:
+      required:
+      - id
+      - accountId
+      - channelRequestId
+      - isPending
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+  requestBodies:
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+      description: The mobile push application.
+      required: true
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

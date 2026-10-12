@@ -1,0 +1,682 @@
+# x-archived-from: cm-com-voice-distribution-groups-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: Distribution Groups API
+  version: v1
+servers:
+- url: https://api.cm.com
+paths:
+  /voice-distributiongroupsapi/v1/{accountGuid}/distributiongroups:
+    get:
+      tags:
+      - Distribution Groups
+      summary: Get Distribution Groups
+      description: Get all Distribution Groups belonging to the given Account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: Skip
+        in: query
+        description: Amount of items being skipped.
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          description: Amount of items being skipped.
+          format: int32
+          nullable: true
+          example: 0
+        example: 0
+      - name: Take
+        in: query
+        description: Amount of items being retrieved.
+        schema:
+          maximum: 200
+          minimum: 0
+          type: integer
+          description: Amount of items being retrieved.
+          format: int32
+          nullable: true
+          example: 50
+        example: 50
+      - name: q
+        in: query
+        description: Search for Distribution Group name.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-CM-PAGINATION-SKIP:
+              description: The amount of items that have been skipped
+              schema:
+                type: number
+            X-CM-PAGINATION-TAKE:
+              description: The amount of items that have been taken
+              schema:
+                type: number
+            X-CM-PAGINATION-TOTAL:
+              description: The total amount of available items
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiDistributionGroup'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    post:
+      tags:
+      - Distribution Groups
+      summary: Create Distribution Group
+      description: Create a new Distribution Group.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: The new Distribution Group.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiDistributionGroup'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiDistributionGroup'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiDistributionGroup'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDistributionGroup'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-distributiongroupsapi/v1/{accountGuid}/distributiongroups/{distributionGroupGuid}:
+    get:
+      tags:
+      - Distribution Groups
+      summary: Get Distribution Group
+      description: Get a single Distribution Group by it's unique identifier.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: distributionGroupGuid
+        in: path
+        description: Unique identifier of the Distribution Group.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDistributionGroup'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    put:
+      tags:
+      - Distribution Groups
+      summary: Update Distribution Group
+      description: Update a Distribution Group.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: distributionGroupGuid
+        in: path
+        description: Unique identifier of the Distribution Group.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: The Distribution Group to use for updating.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiDistributionGroup'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiDistributionGroup'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiDistributionGroup'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    delete:
+      tags:
+      - Distribution Groups
+      summary: Delete Distribution Group
+      description: Deletes the given Distribution Group.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: distributionGroupGuid
+        in: path
+        description: Unique identifier of the Distribution Group.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-distributiongroupsapi/v1/{accountGuid}/distributiongroups/{distributionGroupGuid}/endpoints:
+    get:
+      tags:
+      - Endpoints
+      summary: Get Endpoints
+      description: Get all Endpoints linked to a given Distribution Group.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: distributionGroupGuid
+        in: path
+        description: Unique identifier of the Distribution Group.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiEndpoint'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    post:
+      tags:
+      - Endpoints
+      summary: Create Endpoints
+      description: Create new Endpoints linked to a given Distribution Group.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: distributionGroupGuid
+        in: path
+        description: Unique identifier of the Distribution Group.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: The new Endpoints to be created.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiEndpoint'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiEndpoint'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiEndpoint'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiEndpoint'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-distributiongroupsapi/v1/{accountGuid}/distributiongroups/{distributionGroupGuid}/endpoints/{endpointGuid}:
+    get:
+      tags:
+      - Endpoints
+      summary: Get Endpoint
+      description: Get an Endpoint linked to a given Distribution Group.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: distributionGroupGuid
+        in: path
+        description: Unique identifier of the Distribution Group.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: endpointGuid
+        in: path
+        description: Unique identifier of the Endpoint.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiEndpoint'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    put:
+      tags:
+      - Endpoints
+      summary: Update Endpoint
+      description: Update an existing Endpoint.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: distributionGroupGuid
+        in: path
+        description: Unique identifier of the Distribution Group.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: endpointGuid
+        in: path
+        description: Unique identifier of the Endpoint.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: The updated Endpoint.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiEndpoint'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiEndpoint'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiEndpoint'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    delete:
+      tags:
+      - Endpoints
+      summary: Delete Endpoint
+      description: Delete the given Endpoint.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: distributionGroupGuid
+        in: path
+        description: Unique identifier of the Distribution Group.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: endpointGuid
+        in: path
+        description: Unique identifier of the Endpoint.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+components:
+  schemas:
+    ApiDistributionGroup:
+      title: Distribution Group
+      type: object
+      properties:
+        guid:
+          type: string
+          description: Unique identifier of the Distribution Group.
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          maxLength: 128
+          type: string
+          description: Name of the Distribution Group.
+          nullable: true
+          example: My Distribution Group
+        createdOn:
+          type: string
+          description: Date and time the Distribution Group was created.
+          format: date-time
+          example: '2022-01-01T00:00:00.000Z'
+        updatedOn:
+          type: string
+          description: Date and time the Distribution Group was last updated.
+          format: date-time
+          example: '2022-01-01T00:00:00.000Z'
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiEndpoint'
+          description: List of linked Distribution Group Endpoints.
+          nullable: true
+      additionalProperties: false
+      description: A Distribution Group is a collection of Endpoints that can be grouped together.
+    ApiEndpoint:
+      title: Endpoint
+      type: object
+      properties:
+        guid:
+          type: string
+          description: Unique identifier of the Endpoint.
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          description: Name of the Endpoint.
+          nullable: true
+          example: My Endpoint
+        ipAddress:
+          type: string
+          description: External IP address of the Endpoint.
+          nullable: true
+          example: 0.0.0.0
+        port:
+          type: integer
+          description: 'The port to be configured that is supported by CM. Supported ports: 5060-5100.'
+          format: int32
+          example: 5060
+        priority:
+          minimum: 1
+          type: integer
+          description: Determines the Round-Robin order of the endpoint. Each endpoint inside a Distribution Group must have a unique priority.
+          format: int32
+          example: 1
+        isActive:
+          type: boolean
+          description: Determines whether the Endpoint should be active or not.
+          example: true
+        tlsEnabled:
+          type: boolean
+          description: Determines whether this endpoint receives SIP traffic via TLS.
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          description: "Key/Value Pairs of attributes configured to an Endpoint.\r\nAttributes are extra settings that can be configured to an Endpoint, for example: media encryption.\r\n            \r\nExample:\r\n{\r\n    \"medianenc\": \"SRTP\"\r\n}"
+          nullable: true
+      additionalProperties: false
+      description: Endpoint of a Distribution Group where calls can be routed to.
+    DistributionGroupQuery:
+      title: Distribution Group Query
+      type: object
+      properties:
+        skip:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          description: Amount of items being skipped.
+          format: int32
+          nullable: true
+          example: 0
+        take:
+          maximum: 200
+          minimum: 0
+          type: integer
+          description: Amount of items being retrieved.
+          format: int32
+          nullable: true
+          example: 50
+        searchQuery:
+          type: string
+          description: Search for Distribution Group name.
+          nullable: true
+      additionalProperties: false
+      description: Details of a distribution group endpoint.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

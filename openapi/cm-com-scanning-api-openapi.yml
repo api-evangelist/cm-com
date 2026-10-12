@@ -1,0 +1,4731 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Scanning API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Scanning across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Scanning
+  description: Scan API for barcode scanning, validate, check-in, and check-out operations
+paths:
+  /entrance/v1.0/scan/plans:
+    get:
+      operationId: ScanController_findAllByUser_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: includePastEntrancePlans
+        required: false
+        in: query
+        description: If true, includes entrance plans whose events have all ended. Default is false (past entrance plans are excluded).
+        schema:
+          example: false
+          type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/EntrancePlan'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List entrance plans for the current user
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/plans/{entrancePlanUuid}:
+    get:
+      operationId: ScanController_findPlan_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntrancePlan'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get an entrance plan by UUID
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/events:
+    get:
+      operationId: ScanController_findEventsByEntrancePlan_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Event'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List events for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/rules:
+    get:
+      operationId: ScanController_findRulesByEntrancePlan_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List rules for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/venues:
+    get:
+      operationId: ScanController_findVenuesByEntrancePlan_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List venues for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/constraints:
+    get:
+      operationId: ScanController_findConstraintsByEntrancePlan_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Constraint'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List constraints for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/products:
+    get:
+      operationId: ScanController_findProductsByEntrancePlan_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List products for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/tickets:
+    get:
+      operationId: ScanController_findTicketsByEntrancePlan_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: uuids
+        required: false
+        in: query
+        description: Comma separated values for ticket uuid
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: externalIds
+        required: false
+        in: query
+        description: Comma separated values for ticket externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: venueSections
+        required: false
+        in: query
+        description: Comma separated values for venueSection externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: constraints
+        required: false
+        in: query
+        description: Comma separated values for constraint externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: imports
+        required: false
+        in: query
+        description: Comma separated values for importId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket saleOrigin
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Filter tickets by their derived scan status
+        schema:
+          type: string
+          enum:
+          - CHECKED_IN
+          - REMAINING
+          - ERRORS
+      - name: ticketStatus
+        required: false
+        in: query
+        description: Filter tickets by their stored validity status (VALID / INVALID)
+        schema:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Ticket'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List tickets for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/validate:
+    post:
+      operationId: ScanController_validate_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateScanDto'
+      responses:
+        '200':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Validate a scan barcode
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/checkin:
+    post:
+      operationId: ScanController_checkIn_v1.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScanDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Check in a barcode
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/order/preview:
+    post:
+      operationId: ScanController_previewOrder_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScanDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderScanPreviewDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Preview checking in the entire order for a scanned barcode
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/order/checkin:
+    post:
+      operationId: ScanController_checkInOrder_v1.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckInOrderDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Check in the selected tickets of an order
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/checkin/confirm:
+    post:
+      operationId: ScanController_confirmCheckIn_v1.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScanDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Confirm a pending check-in
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/checkin/deny:
+    post:
+      operationId: ScanController_denyCheckIn_v1.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScanDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Deny a pending check-in
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/checkout:
+    post:
+      operationId: ScanController_checkOut_v1.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCheckOutDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Check out a barcode
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/logs:
+    get:
+      operationId: ScanController_getScanLogsByEntrancePlan_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: statusCodes
+        required: false
+        in: query
+        description: Comma separated values for scan status codes
+        schema:
+          example: 200,401
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: deviceIds
+        required: false
+        in: query
+        description: Comma separated values for device ids
+        schema:
+          example: 872HA,AH84A
+          type: string
+      - name: ticketIds
+        required: false
+        in: query
+        description: Comma separated values for ticket ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: orderIds
+        required: false
+        in: query
+        description: Comma separated values for order ids
+        schema:
+          example: CM12345678,CM0000001
+          type: string
+      - name: productIds
+        required: false
+        in: query
+        description: Comma separated values for product ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: eventIds
+        required: false
+        in: query
+        description: Comma separated values for event ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: includeRelatedEntrancePlans
+        required: false
+        in: query
+        description: When true, include scan logs from the entire entrance plan collection the requested plan belongs to (its related plans across the collection) instead of only the requested entrance plan. Only affects entrance-plan-scoped requests; ignored for organisation-scoped requests.
+        schema:
+          example: true
+          type: boolean
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List scan logs for an entrance plan (deprecated)
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/sync:
+    post:
+      operationId: ScanController_sync_v1.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Sync offline scans
+      tags:
+      - Scanning
+    get:
+      operationId: ScanController_getLogsSinceTimestamp_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan logs since a given timestamp
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/sync/tickets:
+    get:
+      operationId: ScanController_getTicketsSinceTimestamp_v1.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get tickets updated since a given timestamp
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/download:
+    get:
+      operationId: ScanController_getInitialSyncFileByEntrancePlan_v1.0
+      parameters:
+      - name: forceZipJob
+        required: true
+        in: query
+        description: Query parameter that can force creation of a new zip file
+        schema:
+          default: false
+          type: boolean
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Download initial sync file for entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/callback/{ulid}:
+    post:
+      operationId: ScanController_triggerScanCallback_v1.0
+      parameters:
+      - name: ulid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Trigger a scan callback
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/analytics/scan-progress:
+    get:
+      operationId: ScanAnalyticsController_getScanProgress_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanProgressResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan progress for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/analytics/widgets:
+    get:
+      operationId: ScanAnalyticsController_getWidgets_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsWidgetResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get analytics widget data for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/analytics/scans-by-product:
+    get:
+      operationId: ScanAnalyticsController_getScansByProduct_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByProductItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan counts grouped by product (only products with scans)
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/analytics/by-product:
+    get:
+      operationId: ScanAnalyticsController_getAllProductScans_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByProductItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan counts grouped by product (all products, zero-scan rows padded)
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/analytics/venue/{venueUuid}:
+    get:
+      operationId: ScanAnalyticsController_getVenueScanOverview_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByVenueItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan overview for a venue
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/scan/{entrancePlanUuid}/analytics/logs:
+    get:
+      operationId: ScanAnalyticsController_getScanLogs_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: statusCodes
+        required: false
+        in: query
+        description: Comma separated values for scan status codes
+        schema:
+          example: 200,401
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: deviceIds
+        required: false
+        in: query
+        description: Comma separated values for device ids
+        schema:
+          example: 872HA,AH84A
+          type: string
+      - name: ticketIds
+        required: false
+        in: query
+        description: Comma separated values for ticket ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: orderIds
+        required: false
+        in: query
+        description: Comma separated values for order ids
+        schema:
+          example: CM12345678,CM0000001
+          type: string
+      - name: productIds
+        required: false
+        in: query
+        description: Comma separated values for product ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: eventIds
+        required: false
+        in: query
+        description: Comma separated values for event ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: includeRelatedEntrancePlans
+        required: false
+        in: query
+        description: When true, include scan logs from the entire entrance plan collection the requested plan belongs to (its related plans across the collection) instead of only the requested entrance plan. Only affects entrance-plan-scoped requests; ignored for organisation-scoped requests.
+        schema:
+          example: true
+          type: boolean
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List scan logs for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/plans:
+    get:
+      operationId: ScanController_findAllByUser_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: includePastEntrancePlans
+        required: false
+        in: query
+        description: If true, includes entrance plans whose events have all ended. Default is false (past entrance plans are excluded).
+        schema:
+          example: false
+          type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/EntrancePlan'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List entrance plans for the current user
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/plans/{entrancePlanUuid}:
+    get:
+      operationId: ScanController_findPlan_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntrancePlan'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get an entrance plan by UUID
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/events:
+    get:
+      operationId: ScanController_findEventsByEntrancePlan_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Event'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List events for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/rules:
+    get:
+      operationId: ScanController_findRulesByEntrancePlan_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Rule'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List rules for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/venues:
+    get:
+      operationId: ScanController_findVenuesByEntrancePlan_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Venue'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List venues for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/constraints:
+    get:
+      operationId: ScanController_findConstraintsByEntrancePlan_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Constraint'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List constraints for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/products:
+    get:
+      operationId: ScanController_findProductsByEntrancePlan_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Product'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List products for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/tickets:
+    get:
+      operationId: ScanController_findTicketsByEntrancePlan_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: uuids
+        required: false
+        in: query
+        description: Comma separated values for ticket uuid
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: externalIds
+        required: false
+        in: query
+        description: Comma separated values for ticket externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: venueSections
+        required: false
+        in: query
+        description: Comma separated values for venueSection externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: constraints
+        required: false
+        in: query
+        description: Comma separated values for constraint externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: imports
+        required: false
+        in: query
+        description: Comma separated values for importId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket saleOrigin
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Filter tickets by their derived scan status
+        schema:
+          type: string
+          enum:
+          - CHECKED_IN
+          - REMAINING
+          - ERRORS
+      - name: ticketStatus
+        required: false
+        in: query
+        description: Filter tickets by their stored validity status (VALID / INVALID)
+        schema:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Ticket'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List tickets for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/validate:
+    post:
+      operationId: ScanController_validate_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateScanDto'
+      responses:
+        '200':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Validate a scan barcode
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/checkin:
+    post:
+      operationId: ScanController_checkIn_v2.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScanDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Check in a barcode
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/order/preview:
+    post:
+      operationId: ScanController_previewOrder_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScanDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderScanPreviewDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Preview checking in the entire order for a scanned barcode
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/order/checkin:
+    post:
+      operationId: ScanController_checkInOrder_v2.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckInOrderDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Check in the selected tickets of an order
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/checkin/confirm:
+    post:
+      operationId: ScanController_confirmCheckIn_v2.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScanDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Confirm a pending check-in
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/checkin/deny:
+    post:
+      operationId: ScanController_denyCheckIn_v2.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScanDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Deny a pending check-in
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/checkout:
+    post:
+      operationId: ScanController_checkOut_v2.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCheckOutDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanResultDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Check out a barcode
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/logs:
+    get:
+      operationId: ScanController_getScanLogsByEntrancePlan_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: statusCodes
+        required: false
+        in: query
+        description: Comma separated values for scan status codes
+        schema:
+          example: 200,401
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: deviceIds
+        required: false
+        in: query
+        description: Comma separated values for device ids
+        schema:
+          example: 872HA,AH84A
+          type: string
+      - name: ticketIds
+        required: false
+        in: query
+        description: Comma separated values for ticket ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: orderIds
+        required: false
+        in: query
+        description: Comma separated values for order ids
+        schema:
+          example: CM12345678,CM0000001
+          type: string
+      - name: productIds
+        required: false
+        in: query
+        description: Comma separated values for product ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: eventIds
+        required: false
+        in: query
+        description: Comma separated values for event ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: includeRelatedEntrancePlans
+        required: false
+        in: query
+        description: When true, include scan logs from the entire entrance plan collection the requested plan belongs to (its related plans across the collection) instead of only the requested entrance plan. Only affects entrance-plan-scoped requests; ignored for organisation-scoped requests.
+        schema:
+          example: true
+          type: boolean
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List scan logs for an entrance plan (deprecated)
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/sync:
+    post:
+      operationId: ScanController_sync_v2.0
+      parameters:
+      - name: X-ENMA-MDM-DEVICE-INFO
+        required: true
+        in: header
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Sync offline scans
+      tags:
+      - Scanning
+    get:
+      operationId: ScanController_getLogsSinceTimestamp_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan logs since a given timestamp
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/sync/tickets:
+    get:
+      operationId: ScanController_getTicketsSinceTimestamp_v2.0
+      parameters:
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get tickets updated since a given timestamp
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/download:
+    get:
+      operationId: ScanController_getInitialSyncFileByEntrancePlan_v2.0
+      parameters:
+      - name: forceZipJob
+        required: true
+        in: query
+        description: Query parameter that can force creation of a new zip file
+        schema:
+          default: false
+          type: boolean
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Download initial sync file for entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/callback/{ulid}:
+    post:
+      operationId: ScanController_triggerScanCallback_v2.0
+      parameters:
+      - name: ulid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Trigger a scan callback
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/analytics/scan-progress:
+    get:
+      operationId: ScanAnalyticsController_getScanProgress_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanProgressResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan progress for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/analytics/widgets:
+    get:
+      operationId: ScanAnalyticsController_getWidgets_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsWidgetResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get analytics widget data for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/analytics/scans-by-product:
+    get:
+      operationId: ScanAnalyticsController_getScansByProduct_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByProductItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan counts grouped by product (only products with scans)
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/analytics/by-product:
+    get:
+      operationId: ScanAnalyticsController_getAllProductScans_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByProductItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan counts grouped by product (all products, zero-scan rows padded)
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/analytics/venue/{venueUuid}:
+    get:
+      operationId: ScanAnalyticsController_getVenueScanOverview_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByVenueItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan overview for a venue
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/scan/{entrancePlanUuid}/analytics/logs:
+    get:
+      operationId: ScanAnalyticsController_getScanLogs_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: statusCodes
+        required: false
+        in: query
+        description: Comma separated values for scan status codes
+        schema:
+          example: 200,401
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: deviceIds
+        required: false
+        in: query
+        description: Comma separated values for device ids
+        schema:
+          example: 872HA,AH84A
+          type: string
+      - name: ticketIds
+        required: false
+        in: query
+        description: Comma separated values for ticket ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: orderIds
+        required: false
+        in: query
+        description: Comma separated values for order ids
+        schema:
+          example: CM12345678,CM0000001
+          type: string
+      - name: productIds
+        required: false
+        in: query
+        description: Comma separated values for product ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: eventIds
+        required: false
+        in: query
+        description: Comma separated values for event ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: includeRelatedEntrancePlans
+        required: false
+        in: query
+        description: When true, include scan logs from the entire entrance plan collection the requested plan belongs to (its related plans across the collection) instead of only the requested entrance plan. Only affects entrance-plan-scoped requests; ignored for organisation-scoped requests.
+        schema:
+          example: true
+          type: boolean
+      - name: entrancePlanUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List scan logs for an entrance plan
+      tags:
+      - Scanning
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    ScanLog:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        scannedValue:
+          type: string
+          maxLength: 255
+          example: CMLQLGRPA
+        scannedAt:
+          format: date-time
+          type: string
+        scanStatusCode:
+          type: number
+          description: Result of the scan
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        errorDetails:
+          type: string
+          readOnly: true
+        deviceId:
+          type: string
+          readOnly: true
+          example: 9UY8G
+        deviceLabel:
+          type: string
+          readOnly: true
+          example: Scanner Entrance 1
+        mdmDeviceInfo:
+          type: object
+          readOnly: true
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+      required:
+      - externalId
+      - scannedValue
+      - scannedAt
+      - scanStatusCode
+      - errorDetails
+      - deviceId
+      - deviceLabel
+      - mdmDeviceInfo
+      - ticket
+    OrderScanResultTicketDto:
+      type: object
+      properties:
+        barcode:
+          type: string
+          readOnly: true
+          example: CMLQFLGRPA
+        ulid:
+          type: string
+          readOnly: true
+          example: 01J96A3A77SVXJKRZNGV386Q7G
+        outcome:
+          type: string
+          enum:
+          - COMMITTED
+          - SKIPPED
+          - FAILED
+          example: COMMITTED
+        scanStatusCode:
+          type: number
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        scanMessage:
+          type: string
+          readOnly: true
+          example: Successfully checked in.
+        scanColour:
+          type: string
+          readOnly: true
+          example: '#3ddc97'
+        name:
+          type: string
+          readOnly: true
+          example: Jane Doe
+        productName:
+          type: string
+          readOnly: true
+          example: VIP Ticket
+        venueSectionName:
+          type: string
+          readOnly: true
+          example: Northside Stand
+      required:
+      - barcode
+      - ulid
+      - outcome
+      - scanStatusCode
+      - scanMessage
+      - scanColour
+      - name
+      - productName
+      - venueSectionName
+    CheckInOrderDto:
+      type: object
+      properties:
+        scans:
+          maxItems: 250
+          description: The selected tickets to check in, each with its own ulid and scannedValue (barcode).
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateScanDto'
+      required:
+      - scans
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    Condition:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Must be scanned once on entrance plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Value to compare the condition operator to.
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        entrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
+      - uuid
+      - name
+      - subject
+      - operator
+      - value
+    Rule:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Scanning Rule All VIP tickets scannable twice
+        maxValidations:
+          type: number
+          minimum: 0
+          description: Amount a ticket can be validated (successfully scanned) on the rule. When 0 the ticket cannot be scanned.
+        maxValidationScope:
+          type: string
+          enum:
+          - UNRESTRICTED
+          - DAILY
+          - SAME_DAY
+          example: UNRESTRICTED
+          description: 'Defines the scope of maxValidations. UNRESTRICTED: total limit across entire validity period, DAILY: limit resets each day, SAME_DAY: all scans must occur on the same calendar day.'
+        validFrom:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned from this date onwards
+        validUntil:
+          format: date-time
+          type: string
+          description: Barcodes can be scanned until this date.
+        daysValidAfterPurchase:
+          type: number
+          description: Amount of days a barcode can be validated after its issued date (whole days, timestamp is not taken into account)
+        shouldValidateTimeslotMoment:
+          type: boolean
+          description: If set to true a barcode with a timeslot can only be scanned on the (whole) day of the timeslot
+        minutesBeforeTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes before the timeslot moment a barcode may be scanned. When set (together with/or minutesAfterTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        minutesAfterTimeslot:
+          type: number
+          minimum: 0
+          maximum: 120
+          description: Minutes after the timeslot moment a barcode may be scanned. When set (together with/or minutesBeforeTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true.
+        shouldValidateOnParent:
+          type: boolean
+          description: If set to true barcodes will be validated on the top-level parent of the entrance plan.
+        scanColour:
+          type: string
+          default: '#3ddc97'
+          description: Colour (hexcode) that is used on scanner display for successful checkins (Default is green).
+        scanMessage:
+          type: string
+          maxLength: 255
+          default: Barcode successfully checked in.
+          description: Message displayed on successful checkin.
+        requiresPhotoVerification:
+          type: boolean
+          description: If set to true a successful checkin requires staff to verify the visitor against a photo (e.g. Museumpass Belgium) before it is registered.
+        requiresConfirmationQuestion:
+          type: boolean
+          description: If set to true a successful checkin requires staff to answer a confirmation question before it is registered.
+        confirmationQuestion:
+          type: string
+          maxLength: 80
+          example: Does this visitor meet the 18+ age requirement?
+          description: Question shown to staff when requiresConfirmationQuestion is true.
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of event the rule applies to
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of venueSection the rule applies to
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of product the rule applies to
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: externalId of constraint the rule applies to
+      required:
+      - uuid
+      - name
+      - maxValidations
+      - maxValidationScope
+      - shouldValidateTimeslotMoment
+      - shouldValidateOnParent
+      - requiresPhotoVerification
+      - requiresConfirmationQuestion
+    ScansByProductItemDto:
+      type: object
+      properties: {}
+    Ticket:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        barcode:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+        externalBarcode:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+        orderId:
+          type: string
+          maxLength: 255
+          example: BP28857934
+        issuedAt:
+          format: date-time
+          type: string
+          maxLength: 255
+          description: Must be in the past
+        timeSlotMomentAt:
+          format: date-time
+          type: string
+        expiresAt:
+          format: date-time
+          type: string
+        ticketDetails:
+          type: string
+          maxLength: 255
+          description: Used to provide additional ticket details displayed on the scanners
+          example: Row 8, seat 15
+        firstName:
+          type: string
+          maxLength: 255
+          example: Jane
+        lastName:
+          type: string
+          maxLength: 255
+          example: Doe
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        phoneNumber:
+          type: string
+          maxLength: 20
+          example: '+31612345678'
+        paymentReference:
+          type: string
+          maxLength: 255
+          description: Reference to an external payment
+          example: N270570809-DZ8HSB
+        status:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+          example: INVALID
+        statusDetails:
+          type: string
+          maxLength: 255
+          description: Additional details as to why a status is invalid
+          example: Ticket is refunded by user
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+        saleOrigin:
+          type: string
+          enum:
+          - GUEST_LIST
+          - PARTNER_API
+          - SHOP
+          - BACKOFFICE_ORDER
+          - CM_POS
+          - SECONDARY_TICKETING_CM
+          - SECONDARY_TICKETING_TICKET_SWAP
+          example: SHOP
+      required:
+      - uuid
+      - barcode
+      - externalBarcode
+      - orderId
+      - issuedAt
+      - email
+      - status
+      - productId
+      - upstreamPlatform
+    Product:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
+      required:
+      - uuid
+      - externalId
+      - name
+      - productType
+    OrderScanPreviewDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          readOnly: true
+          example: ORDER-12345
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderScanTicketDto'
+        summary:
+          $ref: '#/components/schemas/OrderScanSummaryDto'
+      required:
+      - orderId
+      - tickets
+      - summary
+    ValidateScanDto:
+      type: object
+      properties:
+        ulid:
+          type: string
+          maxLength: 26
+          example: 01J96A3A77SVXJKRZNGV386Q7G
+          description: Unique (ULID) identifier of a scan
+        scannedValue:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+          description: Value (barcode) to be validated in the scan api
+        deviceId:
+          type: string
+          maxLength: 5
+          example: 9UY8H
+          description: Generated identifier of the device
+        deviceLabel:
+          type: string
+          maxLength: 25
+          example: Entrance Scanner 1
+          description: Custom label of the device
+        shouldValidateScans:
+          type: boolean
+          example: true
+          default: true
+          description: Boolean to determine whether the validation should consider previous scans.
+      required:
+      - ulid
+      - scannedValue
+      - deviceId
+      - deviceLabel
+      - shouldValidateScans
+    EntrancePlan:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Main Entrance
+        description:
+          type: string
+          maxLength: 255
+          example: Entrance plan for main entrance
+        isDefault:
+          type: boolean
+          description: Marks an entrancePlan as default plan.
+        isActive:
+          type: boolean
+          description: Sets an entrancePlan as active/inactive.
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+        scanMode:
+          type: string
+          enum:
+          - OFFLINE_SYNC
+          - ONLINE
+          example: OFFLINE_SYNC
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - NO_RULES
+          example: ACTIVE
+        children:
+          type: array
+          items:
+            type: object
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        venues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Venue'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        organisation:
+          type: object
+      required:
+      - uuid
+      - name
+      - isDefault
+      - isActive
+      - scanMode
+    Constraint:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Special access group
+      required:
+      - uuid
+      - externalId
+      - name
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    Venue:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueSection'
+      required:
+      - uuid
+      - externalId
+      - name
+      - venueSections
+    ScansByVenueItemDto:
+      type: object
+      properties: {}
+    OrderScanResultSummaryDto:
+      type: object
+      properties:
+        total:
+          type: number
+          example: 4
+        committed:
+          type: number
+          example: 3
+        skipped:
+          type: number
+          example: 1
+        failed:
+          type: number
+          example: 0
+      required:
+      - total
+      - committed
+      - skipped
+      - failed
+    ScanProgressResponseDto:
+      type: object
+      properties:
+        checkins:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        errors:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        checkouts:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        groupIntervalMs:
+          type: number
+          readOnly: true
+        effectiveEndAt:
+          format: date-time
+          type: string
+          readOnly: true
+      required:
+      - checkins
+      - errors
+      - checkouts
+      - groupIntervalMs
+      - effectiveEndAt
+    GenericResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          readOnly: true
+          example: Successfully uploaded file.
+        details:
+          type: array
+          items:
+            type: object
+          example:
+          - file: filename.csv
+      required:
+      - message
+      - details
+    Event:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Festival 2024
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+      required:
+      - uuid
+      - externalId
+      - name
+      - startAt
+      - endAt
+    OrderScanSummaryDto:
+      type: object
+      properties:
+        total:
+          type: number
+          example: 5
+        validHere:
+          type: number
+          example: 3
+        alreadyCheckedIn:
+          type: number
+          example: 1
+        notValidHere:
+          type: number
+          example: 1
+        otherDenied:
+          type: number
+          example: 0
+        requiresVerification:
+          type: number
+          example: 0
+      required:
+      - total
+      - validHere
+      - alreadyCheckedIn
+      - notValidHere
+      - otherDenied
+      - requiresVerification
+    CreateScanDto:
+      type: object
+      properties:
+        ulid:
+          type: string
+          maxLength: 26
+          example: 01J96A3A77SVXJKRZNGV386Q7G
+          description: Unique (ULID) identifier of a scan
+        scannedValue:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+          description: Value (barcode) to be validated in the scan api
+        deviceId:
+          type: string
+          maxLength: 5
+          example: 9UY8H
+          description: Generated identifier of the device
+        deviceLabel:
+          type: string
+          maxLength: 25
+          example: Entrance Scanner 1
+          description: Custom label of the device
+      required:
+      - ulid
+      - scannedValue
+      - deviceId
+      - deviceLabel
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    ScanValidationStepDto:
+      type: object
+      properties:
+        requiresPhotoVerification:
+          type: boolean
+          description: Staff must verify the visitor against a photo (e.g. Museumpass Belgium).
+        requiresConfirmationQuestion:
+          type: boolean
+          description: Staff must answer a confirmation question.
+        confirmationQuestion:
+          type: string
+          readOnly: true
+          example: Does this visitor meet the 18+ age requirement?
+        photo:
+          type: string
+          readOnly: true
+          example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ...
+      required:
+      - requiresPhotoVerification
+      - requiresConfirmationQuestion
+      - confirmationQuestion
+      - photo
+    VenueSection:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Northside Stand
+      required:
+      - uuid
+      - externalId
+      - name
+    ScanResultDto:
+      type: object
+      properties:
+        ulid:
+          type: string
+          readOnly: true
+          example: 01J96GHPJP8TKGTHCYP6V6HVAR
+        scannedValue:
+          type: string
+          readOnly: true
+          example: CMLQFLGRPA
+        scannedAt:
+          format: date-time
+          type: string
+          readOnly: true
+        scanStatusCode:
+          type: number
+          description: Result of the scan
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        scanMessage:
+          type: string
+          readOnly: true
+          example: Barcode successfully checked in
+        errorDetails:
+          type: object
+          readOnly: true
+        scanColour:
+          type: string
+          description: Hex colour code to be used for the checkin
+          example: '#3ddc97'
+        deviceId:
+          type: string
+          description: Generated identifier of the device
+          example: 9UY8G
+        deviceLabel:
+          type: string
+          description: Custom label of the device
+          example: Scanner Entrance 1
+        name:
+          type: string
+          readOnly: true
+          example: Jane Doe
+        productName:
+          type: string
+          readOnly: true
+          example: VIP Ticket
+        venueSectionName:
+          type: string
+          readOnly: true
+          example: Northside Stand
+        ticketDetails:
+          type: string
+          readOnly: true
+          example: Row 8, seat 15
+        timeSlotMomentAt:
+          format: date-time
+          type: string
+          readOnly: true
+        validationStep:
+          description: Present when scanStatusCode is VERIFICATION_REQUIRED. Describes the manual verification the scanner must perform before the check-in can be confirmed or denied.
+          allOf:
+          - $ref: '#/components/schemas/ScanValidationStepDto'
+      required:
+      - ulid
+      - scannedValue
+      - scannedAt
+      - scanStatusCode
+      - scanMessage
+      - errorDetails
+      - scanColour
+      - deviceId
+      - deviceLabel
+      - name
+      - productName
+      - venueSectionName
+      - ticketDetails
+      - timeSlotMomentAt
+    AnalyticsWidgetResponseDto:
+      type: object
+      properties:
+        currentVisitors:
+          type: number
+          readOnly: true
+        totalVisitors:
+          type: number
+          readOnly: true
+        totalCheckouts:
+          type: number
+          readOnly: true
+        showUpPercentage:
+          type: number
+          readOnly: true
+        totalTickets:
+          type: number
+          readOnly: true
+        otherTickets:
+          type: number
+          readOnly: true
+      required:
+      - currentVisitors
+      - totalVisitors
+      - totalCheckouts
+      - showUpPercentage
+      - totalTickets
+      - otherTickets
+    OrderScanResultDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          readOnly: true
+          example: ORDER-12345
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderScanResultTicketDto'
+        summary:
+          $ref: '#/components/schemas/OrderScanResultSummaryDto'
+      required:
+      - orderId
+      - tickets
+      - summary
+    CreateCheckOutDto:
+      type: object
+      properties:
+        ulid:
+          type: string
+          maxLength: 26
+          example: 01J96A3A77SVXJKRZNGV386Q7G
+          description: Unique (ULID) identifier of a scan
+        scannedValue:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+          description: Value (barcode) to be validated in the scan api
+        deviceId:
+          type: string
+          maxLength: 5
+          example: 9UY8H
+          description: Generated identifier of the device
+        deviceLabel:
+          type: string
+          maxLength: 25
+          example: Entrance Scanner 1
+          description: Custom label of the device
+        revalidate:
+          type: boolean
+          example: true
+          default: false
+          description: Boolean to determine whether the barcode is valid again after checkout (default false).
+      required:
+      - ulid
+      - scannedValue
+      - deviceId
+      - deviceLabel
+      - revalidate
+    OrderScanTicketDto:
+      type: object
+      properties:
+        barcode:
+          type: string
+          readOnly: true
+          example: CMLQFLGRPA
+        externalBarcode:
+          type: string
+          example: EXT-CMLQFLGRPA
+        ticketUuid:
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          readOnly: true
+          example: Jane Doe
+        productName:
+          type: string
+          readOnly: true
+          example: VIP Ticket
+        venueSectionName:
+          type: string
+          readOnly: true
+          example: Northside Stand
+        timeSlotMomentAt:
+          format: date-time
+          type: string
+          readOnly: true
+        checkedInAt:
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2025-06-16T11:34:51.000Z'
+        scanStatusCode:
+          type: number
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        scanMessage:
+          type: string
+          readOnly: true
+          example: Successfully checked in.
+        scanColour:
+          type: string
+          readOnly: true
+          example: '#3ddc97'
+        group:
+          type: string
+          enum:
+          - VALID_HERE
+          - ALREADY_CHECKED_IN
+          - NOT_VALID_HERE
+          - OTHER_DENIED
+          example: VALID_HERE
+        requiresVerification:
+          type: boolean
+          example: false
+        isScannedTicket:
+          type: boolean
+          description: True for the ticket whose barcode was actually scanned
+          example: true
+      required:
+      - barcode
+      - name
+      - productName
+      - venueSectionName
+      - timeSlotMomentAt
+      - checkedInAt
+      - scanStatusCode
+      - scanMessage
+      - scanColour
+      - group
+      - requiresVerification
+      - isScannedTicket
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

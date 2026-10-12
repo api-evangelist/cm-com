@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-generate-request-schema.json",
+  "title": "Generate request",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-otp-v1-openapi.yml#/components/schemas/GenerateRequest",
+  "type": "object",
+  "properties": {
+    "recipient": {
+      "type": "string",
+      "description": "Phone number in international format without +."
+    },
+    "sender": {
+      "type": "string",
+      "description": "The name or phone number of the sender. Please note that alphanumeric sender is not supported in all countries. If `allowVoice` is `true`, sender must be a phone number. For alphanumeric senders, the length should be between 3 and 11 characters.\n"
+    },
+    "length": {
+      "type": "integer",
+      "description": "The length of the code.",
+      "minimum": 4,
+      "maximum": 10,
+      "default": 5
+    },
+    "expiry": {
+      "type": "integer",
+      "description": "The expiry in seconds.",
+      "minimum": 10,
+      "maximum": 3600,
+      "default": 60
+    },
+    "allowVoice": {
+      "type": "boolean",
+      "description": "Send the code via a voice call."
+    },
+    "voiceLanguage": {
+      "type": "string",
+      "description": "Change the language of the voice call.",
+      "enum": [
+        "de",
+        "en",
+        "es",
+        "fr",
+        "it",
+        "nl"
+      ],
+      "default": "en"
+    },
+    "allowPush": {
+      "type": "boolean",
+      "description": "Allow code to be send via push notification. When allowPush is set to `true`, a valid app key is required.",
+      "default": false
+    },
+    "appKey": {
+      "type": "string",
+      "description": "The app key GUID.",
+      "format": "uuid"
+    },
+    "message": {
+      "type": "string",
+      "description": "Set a custom message. You can use the placeholder {code} which will be replaced by the actual code. e.g. Your code is: {code}.\"\n"
+    }
+  },
+  "required": [
+    "recipient",
+    "sender"
+  ]
+}

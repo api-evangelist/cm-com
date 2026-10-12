@@ -1,0 +1,132 @@
+# x-archived-from: cm-com-sign-seal-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.1
+
+info:
+  version: '1'
+  title: Seal API
+  description: |
+    Use the Seal API to provide documents with a seal.
+
+    The seal is a certificate which ensures the authenticity and integrity of a document provided by a certificate authority.
+
+    It is possible to add a reason that will be stated on the certificate.
+
+servers:
+  - url: https://api.cm.com/seal/v1
+
+security: [ { JWT: [ ] } ]
+
+tags:
+  - name: Seal
+    description: Seal a document with a certificate
+
+paths:
+  /seal:
+    post:
+      description: |
+        Use the Seal API to provide documents with a seal.
+
+        The seal is a certificate which ensures the authenticity and integrity of a document provided by a certificate authority.
+
+        It is possible to add a reason that will be stated on the certificate.
+      summary: Seal a document
+      tags: [Seal]
+      operationId: seal_document
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SealDocument'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/pdf:
+              schema:
+                type: string
+                contentMediaType: application/pdf
+        '500':
+          description: Unable to seal file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Unable to seal file
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Unauthorized
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: The file must not be greater than 10240 kilobytes.
+        '404':
+          description: The specified resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 404
+                message: Not found
+
+components:
+  schemas:
+    SealDocument:
+      title: Seal a Document
+      type: object
+      properties:
+        file:
+          type: string
+          description: The file to upload. Currently only supports PDF files up to 10MB.
+          contentMediaType: application/pdf
+          examples: [sample.pdf]
+        reason:
+          type: string
+          description: Optional reason that can be added to the seal certificate
+          examples: ['Signed by CM.com at 2026-01-01 00:00:00']
+      required:
+        - file
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples: [400]
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          examples: [The request is invalid]
+
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+        ```
+        Authorization: Bearer GENERATED_TOKEN_HERE
+        ```
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)

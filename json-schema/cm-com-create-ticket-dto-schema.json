@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-create-ticket-dto-schema.json",
+  "title": "CreateTicketDto",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-live-entrance-management-v1-openapi.yml#/components/schemas/CreateTicketDto",
+  "type": "object",
+  "properties": {
+    "externalId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "barcode": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "externalBarcode": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "orderId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "issuedAt": {
+      "type": "object"
+    },
+    "timeSlotMomentAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "expiresAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ticketDetails": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Used to provide additional ticket details displayed on the scanners"
+    },
+    "firstName": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "lastName": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "email": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Should be valid e-mail address"
+    },
+    "phoneNumber": {
+      "type": "string",
+      "maxLength": 20
+    },
+    "paymentReference": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Reference to an external payment"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "VALID",
+        "INVALID"
+      ]
+    },
+    "statusDetails": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Additional details as to why a status is invalid"
+    },
+    "productId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "venueSectionId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "eventId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "primaryConstraintId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "secondaryConstraintId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "tertiaryConstraintId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "upstreamPlatform": {
+      "type": "string",
+      "enum": [
+        "ENMA_SUBSCRIBER",
+        "GENERAL_ADMISSION",
+        "SEATED_TICKETING",
+        "GLOBAL_TICKET",
+        "INTERSOLVE",
+        "PUBLIQ",
+        "YOURTICKETPROVIDER",
+        "PASS_TEST",
+        "PASS_NATIONAAL_MILITAIR_MUSEUM",
+        "PASS_WEC",
+        "PASS_CENTRAAL_MUSEUM",
+        "PHOENIX_DES_LUMIERES",
+        "PORT_DES_LUMIERES",
+        "SMOOTHR_DEMO_ACCOUNT",
+        "ENTRANCE_MANAGEMENT",
+        "STICHTING_KONINKLIJKE_DEFENSIEMUSEA",
+        "ELECTRIC_IBIZA_ENTERTAINMENT",
+        "MOMICE_KLM_OPEN",
+        "CUSTOMER_DATA_PLATFORM",
+        "GO_CITY"
+      ]
+    },
+    "saleOrigin": {
+      "type": "string",
+      "enum": [
+        "GUEST_LIST",
+        "PARTNER_API",
+        "SHOP",
+        "BACKOFFICE_ORDER",
+        "CM_POS",
+        "SECONDARY_TICKETING_CM",
+        "SECONDARY_TICKETING_TICKET_SWAP"
+      ]
+    }
+  },
+  "required": [
+    "barcode",
+    "orderId",
+    "status",
+    "productId"
+  ]
+}

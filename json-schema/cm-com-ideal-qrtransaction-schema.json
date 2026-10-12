@@ -1,0 +1,386 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-ideal-qrtransaction-schema.json",
+  "title": "IdealQRTransaction",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml#/components/schemas/IdealQRTransaction",
+  "allOf": [
+    {
+      "type": "object",
+      "required": [
+        "id",
+        "reference",
+        "amount",
+        "currency",
+        "purchaseId",
+        "description",
+        "size",
+        "expiresAt",
+        "status",
+        "action",
+        "createdAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Uuid"
+        },
+        "amountChangeable": {
+          "$ref": "#/$defs/AmountChangeable"
+        },
+        "reference": {
+          "$ref": "#/$defs/Reference"
+        },
+        "amount": {
+          "$ref": "#/$defs/Amount"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "purchaseId": {
+          "$ref": "#/$defs/PurchaseID"
+        },
+        "description": {
+          "$ref": "#/$defs/IDEALDescription"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/Datetime"
+        },
+        "reusable": {
+          "$ref": "#/$defs/IDEALQRReusable"
+        },
+        "language": {
+          "$ref": "#/$defs/Language"
+        },
+        "webhooks": {
+          "$ref": "#/$defs/TransactionWebhooksQR"
+        },
+        "status": {
+          "description": "The status of the transaction.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/StatusOpen"
+            },
+            {
+              "$ref": "#/$defs/StatusSuccess"
+            },
+            {
+              "$ref": "#/$defs/StatusExpired"
+            }
+          ]
+        },
+        "action": {
+          "description": "Next action to be performed by merchant (or consumer) to complete the payment.",
+          "type": "object",
+          "properties": {
+            "qrcode": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "ID of the QR Code known by the iDEAL QR Backend of CM.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL to QR code image to be scanned by consumer to perform the payment.",
+                  "type": "string",
+                  "format": "url"
+                },
+                "href": {
+                  "description": "URL to which the QR code redirects to perform the payment.",
+                  "type": "string",
+                  "format": "url"
+                }
+              }
+            }
+          }
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Datetime"
+        }
+      }
+    },
+    {
+      "$ref": "#/$defs/ReturnURLOneOf"
+    }
+  ],
+  "$defs": {
+    "Amount": {
+      "description": "Denomination in the smallest currency subunit, as for example euro cents.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99999999
+    },
+    "AmountChangeable": {
+      "description": "Contains the minimum and maximum values for the amount of a QR code that a consumer can set themselves after scanning the code.",
+      "type": "object",
+      "properties": {
+        "min": {
+          "description": "Minimum of the amount. Must be higher than 0",
+          "type": "integer"
+        },
+        "max": {
+          "description": "Maximum of the amount. Must be higher than the minimum and lower than 5000000.",
+          "type": "integer"
+        }
+      }
+    },
+    "BaseWebhook": {
+      "type": "object",
+      "description": "A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.",
+      "required": [
+        "url",
+        "events"
+      ],
+      "properties": {
+        "url": {
+          "description": "The URL the request must be send to.",
+          "type": "string",
+          "format": "url"
+        },
+        "events": {
+          "description": "Type of events that will trigger a webhook.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Currency": {
+      "description": "ISO 4217 currency code.",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 3,
+      "default": "EUR"
+    },
+    "Datetime": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 20,
+      "description": "ISO 8601 date and time."
+    },
+    "FinalStatusEvent": {
+      "description": "* `FINALSTATUS` - This value is deprecated and shouldn't be used anymore. Use `STATUS_CHANGE` instead.\n",
+      "type": "string",
+      "enum": [
+        "FINALSTATUS"
+      ]
+    },
+    "IDEALDescription": {
+      "maxLength": 35,
+      "description": "Description of the underlying value or reason of the payment.\n\nUltimately appears on the payment statement and confirmation screen.\n"
+    },
+    "IDEALQRReusable": {
+      "description": "Indicates the QR code's ability to accept multiple successful payments.",
+      "type": "boolean",
+      "default": false
+    },
+    "Language": {
+      "description": "Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).",
+      "type": "string",
+      "default": "nl",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "PurchaseID": {
+      "description": "Unique identification of the order within the Merchant's system. This value\nappears on the bank statement of the Consumer.\n\nThe purchaseID can only contain letters and numbers.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 35,
+      "pattern": "^[A-Za-z0-9]{1,35}$"
+    },
+    "Reference": {
+      "description": "The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "RefundStatusEvent": {
+      "description": "* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.\n",
+      "type": "string",
+      "enum": [
+        "REFUND_STATUS"
+      ]
+    },
+    "ReturnURLOneOf": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "returnUrls"
+          ],
+          "properties": {
+            "returnUrls": {
+              "$ref": "#/$defs/ReturnUrls"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "returnUrl"
+          ],
+          "properties": {
+            "returnUrl": {
+              "$ref": "#/$defs/ReturnUrl"
+            }
+          }
+        }
+      ]
+    },
+    "ReturnUrl": {
+      "description": "URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.\n\nWith this implementation you are responsible to fetch the payment status and incorporated into your site.",
+      "type": "string",
+      "format": "url",
+      "maxLength": 2000
+    },
+    "ReturnUrls": {
+      "type": "object",
+      "description": "URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.\n\nWith this object we can redirect consumer to a dedicated page per payment result status. Either this object or the returnUrl field is mandatory.",
+      "required": [
+        "success",
+        "cancelled",
+        "expired",
+        "failed"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "cancelled": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "expired": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "failed": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        }
+      }
+    },
+    "StatusChangeEvent": {
+      "description": "* `STATUS_CHANGE` - Triggered when the status of a transaction changes.\n",
+      "type": "string",
+      "enum": [
+        "STATUS_CHANGE"
+      ]
+    },
+    "StatusExpired": {
+      "description": "The transaction has expired.",
+      "type": "string",
+      "format": "enum",
+      "enum": [
+        "EXPIRED"
+      ]
+    },
+    "StatusOpen": {
+      "description": "The transaction is open and can be paid.",
+      "type": "string",
+      "format": "enum",
+      "enum": [
+        "OPEN"
+      ]
+    },
+    "StatusSuccess": {
+      "description": "The transaction has been successfully paid.",
+      "type": "string",
+      "format": "enum",
+      "enum": [
+        "SUCCESS"
+      ]
+    },
+    "TransactionWebhook": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseWebhook"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "events": {
+              "items": {
+                "description": "* `STATUS_CHANGE` - Triggered when the status of a transaction changes.\n* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.\n* `FINALSTATUS` - This value is deprecated and shouldn't be used anymore. Use `STATUS_CHANGE` instead.\n",
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/StatusChangeEvent"
+                  },
+                  {
+                    "$ref": "#/$defs/RefundStatusEvent"
+                  },
+                  {
+                    "$ref": "#/$defs/FinalStatusEvent"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "TransactionWebhookQREvents": {
+      "description": "* `STATUS_CHANGE` - When the status of the transaction changes to any other value.\n* `QR_PAYMENT_CREATED` - When a new payment is created using the qr code.\n* `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.\n",
+      "type": "string",
+      "enum": [
+        "STATUS_CHANGE",
+        "QR_PAYMENT_CREATED",
+        "REFUND_STATUS"
+      ]
+    },
+    "TransactionWebhooks": {
+      "description": "Array of webhooks that enables receiving a web request once a given event occurs. We won't do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.\n",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TransactionWebhook"
+      }
+    },
+    "TransactionWebhooksQR": {
+      "$ref": "#/$defs/TransactionWebhooks",
+      "items": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "url",
+              "events"
+            ],
+            "properties": {
+              "url": {
+                "description": "The URL the request must be send to.",
+                "type": "string",
+                "format": "url"
+              },
+              "events": {
+                "description": "The events when this URL must be requested.",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/TransactionWebhookQREvents"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Uuid": {
+      "description": "Unique identifier",
+      "type": "string",
+      "format": "uuid",
+      "minLength": 36,
+      "maxLength": 36
+    }
+  }
+}

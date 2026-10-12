@@ -1,0 +1,1016 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://docs.cm.com/.well-known/api-catalog",
+      "item": [
+        {
+          "href": "https://docs.cm.com/conversational-ai/v1/api-reference",
+          "title": "Conversational AI API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/conversational-router/v1/api-reference",
+          "title": "Conversational Router API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/conversational-router/v2/api-reference",
+          "title": "Conversational Router API Reference v2"
+        },
+        {
+          "href": "https://docs.cm.com/customer-engagement/v1/api-reference",
+          "title": "Customer Engagement API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/email-gateway-api/v1/api-reference",
+          "title": "Email Gateway API API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/halo/analytics/v1/api-reference",
+          "title": "Analytics API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/halo/core/v1/api-reference",
+          "title": "Core API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/live/entrance-management/v1/api-reference",
+          "title": "Entrance Management API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/live/entrance-management/v2/api-reference",
+          "title": "Entrance Management API Reference v2"
+        },
+        {
+          "href": "https://docs.cm.com/live/event-apps/v1/api-reference",
+          "title": "Event Apps API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/live/event-ticketing/v1/api-reference",
+          "title": "Event Ticketing API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/live/ga-partner/v1/api-reference",
+          "title": "Event Ticketing: Partner API API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/live/museum-park-reseller/v1/api-reference",
+          "title": "Museums & Parks: Reseller API API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/live/museum-park-scan/v1/api-reference",
+          "title": "Museums & Parks: Scan API API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/live/tables/v1/api-reference",
+          "title": "Tables API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/marketplace/cdp-integration/v1/api-reference",
+          "title": "CDP Integrations API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/marketplace/cms-integrations/v1/api-reference",
+          "title": "CMS Integrations API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/marketplace/crm-integrations/v1/api-reference",
+          "title": "CRM Integrations API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/marketplace/internal-comms-integrations/v1/api-reference",
+          "title": "Internal Comms Integrations API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/marketplace/live-chat-integrations/v1/api-reference",
+          "title": "Live Chat Integrations API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/marketplace/product-feed-integrations/v1/api-reference",
+          "title": "Product Feed Integrations API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/messaging/business-messaging/v1/api-reference",
+          "title": "Business Messaging API API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/messaging/channels-api/v1.2/api-reference",
+          "title": "Channels API API Reference v1.2"
+        },
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/cdp-events/v1/api-reference",
+          "title": "Customer Data Platform - Events API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/cdp-profiles/v1/api-reference",
+          "title": "Customer Data Platform - Profiles API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/email-campaigns/v1/api-reference",
+          "title": "Email Campaigns API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/email-validation/v1/api-reference",
+          "title": "Email Validation API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/mmc-campaigns/v1/api-reference",
+          "title": "Campaigns API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/payments/online-payments/v1.27.22/api-reference",
+          "title": "Online Payments API Reference v1.27.22"
+        },
+        {
+          "href": "https://docs.cm.com/payments/pos-cloud-api/v1.9.0/api-reference",
+          "title": "POS Cloud API API Reference v1.9.0"
+        },
+        {
+          "href": "https://docs.cm.com/sign/v1/api-reference",
+          "title": "Sign API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/sign/seal/v1/api-reference",
+          "title": "Seal API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/verification/iban-verification/v1/api-reference",
+          "title": "IBAN Verification API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/verification/id-scan/v1/api-reference",
+          "title": "ID Scan API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/verification/identity-hub/v1/api-reference",
+          "title": "Identity Hub API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/verification/idin/v1/api-reference",
+          "title": "iDIN API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/verification/mobile-identity/v1/api-reference",
+          "title": "Mobile Identity Services API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/verification/number-validation/v1/api-reference",
+          "title": "Number Validation API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/verification/otp/v1/api-reference",
+          "title": "OTP as a Service API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/verification/otp/v2/api-reference",
+          "title": "OTP as a Service API Reference v2"
+        },
+        {
+          "href": "https://docs.cm.com/voice/audio-manager/v1/api-reference",
+          "title": "Audio Files API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/cdr/v1/api-reference",
+          "title": "CDRs API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/company-profiles/v1/api-reference",
+          "title": "Company Profiles API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/distribution-groups/v1/api-reference",
+          "title": "Distribution Groups API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/documents/v1/api-reference",
+          "title": "Documents API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/number-requests/v1/api-reference",
+          "title": "Number Requests API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/phone-numbers/v1/api-reference",
+          "title": "Phone Numbers API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/sip-accounts/v1/api-reference",
+          "title": "SIP Accounts API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/sip-thresholds/v1/api-reference",
+          "title": "SIP Thresholds API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/tts/v1/api-reference",
+          "title": "Text to Speech API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/voice-accounts/v1/api-reference",
+          "title": "Voice Accounts API Reference v1"
+        },
+        {
+          "href": "https://docs.cm.com/voice/voice-api/v2/api-reference",
+          "title": "Voice API API Reference v2"
+        },
+        {
+          "href": "https://docs.cm.com/voice/voice-insights/v1/api-reference",
+          "title": "Voice Insights API Reference v1"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/conversational-ai/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/conversational-ai/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/conversational-ai/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/conversational-router/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/conversational-router/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/conversational-router/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/conversational-router/v2/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/conversational-router/v2/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/conversational-router/v2/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/customer-engagement/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/customer-engagement/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/customer-engagement/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/email-gateway-api/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/email-gateway-api/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/email-gateway-api/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/halo/analytics/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/halo/analytics/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/halo/analytics/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/halo/core/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/halo/core/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/halo/core/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/live/entrance-management/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/live/entrance-management/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/live/entrance-management/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/live/entrance-management/v2/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/live/entrance-management/v2/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/live/entrance-management/v2/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/live/event-apps/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/live/event-apps/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/live/event-apps/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/live/event-ticketing/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/live/event-ticketing/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/live/event-ticketing/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/live/ga-partner/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/live/ga-partner/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/live/ga-partner/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/live/museum-park-reseller/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/live/museum-park-reseller/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/live/museum-park-reseller/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/live/museum-park-scan/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/live/museum-park-scan/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/live/museum-park-scan/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/live/tables/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/live/tables/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/live/tables/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/marketplace/cdp-integration/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/marketplace/cdp-integration/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/marketplace/cdp-integration/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/marketplace/cms-integrations/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/marketplace/cms-integrations/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/marketplace/cms-integrations/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/marketplace/crm-integrations/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/marketplace/crm-integrations/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/marketplace/crm-integrations/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/marketplace/internal-comms-integrations/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/marketplace/internal-comms-integrations/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/marketplace/internal-comms-integrations/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/marketplace/live-chat-integrations/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/marketplace/live-chat-integrations/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/marketplace/live-chat-integrations/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/marketplace/product-feed-integrations/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/marketplace/product-feed-integrations/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/marketplace/product-feed-integrations/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/messaging/business-messaging/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/messaging/business-messaging/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/messaging/business-messaging/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/messaging/channels-api/v1.2/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/messaging/channels-api/v1.2/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/messaging/channels-api/v1.2/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/mobile-marketing-cloud/cdp-events/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/cdp-events/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/cdp-events/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/mobile-marketing-cloud/cdp-profiles/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/cdp-profiles/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/cdp-profiles/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/mobile-marketing-cloud/email-campaigns/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/email-campaigns/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/email-campaigns/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/mobile-marketing-cloud/email-validation/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/email-validation/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/email-validation/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/mobile-marketing-cloud/mmc-campaigns/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/mmc-campaigns/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/mobile-marketing-cloud/mmc-campaigns/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/payments/online-payments/v1.27.22/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/payments/online-payments/v1.27.22/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/payments/online-payments/v1.27.22/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/payments/pos-cloud-api/v1.9.0/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/payments/pos-cloud-api/v1.9.0/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/payments/pos-cloud-api/v1.9.0/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/sign/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/sign/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/sign/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/sign/seal/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/sign/seal/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/sign/seal/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/verification/iban-verification/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/verification/iban-verification/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/verification/iban-verification/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/verification/id-scan/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/verification/id-scan/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/verification/id-scan/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/verification/identity-hub/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/verification/identity-hub/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/verification/identity-hub/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/verification/idin/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/verification/idin/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/verification/idin/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/verification/mobile-identity/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/verification/mobile-identity/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/verification/mobile-identity/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/verification/number-validation/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/verification/number-validation/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/verification/number-validation/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/verification/otp/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/verification/otp/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/verification/otp/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/verification/otp/v2/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/verification/otp/v2/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/verification/otp/v2/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/audio-manager/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/audio-manager/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/audio-manager/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/cdr/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/cdr/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/cdr/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/company-profiles/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/company-profiles/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/company-profiles/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/distribution-groups/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/distribution-groups/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/distribution-groups/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/documents/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/documents/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/documents/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/number-requests/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/number-requests/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/number-requests/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/phone-numbers/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/phone-numbers/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/phone-numbers/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/sip-accounts/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/sip-accounts/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/sip-accounts/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/sip-thresholds/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/sip-thresholds/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/sip-thresholds/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/tts/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/tts/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/tts/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/voice-accounts/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/voice-accounts/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/voice-accounts/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/voice-api/v2/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/voice-api/v2/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/voice-api/v2/api-reference",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://docs.cm.com/voice/voice-insights/v1/api-reference",
+      "service-desc": [
+        {
+          "href": "https://docs.cm.com/voice/voice-insights/v1/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://docs.cm.com/voice/voice-insights/v1/api-reference",
+          "type": "text/html"
+        }
+      ]
+    }
+  ]
+}

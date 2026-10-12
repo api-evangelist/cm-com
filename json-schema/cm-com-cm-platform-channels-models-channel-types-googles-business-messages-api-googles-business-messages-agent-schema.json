@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-platform-channels-models-channel-types-googles-business-messages-api-googles-business-messages-agent-schema.json",
+  "title": "CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-messaging-channels-api-v1-2-openapi.yml#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent",
+  "required": [
+    "id",
+    "accountId",
+    "name",
+    "isPending",
+    "isActive",
+    "messageConfigurationCompleted",
+    "entrypointConfigurationCompleted",
+    "agentManualVerificationFlowRequired",
+    "createdOnUtc"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "accountId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "isPending": {
+      "type": "boolean"
+    },
+    "isActive": {
+      "type": "boolean"
+    },
+    "gbmBrandId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "gbmAccountId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "googleBusinessCommunicationsId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "googleBusinessCommunicationsVerificationStatus": {
+      "type": "string"
+    },
+    "googleBusinessCommunicationsLaunchStatus": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentLaunchStatus"
+      }
+    },
+    "messageConfigurationCompleted": {
+      "type": "boolean"
+    },
+    "entrypointConfigurationCompleted": {
+      "type": "boolean"
+    },
+    "agentManualVerificationFlowRequired": {
+      "type": "boolean"
+    },
+    "rejectionReason": {
+      "type": "string"
+    },
+    "channelId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "agentId": {
+      "type": "string"
+    },
+    "entityStatus": {
+      "enum": [
+        "ACTIVE",
+        "PENDING",
+        "ELIGIBLE",
+        "NOT_VALIDATED",
+        "CUSTOMER_ACTION_REQUIRED",
+        "EXPIRED",
+        "REJECTED",
+        "CANCELLED",
+        "DELETED"
+      ],
+      "type": "string"
+    },
+    "cancelledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "deletedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "rejectedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "updatedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "fulfilledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "createdOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentLaunchStatus": {
+      "type": "object",
+      "properties": {
+        "entryPoint": {
+          "enum": [
+            "NON_LOCAL",
+            "LOCATION"
+          ],
+          "type": "string"
+        },
+        "launchState": {
+          "enum": [
+            "LAUNCH_STATE_UNSPECIFIED",
+            "LAUNCH_STATE_UNLAUNCHED",
+            "LAUNCH_STATE_PENDING",
+            "LAUNCH_STATE_LAUNCHED",
+            "LAUNCH_STATE_REJECTED",
+            "LAUNCH_STATE_SUSPENDED",
+            "LAUNCH_STATE_PENDING_UNLAUNCH",
+            "LAUNCH_STATE_INVALID_IN_GMB"
+          ],
+          "type": "string"
+        }
+      }
+    }
+  }
+}

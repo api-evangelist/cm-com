@@ -1,0 +1,273 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Sign Client API
+  description: 'Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via this link. This will grant you access to the sandbox environment.
+
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Client
+  description: Manage clients. A client consists of a key and secret and provides access to the API. Please note that access must be explicitly granted in order to use the client management calls.
+paths:
+  /clients:
+    post:
+      operationId: create_client
+      tags:
+      - Client
+      summary: Create client
+      description: 'Create a client.
+
+
+        This endpoint is only available to API clients with admin access. Admin access allows an API client to
+
+        manage other API clients through the `/clients` endpoints. Admin access is not enabled by default and
+
+        must be explicitly granted by CM.com. It cannot be requested or changed through the API.
+
+
+        There is no dedicated endpoint to check your admin access in advance: calling this endpoint without admin
+
+        access returns `403 Forbidden`, while a successful call confirms you have admin access.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientCreate'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientCreate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    get:
+      operationId: list_clients
+      summary: Get all clients
+      description: 'Retrieve all clients.
+
+
+        This endpoint is only available to API clients with admin access. Admin access allows an API client to
+
+        manage other API clients through the `/clients` endpoints. Admin access is not enabled by default and
+
+        must be explicitly granted by CM.com. It cannot be requested or changed through the API.
+
+
+        There is no dedicated endpoint to check your admin access in advance: calling this endpoint without admin
+
+        access returns `403 Forbidden`, while a successful call confirms you have admin access.'
+      tags:
+      - Client
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /clients/{kid}:
+    parameters:
+    - $ref: '#/components/parameters/KeyId'
+    get:
+      operationId: get_client
+      summary: Get client
+      description: 'Retrieve the client.
+
+
+        This endpoint is only available to API clients with admin access. Admin access allows an API client to
+
+        manage other API clients through the `/clients` endpoints. Admin access is not enabled by default and
+
+        must be explicitly granted by CM.com. It cannot be requested or changed through the API.
+
+
+        There is no dedicated endpoint to check your admin access in advance: calling this endpoint without admin
+
+        access returns `403 Forbidden`, while a successful call confirms you have admin access.'
+      tags:
+      - Client
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: replace_client
+      summary: Update client
+      description: 'Update a client.
+
+
+        This endpoint is only available to API clients with admin access. Admin access allows an API client to
+
+        manage other API clients through the `/clients` endpoints. Admin access is not enabled by default and
+
+        must be explicitly granted by CM.com. It cannot be requested or changed through the API.
+
+
+        There is no dedicated endpoint to check your admin access in advance: calling this endpoint without admin
+
+        access returns `403 Forbidden`, while a successful call confirms you have admin access.'
+      tags:
+      - Client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  schemas:
+    ClientCreate:
+      allOf:
+      - $ref: '#/components/schemas/Client'
+      - type: object
+        properties:
+          key:
+            type: string
+            description: JWT Key. This field is only present in the client create request
+            examples:
+            - fPm3MpxBBN5AKmvBQSrLxXCbE1pF6T07JjNXZwsJpUobknaqJA
+            readOnly: true
+    Client:
+      title: Client
+      type: object
+      properties:
+        kid:
+          type: string
+          description: JWT Key ID
+          examples:
+          - fbd6a3ba-7b95-4ed1-846a-9dfac9cfb704
+          readOnly: true
+        name:
+          type: string
+          description: Client name to be used in communication to the end-user. Defaults to the account name when not set.
+          examples:
+          - Organization A
+        description:
+          type: string
+          description: Client description
+          examples:
+          - API
+        admin:
+          type: boolean
+          description: Indicates if client is authorized to manage clients
+          examples:
+          - false
+          readOnly: true
+        disabled:
+          type: boolean
+          description: Indicates if client access is disabled
+          examples:
+          - false
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the invite was created
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date the invite was created
+          readOnly: true
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+  parameters:
+    KeyId:
+      name: kid
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies the client
+
+        '
+      example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
+  responses:
+    Forbidden:
+      description: Access to the specified resource was denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

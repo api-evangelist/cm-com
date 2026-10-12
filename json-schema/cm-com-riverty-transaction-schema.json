@@ -1,0 +1,676 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-riverty-transaction-schema.json",
+  "title": "RivertyTransaction",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml#/components/schemas/RivertyTransaction",
+  "allOf": [
+    {
+      "$ref": "#/$defs/PaymentWithoutDescriptionExpiresAtAndWebhooks"
+    },
+    {
+      "type": "object",
+      "required": [
+        "id",
+        "status",
+        "orderNumber",
+        "type",
+        "netAmount",
+        "created",
+        "updated",
+        "action"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/TransactionId"
+        },
+        "status": {
+          "description": "The status of the transaction.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/StatusSuccess"
+            },
+            {
+              "$ref": "#/$defs/StatusCancelled"
+            },
+            {
+              "$ref": "#/$defs/StatusExpired"
+            },
+            {
+              "$ref": "#/$defs/StatusFailure"
+            },
+            {
+              "$ref": "#/$defs/StatusPending"
+            }
+          ]
+        },
+        "orderNumber": {
+          "description": "Order number. Unique order number provided by the merchant.",
+          "type": "string",
+          "maxLength": 50
+        },
+        "type": {
+          "type": "string",
+          "format": "enum",
+          "description": "The type of the Riverty payment method.",
+          "enum": [
+            "Invoice"
+          ]
+        },
+        "netAmount": {
+          "$ref": "#/$defs/NetAmount"
+        },
+        "created": {
+          "$ref": "#/$defs/Datetime",
+          "description": "ISO 8601 date and time when the transaction was created."
+        },
+        "updated": {
+          "$ref": "#/$defs/Datetime",
+          "description": "ISO 8601 date and time when the transaction was last updated."
+        },
+        "merchantImageURL": {
+          "description": "Image URL for the merchants brand. This image is shown at the top of the order page in Riverty. Supported image formats are: gif, jpeg (jpg), png, webp.\n",
+          "type": "string",
+          "format": "url"
+        },
+        "additionalMerchantData": {
+          "type": "string",
+          "maxLength": 4096,
+          "description": "Additional information about the merchant Format: Base64 encoded JSON"
+        },
+        "consumer": {
+          "$ref": "#/$defs/Consumer-3"
+        },
+        "items": {
+          "$ref": "#/$defs/RivertyItems"
+        },
+        "webhooks": {
+          "$ref": "#/$defs/RivertyWebhooks"
+        },
+        "action": {
+          "description": "Next action to be performed by merchant (or consumer) to complete the payment.",
+          "type": "object",
+          "properties": {
+            "redirect": {
+              "$ref": "#/$defs/RedirectAction"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "AddressWithOptCountryAndHouseNumberAdditional": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AddressWithoutMandatoryCountry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "houseNumberAdditional": {
+              "description": "Field to support addresses that need to add more information about the house number.",
+              "type": "string",
+              "maxLength": 10
+            }
+          }
+        }
+      ]
+    },
+    "AddressWithoutMandatoryCountry": {
+      "type": "object",
+      "description": "The consumers address.",
+      "properties": {
+        "street": {
+          "description": "The consumers street name.",
+          "type": "string",
+          "maxLength": 100
+        },
+        "houseNumber": {
+          "description": "The consumers house number.",
+          "type": "string",
+          "maxLength": 35
+        },
+        "postalCode": {
+          "description": "The consumers postal code.",
+          "type": "string",
+          "maxLength": 35
+        },
+        "city": {
+          "description": "The consumers city.",
+          "type": "string",
+          "maxLength": 35
+        },
+        "countryCode": {
+          "$ref": "#/$defs/Country"
+        }
+      }
+    },
+    "Amount": {
+      "description": "Denomination in the smallest currency subunit, as for example euro cents.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99999999
+    },
+    "BaseWebhook": {
+      "type": "object",
+      "description": "A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.",
+      "required": [
+        "url",
+        "events"
+      ],
+      "properties": {
+        "url": {
+          "description": "The URL the request must be send to.",
+          "type": "string",
+          "format": "url"
+        },
+        "events": {
+          "description": "Type of events that will trigger a webhook.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Consumer-3": {
+      "description": "The person initiating the checkout, typically the buyer who places the order.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/GenderlessConsumer"
+        },
+        {
+          "type": "object",
+          "required": [
+            "name",
+            "email",
+            "phone",
+            "dateOfBirth",
+            "billingAddress",
+            "shopperIp"
+          ],
+          "properties": {
+            "name": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Name"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "firstName": {
+                      "maxLength": 50
+                    },
+                    "lastName": {
+                      "maxLength": 50
+                    }
+                  }
+                }
+              ]
+            },
+            "shopperIp": {
+              "$ref": "#/$defs/ShopperIP"
+            },
+            "billingAddress": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/AddressWithOptCountryAndHouseNumberAdditional"
+                },
+                {
+                  "description": "The address of the consumer. This is used for shipping and billing purposes.\nIt must include all required fields such as street, house number, postal code, city, and country code.\nIf the shipping address is different from the billing address, it should be specified in the `shippingAddress` field.",
+                  "type": "object",
+                  "required": [
+                    "street",
+                    "houseNumber",
+                    "postalCode",
+                    "city",
+                    "countryCode"
+                  ]
+                }
+              ]
+            },
+            "shippingAddress": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/AddressWithOptCountryAndHouseNumberAdditional"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "description": "Type of shipping address. These values don't have an effect on the Riverty processing, but can\nbe used to improve order handling.\n",
+                      "type": "string",
+                      "enum": [
+                        "Standard",
+                        "ShipTo",
+                        "PickUpPoint",
+                        "InStore"
+                      ]
+                    },
+                    "pickUpPoint": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Type of pickup point",
+                          "enum": [
+                            "NotSet",
+                            "ParcelLocker",
+                            "ServicePoint",
+                            "NeighbourhoodPoint",
+                            "CarrierDepot"
+                          ]
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the pickup point",
+                          "maxLength": 255
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "street",
+                    "houseNumber",
+                    "postalCode",
+                    "city",
+                    "countryCode"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Country": {
+      "description": "Country of the consumer (ISO-3166)",
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "Currency": {
+      "description": "ISO 4217 currency code.",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 3,
+      "default": "EUR"
+    },
+    "Datetime": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 20,
+      "description": "ISO 8601 date and time."
+    },
+    "Description": {
+      "description": "Description of the underlying value or reason of the payment.",
+      "type": "string",
+      "maxLength": 255
+    },
+    "Email": {
+      "description": "The email address of the consumer.",
+      "type": "string",
+      "format": "email"
+    },
+    "GenderlessConsumer": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "$ref": "#/$defs/Email"
+        },
+        "phone": {
+          "$ref": "#/$defs/Phone"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Date of birth in ISO 8601 format (YYYY-MM-DD)."
+        }
+      }
+    },
+    "Item": {
+      "description": "Item object that can be used to provide details of the items in the order.\nThis is only used by payment methods that support it, like Klarna and Riverty.",
+      "type": "object",
+      "required": [
+        "code",
+        "unitPrice",
+        "quantity",
+        "vatAmount",
+        "vatRate"
+      ],
+      "properties": {
+        "code": {
+          "description": "Merchant Product identification. Each item code must be unique per transaction.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "description": {
+          "description": "A human readable description of the item.",
+          "$ref": "#/$defs/Description"
+        },
+        "unitPrice": {
+          "description": "Unit price (including VAT) of the item, specified in the smallest currency subunit, as for example euro cents.",
+          "$ref": "#/$defs/Amount"
+        },
+        "quantity": {
+          "description": "The number of items of this type.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "vatAmount": {
+          "description": "Total VAT amount of the orderline, specified in the smallest currency subunit as for example euro cents.\n",
+          "$ref": "#/$defs/Amount"
+        },
+        "vatRate": {
+          "description": "Percentage of VAT applied.\nOnly the first decimal value will be taken into account, the rest will be ignored.\n",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99.9,
+          "multipleOf": 0.1
+        }
+      }
+    },
+    "Language": {
+      "description": "Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).",
+      "type": "string",
+      "default": "nl",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "LastName": {
+      "description": "Consumer's last name.",
+      "type": "string",
+      "maxLength": 35
+    },
+    "Name": {
+      "description": "Consumer's name.",
+      "type": "object",
+      "required": [
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "firstName": {
+          "description": "Consumer's first name.",
+          "type": "string",
+          "maxLength": 35
+        },
+        "lastName": {
+          "$ref": "#/$defs/LastName"
+        },
+        "middleName": {
+          "description": "Consumer's middle name.",
+          "type": "string",
+          "maxLength": 35
+        }
+      }
+    },
+    "NetAmount": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Amount"
+        },
+        {
+          "description": "Total net amount of order in the smallest currency subunit, as for example euro cents (excluding taxes and fees).\n\nThe validation will fail if: netAmount ≠ Σ(netUnitPrice × quantity)\n"
+        }
+      ]
+    },
+    "PaymentWithoutDescriptionExpiresAtAndWebhooks": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "language": {
+              "$ref": "#/$defs/Language"
+            }
+          }
+        }
+      ]
+    },
+    "PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ReturnURLOneOf"
+        },
+        {
+          "type": "object",
+          "required": [
+            "reference",
+            "amount"
+          ],
+          "properties": {
+            "reference": {
+              "$ref": "#/$defs/Reference"
+            },
+            "amount": {
+              "$ref": "#/$defs/Amount"
+            },
+            "currency": {
+              "$ref": "#/$defs/Currency"
+            }
+          }
+        }
+      ]
+    },
+    "Phone": {
+      "description": "The phonenumber of the consumer (E.164 format).",
+      "type": "string",
+      "maxLength": 16
+    },
+    "RedirectAction": {
+      "description": "URL where consumer should be redirected to by the merchant to perform the payment.",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "description": "URL where consumer should be redirected to by the merchant to perform the payment.",
+          "type": "string",
+          "format": "url"
+        }
+      }
+    },
+    "Reference": {
+      "description": "The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "ReturnURLOneOf": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "returnUrls"
+          ],
+          "properties": {
+            "returnUrls": {
+              "$ref": "#/$defs/ReturnUrls"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "returnUrl"
+          ],
+          "properties": {
+            "returnUrl": {
+              "$ref": "#/$defs/ReturnUrl"
+            }
+          }
+        }
+      ]
+    },
+    "ReturnUrl": {
+      "description": "URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.\n\nWith this implementation you are responsible to fetch the payment status and incorporated into your site.",
+      "type": "string",
+      "format": "url",
+      "maxLength": 2000
+    },
+    "ReturnUrls": {
+      "type": "object",
+      "description": "URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.\n\nWith this object we can redirect consumer to a dedicated page per payment result status. Either this object or the returnUrl field is mandatory.",
+      "required": [
+        "success",
+        "cancelled",
+        "expired",
+        "failed"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "cancelled": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "expired": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        },
+        "failed": {
+          "type": "string",
+          "format": "url",
+          "maxLength": 2000
+        }
+      }
+    },
+    "RivertyItem": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Item"
+        },
+        {
+          "type": "object",
+          "required": [
+            "description",
+            "netUnitPrice"
+          ],
+          "properties": {
+            "netUnitPrice": {
+              "description": "Price per unit in cents (excluding vat)",
+              "$ref": "#/$defs/Amount"
+            },
+            "imageUrl": {
+              "type": "string",
+              "format": "url",
+              "description": "URL for the product image, will be used as a thumbnail in Riverty on the invoice line. Must be rectangular or square with a width between 100-1280 pixels. Supported formats, gif, jpeg(jpg), png, webp"
+            },
+            "productUrl": {
+              "type": "string",
+              "description": "URL to the product page",
+              "format": "url"
+            }
+          }
+        }
+      ]
+    },
+    "RivertyItems": {
+      "description": "Array of order items. Maximum allowed 500 items.",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "items": {
+        "$ref": "#/$defs/RivertyItem"
+      }
+    },
+    "RivertyWebhooks": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BaseWebhook"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "events": {
+              "items": {
+                "description": "* `STATUS_CHANGE` - Triggered when the status of a transaction changes.\n",
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/StatusChangeEvent"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ShopperIP": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 39,
+      "description": "IPv4 or IPv6 address for the consumer"
+    },
+    "StatusCancelled": {
+      "description": "The transaction has been cancelled by the consumer.",
+      "type": "string",
+      "format": "enum",
+      "enum": [
+        "CANCELLED"
+      ]
+    },
+    "StatusChangeEvent": {
+      "description": "* `STATUS_CHANGE` - Triggered when the status of a transaction changes.\n",
+      "type": "string",
+      "enum": [
+        "STATUS_CHANGE"
+      ]
+    },
+    "StatusExpired": {
+      "description": "The transaction has expired.",
+      "type": "string",
+      "format": "enum",
+      "enum": [
+        "EXPIRED"
+      ]
+    },
+    "StatusFailure": {
+      "description": "The transaction has failed.",
+      "type": "string",
+      "format": "enum",
+      "enum": [
+        "FAILURE"
+      ]
+    },
+    "StatusPending": {
+      "description": "The transaction is pending, meaning it could not be completed yet; waiting for something.",
+      "type": "string",
+      "format": "enum",
+      "enum": [
+        "PENDING"
+      ]
+    },
+    "StatusSuccess": {
+      "description": "The transaction has been successfully paid.",
+      "type": "string",
+      "format": "enum",
+      "enum": [
+        "SUCCESS"
+      ]
+    },
+    "TransactionId": {
+      "description": "ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.",
+      "type": "string",
+      "format": "uuid",
+      "minLength": 36,
+      "maxLength": 36
+    }
+  }
+}

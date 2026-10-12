@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-tooling-bulk-email-api-models-api-from-domain-schema.json",
+  "title": "CM.Tooling.BulkEmail.Api.Models.ApiFromDomain",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-email-campaigns-v1-openapi.yml#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain",
+  "type": "object",
+  "properties": {
+    "ID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "AccountID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "Domain": {
+      "type": "string"
+    },
+    "IsValid": {
+      "type": "boolean"
+    },
+    "DnsEntries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CM.Tooling.BulkEmail.Api.Models.ApiFromDomainDnsEntry"
+      }
+    },
+    "CreatedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "CreatedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ModifiedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ModifiedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "DeletedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "DeletedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "CM.Tooling.BulkEmail.Api.Models.ApiFromDomainDnsEntry": {
+      "type": "object",
+      "properties": {
+        "Host": {
+          "type": "string"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "string"
+        },
+        "IsValid": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Connect API
+  version: 1.0.0
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: 'Operations tagged Connect across 2 of this provider''s published API definitions: cm-com-conversational-router-v1-openapi.yml, cm-com-conversational-router-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://core-node-h3cjyx4jzq-ez.a.run.app
+tags:
+- name: Connect
+  description: Connect the customer to the adapter they configured in the Connect product
+paths:
+  /public/connect/{configurationId}/adapters/{adapterId}/custom:
+    post:
+      tags:
+      - Connect
+      summary: Call any endpoint on the CM.com adapter for the specified configuration
+      description: Call any endpoint on the specified Connect adapter
+      operationId: custom
+      parameters:
+      - name: configurationId
+        in: path
+        description: Configuration ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: adapterId
+        in: path
+        description: Adapter ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Contains the HTTP method to call on the CM.com adapter
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectCustom'
+        required: true
+      responses:
+        '200':
+          description: Dynamic response object based on whatever the connected service returns for the configured endpoint.
+          content: {}
+        '500':
+          description: A server side exception occurred. Try again later.
+          content: {}
+      security:
+      - apiKey: []
+      x-codegen-request-body-name: Request body
+    servers:
+    - url: https://core-node-h3cjyx4jzq-ez.a.run.app
+components:
+  schemas:
+    ConnectCustom:
+      type: object
+      properties:
+        method:
+          type: string
+          description: The HTTP method to call on the connect service
+          example: put
+          enum:
+          - get
+          - post
+          - put
+          - delete
+          - patch
+        path:
+          type: string
+          description: URI path to call on the connected service, e.g. /customers/123/invoices
+          example: /customers/3
+        query:
+          type: array
+          description: Key value pairs transformed to query parameters to the connected service, e.g. ?key=value&key2=value2
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                example: email
+              value:
+                type: string
+                example: test.email@cm.com
+        data:
+          type: object
+          additionalProperties:
+            type: string
+          description: When provided this will be sent to the connected service as the request body. If the specified method is GET, this will be ignored.
+  securitySchemes:
+    apiKey:
+      description: Connect API key
+      type: http
+      scheme: bearer
+x-refined-from:
+- cm-com-conversational-router-v1-openapi.yml
+- cm-com-conversational-router-v2-openapi.yml

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-data-core-profiles-api-models-api-profile-export-schema.json",
+  "title": "CM.Data.Core.Profiles.Api.Models.ApiProfileExport",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-cdp-profiles-v1-openapi.yml#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileExport",
+  "type": "object",
+  "properties": {
+    "profile": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/CM.Data.Core.Profiles.Shared.BoxedValue"
+      }
+    },
+    "events": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/CM.Data.Core.Profiles.Api.Models.ApiEventExport"
+      }
+    },
+    "oldestEventDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "latestEventDate": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "CM.Data.Core.Profiles.Api.Models.ApiEventExport": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "data": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "$ref": "#/$defs/CM.Data.Core.Profiles.Shared.BoxedValue"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CM.Data.Core.Profiles.Shared.BoxedValue": {
+      "type": "object",
+      "additionalProperties": false
+    }
+  }
+}

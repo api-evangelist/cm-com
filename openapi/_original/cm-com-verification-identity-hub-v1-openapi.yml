@@ -1,0 +1,488 @@
+# x-archived-from: cm-com-verification-identity-hub-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.1
+
+info:
+  title: Identity Hub
+  description: |
+    Identity Hub lets you verify the identity of your end-users through a single hosted flow, abstracting away the underlying identification methods (such as iDIN and ID Scan). The set of available methods depends on the account's contract.
+
+    Create a transaction, redirect the end-user to the returned hosted URL, and retrieve the verified result once the flow is completed. Specify the personal data fields (e.g. name, birthdate, address) to collect via `requestedFields`; the collected values are returned once the transaction is successful.
+
+    Typical use-cases include KYC onboarding, age verification, and confirming a user's identity before granting access to sensitive services.
+  version: 1.0.0
+
+servers:
+  - url: 'https://api.cm.com/identity-hub/v1'
+
+security: [ { JWT: [ ] } ]
+
+tags:
+  - name: Transaction
+    description: Create and retrieve transactions
+  - name: Callbacks
+    description: Updates sent to the `callbackUrl` provided when creating a transaction
+
+paths:
+  /transactions:
+    post:
+      operationId: create_transaction
+      summary: Create transaction
+      description: |
+        Create a new transaction. The response contains the transaction id and a hosted URL that the end-user can be redirected to in order to complete the transaction.
+      tags: [ Transaction ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+      responses:
+        '201':
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTransactionResponse'
+              examples:
+                created:
+                  $ref: '#/components/examples/transaction-created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /transactions/{id}:
+    get:
+      operationId: get_transaction
+      summary: Get transaction
+      description: |
+        Retrieve a transaction by its id. When the transaction is successful, the `data` and `unavailableFields` properties are included in the response. `rawData` will be included when available.
+      tags: [ Transaction ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The UUID of the transaction.
+          schema:
+            type: string
+            format: uuid
+            examples: [ 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b' ]
+      responses:
+        '200':
+          description: Transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+              examples:
+                created:
+                  $ref: '#/components/examples/transaction-state-created'
+                started:
+                  $ref: '#/components/examples/transaction-state-started'
+                success:
+                  $ref: '#/components/examples/transaction-state-success'
+                failed:
+                  $ref: '#/components/examples/transaction-state-failed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+webhooks:
+  transactionState:
+    post:
+      operationId: callback_transaction_state
+      summary: Transaction state
+      description: |
+        Sent to the `callbackUrl` provided when [creating the transaction](#tag/Transaction/operation/create_transaction), every time the state of the transaction changes. No callbacks are sent when no `callbackUrl` was provided. Use it as a trigger to retrieve the latest details with the [Get transaction](#tag/Transaction/operation/get_transaction) endpoint.
+
+        The request is signed so you can verify its authenticity and integrity. The signature is calculated using HMAC-SHA256, with the request body as the message and the client secret as the secret key, and is sent in the `Authorization` header. Repeat this calculation on the received body and compare the result with the header value.
+
+        Respond with a status code in the 2xx range; the response body is ignored. When your endpoint responds with a 5xx status code, the callback is retried several times.
+      tags: [ Callbacks ]
+      security: [ { HMAC: [ ] } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionStateEvent'
+            examples:
+              success:
+                $ref: '#/components/examples/transaction-state-event'
+      responses:
+        '2XX':
+          description: Callback received. Any status code in the 2xx range is accepted, the response body is ignored.
+
+components:
+  schemas:
+    CreateTransactionRequest:
+      type: object
+      properties:
+        returnUrl:
+          type: string
+          format: url
+          maxLength: 255
+          description: The URL the end-user will be redirected to after completing the transaction. The `transactionId` and `state` are appended as query parameters, e.g. `https://example.com/transaction/return?transactionId=b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b&state=success`.
+          examples: [ 'https://example.com/transaction/return' ]
+        callbackUrl:
+          type: string
+          format: url
+          maxLength: 255
+          description: Updates regarding the transaction will be sent to the callback URL. It must begin with `https://`. See the [Transaction state](#tag/Callbacks/operation/callback_transaction_state) callback for the payload that is sent.
+          examples: [ 'https://example.com/transaction/callback' ]
+        locale:
+          $ref: '#/components/schemas/Locale'
+          default: en-US
+          description: >
+            Supported locales for the hosted transaction UI:
+              * `nl-NL` - Dutch
+              * `en-US` - English
+              * `fr-FR` - French
+              * `de-DE` - German
+              * `hu-HU` - Hungarian
+              * `it-IT` - Italian
+              * `ja-JP` - Japanese
+              * `pl-PL` - Polish
+              * `pt-PT` - Portuguese
+              * `ro-RO` - Romanian
+              * `sk-SK` - Slovakian
+              * `es-ES` - Spanish
+        requestedFields:
+          type: array
+          minItems: 1
+          description: The list of fields to collect from the end-user during the transaction. The collected values are returned via the `data` property once the transaction is successful.
+          items:
+            $ref: '#/components/schemas/RequestedField'
+          examples:
+            - [ 'givenName', 'familyName', 'birthdate', 'identifier' ]
+      required: [ returnUrl, requestedFields ]
+
+    CreateTransactionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The UUID of the created transaction.
+          examples: [ 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b' ]
+        url:
+          type: string
+          format: url
+          description: The hosted URL the end-user should be redirected to in order to complete the transaction.
+          examples: [ 'https://www.cm.com/app/identity-hub/session/aQ9pX3vN7wL2kB4mR8sT6yU0iO5cF1eH' ]
+      required: [ id, url ]
+
+    TransactionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The UUID of the transaction.
+          examples: [ 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b' ]
+        state:
+          description: The current state of the transaction.
+          oneOf:
+            - $ref: '#/components/schemas/TransactionState'
+        method:
+          type: [ 'string', 'null' ]
+          description: The identification method used by the end-user. `null` until the end-user has selected a method. The set of available methods depends on the account's contract.
+          examples: [ 'idin' ]
+        methodType:
+          type: [ 'string', 'null' ]
+          description: The type of the selected method (e.g. `basic` or `full` for ID Scan). `null` when not applicable, not all methods have multiple types.
+          examples: [ 'full' ]
+        data:
+          type: [ 'object', 'null' ]
+          description: |
+            The collected transaction data. Only present when `state` is `success`. Fields that were requested but could not be provided by the selected identification method are omitted here and listed in `unavailableFields`.
+          properties:
+            givenName:
+              type: [ 'string', 'null' ]
+              description: The end-user's given name(s).
+              examples: [ 'John' ]
+            middleName:
+              type: [ 'string', 'null' ]
+              description: The end-user's middle name(s).
+              examples: [ 'Robert' ]
+            familyName:
+              type: [ 'string', 'null' ]
+              description: The end-user's family name.
+              examples: [ 'Doe' ]
+            gender:
+              type: [ 'string', 'null' ]
+              description: The end-user's gender.
+              examples: [ 'male' ]
+            birthdate:
+              type: [ 'string', 'null' ]
+              format: date
+              description: The end-user's date of birth in `YYYY-MM-DD` format.
+              examples: [ '1980-01-31' ]
+            email:
+              type: [ 'string', 'null' ]
+              format: email
+              description: The end-user's email address.
+              examples: [ 'john.doe@example.com' ]
+            phoneNumber:
+              type: [ 'string', 'null' ]
+              description: The end-user's phone number in E.164 format.
+              examples: [ '+31612345678' ]
+            address:
+              type: [ 'string', 'null' ]
+              description: The end-user's address.
+              examples: [ 'Konijnenberg 30, 4825 BD Breda, Netherlands' ]
+            nationality:
+              type: [ 'string', 'null' ]
+              description: The end-user's nationality.
+              examples: [ 'Dutch' ]
+            identifier:
+              type: [ 'string', 'null' ]
+              description: A stable user identifier that is unique per identification method (e.g. the iDIN BIN). Not available for all methods.
+              examples: [ 'NLINGB3x4u89498qe4tqjvdaj0' ]
+        unavailableFields:
+          type: [ 'array', 'null' ]
+          description: The fields that were requested but could not be provided by the identification method used. Only present when `state` is `success`.
+          items:
+            $ref: '#/components/schemas/RequestedField'
+          examples:
+            - [ 'nationality' ]
+        rawData:
+          description: |
+            The raw, unprocessed response from the underlying identification method. Its structure depends on the method used and is not normalised. Included whenever available, typically once the transaction's state is `success` or `failed`.
+      required: [ id, state, method, methodType ]
+
+    TransactionStateEvent:
+      title: Transaction State Event
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the event.
+          examples: [ '58128784-9e8d-4424-a89d-08bfe273381c' ]
+        type:
+          $ref: '#/components/schemas/EventType'
+        created:
+          type: string
+          format: date-time
+          description: The time the event was created, in ISO 8601 format.
+          examples: [ '2026-01-01T00:00:00+00:00' ]
+        transaction:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The UUID of the transaction.
+              examples: [ 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b' ]
+            state:
+              $ref: '#/components/schemas/TransactionState'
+            method:
+              type: [ 'string', 'null' ]
+              description: The identification method selected by the end-user. `null` until the end-user has selected a method.
+              examples: [ 'idin' ]
+            methodType:
+              type: [ 'string', 'null' ]
+              description: The type of the selected method, when a method offers more than one (e.g. `basic` or `full` for ID Scan). `null` when not applicable.
+              examples: [ 'full' ]
+          required: [ id, state, method, methodType ]
+      required: [ id, type, created, transaction ]
+
+    EventType:
+      type: string
+      description: >
+        Supported event types:
+
+         * `transaction.state` - The state of the transaction has been updated.
+
+      enum: [ transaction.state ]
+      examples: [ transaction.state ]
+
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples: [ 400 ]
+        message:
+          type: string
+          description: Description of the error that occurred.
+          examples: [ The return url field is required ]
+
+    TransactionState:
+      type: string
+      description: >
+        Possible transaction states:
+
+         * `created` - The transaction has been created but the end-user has not started the flow yet.
+         * `started` - The end-user has selected a method and started the transaction.
+         * `success` - The transaction has been completed successfully.
+         * `failed` - The transaction could not be completed.
+
+      enum: [ created, started, success, failed ]
+      examples: [ success ]
+
+    RequestedField:
+      type: string
+      description: >
+        Requested field description:
+
+         * `givenName` - The end-user's given name(s).
+         * `middleName` - The end-user's middle name(s).
+         * `familyName` - The end-user's family name.
+         * `gender` - The end-user's gender.
+         * `birthdate` - The end-user's date of birth.
+         * `email` - The end-user's email address.
+         * `phoneNumber` - The end-user's phone number.
+         * `address` - The end-user's address.
+         * `nationality` - The end-user's nationality.
+         * `identifier` - A stable user identifier that is unique per identification method. Not available for all methods.
+
+      enum: [ givenName, middleName, familyName, gender, birthdate, email, phoneNumber, address, nationality, identifier ]
+      examples: [ givenName ]
+
+    Locale:
+      type: string
+      enum: [ nl-NL, en-US, fr-FR, de-DE, hu-HU, it-IT, ja-JP, pl-PL, pt-PT, ro-RO, sk-SK, es-ES ]
+      examples: [ en-US ]
+
+  examples:
+    transaction-created:
+      summary: Transaction created
+      value:
+        id: 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b'
+        url: 'https://www.cm.com/app/identity-hub/session/aQ9pX3vN7wL2kB4mR8sT6yU0iO5cF1eH'
+
+    transaction-state-created:
+      summary: State created (end-user has not started yet)
+      value:
+        id: 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b'
+        state: 'created'
+        method: null
+        methodType: null
+
+    transaction-state-started:
+      summary: State started (end-user has selected a method)
+      value:
+        id: 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b'
+        state: 'started'
+        method: 'idin'
+        methodType: null
+
+    transaction-state-success:
+      summary: State success with collected data
+      value:
+        id: 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b'
+        state: 'success'
+        method: 'idin'
+        methodType: 'full'
+        data:
+          givenName: 'John'
+          familyName: 'Doe'
+          birthdate: '1980-01-31'
+          identifier: 'NLINGB3x4u89498qe4tqjvdaj0'
+        unavailableFields: [ 'nationality' ]
+        rawData:
+          status: 'success'
+          name:
+            initials: 'J.'
+            last_name: 'Doe'
+          age:
+            date_of_birth: '1980-01-31'
+
+    transaction-state-failed:
+      summary: State failed
+      value:
+        id: 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b'
+        state: 'failed'
+        method: 'id-scan'
+        methodType: 'basic'
+
+    transaction-state-event:
+      summary: Transaction state changed to success
+      value:
+        id: '58128784-9e8d-4424-a89d-08bfe273381c'
+        type: 'transaction.state'
+        created: '2026-01-01T00:00:00+00:00'
+        transaction:
+          id: 'b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b'
+          state: 'success'
+          method: 'idin'
+          methodType: 'full'
+
+  responses:
+    BadRequest:
+      description: Errors related to the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: The return url field is required
+
+    Unauthorized:
+      description: Errors related to the authorization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+
+    NotFound:
+      description: The requested transaction could not be found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 404
+            message: Not Found
+
+    InternalServerError:
+      description: Errors related to the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: Internal Server Error
+
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp` in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key ID of your credentials.
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+        ```
+        Authorization: Bearer GENERATED_TOKEN_HERE
+        ```
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+    HMAC:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        Used on callbacks sent by Identity Hub to your `callbackUrl`. The header contains the HMAC-SHA256 signature of the request body, calculated with your client secret as the secret key, prefixed with `HMAC `:
+
+        ```
+        Authorization: HMAC MIi9ZMyar2v+o7H7LD7oNolO5LrTJaC+8uKvYUGqJvM=
+        ```

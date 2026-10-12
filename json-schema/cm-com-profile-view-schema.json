@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-profile-view-schema.json",
+  "title": "ProfileView",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-halo-core-v1-openapi.yml#/components/schemas/ProfileView",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "workspace_type"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "name": {
+      "type": "string"
+    },
+    "workspace_type": {
+      "$ref": "#/$defs/WorkspaceType",
+      "description": "Workspace kind: `conversational` or `automation`."
+    }
+  },
+  "$defs": {
+    "WorkspaceType": {
+      "type": "string",
+      "description": "Workspace kind of a profile, stored as varchar and constrained by a CHECK\n(`'conversational' | 'automation'`). `Conversational` is the DB default.",
+      "enum": [
+        "conversational",
+        "automation"
+      ]
+    }
+  }
+}

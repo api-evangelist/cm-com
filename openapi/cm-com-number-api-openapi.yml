@@ -1,0 +1,392 @@
+openapi: 3.2.0
+info:
+  title: Validation Number API
+  description: Validate and enrich phone numbers with network, operator, and portability data.
+  version: 1.0.0
+servers:
+- url: https://api.cm.com/number-validation/v1
+security:
+- JWT: []
+tags:
+- name: Number
+  description: Check a phone number
+paths:
+  /number/check:
+    post:
+      operationId: create_check
+      summary: Check phone number
+      description: Check a phone number to retrieve formatting, validity, location, operator, and network data, depending on the requested connection type.
+      tags:
+      - Number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NumberCheckRequest'
+      responses:
+        '200':
+          description: Number check result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NumberCheckResponse'
+              examples:
+                hlr-check:
+                  $ref: '#/components/examples/hlr-check'
+                mnp-check:
+                  $ref: '#/components/examples/mnp-check'
+                static-check:
+                  $ref: '#/components/examples/static-check'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    ConnectionType:
+      type: string
+      description: "Connection type description:\n\n * `hlr` - Home Location Register lookup. Returns real-time network status including whether the number is active, along with static data derived from the phone number.\n * `mnp` - Mobile Number Portability lookup. Returns ported status including data about the ported-to operator, along with static data derived from the phone number.\n * `static` - No lookup conducted. Returns static data derived from the phone number itself.\n"
+      enum:
+      - hlr
+      - mnp
+      - static
+    Source:
+      type: string
+      description: "Source description:\n\n * `hlr` - Home Location Register\n * `mnp` - Supplier's Mobile Number Portability database\n * `prefix` - Phone number prefix lookup, same as static\n * `external` - External source (HLR or MNP, unknown by supplier)\n * `mnp_database` - CM.com's internal MNP database\n * `static` - Static lookup using phone number prefix\n"
+      enum:
+      - hlr
+      - mnp
+      - prefix
+      - external
+      - mnp_database
+      - static
+      examples:
+      - hlr
+    NumberCheckRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          description: The phone number to check. Must start with a `+`.
+          examples:
+          - '+31612345678'
+        connectionType:
+          description: The type of connection to use when retrieving the data. Defaults to `static` if not provided.
+          anyOf:
+          - $ref: '#/components/schemas/ConnectionType'
+          - type:
+            - 'null'
+          examples:
+          - hlr
+      required:
+      - phoneNumber
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
+        message:
+          type: string
+          description: Description of the error that occurred.
+          examples:
+          - The phone number field is required
+    NumberCheckResponse:
+      type: object
+      properties:
+        format:
+          type: object
+          description: The phone number in various formats.
+          properties:
+            e164:
+              type:
+              - string
+              - 'null'
+              description: E.164 format
+              examples:
+              - '+31612345678'
+            international:
+              type:
+              - string
+              - 'null'
+              description: International format
+              examples:
+              - +31 6 12345678
+            national:
+              type:
+              - string
+              - 'null'
+              description: National format
+              examples:
+              - 06 12345678
+            rfc3966:
+              type:
+              - string
+              - 'null'
+              description: RFC 3966 URI format
+              examples:
+              - tel:+31-6-12345678
+        type:
+          description: The type of phone number.
+          anyOf:
+          - $ref: '#/components/schemas/PhoneNumberType'
+          - type:
+            - 'null'
+          examples:
+          - mobile
+        country:
+          type:
+          - string
+          - 'null'
+          description: The country associated with the phone number.
+          examples:
+          - Netherlands
+        callingCode:
+          type:
+          - integer
+          - 'null'
+          description: The international calling code of the country.
+          examples:
+          - 31
+        regionCode:
+          type:
+          - string
+          - 'null'
+          description: The ISO 3166-1 alpha-2 region code of the country, in lowercase.
+          examples:
+          - nl
+        operator:
+          type:
+          - string
+          - 'null'
+          description: The name of the network operator.
+          examples:
+          - Vodafone
+        mcc:
+          type:
+          - string
+          - 'null'
+          description: The Mobile Country Code of the operator.
+          examples:
+          - '204'
+        mnc:
+          type:
+          - string
+          - 'null'
+          description: The Mobile Network Code of the operator.
+          examples:
+          - '04'
+        source:
+          type: string
+          description: The source of the returned data.
+          $ref: '#/components/schemas/Source'
+          examples:
+          - hlr
+        roaming:
+          type:
+          - object
+          - 'null'
+          description: Roaming information. Only present when the number is currently roaming.
+          properties:
+            country:
+              type:
+              - string
+              - 'null'
+              description: The country the subscriber is currently roaming in.
+              examples:
+              - Germany
+            callingCode:
+              type:
+              - integer
+              - 'null'
+              description: The international calling code of the roaming country.
+              examples:
+              - 49
+            regionCode:
+              type:
+              - string
+              - 'null'
+              description: The ISO 3166-1 alpha-2 code of the roaming country, in lowercase.
+              examples:
+              - de
+            operator:
+              type:
+              - string
+              - 'null'
+              description: The name of the roaming network operator.
+              examples:
+              - T-Mobile DE
+            mcc:
+              type:
+              - string
+              - 'null'
+              description: The Mobile Country Code of the roaming operator.
+              examples:
+              - '262'
+            mnc:
+              type:
+              - string
+              - 'null'
+              description: The Mobile Network Code of the roaming operator.
+              examples:
+              - '01'
+        isValid:
+          type: boolean
+          description: Whether the phone number is a valid number.
+          examples:
+          - true
+        isActive:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the phone number is currently active on the network. Only available for `hlr` connection type.
+          examples:
+          - true
+        isPorted:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the phone number has been ported to another operator. Only available for `mnp` connection type.
+          examples:
+          - false
+    PhoneNumberType:
+      type: string
+      description: "Phone number type description:\n\n * `mobile` - Mobile phone number\n * `fixed_line` - Fixed-line phone number\n * `fixed_line_or_mobile` - Either a fixed-line or mobile number (not distinguishable)\n * `toll_free` - Toll-free number\n * `premium_rate` - Premium rate number\n * `shared_cost` - Shared cost number\n * `voip` - VoIP number\n * `personal_number` - Personal number\n * `pager` - Pager number\n * `uan` - Universal Access Number\n * `voicemail` - Voicemail number\n * `unknown` - Unknown type\n"
+      enum:
+      - mobile
+      - fixed_line
+      - fixed_line_or_mobile
+      - toll_free
+      - premium_rate
+      - shared_cost
+      - voip
+      - personal_number
+      - pager
+      - uan
+      - voicemail
+      - unknown
+      examples:
+      - mobile
+  responses:
+    InternalServerError:
+      description: Errors related to the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: Internal Server Error
+    Unauthorized:
+      description: Errors related to the authorization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+    BadRequest:
+      description: Errors related to the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: The phone number field is required
+  examples:
+    static-check:
+      summary: Static check result
+      value:
+        format:
+          e164: '+31612345678'
+          international: +31 6 12345678
+          national: 06 12345678
+          rfc3966: tel:+31-6-12345678
+        type: mobile
+        country: Netherlands
+        callingCode: 31
+        regionCode: nl
+        operator: null
+        mcc: null
+        mnc: null
+        source: static
+        roaming: null
+        isValid: true
+        isActive: null
+        isPorted: null
+    mnp-check:
+      summary: MNP check result (ported number)
+      value:
+        format:
+          e164: '+31612345678'
+          international: +31 6 12345678
+          national: 06 12345678
+          rfc3966: tel:+31-6-12345678
+        type: mobile
+        country: Netherlands
+        callingCode: 31
+        regionCode: nl
+        operator: KPN
+        mcc: '204'
+        mnc: 08
+        source: mnp
+        roaming: null
+        isValid: true
+        isActive: null
+        isPorted: true
+    hlr-check:
+      summary: HLR check result (roaming in Germany)
+      value:
+        format:
+          e164: '+31612345678'
+          international: +31 6 12345678
+          national: 06 12345678
+          rfc3966: tel:+31-6-12345678
+        type: mobile
+        country: Netherlands
+        callingCode: 31
+        regionCode: nl
+        operator: Vodafone
+        mcc: '204'
+        mnc: '04'
+        source: hlr
+        roaming:
+          country: Germany
+          callingCode: 49
+          regionCode: de
+          operator: T-Mobile DE
+          mcc: '262'
+          mnc: '01'
+        isValid: true
+        isActive: true
+        isPorted: null
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key ID of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io).
+
+        '

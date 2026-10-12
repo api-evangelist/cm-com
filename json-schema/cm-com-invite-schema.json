@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-invite-schema.json",
+  "title": "Invite",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-sign-v1-openapi.yml#/components/schemas/Invite",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The ID of the invite",
+      "readOnly": true
+    },
+    "inviteeId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The ID of the invitee"
+    },
+    "inviteUri": {
+      "type": "string",
+      "format": "url",
+      "description": "This is a link which the particular invitee can use to access and subsequently sign the dossier.\n",
+      "readOnly": true
+    },
+    "channel": {
+      "$ref": "#/$defs/ChannelType",
+      "description": "Send invite via email, SMS or WhatsApp. Please note that SMS and WhatsApp are only available when configured for your account.\n\nIf this field is not provided or set to null, the invite will not be sent automatically. Instead, the `inviteUri` will be included in the response, and the link must be manually provided to the invitee.\n",
+      "nullable": true
+    },
+    "emailConfig": {
+      "type": "object",
+      "writeOnly": true,
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "Add your own message to the invite email."
+        }
+      }
+    },
+    "reminder": {
+      "type": "boolean",
+      "description": "Marker to indicate this invite is a reminder of an earlier invite"
+    },
+    "emailSentAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date at which the email was sent that was requested by setting the `channel` property of an invite to `email`.",
+      "readOnly": true
+    },
+    "expiresIn": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 60,
+      "maximum": 7776000,
+      "default": 2592000,
+      "description": "The expiry in seconds since invite was created"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the invite expires",
+      "readOnly": true
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date the invite was created",
+      "readOnly": true
+    }
+  },
+  "$defs": {
+    "ChannelType": {
+      "type": "string",
+      "enum": [
+        "email",
+        "sms",
+        "whatsapp"
+      ]
+    }
+  }
+}

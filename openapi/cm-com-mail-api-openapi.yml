@@ -1,0 +1,275 @@
+openapi: 3.2.0
+info:
+  version: v1
+  title: BulkEmail Mail API
+servers:
+- url: http://api.cm.com
+tags:
+- name: Mail
+paths:
+  /bulkemail/v1.0/mails/{mailID}:
+    get:
+      tags:
+      - Mail
+      summary: Get a specific mail
+      operationId: Mail_GetMailAsync
+      parameters:
+      - name: mailID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMail'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMail'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMail'
+  /bulkemail/v1.0/accounts/{accountID}/mails:
+    post:
+      tags:
+      - Mail
+      summary: Send a single mail without a mailing
+      operationId: Mail_AddSingleMailAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSingleMail'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSingleMail'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSingleMail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSingleMail'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSingleMail'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSingleMail'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSingleMail'
+  /bulkemail/v1.0/accounts/{accountID}/campaigns/{campaignID}/mails:
+    post:
+      tags:
+      - Mail
+      summary: Add a mail to a triggered campaign
+      operationId: Mail_AddCampaignMailAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail'
+components:
+  schemas:
+    CM.Tooling.BulkEmail.Api.Models.ApiAttachment:
+      type: object
+      properties:
+        FileName:
+          type: string
+        Content:
+          type: string
+        ContentID:
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiEmailAddress:
+      type: object
+      properties:
+        EmailAddress:
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiSingleMail:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        FromAddressID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        FromName:
+          type: string
+        ReplyToAddressID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        ReplyToAddress:
+          type: string
+        ReplyToName:
+          type: string
+        ToAddress:
+          type: string
+        ToName:
+          type: string
+        Subject:
+          type: string
+        Bccs:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiEmailAddress'
+        Ccs:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiEmailAddress'
+        HtmlBody:
+          type: string
+        TextBody:
+          type: string
+        Attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiAttachment'
+        CustomerReference:
+          type: string
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiCustomValue:
+      type: object
+      properties:
+        Field:
+          type: string
+        Value:
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        CampaignID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        ToAddress:
+          type: string
+        ToName:
+          type: string
+        CustomValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCustomValue'
+        Attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiAttachment'
+    CM.Tooling.BulkEmail.Api.Models.ApiMail:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        MailingID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        FromAddress:
+          type: string
+        FromName:
+          type: string
+        ToAddress:
+          type: string
+        ToName:
+          type: string
+        Subject:
+          type: string
+        TextBody:
+          type: string
+        HtmlBody:
+          type: string
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-sim-swap-request-schema.json",
+  "title": "SimSwapRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-mobile-identity-v1-openapi.yml#/components/schemas/SimSwapRequest",
+  "type": "object",
+  "properties": {
+    "phoneNumber": {
+      "type": "string",
+      "description": "The phone number to match the person to. Must be in E.164 format."
+    },
+    "serviceType": {
+      "$ref": "#/$defs/SimSwapType",
+      "description": "Type of SIM Swap response to be retrieved."
+    }
+  },
+  "required": [
+    "phoneNumber",
+    "serviceType"
+  ],
+  "$defs": {
+    "SimSwapType": {
+      "type": "string",
+      "enum": [
+        "timestamp",
+        "24h"
+      ]
+    }
+  }
+}

@@ -1,0 +1,86 @@
+openapi: 3.2.0
+info:
+  title: General Admission Partner Auth API
+  version: '1.0'
+servers:
+- url: https://api.ticketing.cm.com/partnerapi/v1.0
+security:
+- sec0: []
+tags:
+- name: Auth
+paths:
+  /auth/signin:
+    post:
+      summary: Sign In
+      description: ''
+      operationId: sign-in
+      parameters:
+      - name: Content-Type
+        in: header
+        description: The content type which the application expects.
+        schema:
+          type: string
+          default: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'the e-mail address for your account. Example: john.doe@example.com'
+                password:
+                  type: string
+                  description: The password provided by CM.com
+            examples:
+              Request Example:
+                value:
+                  email: john.doe@example.com
+                  password: L6XXfQ8KTIRu4ZtH
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{ "access_token": "eyJ0eXBkf3jdSfFJhbGciOiJS...", "token_type": "Bearer", "expire_at": "2023-01-03T13:20:11+00:00" }'
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJ0eXBkf3jdSfFJhbGciOiJS...
+                  token_type:
+                    type: string
+                    example: Bearer
+                  expire_at:
+                    type: string
+                    example: 2023-01-03 13:20:11+00:00
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      security: []
+      tags:
+      - Auth
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers:
+  - key: X-TF-PREFERREDLANGUAGEID
+    value: Language ID
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

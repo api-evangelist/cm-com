@@ -1,0 +1,552 @@
+openapi: 3.2.0
+info:
+  title: Email Gateway Domains API
+  version: '1.0'
+  description: Send transactional and marketing emails, manage domains, suppressions, webhooks, and more.
+servers:
+- url: https://api.cm.com
+  description: Production
+tags:
+- name: Domains
+paths:
+  /email/configuration/v1/configuration/add-domain:
+    post:
+      summary: Add domain
+      tags:
+      - Domains
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Configuration_DomainConfigPostDto'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration_DomainConfigPostDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Configuration_DomainConfigPostDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Configuration_DomainConfigPostDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainConfigResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_8
+      security:
+      - ProductToken: []
+  /email/configuration/v1/configuration/accounts/{logicalAccountId}:
+    get:
+      summary: List account domains
+      tags:
+      - Domains
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_MultiDomainConfigResponse'
+      operationId: op_9
+      security:
+      - ProductToken: []
+  /email/configuration/v1/configuration/accounts/{logicalAccountId}/domains/{domainId}:
+    get:
+      summary: Get domain
+      tags:
+      - Domains
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: domainId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_DnsRecordGetResponse'
+      operationId: op_10
+      security:
+      - ProductToken: []
+    delete:
+      summary: Delete domain
+      tags:
+      - Domains
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: domainId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ConfigResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_11
+      security:
+      - ProductToken: []
+  /email/configuration/v1/configuration/accounts/{logicalAccountId}/domains/{domain}/sending:
+    put:
+      summary: Enable or disable sending
+      tags:
+      - Domains
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: domain
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: enabled
+        in: query
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainConfigIEnumerableControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_20
+      security:
+      - ProductToken: []
+  /email/configuration/v1/configuration/accounts/{logicalAccountId}/domains/{domain}/receiving:
+    put:
+      summary: Enable or disable receiving
+      tags:
+      - Domains
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: domain
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: enabled
+        in: query
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_DomainConfigIEnumerableControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_21
+      security:
+      - ProductToken: []
+components:
+  schemas:
+    Configuration_DomainConfigResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        domainConfig:
+          $ref: '#/components/schemas/Configuration_DomainConfig'
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_ConfigResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_DomainConfigPostDto:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        domain:
+          type:
+          - string
+          - 'null'
+        clickTracking:
+          type: boolean
+        openTracking:
+          type: boolean
+      additionalProperties: false
+    Configuration_DomainConfigIEnumerableControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_DomainConfig'
+      additionalProperties: false
+    Configuration_MultiDomainConfigResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        domains:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_DomainConfig'
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    Configuration_DnsRecord:
+      required:
+      - host
+      - purpose
+      - type
+      - value
+      type: object
+      properties:
+        host:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        purpose:
+          type:
+          - string
+          - 'null'
+          description: Either sending (CNAME records) or receiving (the MX record).
+        priority:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: MX preference. Null for non-MX records.
+        dnsStatus:
+          type: integer
+          format: int32
+          description: 1 not verified yet, 2 verified, 3 verification ran and failed.
+      additionalProperties: false
+    Configuration_DomainConfig:
+      required:
+      - domain
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        accountId:
+          type: string
+          format: uuid
+        domain:
+          type:
+          - string
+          - 'null'
+        createdOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        modifiedOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        deletedOn:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        dnsRecords:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_DnsRecord'
+        isValid:
+          type: boolean
+        clickTracking:
+          type: boolean
+        openTracking:
+          type: boolean
+        sendingEnabled:
+          type: boolean
+          description: Defaults to true for a new domain.
+        receivingEnabled:
+          type: boolean
+          description: Defaults to false for a new domain.
+        status:
+          type: integer
+          format: int32
+          description: 1 not verified yet, 2 verified, 3 verification ran and failed.
+      additionalProperties: false
+    Configuration_DnsRecordGetResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        dnsRecords:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_DnsRecordGetDto'
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_DnsRecordGetDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        fromDomain:
+          type: integer
+          format: int32
+        host:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        isValid:
+          type: boolean
+        purpose:
+          type:
+          - string
+          - 'null'
+          description: Either sending (CNAME records) or receiving (the MX record).
+        priority:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: MX preference. Null for non-MX records.
+        dnsStatus:
+          type: integer
+          format: int32
+          description: 1 not verified yet, 2 verified, 3 verification ran and failed.
+      additionalProperties: false
+    Configuration_StatusCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 429
+      - 500
+      - 999
+      type: integer
+      format: int32
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-PRODUCTTOKEN
+      description: Your CM.com product token. Find it in the Email Gateway App → Settings → Integration.

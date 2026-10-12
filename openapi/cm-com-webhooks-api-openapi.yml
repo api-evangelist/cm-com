@@ -1,0 +1,561 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Webhooks API
+  version: '1.0'
+  description: 'Operations tagged Webhooks across 3 of this provider''s published API definitions: cm-com-email-gateway-api-v1-openapi.yml, cm-com-live-event-ticketing-v1-openapi.yml, cm-com-verification-id-scan-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+  description: Production
+- url: /ticketing/v1
+- url: https://api.cm.com/id-scan/v1
+tags:
+- name: Webhooks
+paths:
+  /email/configuration/v1/accounts/{logicalAccountId}/create:
+    post:
+      summary: Create webhook
+      tags:
+      - Webhooks
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Configuration_WebhookPostDto'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration_WebhookPostDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Configuration_WebhookPostDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Configuration_WebhookPostDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_Int32ControllerResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_Int32ControllerResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_Int32ControllerResponse'
+      operationId: op_12
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production
+  /email/configuration/v1/accounts/{logicalAccountId}/list:
+    get:
+      summary: List webhooks
+      tags:
+      - Webhooks
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: all
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ObjectControllerResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ObjectControllerResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ObjectControllerResponse'
+      operationId: op_13
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production
+  /email/configuration/v1/accounts/{logicalAccountId}/delete:
+    delete:
+      summary: Delete webhook
+      tags:
+      - Webhooks
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: webhookType
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Configuration_ConfigResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ConfigResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ConfigResponse'
+      operationId: op_14
+      security:
+      - ProductToken: []
+    servers:
+    - url: https://api.cm.com
+      description: Production
+  /webhooks:
+    post:
+      operationId: create_webhook
+      summary: Add a webhook
+      tags:
+      - Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+      responses:
+        '200':
+          description: The webhook has been added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - JWT: []
+    get:
+      operationId: list_webhooks
+      summary: Retrieve all webhooks
+      tags:
+      - Webhooks
+      responses:
+        '200':
+          description: All configured webhooks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - JWT: []
+    servers:
+    - url: https://api.cm.com/id-scan/v1
+  /webhooks/{webhookId}:
+    parameters:
+    - $ref: '#/components/parameters/WebhookId'
+    get:
+      operationId: get_webhook
+      summary: Retrieve a webhook
+      tags:
+      - Webhooks
+      responses:
+        '200':
+          description: The requested webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - JWT: []
+    put:
+      operationId: replace_webhook
+      summary: Update a webhook
+      tags:
+      - Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+      responses:
+        '200':
+          description: The updated webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - JWT: []
+    delete:
+      operationId: delete_webhook
+      summary: Delete a webhook
+      tags:
+      - Webhooks
+      responses:
+        '200':
+          description: The webhook has been deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - JWT: []
+    servers:
+    - url: https://api.cm.com/id-scan/v1
+webhooks:
+  customer_product.canceled:
+    post:
+      description: Sent when a customer product (an individual ticket) is canceled, either on its own or as part of an order cancellation. Retrieve it with `GET /events/{event_id}/orders/{order_id}/products/{customer_product_id}`.
+      operationId: WebhookCustomerProductCanceled
+      parameters:
+      - description: Always `customer_product.canceled`
+        in: header
+        name: X-Message-Type
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.webhookMessagePayload'
+              description: Message payload
+              summary: payload
+        description: Message payload
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Any 2xx response is treated as a successful delivery
+        '500':
+          description: Any other response, or no response within 10 seconds, counts as a failed delivery and is retried
+      summary: Webhook — customer_product.canceled
+      tags:
+      - Webhooks
+      security: []
+    servers:
+    - url: /ticketing/v1
+  order.canceled:
+    post:
+      description: Sent when an order is canceled, followed by a `customer_product.canceled` message for each ticket in the order.
+      operationId: WebhookOrderCanceled
+      parameters:
+      - description: Always `order.canceled`
+        in: header
+        name: X-Message-Type
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.webhookMessagePayload'
+              description: Message payload
+              summary: payload
+        description: Message payload
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Any 2xx response is treated as a successful delivery
+        '500':
+          description: Any other response, or no response within 10 seconds, counts as a failed delivery and is retried
+      summary: Webhook — order.canceled
+      tags:
+      - Webhooks
+      security: []
+    servers:
+    - url: /ticketing/v1
+  order.completed:
+    post:
+      description: Sent when an order is completed. Retrieve it with `GET /events/{event_id}/orders/{order_id}`.
+      operationId: WebhookOrderCompleted
+      parameters:
+      - description: Always `order.completed`
+        in: header
+        name: X-Message-Type
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.webhookMessagePayload'
+              description: Message payload
+              summary: payload
+        description: Message payload
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Any 2xx response is treated as a successful delivery
+        '500':
+          description: Any other response, or no response within 10 seconds, counts as a failed delivery and is retried
+      summary: Webhook — order.completed
+      tags:
+      - Webhooks
+      security: []
+    servers:
+    - url: /ticketing/v1
+components:
+  schemas:
+    Configuration_ConfigResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_Int32ControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Configuration_WebhookPostDto:
+      type: object
+      properties:
+        webhookType:
+          type:
+          - string
+          - 'null'
+        webhookUrl:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Configuration_ObjectControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type:
+          - object
+          - 'null'
+      additionalProperties: false
+    Configuration_StatusCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 429
+      - 500
+      - 999
+      type: integer
+      format: int32
+    handler.webhookMessagePayload:
+      properties:
+        customer_product_id:
+          description: UUID of the customer product. Present only when entity == "customer_product".
+          example: f23c8ad2-9b5b-4f7e-9a55-7c5c4c8b71d2
+          type: string
+        entity:
+          description: 'Resource the message is about. One of: order, customer_product.'
+          example: order
+          type: string
+        event_id:
+          description: UUID of the ticketing event the resource belongs to.
+          example: 3e2af7d0-7c1f-4d40-9b62-2fcb6e0d2c8a
+          type: string
+        order_id:
+          description: UUID of the order the resource belongs to.
+          example: a76d9c1c-1bd6-4f6b-8a3e-5a9d9c8a1b54
+          type: string
+      type: object
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          description: The URL must begin with `https://`.
+          example: https://example.com
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookType'
+          description: The subscribed webhook events.
+          default:
+          - transaction.state.updated
+          - task.state.updated
+        headers:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          example:
+            My-Custom-Header: Example
+          description: The custom HTTP headers sent with each request to the webhook URL. The value is `null` when no headers are set.
+        updated:
+          type: string
+          format: date-time
+          description: The date the webhook was updated.
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          description: The date the webhook was created.
+          readOnly: true
+      required:
+      - url
+    WebhookType:
+      type: string
+      enum:
+      - transaction.state.updated
+      - task.state.updated
+      description: Webhook event type
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          example: 400
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          example: The request is invalid
+  parameters:
+    WebhookId:
+      name: webhookId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: A unique identifier for the webhook.
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+    NotFound:
+      description: The specified resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 404
+            message: Not found
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-PRODUCTTOKEN
+      description: Your CM.com product token. Find it in the Email Gateway App → Settings → Integration.
+    SystemTokenAuth:
+      description: Send your organisation's system token in this header.
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID
+      type: apiKey
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '
+externalDocs:
+  description: ''
+  url: ''
+x-refined-from:
+- cm-com-email-gateway-api-v1-openapi.yml
+- cm-com-live-event-ticketing-v1-openapi.yml
+- cm-com-verification-id-scan-v1-openapi.yml

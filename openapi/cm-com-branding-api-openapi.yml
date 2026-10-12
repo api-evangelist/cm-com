@@ -1,0 +1,154 @@
+openapi: 3.2.0
+info:
+  version: '1'
+  title: Sign Branding API
+  description: 'Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via this link. This will grant you access to the sandbox environment.
+
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Branding
+  description: Change the branding style that is being used in email communication
+paths:
+  /clients/{kid}/branding:
+    parameters:
+    - $ref: '#/components/parameters/KeyId'
+    post:
+      operationId: replace_branding
+      summary: Update branding
+      description: Create or update branding
+      tags:
+      - Branding
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Branding'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branding'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/NotAvailable'
+    get:
+      operationId: get_branding
+      summary: Get branding
+      description: Retrieve branding
+      tags:
+      - Branding
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branding'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Branding:
+      title: Branding
+      type: object
+      properties:
+        buttonBackgroundColor:
+          type: string
+          description: The hex color code for the button background color
+          examples:
+          - '#000000'
+        buttonTextColor:
+          type: string
+          description: The hex color code for the button text color
+          examples:
+          - '#ffffff'
+        themePrimaryColor:
+          type: string
+          description: The hex color code for the primary color in the Sign front-end
+          examples:
+          - '#0000ff'
+        themeSuccessColor:
+          type: string
+          description: The hex color code for the success color in the Sign front-end
+          examples:
+          - '#00ff00'
+        logo:
+          type: string
+          description: Base64 encoded PNG image in Data URL format
+          examples:
+          - data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=
+        logoEmail:
+          type: string
+          description: Base64 encoded PNG image in Data URL format
+          examples:
+          - data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+  responses:
+    NotAvailable:
+      description: The request cannot be made because the feature is not available for your account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    KeyId:
+      name: kid
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies the client
+
+        '
+      example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '

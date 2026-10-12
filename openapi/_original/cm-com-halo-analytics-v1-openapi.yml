@@ -1,0 +1,4581 @@
+# x-archived-from: cm-com-halo-analytics-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: HALO Analytics API
+  description: Execute analytical operations for HALO platform
+  license:
+    name: ""
+  version: 1.0.0
+servers:
+  - url: /halo
+paths:
+  /analytics/v1/accounts/{account_id}/logging/feedback-scores:
+    post:
+      tags:
+        - Analytics
+      description: |-
+        Create a feedback score for a conversation interaction.
+
+        Required permission: `HALO.Analytics_Logging_FeedbackScores`
+      operationId: create_feedback_score_external
+      parameters:
+        - name: account_id
+          in: path
+          description: The account ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFeedbackScoreRequest"
+        required: true
+      responses:
+        "200":
+          description: Feedback score created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedbackScoreResponse"
+        "400":
+          description: Bad request - invalid input
+        "404":
+          description: Account not found
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /analytics/v1/accounts/{account_id}/metrics:
+    get:
+      tags:
+        - Analytics
+      description: |-
+        Get conversation metrics for an account.
+
+        Required permission: `HALO.Analytics_API`
+      operationId: get_metrics
+      parameters:
+        - name: account_id
+          in: path
+          description: The account ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: from_date
+          in: query
+          description: Start date for metrics calculation (ISO 8601 format, UTC expected). Defaults to 30 days ago.
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: until_date
+          in: query
+          description: End date for metrics calculation (ISO 8601 format, UTC expected). Defaults to now.
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: profile_id
+          in: query
+          description: Optional profile ID to filter metrics
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetricsData"
+        "400":
+          description: Bad request - invalid query parameters
+        "404":
+          description: Account not found
+        "422":
+          description: Validation error - invalid date range
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /analytics/v2/accounts/{account_id}/conversations:
+    get:
+      tags:
+        - Conversations
+      description: |-
+        List conversations for a profile with filtering and pagination.
+
+        Required permission: `HALO.Analytics_Conversations_Read`
+      operationId: get_conversations
+      parameters:
+        - name: account_id
+          in: path
+          description: The account ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: profile_id
+          in: query
+          description: Optional profile ID to filter conversations (if not provided, returns all conversations for the account)
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: duration_filter_in_days
+          in: query
+          description: Number of days to filter (alternative to from_date/until_date)
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: from_date
+          in: query
+          description: Start date for filtering (ISO 8601 format, UTC)
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: until_date
+          in: query
+          description: End date for filtering (ISO 8601 format, UTC)
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: languages
+          in: query
+          description: Filter by languages (comma-separated)
+          required: false
+          schema:
+            type: string
+        - name: channels
+          in: query
+          description: Filter by channels (comma-separated)
+          required: false
+          schema:
+            type: string
+        - name: products
+          in: query
+          description: Filter by products (comma-separated)
+          required: false
+          schema:
+            type: string
+        - name: excluded_products
+          in: query
+          description: Exclude products while retaining conversations whose product is missing (comma-separated)
+          required: false
+          schema:
+            type: string
+        - name: resolutions
+          in: query
+          description: Filter by resolutions (comma-separated)
+          required: false
+          schema:
+            type: string
+        - name: feedbacks
+          in: query
+          description: Filter by feedbacks (comma-separated)
+          required: false
+          schema:
+            type: string
+        - name: search_query
+          in: query
+          description: Search query for conversation content
+          required: false
+          schema:
+            type: string
+        - name: min_recognition_rate_percentage
+          in: query
+          description: Minimum recognition rate percentage (0-100)
+          required: false
+          schema:
+            type: number
+            format: double
+        - name: max_recognition_rate_percentage
+          in: query
+          description: Maximum recognition rate percentage (0-100)
+          required: false
+          schema:
+            type: number
+            format: double
+        - name: agent_ids
+          in: query
+          description: Filter by agent IDs (comma-separated integers)
+          required: false
+          schema:
+            type: string
+        - name: tool_ids
+          in: query
+          description: Filter by tool IDs (comma-separated integers)
+          required: false
+          schema:
+            type: string
+        - name: topic_ids
+          in: query
+          description: Filter by topic IDs (comma-separated integers, -1 = pending)
+          required: false
+          schema:
+            type: string
+        - name: conversation_product
+          in: query
+          description: "Filter by conversation product (comma-separated: HALO,AICLOUD,FAQ)"
+          required: false
+          schema:
+            type: string
+        - name: has_feedback
+          in: query
+          description: Filter by whether conversations have feedback (true = only with feedback, false = only without)
+          required: false
+          schema:
+            type: boolean
+        - name: optimise_suggestion_id
+          in: query
+          description: |-
+            Filter to only conversations belonging to a specific Optimise suggestion (its suggestion_id).
+            Requires `profile_id`. An unknown or pruned id yields an empty result.
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: page_size
+          in: query
+          description: "Page size (default: 1000, max: 1000)"
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: page_index
+          in: query
+          description: "Page index (0-based, default: 0)"
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: sort_order
+          in: query
+          description: 'Sort order: "asc" or "desc" (default: "desc")'
+          required: false
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          description: 'Sort by field: "started", "ended", or "recognition_rate" (default: "started")'
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Conversations list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationsResponse"
+        "404":
+          description: Account or profile not found
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /analytics/v2/accounts/{account_id}/conversations/{conversation_id}:
+    get:
+      tags:
+        - Conversations
+      description: |-
+        Retrieve a conversation by ID with calculated analytics.
+
+        Required permission: `HALO.Analytics_Conversations_Read`
+      operationId: get_conversation
+      parameters:
+        - name: account_id
+          in: path
+          description: The account ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: conversation_id
+          in: path
+          description: The conversation ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        "404":
+          description: Conversation not found
+        "410":
+          description: Conversation content redacted after the retention window; body carries the retained non-PII metadata (redacted, created, ended, ai_resolution_status, feedback_status)
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /analytics/v2/accounts/{account_id}/conversations/{conversation_id}/items:
+    get:
+      tags:
+        - Runtime
+      description: Get conversation items by conversation ID, optionally filtered by interaction ID.
+      operationId: get_conversation_items
+      parameters:
+        - name: account_id
+          in: path
+          description: Account ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: conversation_id
+          in: path
+          description: Conversation ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: interaction_id
+          in: query
+          description: Optional interaction ID filter
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Conversation items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ConversationItem"
+        "404":
+          description: Account not found
+        "410":
+          description: Conversation content redacted after the retention window; body carries the retained non-PII metadata (redacted, created, ended, ai_resolution_status, feedback_status)
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /analytics/v2/accounts/{account_id}/conversations/{conversation_id}/recording:
+    get:
+      tags:
+        - Conversations
+      description: |-
+        Download the voice call recording of a conversation as `audio/ogg`.
+
+        Required permission: `HALO.Analytics_Conversations_Read`
+      operationId: get_conversation_recording
+      parameters:
+        - name: account_id
+          in: path
+          description: The account ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: conversation_id
+          in: path
+          description: The conversation ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Voice call recording
+          content:
+            audio/ogg: {}
+        "404":
+          description: Conversation or recording not found
+        "410":
+          description: Conversation content redacted after the retention window
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+components:
+  schemas:
+    Actor:
+      oneOf:
+        - type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum:
+                - msc_user
+        - type: object
+          required:
+            - type
+          properties:
+            name:
+              type:
+                - string
+                - "null"
+            type:
+              type: string
+              enum:
+                - msc_agent
+        - type: object
+          required:
+            - id
+            - name
+            - type
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            type:
+              type: string
+              enum:
+                - teams
+      description: |-
+        Identifies the specific participant who authored a `User` or `Assistant`
+        conversation item, for conversations with more than one distinct actor
+        on that role (e.g. MSC's end-user/agent distinction, or a Teams channel
+        thread). Absent when the item's role alone identifies the author.
+
+        Serializes as a tagged object (`{"type": "msc_user"}`, `{"type": "teams", ...}`,
+        etc). Deserialization additionally accepts the bare strings `"End_User"` /
+        `"Customer_Service_Agent"` for `MscUser` / `MscAgent { name: None }` — MSC's
+        legacy `/instruction` and `/suggestion` endpoints have sent exactly those two
+        string values on the wire for years, so reading that shape can't be dropped.
+        Nothing produces it anymore; it's accepted, not emitted.
+    AdditionalProperties:
+      oneOf:
+        - type: boolean
+        - $ref: "#/components/schemas/JsonSchema"
+    AgentAnswerResult:
+      type: object
+      required:
+        - temperature
+        - top_p
+        - tools
+        - tool_choice_required
+        - formatting_options
+        - agent_prompt
+      properties:
+        agent_prompt:
+          type: string
+        content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        formatting_options:
+          type: array
+          items:
+            $ref: "#/components/schemas/FormattingOption"
+        model:
+          type:
+            - string
+            - "null"
+        request_type:
+          type: string
+        temperature:
+          type: number
+          format: double
+        tool_choice_required:
+          type: boolean
+        tool_uses:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ToolUse"
+        tools:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolOption"
+        top_p:
+          type: number
+          format: double
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    AgentHandoverDetails:
+      type: object
+      description: Agent handover details
+      required:
+        - stop_status
+      properties:
+        from_agent_name:
+          type:
+            - string
+            - "null"
+        from_agent_version_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        reasoning:
+          type:
+            - string
+            - "null"
+        stop_status:
+          $ref: "#/components/schemas/AgentInteractionState"
+        to_agent_name:
+          type:
+            - string
+            - "null"
+        to_agent_version_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+    AgentInteractionState:
+      type: string
+      description: Agent interaction state
+      enum:
+        - active
+        - completed
+        - breakout
+        - handover
+    AgentResult:
+      type: object
+      description: Agent execution result
+      properties:
+        agent_id:
+          type:
+            - integer
+            - "null"
+          format: int64
+        agent_name:
+          type:
+            - string
+            - "null"
+        agent_version_id:
+          type:
+            - integer
+            - "null"
+          format: int64
+        handover_reasoning:
+          type:
+            - string
+            - "null"
+        tool_results:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolResult"
+        tool_uses:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolUse"
+    AgenticParkPayload:
+      type: object
+      description: Park payload for agentic activity
+      properties:
+        agent_response:
+          type:
+            - string
+            - "null"
+          description: Agent's response to show the user
+        conversation_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+          description: Conversation ID for continuing multi-turn conversations
+        dialog_options:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ConversationOption"
+          description: Selectable buttons to show alongside the response
+        image_carousel:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/CarouselResponse"
+              description: Image carousel to show alongside the response
+    AgenticPromptInjectionResult:
+      type: object
+      required:
+        - input
+        - staged_output
+        - agent_instructions
+        - is_safe
+        - reasoning
+      properties:
+        agent_instructions:
+          type: string
+        input:
+          type: string
+        is_safe:
+          type: boolean
+        reasoning:
+          type: string
+        request_type:
+          type: string
+        staged_output:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    AgenticUnparkPayload:
+      type: object
+      description: Unpark payload for agentic activity - user continues conversation via orchestrator
+      required:
+        - query
+      properties:
+        query:
+          $ref: "#/components/schemas/UserResponse"
+          description: User's query to continue the conversation
+    AiCloudItemMeta:
+      type: object
+      description: AI Cloud-specific metadata for a conversation message
+      required:
+        - customer_key
+        - project_key
+        - culture
+      properties:
+        article_ids:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+        context_variables: {}
+        conversation_variables: {}
+        culture:
+          type: string
+        customer_key:
+          type: string
+        entity_matches: {}
+        intent_info: {}
+        is_fallback:
+          type:
+            - boolean
+            - "null"
+        main_interaction_type:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/MainInteractionType"
+        pages:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Pages"
+        project_key:
+          type: string
+        recognition_quality:
+          type:
+            - number
+            - "null"
+          format: double
+        recognition_type:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RecognitionType"
+        stop_words: {}
+        translation:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TranslationDetails"
+    AiCloudMessage:
+      allOf:
+        - type: object
+          description: Base fields shared by all message types
+          properties:
+            actor:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Actor"
+                  description: The participant who authored this item, when the role alone is ambiguous.
+            content:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/MessageContentPart"
+            interaction_id:
+              type:
+                - string
+                - "null"
+              format: uuid
+            is_message_before_halo:
+              type: boolean
+            timestamp:
+              type:
+                - string
+                - "null"
+              format: date-time
+              description: |-
+                Time at which the conversation item was first produced. Legacy items
+                without valid initialization metadata fall back to their logging time.
+        - type: object
+          properties:
+            aicloud_meta:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/AiCloudItemMeta"
+            tool_results:
+              type: array
+              items:
+                $ref: "#/components/schemas/ToolResult"
+            tool_uses:
+              type: array
+              items:
+                $ref: "#/components/schemas/ToolUse"
+      description: AI Cloud message
+    AnswerStyleResult:
+      type: object
+      required:
+        - original_answer
+        - language
+      properties:
+        language:
+          type: string
+        original_answer:
+          type: string
+        request_type:
+          type: string
+        rewritten_answer:
+          type:
+            - string
+            - "null"
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    AssistantConversationItem:
+      type: object
+      required:
+        - content
+      properties:
+        actor:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Actor"
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        id:
+          type:
+            - string
+            - "null"
+        meta:
+          $ref: "#/components/schemas/AssistantConversationItemMeta"
+        name:
+          type:
+            - string
+            - "null"
+        parent_tool_use_id:
+          type:
+            - string
+            - "null"
+        tool_uses:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ToolUse"
+    AssistantConversationItemMeta:
+      type: object
+      properties:
+        answering_agent_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        audio_interrupted_ms:
+          type:
+            - integer
+            - "null"
+          format: int32
+          minimum: 0
+        contexts:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Contexts"
+        conversation_ended_delay:
+          type:
+            - integer
+            - "null"
+          format: int64
+        feedback_reasoning:
+          type:
+            - string
+            - "null"
+        generation_duration_ms:
+          type:
+            - integer
+            - "null"
+          format: int32
+        initialized:
+          type:
+            - string
+            - "null"
+        language:
+          type:
+            - string
+            - "null"
+        match:
+          type:
+            - boolean
+            - "null"
+        model_results:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ModelResult"
+        origin:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestOrigin"
+        provider:
+          type:
+            - string
+            - "null"
+        rank:
+          type:
+            - integer
+            - "null"
+          format: int32
+        reasoning:
+          type:
+            - string
+            - "null"
+        reasoning_summary:
+          type:
+            - string
+            - "null"
+          description: |-
+            A reasoning model's concise summary of its own chain-of-thought (e.g.
+            OpenAI Responses API `reasoning.summary`), surfaced for observability.
+            Deliberately separate from `reasoning`, which elsewhere in the
+            orchestrator/analytics stack means why the system took an action
+            (fallback trigger, classification, guardrail) — conflating the two
+            would surface a model's internal thinking where a business-logic
+            rationale is expected.
+        tokens:
+          type:
+            - integer
+            - "null"
+          format: int32
+        used_feedback:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/Feedback"
+        used_knowledge:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/Knowledge"
+        used_media:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/MediaContentPart"
+    AssistantMessage:
+      allOf:
+        - type: object
+          description: Base fields shared by all message types
+          properties:
+            actor:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Actor"
+                  description: The participant who authored this item, when the role alone is ambiguous.
+            content:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/MessageContentPart"
+            interaction_id:
+              type:
+                - string
+                - "null"
+              format: uuid
+            is_message_before_halo:
+              type: boolean
+            timestamp:
+              type:
+                - string
+                - "null"
+              format: date-time
+              description: |-
+                Time at which the conversation item was first produced. Legacy items
+                without valid initialization metadata fall back to their logging time.
+        - type: object
+          properties:
+            aicloud_meta:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/AiCloudItemMeta"
+            source:
+              type:
+                - string
+                - "null"
+      description: Generic assistant message
+    BasicPromptInjectionResult:
+      type: object
+      required:
+        - input
+        - is_safe
+        - reasoning
+      properties:
+        input:
+          type: string
+        is_safe:
+          type: boolean
+        reasoning:
+          type: string
+        request_type:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    CandidateChunk:
+      type: object
+      description: Candidate chunk for RAG refiner/selector
+      required:
+        - content
+      properties:
+        content:
+          type: string
+        distance:
+          type: number
+          format: double
+        id:
+          type: integer
+          format: int64
+    CarouselItem:
+      type: object
+      required:
+        - image_src
+        - image_alt
+      properties:
+        buttons:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/CarouselItemButton"
+        description:
+          type:
+            - string
+            - "null"
+        image_alt:
+          type: string
+        image_src:
+          type: string
+        title:
+          type:
+            - string
+            - "null"
+        url:
+          type:
+            - string
+            - "null"
+    CarouselItemButton:
+      type: object
+      required:
+        - text
+        - value
+      properties:
+        text:
+          type: string
+        value:
+          type: string
+    CarouselResponse:
+      type: object
+      properties:
+        carousel:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/CarouselItem"
+    ClassifyInstructionResult:
+      type: object
+      required:
+        - input
+        - is_instruction
+      properties:
+        input:
+          type: string
+        is_instruction:
+          type: boolean
+        request_type:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    ContentPart:
+      oneOf:
+        - type: object
+          required:
+            - text
+            - type
+          properties:
+            text:
+              type: string
+            type:
+              type: string
+              enum:
+                - text
+        - type: object
+          required:
+            - text
+            - type
+          properties:
+            redacted:
+              type: boolean
+            signature:
+              type:
+                - string
+                - "null"
+            text:
+              type: string
+            type:
+              type: string
+              enum:
+                - thinking
+        - type: object
+          required:
+            - json_value
+            - type
+          properties:
+            json_value:
+              $ref: "#/components/schemas/Value"
+            type:
+              type: string
+              enum:
+                - json
+        - allOf:
+            - $ref: "#/components/schemas/MediaContentPart"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - media
+        - type: object
+          description: |-
+            OpenAI Responses API `phase: "commentary"` text: an intermediate
+            preamble emitted before a tool call, distinct from the turn's final
+            answer. Plain assistant-authored text, not hidden reasoning like
+            `Thinking`.
+          required:
+            - text
+            - type
+          properties:
+            text:
+              type: string
+            type:
+              type: string
+              enum:
+                - commentary
+    ContextValue:
+      oneOf:
+        - type: object
+          required:
+            - Plain
+          properties:
+            Plain:
+              type: string
+        - type: object
+          description: |-
+            A sensitive string (masked in debug output).
+
+            - `is_external: true` — the value came from an external source (e.g. user/API input)
+              No decryption is needed.
+            - `is_external: false` — the value is internally managed (e.g. a database default)
+              and is stored encrypted. It must be decrypted before use.
+          required:
+            - Secret
+          properties:
+            Secret:
+              type: object
+              description: |-
+                A sensitive string (masked in debug output).
+
+                - `is_external: true` — the value came from an external source (e.g. user/API input)
+                  No decryption is needed.
+                - `is_external: false` — the value is internally managed (e.g. a database default)
+                  and is stored encrypted. It must be decrypted before use.
+              required:
+                - value
+                - is_external
+              properties:
+                is_external:
+                  type: boolean
+                value:
+                  type: string
+      description: |-
+        Value of context
+        - Plain: A non-sensitive string (media and structured data stored as JSON strings)
+        - Secret: A sensitive string (not printed in debug)
+    Contexts:
+      type: object
+      description: Type alias for a mapping from strings to context values
+      additionalProperties:
+        $ref: "#/components/schemas/ContextValue"
+      propertyNames:
+        type: string
+    Conversation:
+      type: object
+      description: Complete conversation with analytics
+      required:
+        - started
+        - ended
+        - total_user_items
+        - num_matched_user_items
+        - recognition_rate
+        - messages
+      properties:
+        ended:
+          type: string
+          format: date-time
+        feedback:
+          $ref: "#/components/schemas/ConversationFeedback"
+        feedback_comment:
+          type:
+            - string
+            - "null"
+        manual_resolution:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ManualResolution"
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+        most_common_channel:
+          type:
+            - string
+            - "null"
+        most_common_language:
+          type:
+            - string
+            - "null"
+        most_common_origin:
+          type:
+            - string
+            - "null"
+        most_common_product:
+          type:
+            - string
+            - "null"
+        num_matched_user_items:
+          type: integer
+          format: int32
+        profile_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        profile_name:
+          type:
+            - string
+            - "null"
+        recognition_rate:
+          type: number
+          format: double
+        resolution:
+          $ref: "#/components/schemas/ConversationResolution"
+        resolution_reasoning:
+          type:
+            - string
+            - "null"
+        started:
+          type: string
+          format: date-time
+        subtopic:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Subtopic"
+        summary:
+          type:
+            - string
+            - "null"
+        topic:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Topic"
+        total_user_items:
+          type: integer
+          format: int32
+        version:
+          type: integer
+          format: int32
+        visited_agent_ids:
+          type: array
+          items:
+            type:
+              - integer
+              - "null"
+            format: int64
+        visited_agents:
+          type: array
+          items:
+            $ref: "#/components/schemas/VisitedAgent"
+        visited_tool_ids:
+          type: array
+          items:
+            type:
+              - integer
+              - "null"
+            format: int64
+        visited_tools:
+          type: array
+          items:
+            $ref: "#/components/schemas/VisitedTool"
+    ConversationFeedback:
+      type: string
+      description: Enum for conversation feedback rating in API responses
+      enum:
+        - FEEDBACK_VERY_SATISFIED
+        - FEEDBACK_SATISFIED
+        - FEEDBACK_NEUTRAL
+        - FEEDBACK_UNSATISFIED
+        - FEEDBACK_VERY_UNSATISFIED
+        - FEEDBACK_NOT_GIVEN
+    ConversationItem:
+      oneOf:
+        - type: object
+          required:
+            - User
+          properties:
+            User:
+              $ref: "#/components/schemas/UserConversationItem"
+        - type: object
+          required:
+            - Assistant
+          properties:
+            Assistant:
+              $ref: "#/components/schemas/AssistantConversationItem"
+        - type: object
+          required:
+            - Tool
+          properties:
+            Tool:
+              $ref: "#/components/schemas/ToolConversationItem"
+        - type: object
+          required:
+            - ToolInteraction
+          properties:
+            ToolInteraction:
+              $ref: "#/components/schemas/ToolInteractionConversationItem"
+        - type: object
+          required:
+            - Handover
+          properties:
+            Handover:
+              $ref: "#/components/schemas/HandoverConversationItem"
+    ConversationItemSummary:
+      type: object
+      description: Simplified conversation item for list views
+      required:
+        - id
+      properties:
+        buttons:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ConversationOption"
+        created:
+          type:
+            - string
+            - "null"
+          format: date-time
+        id:
+          type: integer
+          format: int64
+        image_carousel:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/CarouselResponse"
+        interaction_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+        json_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/Value"
+        language:
+          type:
+            - string
+            - "null"
+        match:
+          type:
+            - boolean
+            - "null"
+        media:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/MediaMessageContentPart"
+        name:
+          type:
+            - string
+            - "null"
+        profile_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        role:
+          type:
+            - string
+            - "null"
+        show_feedback:
+          type:
+            - string
+            - "null"
+        text_content:
+          type:
+            - string
+            - "null"
+    ConversationOption:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+    ConversationOptionsContentPart:
+      type: object
+      description: Conversation options (buttons) content part
+      required:
+        - conversation_options
+      properties:
+        conversation_options:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationOption"
+    ConversationOverview:
+      type: object
+      description: Conversation overview for list views
+      required:
+        - conversation_id
+        - matched_items
+        - total_items
+        - recognition_rate
+        - conversation_products
+        - messages
+      properties:
+        conversation_id:
+          type: string
+          format: uuid
+        conversation_products:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationProduct"
+        created:
+          type:
+            - string
+            - "null"
+          format: date-time
+        ended:
+          type:
+            - string
+            - "null"
+          format: date-time
+        environment:
+          type:
+            - string
+            - "null"
+        external_handover:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Value"
+        feedback:
+          $ref: "#/components/schemas/ConversationFeedback"
+        feedback_comment:
+          type:
+            - string
+            - "null"
+        first_user_message:
+          type:
+            - string
+            - "null"
+        manual_resolution:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ManualResolution"
+        matched_items:
+          type: integer
+          format: int32
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationItemSummary"
+        most_common_channel:
+          type:
+            - string
+            - "null"
+        most_common_language:
+          type:
+            - string
+            - "null"
+        most_common_origin:
+          type:
+            - string
+            - "null"
+        most_common_product:
+          type:
+            - string
+            - "null"
+        profile_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        profile_name:
+          type:
+            - string
+            - "null"
+        recognition_rate:
+          type: number
+          format: double
+        redacted:
+          type: boolean
+          description: |-
+            True for retention skeletons: content/PII has been redacted, `external_handover` may hold
+            the `{"redacted":true}` sentinel rather than real handover data. Lets list/export consumers
+            distinguish skeletons from ordinary conversations with empty content.
+        resolution:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ConversationResolution"
+        resolution_reasoning:
+          type:
+            - string
+            - "null"
+        started:
+          type:
+            - string
+            - "null"
+          format: date-time
+        subtopic:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Subtopic"
+        summary:
+          type:
+            - string
+            - "null"
+        topic:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Topic"
+        total_items:
+          type: integer
+          format: int32
+        visited_agent_ids:
+          type: array
+          items:
+            type:
+              - integer
+              - "null"
+            format: int64
+        visited_agents:
+          type: array
+          items:
+            $ref: "#/components/schemas/VisitedAgent"
+        visited_tool_ids:
+          type: array
+          items:
+            type:
+              - integer
+              - "null"
+            format: int64
+        visited_tools:
+          type: array
+          items:
+            $ref: "#/components/schemas/VisitedTool"
+    ConversationProduct:
+      type: string
+      enum:
+        - HALO
+        - AICLOUD
+        - FAQ
+    ConversationResolution:
+      type: string
+      description: Enum for conversation resolution status in API responses
+      enum:
+        - RESOLUTION_SUCCESSFUL
+        - RESOLUTION_HANDOVER
+        - RESOLUTION_UNSUCCESSFUL
+        - RESOLUTION_UNDETERMINED
+        - RESOLUTION_PENDING
+    ConversationSummaryPurpose:
+      type: string
+      description: Conversation summary purpose
+      enum:
+        - handover
+        - resolution
+        - general
+    ConversationsResponse:
+      type: object
+      description: Paginated response for conversations list
+      required:
+        - data
+        - total_count
+        - page_index
+        - page_size
+        - possible_language_filters
+        - possible_product_filters
+        - possible_channel_filters
+        - possible_conversation_product_filters
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationOverview"
+        page_index:
+          type: integer
+          format: int64
+        page_size:
+          type: integer
+          format: int64
+        possible_channel_filters:
+          type: array
+          items:
+            type: string
+        possible_conversation_product_filters:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationProduct"
+        possible_language_filters:
+          type: array
+          items:
+            type: string
+        possible_product_filters:
+          type: array
+          items:
+            type: string
+        total_count:
+          type: integer
+          format: int64
+    CreateFeedbackScoreRequest:
+      type: object
+      description: |-
+        Request to create a feedback score for a conversation interaction.
+
+        Example:
+        ```json
+        {
+            "account_id": "550e8400-e29b-41d4-a716-446655440000",
+            "conversation_id": "123e4567-e89b-12d3-a456-426614174000",
+            "interaction_id": "987fcdeb-51a2-3c4d-e5f6-789012345678",
+            "score": 4,
+            "comment": "The assistant was very helpful and resolved my issue quickly.",
+            "product_source": "HALO_WEB_WIDGET"
+        }
+        ```
+      required:
+        - account_id
+        - conversation_id
+        - score
+      properties:
+        account_id:
+          type: string
+          format: uuid
+          description: The account ID this feedback belongs to
+        comment:
+          type:
+            - string
+            - "null"
+          description: Optional comment from the user explaining their score
+        conversation_id:
+          type: string
+          format: uuid
+          description: The conversation ID for this feedback score
+        interaction_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+          description: The specific interaction ID within the conversation (optional)
+        product_source:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ProductSource"
+              description: The product source where the feedback was submitted
+        profile_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+          description: The profile ID associated with this feedback (optional)
+        score:
+          type: integer
+          format: int32
+          description: The feedback score (0-4 range, will be normalized to 1-5 for storage)
+    CustomGuardrailResult:
+      type: object
+      required:
+        - input
+        - prompt
+        - result
+      properties:
+        input:
+          type: string
+        prompt:
+          type: string
+        request_type:
+          type: string
+        result:
+          $ref: "#/components/schemas/CustomGuardrailResultType"
+        rewritten_input:
+          type:
+            - string
+            - "null"
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    CustomGuardrailResultType:
+      type: string
+      description: Custom guardrail result type
+      enum:
+        - continue
+        - stop
+        - rewrite
+    CustomerServiceAgentInstructionMessage:
+      allOf:
+        - type: object
+          description: Base fields shared by all message types
+          properties:
+            actor:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Actor"
+                  description: The participant who authored this item, when the role alone is ambiguous.
+            content:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/MessageContentPart"
+            interaction_id:
+              type:
+                - string
+                - "null"
+              format: uuid
+            is_message_before_halo:
+              type: boolean
+            timestamp:
+              type:
+                - string
+                - "null"
+              format: date-time
+              description: |-
+                Time at which the conversation item was first produced. Legacy items
+                without valid initialization metadata fall back to their logging time.
+        - type: object
+          required:
+            - is_classified_as_instruction
+          properties:
+            custom_guardrail_results:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/CustomGuardrailResult"
+            is_classified_as_instruction:
+              type: boolean
+            is_recognized:
+              type:
+                - boolean
+                - "null"
+      description: Customer service agent instruction message
+    CustomerServiceAgentMessage:
+      allOf:
+        - type: object
+          description: Base fields shared by all message types
+          properties:
+            actor:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Actor"
+                  description: The participant who authored this item, when the role alone is ambiguous.
+            content:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/MessageContentPart"
+            interaction_id:
+              type:
+                - string
+                - "null"
+              format: uuid
+            is_message_before_halo:
+              type: boolean
+            timestamp:
+              type:
+                - string
+                - "null"
+              format: date-time
+              description: |-
+                Time at which the conversation item was first produced. Legacy items
+                without valid initialization metadata fall back to their logging time.
+      description: Customer service agent message
+    DematerializedMediaContentPart:
+      type: object
+      required:
+        - mime_type
+        - data_uri
+        - data_hash
+      properties:
+        data_hash:
+          type: string
+        data_uri:
+          $ref: "#/components/schemas/MediaDataUri"
+        metadata:
+          $ref: "#/components/schemas/Value"
+        mime_type:
+          type: string
+        name:
+          type:
+            - string
+            - "null"
+    DetectedLanguage:
+      type: object
+      description: Detected language with probability
+      required:
+        - language
+        - language_iso
+        - probability
+      properties:
+        language:
+          type: string
+        language_iso:
+          type: string
+        probability:
+          type: number
+          format: double
+    DoNotAnswerResult:
+      type: object
+      required:
+        - should_answer
+      properties:
+        request_type:
+          type: string
+        should_answer:
+          type: boolean
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    ErrorResponse:
+      type: object
+      required:
+        - type
+        - title
+      properties:
+        detail:
+          type:
+            - object
+            - "null"
+        instance:
+          type:
+            - string
+            - "null"
+        title:
+          type: string
+        type:
+          type: string
+    ExternalHandoverMessage:
+      allOf:
+        - type: object
+          description: Base fields shared by all message types
+          properties:
+            actor:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Actor"
+                  description: The participant who authored this item, when the role alone is ambiguous.
+            content:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/MessageContentPart"
+            interaction_id:
+              type:
+                - string
+                - "null"
+              format: uuid
+            is_message_before_halo:
+              type: boolean
+            timestamp:
+              type:
+                - string
+                - "null"
+              format: date-time
+              description: |-
+                Time at which the conversation item was first produced. Legacy items
+                without valid initialization metadata fall back to their logging time.
+        - type: object
+          properties:
+            handover_details:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/HandoverDetails"
+      description: External handover message
+    FallbackAnswerResult:
+      type: object
+      required:
+        - account_name
+        - language
+        - fallback_prompt
+        - fallback_answer
+      properties:
+        account_name:
+          type: string
+        fallback_answer:
+          type: string
+        fallback_prompt:
+          type: string
+        language:
+          type: string
+        request_type:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    Feedback:
+      type: object
+      required:
+        - feedback_id
+        - profile_id
+        - account_id
+        - conversation_id
+        - interaction_id
+        - original_answer
+        - feedback
+        - distance
+        - feedback_reason
+      properties:
+        account_id:
+          type: string
+          format: uuid
+        conversation_id:
+          type: string
+          format: uuid
+        distance:
+          type: number
+          format: double
+        feedback:
+          type: string
+        feedback_id:
+          $ref: "#/components/schemas/i64"
+        feedback_reason:
+          $ref: "#/components/schemas/FeedbackReason"
+        interaction_id:
+          type: string
+          format: uuid
+        original_answer:
+          type: string
+        profile_id:
+          $ref: "#/components/schemas/i64"
+    FeedbackReason:
+      type: string
+      enum:
+        - wrongly-formulated
+        - incorrect
+        - do-not-answer
+    FeedbackResult:
+      type: object
+      required:
+        - original_answer
+      properties:
+        original_answer:
+          type: string
+        reasoning:
+          type:
+            - string
+            - "null"
+        request_type:
+          type: string
+        rewritten_answer:
+          type:
+            - string
+            - "null"
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    FeedbackScoreResponse:
+      type: object
+      description: Response returned after creating or updating a feedback score.
+      required:
+        - id
+        - conversation_id
+        - score
+        - product_source
+        - created
+      properties:
+        comment:
+          type:
+            - string
+            - "null"
+          description: Optional comment from the user explaining their score
+        conversation_id:
+          type: string
+          format: uuid
+          description: The conversation ID for this feedback score
+        created:
+          type: string
+          format: date-time
+          description: When the feedback score was created
+        id:
+          type: integer
+          format: int32
+          description: The unique identifier of the feedback score
+        interaction_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+          description: The specific interaction ID within the conversation (optional)
+        product_source:
+          type: string
+          description: The product source where the feedback was submitted
+        profile_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+          description: The profile ID associated with this feedback (null if not provided)
+        score:
+          type: integer
+          format: int32
+          description: The feedback score (e.g., 1-5 rating)
+    FlowToolDefinition:
+      allOf:
+        - $ref: "#/components/schemas/FunctionDefinition"
+        - type: object
+          required:
+            - tool_id
+          properties:
+            tool_id:
+              type: integer
+              format: int32
+      description: Flow-based tool definition with a mandatory tool ID.
+    FormattingOption:
+      type: string
+      description: Formatting option for agent answer
+      enum:
+        - buttons
+        - carousel
+        - show_feedback
+    FunctionDefinition:
+      type: object
+      description: |-
+        Common function shape: name, description, and parameters.
+        Re-used by `ToolOption::Function` and `ToolOption::Routing`.
+      required:
+        - name
+        - description
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        parameters:
+          type: array
+          items:
+            $ref: "#/components/schemas/FunctionOptionParameter"
+    FunctionOptionParameter:
+      type: object
+      required:
+        - name
+        - required
+        - schema
+      properties:
+        name:
+          type: string
+        required:
+          type: boolean
+        schema:
+          $ref: "#/components/schemas/JsonSchema"
+    FunctionUseArgument:
+      type: object
+      required:
+        - parameter
+        - value
+      properties:
+        parameter:
+          type: string
+        value:
+          $ref: "#/components/schemas/Value"
+    HaloMessage:
+      allOf:
+        - type: object
+          description: Base fields shared by all message types
+          properties:
+            actor:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Actor"
+                  description: The participant who authored this item, when the role alone is ambiguous.
+            content:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/MessageContentPart"
+            interaction_id:
+              type:
+                - string
+                - "null"
+              format: uuid
+            is_message_before_halo:
+              type: boolean
+            timestamp:
+              type:
+                - string
+                - "null"
+              format: date-time
+              description: |-
+                Time at which the conversation item was first produced. Legacy items
+                without valid initialization metadata fall back to their logging time.
+        - type: object
+          required:
+            - can_get_feedback
+            - answering_user_interaction
+            - used_language_detection
+            - is_welcome_tool_trigger
+            - is_fallback_tool_trigger
+            - is_breakout
+          properties:
+            agent_results:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/AgentResult"
+            answer_after_answer_style:
+              type:
+                - string
+                - "null"
+            answer_after_feedback:
+              type:
+                - string
+                - "null"
+            answer_before_answer_style:
+              type:
+                - string
+                - "null"
+            answer_before_feedback:
+              type:
+                - string
+                - "null"
+            answering_user_interaction:
+              type: boolean
+            can_get_feedback:
+              type: boolean
+            contexts:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Contexts"
+            detected_language:
+              type:
+                - string
+                - "null"
+            feedback_reasoning:
+              type:
+                - string
+                - "null"
+            input_language:
+              type:
+                - string
+                - "null"
+            interaction_type:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/ToolInteractionType"
+            is_breakout:
+              type: boolean
+            is_fallback_tool_trigger:
+              type: boolean
+            is_welcome_tool_trigger:
+              type: boolean
+            match:
+              type:
+                - boolean
+                - "null"
+            reasoning:
+              type:
+                - string
+                - "null"
+            tool_use_id:
+              type:
+                - string
+                - "null"
+            used_feedback:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/Feedback"
+            used_feedback_str:
+              type:
+                - string
+                - "null"
+            used_language_detection:
+              type: boolean
+            used_sources:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/Knowledge"
+      description: HALO (AI assistant) message
+    HandoverConversationItem:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        from_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        from_type:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/HandoverEntityType"
+        id:
+          type:
+            - string
+            - "null"
+        meta:
+          $ref: "#/components/schemas/HandoverConversationItemMeta"
+        name:
+          type:
+            - string
+            - "null"
+        to_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        to_type:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/HandoverEntityType"
+    HandoverConversationItemMeta:
+      type: object
+      properties:
+        contexts:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Contexts"
+        conversation_ended_delay:
+          type:
+            - integer
+            - "null"
+          format: int64
+        handover_details:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/HandoverDetails"
+        initialized:
+          type:
+            - string
+            - "null"
+        model_results:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ModelResult"
+        origin:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestOrigin"
+        rank:
+          type:
+            - integer
+            - "null"
+          format: int32
+        tokens:
+          type:
+            - integer
+            - "null"
+          format: int32
+    HandoverDetails:
+      oneOf:
+        - allOf:
+            - $ref: "#/components/schemas/AgentHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - agent
+        - allOf:
+            - $ref: "#/components/schemas/TextRouterHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text_router_v2
+        - allOf:
+            - $ref: "#/components/schemas/TextMscHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text_msc
+        - allOf:
+            - $ref: "#/components/schemas/TextMarketplaceHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text_marketplace
+        - allOf:
+            - $ref: "#/components/schemas/TextLoggingHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text_logging
+        - allOf:
+            - $ref: "#/components/schemas/VoiceMscHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_msc
+        - allOf:
+            - $ref: "#/components/schemas/VoiceForwardHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_forward
+        - allOf:
+            - $ref: "#/components/schemas/VoiceTransferHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_transfer
+        - allOf:
+            - $ref: "#/components/schemas/VoiceCustomHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_custom
+        - allOf:
+            - $ref: "#/components/schemas/VoiceLoggingHandoverDetails"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_logging
+      description: Handover details variants
+    HandoverEntityType:
+      type: string
+      enum:
+        - USER_DEFINED_AGENT
+        - BUILTIN_AGENT
+        - EXTERNAL
+    ImageCarouselMessageContentPart:
+      type: object
+      description: Image carousel content part
+      required:
+        - image_carousel
+      properties:
+        image_carousel:
+          $ref: "#/components/schemas/CarouselResponse"
+    JsonMessageContentPart:
+      type: object
+      description: JSON message content part
+      required:
+        - json
+      properties:
+        json:
+          $ref: "#/components/schemas/Value"
+    JsonSchema:
+      allOf:
+        - type:
+            - object
+            - "null"
+          description: |-
+            any remaining JSON Schema keywords we don't model explicitly. catch-all
+            for things like `pattern`, `format`, `minLength`, etc. — keywords that
+            strict-mode openai rejects and that we deliberately don't surface as
+            typed fields, but pass through for non-strict consumers.
+          additionalProperties:
+            $ref: "#/components/schemas/Value"
+          propertyNames:
+            type: string
+        - type: object
+          properties:
+            $defs:
+              type:
+                - object
+                - "null"
+              description: |-
+                `$defs`: named subschemas usable from `$ref`. accepts the legacy
+                `definitions` key as an alias on input.
+              additionalProperties:
+                $ref: "#/components/schemas/JsonSchema"
+              propertyNames:
+                type: string
+            $ref:
+              type:
+                - string
+                - "null"
+              description: "`$ref`: pointer to a definition (e.g. `#/$defs/Name`)."
+            additionalItems:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/JsonSchema"
+                  description: "`additionalItems`: schema for items beyond the tuple defined by `items`."
+            additionalProperties:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/AdditionalProperties"
+                  description: "For objects: allow/deny extra keys"
+            anyOf:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/JsonSchema"
+              description: "`anyOf`: a tagged union of acceptable schemas."
+            const:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Value"
+                  description: "`const`: a single allowed value. spec is type-agnostic."
+            description:
+              type:
+                - string
+                - "null"
+            enum:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/Value"
+              description: "`enum`: any allowed values. spec is type-agnostic, hence `JsonValue`."
+            exclusiveMaximum:
+              type:
+                - number
+                - "null"
+              format: double
+              description: "`exclusiveMaximum`: numbers/integers strictly less than this."
+            exclusiveMinimum:
+              type:
+                - number
+                - "null"
+              format: double
+              description: "`exclusiveMinimum`: numbers/integers strictly greater than this."
+            items:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/JsonSchema"
+                  description: "For arrays: a schema for the items"
+            properties:
+              type:
+                - object
+                - "null"
+              description: "For objects: property-name -> schema"
+              additionalProperties:
+                $ref: "#/components/schemas/JsonSchema"
+              propertyNames:
+                type: string
+            required:
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+              description: "For objects: names of required properties"
+            title:
+              type:
+                - string
+                - "null"
+              description: "`title`: human-readable label."
+            type:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/JsonTypeSpec"
+    JsonType:
+      type: string
+      enum:
+        - object
+        - array
+        - string
+        - number
+        - integer
+        - boolean
+        - "null"
+    JsonTypeSpec:
+      oneOf:
+        - $ref: "#/components/schemas/JsonType"
+        - type: array
+          items:
+            $ref: "#/components/schemas/JsonType"
+      description: 'JSON Schema `type` field: either a single type (`"string"`) or a union (`["array", "null"]`).'
+    Knowledge:
+      type: object
+      required:
+        - id
+        - source_id
+        - chunk_id
+        - content
+        - metadata
+        - distance
+      properties:
+        chunk_id:
+          type: string
+        content:
+          type: string
+        distance:
+          type: number
+          format: double
+        id:
+          $ref: "#/components/schemas/i64"
+        metadata:
+          type: object
+          additionalProperties: {}
+          propertyNames:
+            type: string
+        source:
+          type: string
+        source_id:
+          $ref: "#/components/schemas/i64"
+        source_reference:
+          type: string
+    LanguageDetectionResult:
+      type: object
+      required:
+        - input
+        - languages
+      properties:
+        input:
+          type: string
+        languages:
+          type: array
+          items:
+            $ref: "#/components/schemas/DetectedLanguage"
+        request_type:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    LanguageTranslationResult:
+      type: object
+      required:
+        - input
+        - language
+        - translation
+      properties:
+        current_language:
+          type:
+            - string
+            - "null"
+        input:
+          $ref: "#/components/schemas/TranslationContent"
+        language:
+          type: string
+        lexicon:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        request_type:
+          type: string
+        translation:
+          $ref: "#/components/schemas/TranslationContent"
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    MainInteractionType:
+      type: string
+      enum:
+        - QA
+        - Dialog
+        - Event
+        - TransactionalDialog
+        - DataRetrieval
+        - FaqClick
+        - Feedback
+        - FaqSearch
+        - LinkClick
+        - GenerativeAI
+    ManualResolution:
+      type: object
+      description: Manual resolution override for a conversation
+      required:
+        - id
+        - conversation_id
+        - new_label
+        - is_active
+        - created
+        - user_email
+      properties:
+        conversation_id:
+          type: string
+          format: uuid
+        created:
+          type: string
+          format: date-time
+        id:
+          type: integer
+          format: int32
+        is_active:
+          type: boolean
+        new_label:
+          $ref: "#/components/schemas/ConversationResolution"
+        original_label:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ConversationResolution"
+        profile_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        reasoning:
+          type:
+            - string
+            - "null"
+        user_email:
+          type: string
+        user_name:
+          type:
+            - string
+            - "null"
+    MaterializedMediaContentPart:
+      type: object
+      required:
+        - mime_type
+        - data
+        - data_uri
+        - data_hash
+        - metadata
+      properties:
+        data:
+          type: string
+        data_hash:
+          type: string
+        data_uri:
+          $ref: "#/components/schemas/MediaDataUri"
+        metadata:
+          $ref: "#/components/schemas/Value"
+        mime_type:
+          type: string
+        name:
+          type:
+            - string
+            - "null"
+    McpToolDefinition:
+      allOf:
+        - $ref: "#/components/schemas/FunctionDefinition"
+        - type: object
+          required:
+            - mcp_server_id
+          properties:
+            mcp_server_id:
+              $ref: "#/components/schemas/i32"
+      description: MCP-based tool definition with a mandatory server ID.
+    MediaContentPart:
+      oneOf:
+        - type: object
+          description: A new media content part which is not yet uploaded into HALO
+          required:
+            - Transient
+          properties:
+            Transient:
+              $ref: "#/components/schemas/TransientMediaContentPart"
+              description: A new media content part which is not yet uploaded into HALO
+        - type: object
+          description: A media content part with data, and can be dematerialized
+          required:
+            - Materialized
+          properties:
+            Materialized:
+              $ref: "#/components/schemas/MaterializedMediaContentPart"
+              description: A media content part with data, and can be dematerialized
+        - type: object
+          description: A media content part without data, but it can be downloaded
+          required:
+            - Dematerialized
+          properties:
+            Dematerialized:
+              $ref: "#/components/schemas/DematerializedMediaContentPart"
+              description: A media content part without data, but it can be downloaded
+    MediaDataUri:
+      type: string
+    MediaMessageContentPart:
+      type: object
+      description: Media message content part
+      required:
+        - mime_type
+      properties:
+        data_uri:
+          type:
+            - string
+            - "null"
+        mime_type:
+          type: string
+        name:
+          type:
+            - string
+            - "null"
+    Message:
+      oneOf:
+        - allOf:
+            - $ref: "#/components/schemas/UserMessage"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - USER
+        - allOf:
+            - $ref: "#/components/schemas/HaloMessage"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - HALO
+        - allOf:
+            - $ref: "#/components/schemas/AssistantMessage"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - ASSISTANT
+        - allOf:
+            - $ref: "#/components/schemas/AiCloudMessage"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - AICLOUD
+        - allOf:
+            - $ref: "#/components/schemas/CustomerServiceAgentMessage"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - CUSTOMER_SERVICE_AGENT
+        - allOf:
+            - $ref: "#/components/schemas/CustomerServiceAgentInstructionMessage"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - CUSTOMER_SERVICE_AGENT_INSTRUCTION
+        - allOf:
+            - $ref: "#/components/schemas/ExternalHandoverMessage"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - EXTERNAL_HANDOVER
+      description: Message - discriminated union of all message types
+    MessageBase:
+      type: object
+      description: Base fields shared by all message types
+      properties:
+        actor:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Actor"
+              description: The participant who authored this item, when the role alone is ambiguous.
+        content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/MessageContentPart"
+        interaction_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+        is_message_before_halo:
+          type: boolean
+        timestamp:
+          type:
+            - string
+            - "null"
+          format: date-time
+          description: |-
+            Time at which the conversation item was first produced. Legacy items
+            without valid initialization metadata fall back to their logging time.
+    MessageContentPart:
+      oneOf:
+        - allOf:
+            - $ref: "#/components/schemas/TextMessageContentPart"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text
+        - allOf:
+            - $ref: "#/components/schemas/JsonMessageContentPart"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - json
+        - allOf:
+            - $ref: "#/components/schemas/MediaMessageContentPart"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - media
+        - allOf:
+            - $ref: "#/components/schemas/ConversationOptionsContentPart"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - buttons
+        - allOf:
+            - $ref: "#/components/schemas/ImageCarouselMessageContentPart"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - image_carousel
+        - allOf:
+            - $ref: "#/components/schemas/ShowFeedbackMessageContentPart"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - show_feedback
+      description: Message content part - discriminated union
+    MessageList:
+      type: object
+      description: Language translation message
+      required:
+        - message_id
+        - content
+      properties:
+        content:
+          type: string
+        message_id:
+          type: string
+    MetricsData:
+      type: object
+      description: Aggregated metrics data.
+      required:
+        - total_conversations_count
+        - total_average_conversation_duration_seconds
+        - total_average_interactions_per_conversation
+      properties:
+        average_recognition_rate:
+          type:
+            - number
+            - "null"
+          format: double
+        product_metrics:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ProductMetrics"
+        total_average_conversation_duration_seconds:
+          type: integer
+          format: int64
+        total_average_interactions_per_conversation:
+          type: number
+          format: double
+        total_conversations_count:
+          type: integer
+          format: int64
+    ModelResult:
+      oneOf:
+        - allOf:
+            - $ref: "#/components/schemas/ClassifyInstructionResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - classify_instruction
+        - allOf:
+            - $ref: "#/components/schemas/QueryClassificationResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - query_classification
+        - allOf:
+            - $ref: "#/components/schemas/PromptInjectionResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - prompt_injection
+        - allOf:
+            - $ref: "#/components/schemas/SummarizeConversationResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - summarize_conversation
+        - allOf:
+            - $ref: "#/components/schemas/BasicPromptInjectionResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - basic_prompt_injection
+        - allOf:
+            - $ref: "#/components/schemas/AgenticPromptInjectionResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - agentic_prompt_injection
+        - allOf:
+            - $ref: "#/components/schemas/CustomGuardrailResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - custom_guardrail
+        - allOf:
+            - $ref: "#/components/schemas/AnswerStyleResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - answer_style
+        - allOf:
+            - $ref: "#/components/schemas/FeedbackResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - feedback
+        - allOf:
+            - $ref: "#/components/schemas/DoNotAnswerResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - do_not_answer
+        - allOf:
+            - $ref: "#/components/schemas/FallbackAnswerResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - fallback_answer
+        - allOf:
+            - $ref: "#/components/schemas/RagRewriteResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - rag_rewrite
+        - allOf:
+            - $ref: "#/components/schemas/RagPlannerResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - rag_planner
+        - allOf:
+            - $ref: "#/components/schemas/RagRefinerResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - rag_refiner
+        - allOf:
+            - $ref: "#/components/schemas/RagSelectorResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - rag_selector
+        - allOf:
+            - $ref: "#/components/schemas/AgentAnswerResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - agent_answer
+        - allOf:
+            - $ref: "#/components/schemas/RagAnswerResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - rag_answer
+        - allOf:
+            - $ref: "#/components/schemas/RagAnswerSubagentResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - rag_answer_subagent
+        - allOf:
+            - $ref: "#/components/schemas/LanguageDetectionResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - language_detection
+        - allOf:
+            - $ref: "#/components/schemas/LanguageTranslationResult"
+            - type: object
+              required:
+                - request_type
+              properties:
+                request_type:
+                  type: string
+                  enum:
+                    - language_translation
+      description: Model result discriminated union - matches Python ModelResult type
+    Pages:
+      type: object
+      description: Page context for the conversation item.
+      properties:
+        originatingPage:
+          type:
+            - string
+            - "null"
+        previousPage:
+          type:
+            - string
+            - "null"
+    ParkPayload:
+      oneOf:
+        - allOf:
+            - $ref: "#/components/schemas/TimerParkPayload"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - timer
+        - allOf:
+            - $ref: "#/components/schemas/UserInteractionParkPayload"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - user_interaction
+        - allOf:
+            - $ref: "#/components/schemas/AgenticParkPayload"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - agentic
+        - allOf:
+            - $ref: "#/components/schemas/ToolCallParkPayload"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - tool
+      description: Enum type for parking
+    ParkToken:
+      type: string
+    ProductMetrics:
+      type: object
+      description: Per-product metrics data.
+      required:
+        - product
+        - conversations_count
+        - average_conversation_duration_seconds
+        - average_interactions_per_conversation
+      properties:
+        average_conversation_duration_seconds:
+          type: integer
+          format: int64
+        average_interactions_per_conversation:
+          type: number
+          format: double
+        average_recognition_rate:
+          type:
+            - number
+            - "null"
+          format: double
+        conversations_count:
+          type: integer
+          format: int64
+        product:
+          type: string
+    ProductSource:
+      type: string
+      description: Product source enum for feedback scores
+      enum:
+        - CAIC
+        - MSC
+        - HALO_TEST_CENTER
+        - WEB_CONVERSATIONS
+        - CPAAS
+    PromptInjectionResult:
+      type: object
+      required:
+        - input
+        - is_safe
+        - reasoning
+      properties:
+        input:
+          type: string
+        is_safe:
+          type: boolean
+        reasoning:
+          type: string
+        request_type:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    Provider:
+      type: string
+      enum:
+        - anthropic
+        - openai
+        - gemini
+    QueryClassificationResult:
+      type: object
+      required:
+        - input
+        - classification
+      properties:
+        classification:
+          type: string
+        input:
+          type: string
+        request_type:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    RagAnswerResult:
+      type: object
+      required:
+        - knowledge_chunks
+        - language
+        - account_name
+        - answer
+      properties:
+        account_name:
+          type: string
+        answer:
+          type: string
+        knowledge_chunks:
+          type: array
+          items:
+            $ref: "#/components/schemas/RagChunk"
+        language:
+          type: string
+        media:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/MediaContentPart"
+        request_type:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    RagAnswerSubagentResult:
+      type: object
+      required:
+        - knowledge_contents
+        - status
+        - reasoning
+        - source_ids
+      properties:
+        answer:
+          type:
+            - string
+            - "null"
+        knowledge_chunks:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/RagChunk"
+        knowledge_contents:
+          type: array
+          items:
+            type: string
+        media:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/MediaContentPart"
+        reasoning:
+          type: string
+        request_type:
+          type: string
+        source_ids:
+          type: array
+          items:
+            type: integer
+            format: int64
+        status:
+          $ref: "#/components/schemas/RagAnswerSubagentStatus"
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    RagAnswerSubagentStatus:
+      type: string
+      enum:
+        - answer
+        - clarifying_question
+        - no_answer
+    RagChunk:
+      type: object
+      description: RAG chunk for knowledge retrieval results
+      required:
+        - type
+        - content
+        - chunk_id
+        - source_id
+        - source_name
+      properties:
+        chunk_id:
+          type: string
+        content:
+          type: string
+        source_id:
+          type: integer
+          format: int64
+        source_name:
+          type: string
+        type:
+          type: string
+    RagPlannerResult:
+      type: object
+      required:
+        - searchable_ask
+        - seed_queries
+      properties:
+        request_type:
+          type: string
+        searchable_ask:
+          type: string
+        seed_queries:
+          type: array
+          items:
+            type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    RagRefinerResult:
+      type: object
+      required:
+        - candidate_chunks
+        - searchable_ask
+        - seed_queries
+        - best_ids
+        - retrieval_complete
+        - refined_queries
+      properties:
+        best_ids:
+          type: array
+          items:
+            type: integer
+            format: int64
+        candidate_chunks:
+          type: array
+          items:
+            $ref: "#/components/schemas/CandidateChunk"
+        refined_queries:
+          type: array
+          items:
+            type: string
+        request_type:
+          type: string
+        retrieval_complete:
+          type: boolean
+        searchable_ask:
+          type: string
+        seed_queries:
+          type: array
+          items:
+            type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    RagRewriteResult:
+      type: object
+      required:
+        - input
+        - rewritten_input
+      properties:
+        input:
+          type: string
+        request_type:
+          type: string
+        rewritten_input:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    RagSelectorResult:
+      type: object
+      required:
+        - searchable_ask
+        - candidate_chunks
+        - best_ids
+      properties:
+        best_ids:
+          type: array
+          items:
+            type: integer
+            format: int64
+        candidate_chunks:
+          type: array
+          items:
+            $ref: "#/components/schemas/CandidateChunk"
+        request_type:
+          type: string
+        searchable_ask:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    RecognitionType:
+      type: string
+      enum:
+        - Exception Event
+        - GenerativeAI
+        - Intent
+        - Entity Recognition
+        - No Recognition
+    RequestOrigin:
+      type: string
+      enum:
+        - AVA
+        - CPAAS
+        - WEBCONVERSATIONS
+        - HALO_GENERATED
+        - HALO_TEST_CENTER
+        - NATIVE_VOICE
+        - SEAMLY
+        - CAIC
+        - MOBILE_SERVICE_CLOUD_QA
+        - INSPIRE
+        - PRODUCT_FEED
+        - SUGGESTION
+        - INSTRUCTION
+        - CHAT
+        - MICROSOFT_TEAMS
+        - Unknown
+    ServerToolDefinition:
+      allOf:
+        - $ref: "#/components/schemas/FunctionDefinition"
+        - type: object
+          required:
+            - server_tool_type
+          properties:
+            server_tool_type:
+              type: string
+      description: Server-side tool definition (e.g. Anthropic web search).
+    ShowFeedbackMessageContentPart:
+      type: object
+      description: Show feedback content part
+      properties:
+        text:
+          type: string
+    Subtopic:
+      type: object
+      description: Subtopic (child topic in taxonomy)
+      required:
+        - id
+        - name
+        - definition
+      properties:
+        definition:
+          type: string
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    SummarizeConversationResult:
+      type: object
+      required:
+        - summary
+      properties:
+        purpose:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ConversationSummaryPurpose"
+        request_type:
+          type: string
+        summary:
+          type: string
+        usage:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UsageDetails"
+    TextLoggingHandoverDetails:
+      type: object
+      description: Text logging handover details
+    TextMarketplaceHandoverDetails:
+      type: object
+      description: Text Marketplace handover details
+      required:
+        - adapter_id
+        - messaging_adapter_id
+      properties:
+        adapter_id:
+          type: string
+        context:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        messaging_adapter_id:
+          type: string
+        routing:
+          type:
+            - string
+            - "null"
+    TextMessageContentPart:
+      type: object
+      description: Text message content part
+      required:
+        - text
+      properties:
+        text:
+          type: string
+    TextMscHandoverDetails:
+      type: object
+      description: Text MSC handover details
+      required:
+        - adapter_id
+        - messaging_adapter_id
+        - name
+        - email
+      properties:
+        adapter_id:
+          type: string
+        email:
+          type: string
+        messaging_adapter_id:
+          type: string
+        msc_profile:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        name:
+          type: string
+        phone_number:
+          type:
+            - string
+            - "null"
+        routing_keywords:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+        web_store_referrer:
+          type:
+            - string
+            - "null"
+    TextRouterHandoverDetails:
+      type: object
+      description: Text Router V2 handover details
+      required:
+        - target_state_name_id
+        - context
+      properties:
+        context:
+          type: object
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        target_state_name_id:
+          type: string
+          format: uuid
+    TimerParkPayload:
+      type: object
+      description: Park payload for waiting
+      required:
+        - approximate_resumes_at
+      properties:
+        approximate_resumes_at:
+          type: string
+          format: date-time
+    TimerUnparkPayload:
+      type: object
+      description: Unpark payload for timer (empty - no data needed when timer fires)
+    ToolCallParkPayload:
+      type: object
+      description: Park payload for tool
+      required:
+        - nested_park_token
+        - nested_park_payload
+      properties:
+        nested_park_payload:
+          $ref: "#/components/schemas/ParkPayload"
+        nested_park_token:
+          $ref: "#/components/schemas/ParkToken"
+    ToolCallUnparkPayload:
+      type: object
+      description: Unpark payload for tool
+      required:
+        - nested_unpark_token
+        - nested_unpark_payload
+      properties:
+        nested_unpark_payload:
+          $ref: "#/components/schemas/UnparkPayload"
+        nested_unpark_token:
+          type: string
+    ToolConversationItem:
+      type: object
+      required:
+        - content
+        - tool_use_id
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        id:
+          type:
+            - string
+            - "null"
+        media:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/MediaContentPart"
+        meta:
+          $ref: "#/components/schemas/ToolConversationItemMeta"
+        name:
+          type:
+            - string
+            - "null"
+        parent_tool_use_id:
+          type:
+            - string
+            - "null"
+        tool_use_id:
+          type: string
+    ToolConversationItemMeta:
+      type: object
+      properties:
+        contexts:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Contexts"
+        conversation_ended_delay:
+          type:
+            - integer
+            - "null"
+          format: int64
+        initialized:
+          type:
+            - string
+            - "null"
+        model_results:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ModelResult"
+        origin:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestOrigin"
+        rank:
+          type:
+            - integer
+            - "null"
+          format: int32
+        tokens:
+          type:
+            - integer
+            - "null"
+          format: int32
+        tool_use_details:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ToolUseDetails"
+    ToolInteractionConversationItem:
+      type: object
+      required:
+        - content
+        - tool_use_id
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        id:
+          type:
+            - string
+            - "null"
+        meta:
+          $ref: "#/components/schemas/ToolInteractionConversationItemMeta"
+        name:
+          type:
+            - string
+            - "null"
+        tool_use_id:
+          type: string
+    ToolInteractionConversationItemMeta:
+      type: object
+      properties:
+        contexts:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Contexts"
+        conversation_ended_delay:
+          type:
+            - integer
+            - "null"
+          format: int64
+        initialized:
+          type:
+            - string
+            - "null"
+        interaction_type:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ToolInteractionType"
+        match:
+          type:
+            - boolean
+            - "null"
+        model_results:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ModelResult"
+        origin:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestOrigin"
+        rank:
+          type:
+            - integer
+            - "null"
+          format: int32
+        tokens:
+          type:
+            - integer
+            - "null"
+          format: int32
+    ToolInteractionType:
+      type: string
+      enum:
+        - user
+        - agentic
+    ToolOption:
+      oneOf:
+        - allOf:
+            - $ref: "#/components/schemas/FunctionDefinition"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - function
+        - allOf:
+            - $ref: "#/components/schemas/FlowToolDefinition"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - flow_tool
+        - allOf:
+            - $ref: "#/components/schemas/McpToolDefinition"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - mcp_tool
+        - allOf:
+            - $ref: "#/components/schemas/ServerToolDefinition"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - server_tool
+        - allOf:
+            - $ref: "#/components/schemas/FunctionDefinition"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - routing
+    ToolResult:
+      type: object
+      description: Tool execution result
+      required:
+        - tool_name
+        - tool_use_id
+        - started
+        - finished
+      properties:
+        execution_id:
+          type:
+            - string
+            - "null"
+        finished:
+          type: string
+          format: date-time
+        output:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/MessageContentPart"
+        started:
+          type: string
+          format: date-time
+        state:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ToolState"
+        tool_id:
+          type:
+            - integer
+            - "null"
+          format: int64
+        tool_name:
+          type: string
+        tool_use_id:
+          type: string
+        tool_version_id:
+          type:
+            - integer
+            - "null"
+          format: int64
+        trace:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/Trace"
+    ToolState:
+      type: string
+      description: Unified tool state that covers both Flow and MCP tool states
+      enum:
+        - running
+        - parked
+        - completed
+        - terminated
+    ToolUse:
+      oneOf:
+        - type: object
+          required:
+            - id
+            - name
+            - arguments
+            - type
+          properties:
+            arguments:
+              type: array
+              items:
+                $ref: "#/components/schemas/FunctionUseArgument"
+            id:
+              type: string
+            name:
+              type: string
+            type:
+              type: string
+              enum:
+                - function
+        - type: object
+          required:
+            - id
+            - name
+            - arguments
+            - tool_id
+            - type
+          properties:
+            arguments:
+              type: array
+              items:
+                $ref: "#/components/schemas/FunctionUseArgument"
+            id:
+              type: string
+            name:
+              type: string
+            tool_id:
+              $ref: "#/components/schemas/i32"
+            type:
+              type: string
+              enum:
+                - flow_tool
+        - type: object
+          required:
+            - id
+            - name
+            - arguments
+            - mcp_server_id
+            - type
+          properties:
+            arguments:
+              type: array
+              items:
+                $ref: "#/components/schemas/FunctionUseArgument"
+            id:
+              type: string
+            mcp_server_id:
+              $ref: "#/components/schemas/i32"
+            name:
+              type: string
+            type:
+              type: string
+              enum:
+                - mcp_tool
+        - type: object
+          required:
+            - id
+            - name
+            - arguments
+            - type
+          properties:
+            arguments:
+              type: array
+              items:
+                $ref: "#/components/schemas/FunctionUseArgument"
+            id:
+              type: string
+            name:
+              type: string
+            type:
+              type: string
+              enum:
+                - routing
+        - type: object
+          required:
+            - id
+            - name
+            - input
+            - type
+          properties:
+            id:
+              type: string
+            input:
+              $ref: "#/components/schemas/Value"
+            name:
+              type: string
+            provider:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Provider"
+            type:
+              type: string
+              enum:
+                - server_tool
+    ToolUseDetails:
+      type: object
+      description: Details about a tool execution
+      required:
+        - tool_name
+        - started
+        - finished
+      properties:
+        execution_id:
+          type:
+            - string
+            - "null"
+        finished:
+          type: string
+        started:
+          type: string
+        state:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ToolState"
+        tool_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+        tool_name:
+          type: string
+        trace:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ToolUseTrace"
+        version_id:
+          type:
+            - integer
+            - "null"
+          format: int32
+    ToolUseTrace:
+      type: object
+      description: Trace information for a tool use execution step
+      required:
+        - id
+        - state
+        - started
+      properties:
+        attributes:
+          type:
+            - object
+            - "null"
+        finished:
+          type:
+            - string
+            - "null"
+          format: date-time
+        id:
+          type: integer
+          format: int32
+        media:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            $ref: "#/components/schemas/DematerializedMediaContentPart"
+          propertyNames:
+            type: string
+        node_type:
+          type:
+            - string
+            - "null"
+        output:
+          type:
+            - object
+            - "null"
+        started:
+          type: string
+          format: date-time
+        state:
+          $ref: "#/components/schemas/ToolUseTraceState"
+        trace:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ToolUseTrace"
+        unpark_payload:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UnparkPayload"
+        variables:
+          type:
+            - object
+            - "null"
+    ToolUseTraceOutput:
+      oneOf:
+        - $ref: "#/components/schemas/Value"
+        - type: object
+          properties:
+            payload:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/ParkPayload"
+        - $ref: "#/components/schemas/ErrorResponse"
+      description: Possible output types for a tool use trace step
+    ToolUseTraceState:
+      type: string
+      description: State of a tool use trace step
+      enum:
+        - parked
+        - unparked
+        - completed
+        - terminated
+    Topic:
+      type: object
+      description: Topic (parent topic in taxonomy)
+      required:
+        - id
+        - name
+        - definition
+      properties:
+        definition:
+          type: string
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    Trace:
+      type: object
+      description: Trace for tool execution
+      required:
+        - id
+        - state
+        - started
+      properties:
+        attributes:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            $ref: "#/components/schemas/Value"
+          propertyNames:
+            type: string
+        finished:
+          type:
+            - string
+            - "null"
+          format: date-time
+        id:
+          type: integer
+          format: int64
+        node_type:
+          type:
+            - string
+            - "null"
+        output:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/ToolUseTraceOutput"
+        started:
+          type: string
+          format: date-time
+        state:
+          $ref: "#/components/schemas/ToolUseTraceState"
+        trace:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/Trace"
+        unpark_payload:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UnparkPayload"
+        variables:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            $ref: "#/components/schemas/Value"
+          propertyNames:
+            type: string
+    TransientMediaContentPart:
+      type: object
+      required:
+        - mime_type
+        - data
+        - data_hash
+      properties:
+        data:
+          type: string
+        data_hash:
+          type: string
+        metadata:
+          $ref: "#/components/schemas/Value"
+        mime_type:
+          type: string
+        name:
+          type:
+            - string
+            - "null"
+    TranslationContent:
+      oneOf:
+        - type: string
+        - type: array
+          items:
+            $ref: "#/components/schemas/MessageList"
+      description: Translation input content (either text or message list)
+    TranslationDetails:
+      type: object
+      required:
+        - translation
+        - confidence
+        - detection_used
+      properties:
+        confidence:
+          type: number
+          format: double
+        detection_used:
+          type: boolean
+        original_input:
+          type:
+            - string
+            - "null"
+        translation:
+          $ref: "#/components/schemas/TranslationKind"
+        translation_language:
+          type:
+            - string
+            - "null"
+    TranslationKind:
+      type: string
+      enum:
+        - No Translation
+        - Culture Selected
+        - Culture Detected
+    UnparkPayload:
+      oneOf:
+        - allOf:
+            - $ref: "#/components/schemas/TimerUnparkPayload"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - timer
+        - allOf:
+            - $ref: "#/components/schemas/UserInteractionUnparkPayload"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - user_interaction
+        - allOf:
+            - $ref: "#/components/schemas/AgenticUnparkPayload"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - agentic
+        - allOf:
+            - $ref: "#/components/schemas/ToolCallUnparkPayload"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - tool
+      description: Enum type for unparking
+    UsageDetails:
+      type: object
+      properties:
+        cache_creation_input_tokens:
+          type: integer
+          format: int32
+          default: 0
+          minimum: 0
+        cache_read_input_tokens:
+          type: integer
+          format: int32
+          default: 0
+          minimum: 0
+        completion_tokens:
+          type: integer
+          format: int32
+          default: 0
+          minimum: 0
+        prompt_tokens:
+          type: integer
+          format: int32
+          default: 0
+          minimum: 0
+        total_tokens:
+          type: integer
+          format: int32
+          default: 0
+          minimum: 0
+    UserConversationItem:
+      type: object
+      required:
+        - content
+      properties:
+        actor:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Actor"
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        id:
+          type:
+            - string
+            - "null"
+        meta:
+          $ref: "#/components/schemas/UserConversationItemMeta"
+        name:
+          type:
+            - string
+            - "null"
+        tool_interaction_item_id:
+          type:
+            - string
+            - "null"
+    UserConversationItemMeta:
+      type: object
+      properties:
+        contexts:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Contexts"
+        conversation_ended_delay:
+          type:
+            - integer
+            - "null"
+          format: int64
+        initialized:
+          type:
+            - string
+            - "null"
+        model_results:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ModelResult"
+        origin:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestOrigin"
+        original_query:
+          type:
+            - string
+            - "null"
+        rank:
+          type:
+            - integer
+            - "null"
+          format: int32
+        tokens:
+          type:
+            - integer
+            - "null"
+          format: int32
+    UserInteractionDialogOption:
+      type: object
+      description: Represents a dialog option for user interaction
+      required:
+        - text
+      properties:
+        is_media:
+          type:
+            - boolean
+            - "null"
+        language:
+          type:
+            - string
+            - "null"
+        text:
+          type: string
+    UserInteractionParkPayload:
+      type: object
+      description: Park payload for user interaction
+      required:
+        - answer
+      properties:
+        answer:
+          type: string
+        dialog_options:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/UserInteractionDialogOption"
+        retry_count:
+          type:
+            - integer
+            - "null"
+          format: int64
+          description: Number of times the user has been asked to retry due to invalid response
+        translate_dialog_options:
+          type: boolean
+          description: |-
+            Whether the orchestrator should translate `dialog_options[].text` to the
+            conversation's resolved language. Carries the activity-level
+            `dialog_options_translatable` decision; defaults to `true` (translate).
+            Per-option opt-out is handled via `UserInteractionDialogOption.is_media`.
+    UserInteractionUnparkPayload:
+      type: object
+      description: Unpark payload for user interaction
+      required:
+        - user_response
+      properties:
+        user_response:
+          $ref: "#/components/schemas/UserResponse"
+    UserMessage:
+      allOf:
+        - type: object
+          description: Base fields shared by all message types
+          properties:
+            actor:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Actor"
+                  description: The participant who authored this item, when the role alone is ambiguous.
+            content:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/MessageContentPart"
+            interaction_id:
+              type:
+                - string
+                - "null"
+              format: uuid
+            is_message_before_halo:
+              type: boolean
+            timestamp:
+              type:
+                - string
+                - "null"
+              format: date-time
+              description: |-
+                Time at which the conversation item was first produced. Legacy items
+                without valid initialization metadata fall back to their logging time.
+        - type: object
+          required:
+            - is_safe
+            - do_not_answer
+          properties:
+            custom_guardrail_results:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/CustomGuardrailResult"
+            do_not_answer:
+              type: boolean
+            is_recognized:
+              type:
+                - boolean
+                - "null"
+            is_safe:
+              type: boolean
+      description: User message
+    UserResponse:
+      oneOf:
+        - type: string
+        - $ref: "#/components/schemas/MediaContentPart"
+        - type: array
+          items:
+            $ref: "#/components/schemas/ContentPart"
+          description: |-
+            Mixed content (e.g. user replied with both text and an image).
+            Carries the full ordered list of content parts so the agentic LLM
+            can reason over both the text query and the media together.
+      description: User response in an unpark payload`.
+    Value: {}
+    VisitedAgent:
+      type: object
+      description: Agent info for visited agents
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    VisitedTool:
+      type: object
+      description: Tool info for visited tools
+      required:
+        - id
+        - name
+      properties:
+        description:
+          type:
+            - string
+            - "null"
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    VoiceCustomHandoverDetails:
+      type: object
+      description: Voice custom handover details
+      required:
+        - custom_type
+        - custom_config
+      properties:
+        custom_config:
+          type: object
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        custom_type:
+          type: string
+    VoiceForwardHandoverDetails:
+      type: object
+      description: Voice forward handover details
+      required:
+        - callee_id
+      properties:
+        anonymous:
+          type:
+            - boolean
+            - "null"
+        callee_id:
+          type: string
+        caller_id:
+          type:
+            - string
+            - "null"
+    VoiceLoggingHandoverDetails:
+      type: object
+      description: Voice logging handover details
+    VoiceMscHandoverDetails:
+      type: object
+      description: Voice MSC handover details
+      required:
+        - environment
+        - web_store_referrer
+        - routing_keywords
+      properties:
+        environment:
+          type: string
+        routing_keywords:
+          type: array
+          items:
+            type: string
+        web_store_referrer:
+          type: string
+    VoiceTransferHandoverDetails:
+      type: object
+      description: Voice transfer handover details
+      required:
+        - distribution_group
+        - distribution_group_algorithm
+      properties:
+        cm_context_variables:
+          type:
+            - object
+            - "null"
+          additionalProperties: {}
+          propertyNames:
+            type: string
+        distribution_group:
+          type: string
+        distribution_group_algorithm:
+          type: integer
+          format: int32
+    i32:
+      type: integer
+      format: int32
+    i64:
+      type: integer
+      format: int64
+  securitySchemes:
+    X-CM-SSO-ACCOUNTGUID:
+      type: apiKey
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID

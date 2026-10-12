@@ -1,0 +1,179 @@
+openapi: 3.2.0
+info:
+  title: Channels Organizations API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: Organizations
+paths:
+  /channels/v1/organizations/{organizationCrmId}:
+    get:
+      tags:
+      - Organizations
+      summary: Get an organization
+      operationId: Organizations_GetOrganizationAsync
+      parameters:
+      - name: organizationCrmId
+        in: path
+        description: The organization identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationConfiguration'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationConfiguration'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationConfiguration'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationConfiguration'
+  /channels/v1/organizations/{organizationCrmId}/accounts:
+    get:
+      tags:
+      - Organizations
+      summary: Get an organization's accounts
+      operationId: Organizations_GetOrganizationAccountsAsync
+      parameters:
+      - name: organizationCrmId
+        in: path
+        description: The organization CRM identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccount'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccount'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccount'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccount'
+    post:
+      tags:
+      - Organizations
+      summary: Create an organization account
+      operationId: Organizations_CreateOrganizationAccountAsync
+      parameters:
+      - name: organizationCrmId
+        in: path
+        description: The organization CRM identifier.
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccountRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccountRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccountRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccountRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Organizations.ApiOrganizationAccountRequest'
+        description: The account request.
+        required: true
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    CM.Platform.Channels.Models.Organizations.ApiOrganizationConfiguration:
+      required:
+      - crmId
+      - name
+      - contactName
+      - contactEmailAddress
+      - accountProvisioningItems
+      - createdOnUtc
+      type: object
+      properties:
+        crmId:
+          format: int32
+          type: integer
+        name:
+          type: string
+        contactName:
+          type: string
+        contactEmailAddress:
+          type: string
+        countryId:
+          type: string
+        currencyId:
+          type: string
+        languageId:
+          type: string
+        accountProvisioningItems:
+          type: array
+          items:
+            type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Organizations.ApiOrganizationAccount:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        currencyId:
+          type: string
+        billingTypeID:
+          type: string
+    CM.Platform.Channels.Models.Organizations.ApiOrganizationAccountRequest:
+      type: object
+      properties:
+        name:
+          type: string
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

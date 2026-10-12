@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-partner-api-venue-schema.json",
+  "title": "Venue",
+  "description": "Venue resource representation",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-live-tables-v1-openapi.yml#/components/schemas/PartnerApiVenue",
+  "required": [
+    "uuid",
+    "name",
+    "timezone_id"
+  ],
+  "properties": {
+    "uuid": {
+      "description": "Unique identifier of the venue",
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "description": "Name of the venue",
+      "type": "string"
+    },
+    "timezone_id": {
+      "description": "Timezone identifier of the venue",
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

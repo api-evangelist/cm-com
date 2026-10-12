@@ -1,0 +1,187 @@
+openapi: 3.2.0
+info:
+  title: HALO Core Studio API
+  description: Execute core operations on the HALO platform
+  license:
+    name: ''
+  version: 1.0.0
+servers:
+- url: /halo
+tags:
+- name: Studio
+paths:
+  /core/v1/accounts/{account_id}/cultures:
+    get:
+      tags:
+      - Studio
+      description: 'Retrieve all cultures for an account.
+
+
+        Required permission: `HALO.Core_Cultures_Read`'
+      operationId: get_cultures
+      parameters:
+      - name: account_id
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Cultures
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CultureView'
+      security:
+      - X-CM-SSO-ACCOUNTGUID: []
+      - {}
+      summary: Get cultures
+      x-summary-source: derived
+  /core/v1/accounts/{account_id}/cultures/{culture_code}:
+    get:
+      tags:
+      - Studio
+      description: 'Retrieve culture by code.
+
+
+        Required permission: `HALO.Core_Cultures_Read`'
+      operationId: get_culture_by_code
+      parameters:
+      - name: account_id
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: culture_code
+        in: path
+        description: Culture identifier
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Culture
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CultureView'
+        '404':
+          description: Culture not found
+      security:
+      - X-CM-SSO-ACCOUNTGUID: []
+      - {}
+      summary: Get culture by code
+      x-summary-source: derived
+  /core/v1/accounts/{account_id}/profiles:
+    get:
+      tags:
+      - Studio
+      description: 'Retrieve all profiles for an account.
+
+
+        Required permission: `HALO.Core_Profiles_Read`'
+      operationId: get_profiles
+      parameters:
+      - name: account_id
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProfileView'
+      security:
+      - X-CM-SSO-ACCOUNTGUID: []
+      - {}
+      summary: Get profiles
+      x-summary-source: derived
+  /core/v1/accounts/{account_id}/profiles/{profile_id}:
+    get:
+      tags:
+      - Studio
+      description: 'Retrieve profile by ID.
+
+
+        Required permission: `HALO.Core_Profiles_Read`'
+      operationId: get_profile_by_id
+      parameters:
+      - name: account_id
+        in: path
+        description: Account identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profile_id
+        in: path
+        description: Profile identifier
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileView'
+      security:
+      - X-CM-SSO-ACCOUNTGUID: []
+      - {}
+      summary: Get profile by id
+      x-summary-source: derived
+components:
+  schemas:
+    CultureView:
+      type: object
+      required:
+      - code
+      - name
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+    WorkspaceType:
+      type: string
+      description: 'Workspace kind of a profile, stored as varchar and constrained by a CHECK
+
+        (`''conversational'' | ''automation''`). `Conversational` is the DB default.'
+      enum:
+      - conversational
+      - automation
+    ProfileView:
+      type: object
+      required:
+      - id
+      - name
+      - workspace_type
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        workspace_type:
+          $ref: '#/components/schemas/WorkspaceType'
+          description: 'Workspace kind: `conversational` or `automation`.'
+  securitySchemes:
+    X-CM-SSO-ACCOUNTGUID:
+      type: apiKey
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID

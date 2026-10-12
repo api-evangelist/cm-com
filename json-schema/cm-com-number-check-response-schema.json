@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-number-check-response-schema.json",
+  "title": "NumberCheckResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-number-validation-v1-openapi.yml#/components/schemas/NumberCheckResponse",
+  "type": "object",
+  "properties": {
+    "format": {
+      "type": "object",
+      "description": "The phone number in various formats.",
+      "properties": {
+        "e164": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "E.164 format"
+        },
+        "international": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "International format"
+        },
+        "national": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "National format"
+        },
+        "rfc3966": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "RFC 3966 URI format"
+        }
+      }
+    },
+    "type": {
+      "description": "The type of phone number.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PhoneNumberType"
+        },
+        {
+          "type": [
+            "null"
+          ]
+        }
+      ]
+    },
+    "country": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The country associated with the phone number."
+    },
+    "callingCode": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The international calling code of the country."
+    },
+    "regionCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The ISO 3166-1 alpha-2 region code of the country, in lowercase."
+    },
+    "operator": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The name of the network operator."
+    },
+    "mcc": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The Mobile Country Code of the operator."
+    },
+    "mnc": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The Mobile Network Code of the operator."
+    },
+    "source": {
+      "type": "string",
+      "description": "The source of the returned data.",
+      "$ref": "#/$defs/Source"
+    },
+    "roaming": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Roaming information. Only present when the number is currently roaming.",
+      "properties": {
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The country the subscriber is currently roaming in."
+        },
+        "callingCode": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The international calling code of the roaming country."
+        },
+        "regionCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The ISO 3166-1 alpha-2 code of the roaming country, in lowercase."
+        },
+        "operator": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The name of the roaming network operator."
+        },
+        "mcc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The Mobile Country Code of the roaming operator."
+        },
+        "mnc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The Mobile Network Code of the roaming operator."
+        }
+      }
+    },
+    "isValid": {
+      "type": "boolean",
+      "description": "Whether the phone number is a valid number."
+    },
+    "isActive": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Whether the phone number is currently active on the network. Only available for `hlr` connection type."
+    },
+    "isPorted": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Whether the phone number has been ported to another operator. Only available for `mnp` connection type."
+    }
+  },
+  "$defs": {
+    "PhoneNumberType": {
+      "type": "string",
+      "description": "Phone number type description:\n\n * `mobile` - Mobile phone number\n * `fixed_line` - Fixed-line phone number\n * `fixed_line_or_mobile` - Either a fixed-line or mobile number (not distinguishable)\n * `toll_free` - Toll-free number\n * `premium_rate` - Premium rate number\n * `shared_cost` - Shared cost number\n * `voip` - VoIP number\n * `personal_number` - Personal number\n * `pager` - Pager number\n * `uan` - Universal Access Number\n * `voicemail` - Voicemail number\n * `unknown` - Unknown type\n",
+      "enum": [
+        "mobile",
+        "fixed_line",
+        "fixed_line_or_mobile",
+        "toll_free",
+        "premium_rate",
+        "shared_cost",
+        "voip",
+        "personal_number",
+        "pager",
+        "uan",
+        "voicemail",
+        "unknown"
+      ]
+    },
+    "Source": {
+      "type": "string",
+      "description": "Source description:\n\n * `hlr` - Home Location Register\n * `mnp` - Supplier's Mobile Number Portability database\n * `prefix` - Phone number prefix lookup, same as static\n * `external` - External source (HLR or MNP, unknown by supplier)\n * `mnp_database` - CM.com's internal MNP database\n * `static` - Static lookup using phone number prefix\n",
+      "enum": [
+        "hlr",
+        "mnp",
+        "prefix",
+        "external",
+        "mnp_database",
+        "static"
+      ]
+    }
+  }
+}

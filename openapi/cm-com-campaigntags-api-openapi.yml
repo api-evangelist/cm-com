@@ -1,0 +1,281 @@
+openapi: 3.2.0
+info:
+  version: v1
+  title: BulkEmail Campaign Tags API
+servers:
+- url: http://api.cm.com
+tags:
+- name: CampaignTags
+paths:
+  /bulkemail/v1.0/accounts/{accountID}/campaigntags:
+    get:
+      tags:
+      - CampaignTags
+      summary: Get all campaigntags for an account
+      operationId: CampaignTags_GetCampaignTagsAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+    post:
+      tags:
+      - CampaignTags
+      summary: Create a new campaigntag
+      operationId: CampaignTags_AddCampaignTagAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+      responses:
+        '201':
+          description: Campaigntag successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+  /bulkemail/v1.0/accounts/{accountID}/campaigntags/{campaignTagID}:
+    get:
+      tags:
+      - CampaignTags
+      summary: Get a specific campaigntag
+      operationId: CampaignTags_GetCampaignTagAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignTagID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+    put:
+      tags:
+      - CampaignTags
+      summary: Update the campaigntag
+      operationId: CampaignTags_UpdateCampaignTagAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignTagID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+    delete:
+      tags:
+      - CampaignTags
+      summary: Delete a Campaign
+      operationId: CampaignTags_DeleteCampaignTagAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignTagID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+  /bulkemail/v1.0/accounts/{accountID}/campaigns/{campaignID}/campaigntags/{campaignTagID}:
+    post:
+      tags:
+      - CampaignTags
+      summary: Add a campaigntag to a campaign
+      operationId: CampaignTags_AddCampaignTagToCampaignAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignTagID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Campaigntag successfully added to campaign
+    delete:
+      tags:
+      - CampaignTags
+      summary: Delete a campaigntag from a campaign
+      operationId: CampaignTags_DeleteCampaignTagFromCampaignAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: campaignTagID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+components:
+  requestBodies:
+    CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
+      required: true
+  schemas:
+    CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Tag:
+          type: string
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string

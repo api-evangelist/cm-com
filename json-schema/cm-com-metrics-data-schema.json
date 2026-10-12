@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-metrics-data-schema.json",
+  "title": "MetricsData",
+  "description": "Aggregated metrics data.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-halo-analytics-v1-openapi.yml#/components/schemas/MetricsData",
+  "type": "object",
+  "required": [
+    "total_conversations_count",
+    "total_average_conversation_duration_seconds",
+    "total_average_interactions_per_conversation"
+  ],
+  "properties": {
+    "average_recognition_rate": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "product_metrics": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/ProductMetrics"
+      }
+    },
+    "total_average_conversation_duration_seconds": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "total_average_interactions_per_conversation": {
+      "type": "number",
+      "format": "double"
+    },
+    "total_conversations_count": {
+      "type": "integer",
+      "format": "int64"
+    }
+  },
+  "$defs": {
+    "ProductMetrics": {
+      "type": "object",
+      "description": "Per-product metrics data.",
+      "required": [
+        "product",
+        "conversations_count",
+        "average_conversation_duration_seconds",
+        "average_interactions_per_conversation"
+      ],
+      "properties": {
+        "average_conversation_duration_seconds": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "average_interactions_per_conversation": {
+          "type": "number",
+          "format": "double"
+        },
+        "average_recognition_rate": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "conversations_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "product": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

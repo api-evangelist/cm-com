@@ -1,0 +1,438 @@
+openapi: 3.2.0
+info:
+  title: Channels Keywords API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: Keywords
+paths:
+  /channels/v1/accounts/{accountId}/keywords:
+    get:
+      tags:
+      - Keywords
+      summary: Get all claimed keywords (paginated)
+      operationId: Keywords_GetKeywordClaimsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: q
+        in: query
+        description: The query.
+        required: false
+        schema:
+          type: string
+      - name: phoneNumber
+        in: query
+        description: The phone numbers to filter the results on.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: keyword
+        in: query
+        description: The keywords to filter the results on.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: country
+        in: query
+        description: The country.
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: The status.
+        required: false
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - PENDING
+            - ELIGIBLE
+            - NOT_VALIDATED
+            - CUSTOMER_ACTION_REQUIRED
+            - EXPIRED
+            - REJECTED
+            - CANCELLED
+            - DELETED
+      - name: skip
+        in: query
+        description: The skip.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: The take.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimBase'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimBase'
+    post:
+      tags:
+      - Keywords
+      summary: Claim a keyword
+      operationId: Keywords_AddKeywordClaimAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: periodicity
+        in: query
+        description: The periodicity.
+        required: true
+        schema:
+          type: string
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+      - name: currency
+        in: query
+        description: The currency.
+        required: false
+        schema:
+          type: string
+      - name: simulate
+        in: query
+        description: if set to true no actual operations will be performed, but validation will occur.
+        required: false
+        schema:
+          type: boolean
+      - name: asIncomingOrderFlow
+        in: query
+        description: if set to true [as incoming order flow].
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimRequest'
+        description: The claim.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimResponse'
+        '204':
+          description: NoContent
+        '400':
+          description: BadRequest
+  /channels/v1/accounts/{accountId}/keywords/{keywordClaimId}:
+    get:
+      tags:
+      - Keywords
+      summary: Get a keyword claim by id
+      operationId: Keywords_GetKeywordClaimAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: keywordClaimId
+        in: path
+        description: The keyword identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimResponse'
+    delete:
+      tags:
+      - Keywords
+      summary: Cancel a keyword claim
+      operationId: Keywords_CancelKeywordClaimAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: keywordClaimId
+        in: path
+        description: The keyword identifier.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: NoContent
+components:
+  schemas:
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimBase:
+      required:
+      - id
+      - phoneNumberId
+      - country
+      - keyword
+      - subscriptionPeriodicity
+      - isPending
+      type: object
+      properties:
+        id:
+          type: string
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        phoneNumberId:
+          type: string
+        country:
+          type: string
+        keyword:
+          type: string
+        subscriptionPeriodicity:
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+          type: string
+        isPending:
+          type: boolean
+        claimedOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        channelState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelState'
+    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
+      type: object
+      properties:
+        type:
+          enum:
+          - UNKNOWN
+          - PROCESSING
+          - ACTION_REQUIRED
+          type: string
+        descriptionKey:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimResponse:
+      required:
+      - id
+      - phoneNumberId
+      - country
+      - keyword
+      - subscriptionPeriodicity
+      - price
+      - isPending
+      type: object
+      properties:
+        id:
+          type: string
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        phoneNumberId:
+          type: string
+        country:
+          type: string
+        keyword:
+          type: string
+        subscriptionPeriodicity:
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+          type: string
+        price:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Pricing.ApiSubscriptionPrice'
+        noticePeriodDays:
+          format: double
+          type: number
+        reasonForRejection:
+          type: string
+        isPending:
+          type: boolean
+        claimedOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        channelState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelState'
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimRequest:
+      required:
+      - phoneNumberId
+      - keyword
+      type: object
+      properties:
+        phoneNumberId:
+          type: string
+        keyword:
+          type: string
+    CM.Platform.Channels.Models.Pricing.ApiSubscriptionPrice:
+      required:
+      - currency
+      - price
+      - setupFee
+      - isCountryFallback
+      type: object
+      properties:
+        currency:
+          type: string
+        price:
+          format: double
+          type: number
+        setupFee:
+          format: double
+          type: number
+        isOverride:
+          type: boolean
+        isEuroCurrencyFallback:
+          type: boolean
+        isCountryFallback:
+          type: boolean
+        pricePlanId:
+          format: int32
+          type: integer
+        periodicity:
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelState:
+      required:
+      - isPending
+      - requestState
+      type: object
+      properties:
+        customRequestFormIsPending:
+          type: boolean
+        isPending:
+          type: boolean
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
+      type: object
+      properties:
+        stages:
+          type: array
+          items:
+            type: string
+        current:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiRequestState:
+      type: object
+      properties:
+        completeness:
+          format: int32
+          type: integer
+        nextStage:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
+        progression:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
+        hasPendingOrder:
+          type: boolean
+        hasEligibleOrder:
+          type: boolean
+        hasMissingOrder:
+          type: boolean
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

@@ -1,0 +1,1020 @@
+openapi: 3.2.0
+info:
+  title: Channels Channel Configuration API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: ChannelConfiguration
+paths:
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration:
+    get:
+      tags:
+      - ChannelConfiguration
+      summary: Gets all configurations for a channel
+      operationId: ChannelConfiguration_GetChannelConfigurationsAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurations'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurations'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurations'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurations'
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration/{configurationId}:
+    get:
+      tags:
+      - ChannelConfiguration
+      summary: Gets a configuration for a channel
+      operationId: ChannelConfiguration_GetChannelConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: configurationId
+        in: path
+        description: The configuration identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse'
+    put:
+      tags:
+      - ChannelConfiguration
+      summary: Enables/disables a channel configuration
+      operationId: ChannelConfiguration_DisableChannelConfigurationAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: configurationId
+        in: path
+        description: The configuration identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: enabled
+        in: query
+        description: if set to true [enabled].
+        required: true
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse'
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration/email:
+    post:
+      tags:
+      - ChannelConfiguration
+      summary: Adds a channels' email configuration element
+      operationId: ChannelConfiguration_AddEmailConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration/email/{addressId}:
+    put:
+      tags:
+      - ChannelConfiguration
+      summary: Updates a channels' email configuration element
+      operationId: ChannelConfiguration_UpdateEmailConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: addressId
+        in: path
+        description: The address identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+    delete:
+      tags:
+      - ChannelConfiguration
+      summary: Deletes a channels' email configuration element
+      operationId: ChannelConfiguration_DeleteEmailConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: addressId
+        in: path
+        description: The address identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration/webhook:
+    post:
+      tags:
+      - ChannelConfiguration
+      summary: Add a channels' web hook configuration element
+      operationId: ChannelConfiguration_AddWebHookConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration/webhook/{webhookId}:
+    put:
+      tags:
+      - ChannelConfiguration
+      summary: Updates a channels' webhook configuration element
+      operationId: ChannelConfiguration_UpdateWebHookConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: webhookId
+        in: path
+        description: The webhook identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+    delete:
+      tags:
+      - ChannelConfiguration
+      summary: Deletes a channels' web hook configuration element
+      operationId: ChannelConfiguration_DeleteWebHookConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: webhookId
+        in: path
+        description: The web hook identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration/eventwebhook:
+    post:
+      tags:
+      - ChannelConfiguration
+      summary: Adds an event webhook configuration element
+      operationId: ChannelConfiguration_AddEventWebHookConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration/eventwebhook/{eventWebhookId}:
+    put:
+      tags:
+      - ChannelConfiguration
+      summary: Updates an event webhook configuration element
+      operationId: ChannelConfiguration_UpdateEventWebHookConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventWebhookId
+        in: path
+        description: The event webhook identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+    delete:
+      tags:
+      - ChannelConfiguration
+      summary: Deletes an event webhook configuration element
+      operationId: ChannelConfiguration_DeleteEventWebHookConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: eventWebhookId
+        in: path
+        description: The event webhook identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+  /channels/v1/accounts/{accountId}/channels/{channelId}/configuration/messaginglog:
+    post:
+      tags:
+      - ChannelConfiguration
+      summary: Updates a channels' messaging log configuration
+      operationId: ChannelConfiguration_AddMessagingLogConfigurationElementAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: channelId
+        in: path
+        description: The channel identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationRequest'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationRequest'
+        description: The configuration.
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse'
+components:
+  schemas:
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
+      type: object
+      properties:
+        type:
+          enum:
+          - UNKNOWN
+          - PROCESSING
+          - ACTION_REQUIRED
+          type: string
+        descriptionKey:
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointResponse:
+      required:
+      - id
+      - method
+      - url
+      - type
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelsOneId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        method:
+          enum:
+          - POST
+          type: string
+        url:
+          type: string
+        type:
+          enum:
+          - Json
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConversationalRouterConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - endpoint
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        endpoint:
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressResponse:
+      required:
+      - id
+      - address
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        address:
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelBase:
+      required:
+      - id
+      - channelID
+      - channelUrl
+      - isPending
+      - createdOnUtc
+      - requestState
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelTypeId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelID:
+          type: string
+        channelUrl:
+          type: string
+        customRequestFormId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        customRequestFormIsPending:
+          type: boolean
+        isPending:
+          type: boolean
+        createdOnUtc:
+          format: date-time
+          type: string
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest:
+      required:
+      - endpoint
+      type: object
+      properties:
+        endpoint:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointRequest'
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - addresses
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressResponse'
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationsInbound:
+      type: object
+      properties:
+        messagingLog:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse'
+        email:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+        webhook:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+        eventWebhook:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+        conversationalRouter:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConversationalRouterConfigurationResponse'
+    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
+      type: object
+      properties:
+        stages:
+          type: array
+          items:
+            type: string
+        current:
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiRequestState:
+      type: object
+      properties:
+        completeness:
+          format: int32
+          type: integer
+        nextStage:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
+        progression:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
+        hasPendingOrder:
+          type: boolean
+        hasEligibleOrder:
+          type: boolean
+        hasMissingOrder:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressRequest'
+    CM.Platform.Channels.Models.Channels.ApiChannelGroupBase:
+      required:
+      - id
+      - channels
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointRequest:
+      required:
+      - method
+      - url
+      - type
+      type: object
+      properties:
+        method:
+          enum:
+          - POST
+          - GET
+          - PUT
+          - UNKNOWN
+          type: string
+        url:
+          type: string
+        type:
+          enum:
+          - Json
+          - Xml
+          - Custom
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - endpoints
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointResponse'
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest:
+      required:
+      - endpoint
+      type: object
+      properties:
+        endpoint:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointRequest'
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationRequest:
+      type: object
+      properties: {}
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        endpoint:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointResponse'
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointRequest:
+      required:
+      - method
+      - url
+      - type
+      type: object
+      properties:
+        method:
+          enum:
+          - POST
+          type: string
+        url:
+          type: string
+        type:
+          enum:
+          - Json
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressRequest:
+      required:
+      - address
+      type: object
+      properties:
+        address:
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointResponse:
+      required:
+      - id
+      - method
+      - url
+      - type
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        method:
+          enum:
+          - POST
+          - GET
+          - PUT
+          - UNKNOWN
+          type: string
+        url:
+          type: string
+        type:
+          enum:
+          - Json
+          - Xml
+          - Custom
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurations:
+      type: object
+      properties:
+        channelGroup:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelGroupBase'
+        inbound:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationsInbound'
+  requestBodies:
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest'
+      description: The configuration.
+      required: true
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest'
+      description: The configuration.
+      required: true
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+      description: The configuration.
+      required: true
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header

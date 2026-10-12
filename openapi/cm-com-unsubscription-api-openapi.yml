@@ -1,0 +1,161 @@
+openapi: 3.2.0
+info:
+  version: v1
+  title: BulkEmail Unsubscription API
+servers:
+- url: http://api.cm.com
+tags:
+- name: Unsubscription
+paths:
+  /bulkemail/v1.0/accounts/{accountID}/unsubscriptions:
+    get:
+      tags:
+      - Unsubscription
+      summary: Get all unsubscriptions for an account
+      operationId: Unsubscription_GetUnsubscriptionsAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: filter
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: string
+      - name: skip
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+            text/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+    post:
+      tags:
+      - Unsubscription
+      summary: Create an unsubscription for an account
+      operationId: Unsubscription_AddUnsubscriptionAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+        required: true
+      responses:
+        '201':
+          description: Unsubscription created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription'
+  /bulkemail/v1.0/accounts/{accountID}/unsubscriptions/{unsubscriptionID}:
+    delete:
+      tags:
+      - Unsubscription
+      summary: Delete an unsubscription
+      operationId: Unsubscription_DeleteUnsubscriptionAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: unsubscriptionID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    CM.Tooling.BulkEmail.Api.Models.ApiUnsubscription:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        EmailAddress:
+          type: string
+        UnsubscriptionType:
+          format: int32
+          enum:
+          - 1
+          - 2
+          - 3
+          type: integer
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string

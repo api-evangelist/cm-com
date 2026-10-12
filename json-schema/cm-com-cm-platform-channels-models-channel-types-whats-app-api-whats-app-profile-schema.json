@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-platform-channels-models-channel-types-whats-app-api-whats-app-profile-schema.json",
+  "title": "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-messaging-channels-api-v1-2-openapi.yml#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile",
+  "required": [
+    "id",
+    "accountId",
+    "isActive",
+    "isOtpProcessed",
+    "isOtpSent",
+    "isPending",
+    "isSandbox",
+    "createdOnUtc"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "channelId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "accountId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "isFacebookEmbeddedSignUpOwnershipVerified": {
+      "type": "boolean"
+    },
+    "isFacebookEmbeddedSignUpImport": {
+      "type": "boolean"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "rejectionReason": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "isActive": {
+      "type": "boolean"
+    },
+    "isOtpProcessed": {
+      "type": "boolean"
+    },
+    "isOtpSent": {
+      "type": "boolean"
+    },
+    "isPending": {
+      "type": "boolean"
+    },
+    "isSandbox": {
+      "type": "boolean"
+    },
+    "metaSupplierInfo": {
+      "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaSupplierInfo"
+    },
+    "metaQualityRating": {
+      "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating"
+    },
+    "fulfilledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "createdOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "rejectedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "cancelledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "deletedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "entityStatus": {
+      "enum": [
+        "ACTIVE",
+        "PENDING",
+        "ELIGIBLE",
+        "NOT_VALIDATED",
+        "CUSTOMER_ACTION_REQUIRED",
+        "EXPIRED",
+        "REJECTED",
+        "CANCELLED",
+        "DELETED"
+      ],
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating": {
+      "type": "object",
+      "properties": {
+        "rating": {
+          "type": "string"
+        },
+        "currentLimit": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRatingLimit"
+        },
+        "dailyConversationLimit": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "restrictionHistory": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppBusinessAccountUpdateRestriction"
+            }
+          }
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRatingLimit": {
+      "type": "object",
+      "properties": {
+        "fallbackLimit": {
+          "type": "string"
+        },
+        "officialLimit": {
+          "enum": [
+            "TIER_50",
+            "TIER_250",
+            "TIER_1K",
+            "TIER_10K",
+            "TIER_100K",
+            "TIER_UNLIMITED"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaSupplierInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "accountMode": {
+          "type": "string"
+        },
+        "codeVerificationStatus": {
+          "enum": [
+            "NOT_VERIFIED",
+            "VERIFIED",
+            "EXPIRED"
+          ],
+          "type": "string"
+        },
+        "displayPhonenumber": {
+          "type": "string"
+        },
+        "isOfficialBusinessAccount": {
+          "type": "boolean"
+        },
+        "isPinEnabled": {
+          "type": "boolean"
+        },
+        "isPreVerifiedNumber": {
+          "type": "boolean"
+        },
+        "nameStatus": {
+          "type": "string"
+        },
+        "newNameStatus": {
+          "type": "string"
+        },
+        "platformType": {
+          "type": "string"
+        },
+        "qualityRating": {
+          "type": "string"
+        },
+        "qualityScore": {
+          "type": "object"
+        },
+        "searchVisibility": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "throughput": {
+          "type": "object"
+        },
+        "verifiedName": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppBusinessAccountUpdateRestriction": {
+      "type": "object",
+      "properties": {
+        "restriction_type": {
+          "type": "string"
+        },
+        "expiration": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,353 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Onboarding API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Onboarding across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Onboarding
+  description: Organisation onboarding flows
+paths:
+  /entrance/v1.0/onboarding:
+    post:
+      operationId: OnboardingController_onboard_v1.0
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Onboard a new organisation
+      tags:
+      - Onboarding
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/onboarding/{organisationUuid}:
+    patch:
+      operationId: OnboardingController_onboardExistingOrganisation_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Onboard an existing organisation
+      tags:
+      - Onboarding
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/onboarding:
+    post:
+      operationId: OnboardingController_onboard_v2.0
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Onboard a new organisation
+      tags:
+      - Onboarding
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/onboarding/{organisationUuid}:
+    patch:
+      operationId: OnboardingController_onboardExistingOrganisation_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Onboard an existing organisation
+      tags:
+      - Onboarding
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    Organisation:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com NV
+        cmAccountGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmCrmId:
+          type: number
+          example: 123456
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+      required:
+      - uuid
+      - name
+      - email
+      - upstreamPlatform
+    CreateOrganisationDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com NV
+        cmAccountGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmCrmId:
+          type: number
+          example: 123456
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        callbackUrl:
+          type: string
+          maxLength: 255
+          description: Should be valid url. Will be used to POST scan events towards
+          example: https://yourdomain.tld/scanning/callback
+        callbackConfiguration:
+          type: object
+          description: Generic JSON configuration for callbacks
+          example:
+            apiKey: your-api-key
+            apiSecret: your-api-secret
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+      required:
+      - name
+      - email
+      - upstreamPlatform
+    OnboardingDto:
+      type: object
+      properties:
+        organisation:
+          description: Object of the organisation to be onboarded
+          allOf:
+          - $ref: '#/components/schemas/CreateOrganisationDto'
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

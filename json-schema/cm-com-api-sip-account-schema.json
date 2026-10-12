@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-sip-account-schema.json",
+  "title": "Sip Account",
+  "description": "A SIP Account that can be used to make calls via the CM.com Platform.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-sip-accounts-v1-openapi.yml#/components/schemas/ApiSipAccount",
+  "type": "object",
+  "properties": {
+    "guid": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unique identifier of the SIP Account."
+    },
+    "createdOn": {
+      "type": "string",
+      "description": "Date and time on which the SIP Account was created.",
+      "format": "date-time"
+    },
+    "customerAccountGuid": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The unique identifier of the Voice Account which this SIP Account is part of."
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Display name of the SIP Account."
+    },
+    "username": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Username of the SIP Account. The username is generated automatically by CM.com and cannot be changed."
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Whether or not the SIP Account is set to active."
+    },
+    "inPrison": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Whether the account has a temporary ban after entering the wrong password too many times."
+    },
+    "config": {
+      "$ref": "#/$defs/ApiSipConfig"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiSipConfig": {
+      "title": "Sip Config",
+      "type": "object",
+      "properties": {
+        "cpsLimit": {
+          "type": "integer",
+          "description": "Limit of the amount of calls that can be set up per second.",
+          "format": "int32"
+        },
+        "ccLimit": {
+          "type": "integer",
+          "description": "Limit of the amount of calls that can take place concurrently.",
+          "format": "int32"
+        },
+        "alwaysAnonymous": {
+          "type": "boolean",
+          "description": "Whether or not outbound calls from this SIP Account will always be dialed out with CLI anonymous."
+        },
+        "hasAnonymousOverride": {
+          "type": "boolean",
+          "description": "When set to true, this option guarantees routing that support anonymous calls."
+        },
+        "defaultOutboundCallerId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The CLI used when making outbound calls. This does not override a valid CLI that is already provided in the SIP invite."
+        },
+        "restrictionType": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Sets the type of prefix restrictions placed on this SIP Account, this can be either set to `whitelist` or `blacklist`. When set to `whitelist`, only calls to the given prefixes will be allowed, when set to `blacklist`, only calls to the given prefixes will be blocked."
+        },
+        "primaryTrunkId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Platform name or domain of the primary SIP trunk or DNS that will be used. The `/trunks` and `/platformdomains` endpoints can be used to get a list of currently active SIP Trunks and Platform Domains."
+        },
+        "secondaryTrunkId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Platform name or domain of the secondary (backup) SIP trunk that will be used. The `/trunks` and `/platformdomains` endpoints can be used to get a list of currently active SIP Trunks and Platform Domains. **When using DNS, reach out to support for a backup DNS.**"
+        },
+        "blockNonEerToEer": {
+          "type": "boolean",
+          "description": "All calls with a non-European CLI to a European country will be blocked for this SIP account."
+        },
+        "allowPremium": {
+          "type": "boolean",
+          "description": "Allow calls to premium pay-per-minute or pay-per-call numbers."
+        }
+      },
+      "additionalProperties": false,
+      "description": "SIP configuration containing settings that define how a SIP Account can be used."
+    }
+  }
+}

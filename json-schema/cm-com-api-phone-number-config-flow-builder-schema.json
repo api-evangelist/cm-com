@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-phone-number-config-flow-builder-schema.json",
+  "title": "Phone Number Config Flow Builder",
+  "description": "Configuration settings for configuring a Phone Number for the Voice FlowBuilder Application.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-phone-numbers-v1-openapi.yml#/components/schemas/ApiPhoneNumberConfigFlowBuilder",
+  "required": [
+    "appAccountGuid",
+    "callFlowId"
+  ],
+  "type": "object",
+  "properties": {
+    "phoneNumber": {
+      "minimum": 100000,
+      "type": "integer",
+      "description": "The Phone Number that the current configuration applies to.",
+      "format": "int64"
+    },
+    "appAccountGuid": {
+      "minLength": 1,
+      "type": "string",
+      "description": "The unique identifier of the application can be found in the Voice Management App in the API Settings section.",
+      "format": "uuid"
+    },
+    "type": {
+      "type": "string",
+      "description": "The Application type that should be used. Can be either `directforwarding`, `flowbuilder`, `notification`, `sip`, `halo` or `none`."
+    },
+    "callFlowId": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Unique Identifier of the callflow that should be used. Can be found in the Voice FlowBuilder application."
+    }
+  },
+  "additionalProperties": false
+}

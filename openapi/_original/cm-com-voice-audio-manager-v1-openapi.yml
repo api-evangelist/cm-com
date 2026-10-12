@@ -1,0 +1,238 @@
+# x-archived-from: cm-com-voice-audio-manager-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: Audio Manager API
+  version: v1
+servers:
+- url: https://api.cm.com
+paths:
+  /voice-audiomanagerapi/v1/{accountGuid}/directories/{appAccountUsername}:
+    get:
+      tags:
+      - Prompts
+      summary: Get Directories
+      description: Get only directories, and subdirectories in the given account's audio space.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the voice account or logical account
+        required: true
+        style: simple
+        schema:
+          type: string
+          format: uuid
+      - name: appAccountUsername
+        in: path
+        description: Username of the app account, this is case-sensitive
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+  /voice-audiomanagerapi/v1/{accountGuid}/{appAccountUsername}/{path}:
+    get:
+      tags:
+      - Prompts
+      summary: Get Audio Prompts
+      description: Get files in the account's audio folder, or at the specified path.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the voice account or logical account
+        required: true
+        style: simple
+        schema:
+          type: string
+          format: uuid
+      - name: appAccountUsername
+        in: path
+        description: Username of the app account, this is case-sensitive
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: path
+        in: path
+        description: The specified directory path, or the file to be downloaded
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: Skip
+        in: query
+        description: Skip
+        style: form
+        schema:
+          type: integer
+          format: int32
+      - name: Take
+        in: query
+        description: Take
+        style: form
+        schema:
+          type: integer
+          format: int32
+      - name: q
+        in: query
+        description: Search
+        style: form
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+      - Prompts
+      summary: Create Prompt
+      description: Upload a file to the specified path, or create a directory.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the voice account or logical account
+        required: true
+        style: simple
+        schema:
+          type: string
+          format: uuid
+      - name: appAccountUsername
+        in: path
+        description: Username of the app account, this is case-sensitive
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: path
+        in: path
+        description: The specified path of to be uploaded file
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                promptFiles:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+            encoding:
+              promptFiles:
+                style: form
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+  /voice-audiomanagerapi/v1/{accountGuid}/{appAccountUsername}:
+    put:
+      tags:
+      - Prompts
+      summary: Move Prompts
+      description: Move or rename files or directories.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the voice account or logical account
+        required: true
+        style: simple
+        schema:
+          type: string
+          format: uuid
+      - name: appAccountUsername
+        in: path
+        description: Username of the app account, this is case-sensitive
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: 'Combinations that match a source file with a new destination. E.g. { ''my_audio.wav'': ''destination_folder/my_audio.wav'' }'
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+          text/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+          application/*+json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+      - Prompts
+      summary: Delete Prompts
+      description: Delete the file or directory at the specified paths. Removed files cannot be recovered.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the voice account or logical account
+        required: true
+        style: simple
+        schema:
+          type: string
+          format: uuid
+      - name: appAccountUsername
+        in: path
+        description: Username of the app account, this is case-sensitive
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: The specified paths or files to be removed
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+          text/json:
+            schema:
+              type: array
+              items:
+                type: string
+          application/*+json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+components:
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

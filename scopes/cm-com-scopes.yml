@@ -1,0 +1,15 @@
+generated: '2026-10-13'
+method: none
+source: openapi/cm-com-live-ga-partner-v1-openapi.yml, openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
+schemes:
+- name: sec0
+  source: openapi/cm-com-live-ga-partner-v1-openapi.yml
+  flows: []
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+scopes: []
+note: OAuth2 clientCredentials declared in the Online Payments spec with no scopes; no other spec declares OAuth scopes.

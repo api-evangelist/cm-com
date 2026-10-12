@@ -1,0 +1,218 @@
+openapi: 3.2.0
+info:
+  title: Sip Accounts Sip Endpoints API
+  version: v1
+servers:
+- url: https://api.cm.com
+security:
+- X-CM-PRODUCTTOKEN: []
+tags:
+- name: Sip Endpoints
+paths:
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/sipEndpoints:
+    get:
+      tags:
+      - Sip Endpoints
+      summary: Get SIP Account Endpoints
+      description: Get all SIP Endpoints that are set up for the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiSipEndpoint'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: getVoiceSipaccountsapiV1ByVoiceAccountGuidSipAccountsBySipAccountGuidSipEndpoints
+      x-operation-id-source: derived
+    put:
+      tags:
+      - Sip Endpoints
+      summary: Update SIP Account Endpoints
+      description: 'Update the SIP Endpoints that are set up for the given SIP Account.
+
+
+        **CAUTION!** This action will overwrite ALL current SIP Endpoints, so when adding an Endpoint to the existing list, send the entire current list of SIP Endpoints with the new Endpoint appended.'
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: CM.Voice.SipAccounts.Api.Models.Api.ApiSipEndpoint
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiSipEndpoint'
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiSipEndpoint'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiSipEndpoint'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiSipEndpoint'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiSipEndpoint'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+      operationId: putVoiceSipaccountsapiV1ByVoiceAccountGuidSipAccountsBySipAccountGuidSipEndpoints
+      x-operation-id-source: derived
+components:
+  schemas:
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    ApiSipEndpoint:
+      title: Sip Endpoint
+      type: object
+      properties:
+        guid:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the SIP Endpoint.
+          example: 00000000-0000-0000-0000-000000000000
+        createdOn:
+          type: string
+          description: Date and time on which the SIP Endpoint was created.
+          format: date-time
+          example: '2020-01-01T00:00:00Z'
+        hostname:
+          type:
+          - string
+          - 'null'
+          description: Hostname of the SIP Endpoint, when given, the IP address should be left blank.
+          example: example.com
+        ipAddress:
+          type:
+          - string
+          - 'null'
+          description: External IP address of the SIP Endpoint, when given, the hostname should be left blank.
+          example: 0.0.0.0
+        port:
+          type: integer
+          description: Port number of the SIP Endpoint, when set to 0 any port number will be used.
+          format: int32
+          example: 5060
+        subnetMask:
+          type: integer
+          description: Subnet mask of the SIP Endpoint.
+          format: int32
+          example: 32
+        isTrusted:
+          type: boolean
+          description: Whether authentication is required for the SIP endpoints to use the SIP Account or not. It is not recommended to set this to true.
+          example: true
+      additionalProperties: false
+      description: SIP Endpoint that represents a device that can make or receive VOIP phone calls.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

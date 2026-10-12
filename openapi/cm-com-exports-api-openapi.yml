@@ -1,0 +1,826 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Exports API
+  version: '1.0'
+  description: 'Operations tagged Exports across 3 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml, cm-com-mobile-marketing-cloud-cdp-profiles-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+tags:
+- name: Exports
+  description: Data export jobs and downloads
+paths:
+  /entrance/v1.0/organisations/{organisationUuid}/exports/ticket:
+    post:
+      operationId: ExportsController_startTicketExport_v1.0
+      parameters:
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: uuids
+        required: false
+        in: query
+        description: Comma separated values for ticket uuid
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: externalIds
+        required: false
+        in: query
+        description: Comma separated values for ticket externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: venueSections
+        required: false
+        in: query
+        description: Comma separated values for venueSection externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: constraints
+        required: false
+        in: query
+        description: Comma separated values for constraint externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: imports
+        required: false
+        in: query
+        description: Comma separated values for importId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket saleOrigin
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Filter tickets by their derived scan status
+        schema:
+          type: string
+          enum:
+          - CHECKED_IN
+          - REMAINING
+          - ERRORS
+      - name: ticketStatus
+        required: false
+        in: query
+        description: Filter tickets by their stored validity status (VALID / INVALID)
+        schema:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '201':
+          description: Start ticket export and return job ID for progress tracking
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Start ticket export job
+      tags:
+      - Exports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/exports/scan-log:
+    post:
+      operationId: ExportsController_startScanLogExport_v1.0
+      parameters:
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: statusCodes
+        required: false
+        in: query
+        description: Comma separated values for scan status codes
+        schema:
+          example: 200,401
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: deviceIds
+        required: false
+        in: query
+        description: Comma separated values for device ids
+        schema:
+          example: 872HA,AH84A
+          type: string
+      - name: ticketIds
+        required: false
+        in: query
+        description: Comma separated values for ticket ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: orderIds
+        required: false
+        in: query
+        description: Comma separated values for order ids
+        schema:
+          example: CM12345678,CM0000001
+          type: string
+      - name: productIds
+        required: false
+        in: query
+        description: Comma separated values for product ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: eventIds
+        required: false
+        in: query
+        description: Comma separated values for event ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: includeRelatedEntrancePlans
+        required: false
+        in: query
+        description: When true, include scan logs from the entire entrance plan collection the requested plan belongs to (its related plans across the collection) instead of only the requested entrance plan. Only affects entrance-plan-scoped requests; ignored for organisation-scoped requests.
+        schema:
+          example: true
+          type: boolean
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '201':
+          description: Start scan export and return job ID for progress tracking
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Start scan log export job
+      tags:
+      - Exports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/exports/download/{jobId}:
+    get:
+      operationId: ExportsController_downloadExport_v1.0
+      parameters:
+      - name: jobId
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: Download a csv file of your requested export
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Download export file
+      tags:
+      - Exports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/exports/progress/{jobId}:
+    get:
+      operationId: ExportsController_getExportProgress_v1.0
+      parameters:
+      - name: jobId
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: Server-sent events stream of export progress.
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      summary: Get export job progress
+      tags:
+      - Exports
+      security:
+      - cookie: []
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/exports/ticket:
+    post:
+      operationId: ExportsController_startTicketExport_v2.0
+      parameters:
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: uuids
+        required: false
+        in: query
+        description: Comma separated values for ticket uuid
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: externalIds
+        required: false
+        in: query
+        description: Comma separated values for ticket externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: venueSections
+        required: false
+        in: query
+        description: Comma separated values for venueSection externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: constraints
+        required: false
+        in: query
+        description: Comma separated values for constraint externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: imports
+        required: false
+        in: query
+        description: Comma separated values for importId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket saleOrigin
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Filter tickets by their derived scan status
+        schema:
+          type: string
+          enum:
+          - CHECKED_IN
+          - REMAINING
+          - ERRORS
+      - name: ticketStatus
+        required: false
+        in: query
+        description: Filter tickets by their stored validity status (VALID / INVALID)
+        schema:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '201':
+          description: Start ticket export and return job ID for progress tracking
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Start ticket export job
+      tags:
+      - Exports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/exports/scan-log:
+    post:
+      operationId: ExportsController_startScanLogExport_v2.0
+      parameters:
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: statusCodes
+        required: false
+        in: query
+        description: Comma separated values for scan status codes
+        schema:
+          example: 200,401
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: deviceIds
+        required: false
+        in: query
+        description: Comma separated values for device ids
+        schema:
+          example: 872HA,AH84A
+          type: string
+      - name: ticketIds
+        required: false
+        in: query
+        description: Comma separated values for ticket ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: orderIds
+        required: false
+        in: query
+        description: Comma separated values for order ids
+        schema:
+          example: CM12345678,CM0000001
+          type: string
+      - name: productIds
+        required: false
+        in: query
+        description: Comma separated values for product ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: eventIds
+        required: false
+        in: query
+        description: Comma separated values for event ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: includeRelatedEntrancePlans
+        required: false
+        in: query
+        description: When true, include scan logs from the entire entrance plan collection the requested plan belongs to (its related plans across the collection) instead of only the requested entrance plan. Only affects entrance-plan-scoped requests; ignored for organisation-scoped requests.
+        schema:
+          example: true
+          type: boolean
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '201':
+          description: Start scan export and return job ID for progress tracking
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Start scan log export job
+      tags:
+      - Exports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/exports/download/{jobId}:
+    get:
+      operationId: ExportsController_downloadExport_v2.0
+      parameters:
+      - name: jobId
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: Download a csv file of your requested export
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Download export file
+      tags:
+      - Exports
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/exports/progress/{jobId}:
+    get:
+      operationId: ExportsController_getExportProgress_v2.0
+      parameters:
+      - name: jobId
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: Server-sent events stream of export progress.
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      summary: Get export job progress
+      tags:
+      - Exports
+      security:
+      - cookie: []
+    servers:
+    - url: https://api.cm.com
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/csv:
+    post:
+      tags:
+      - Exports
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+            text/json:
+              schema:
+                type: string
+                format: binary
+      summary: Create profile tenants by tenant id profiletypes by profile type id profiles csv
+      x-summary-source: derived
+      operationId: postProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesCsv
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/profiletypes/{profileTypeId}/profiles/{profileId}/export:
+    get:
+      tags:
+      - Exports
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileTypeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: profileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileExport'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileExport'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileExport'
+      summary: Get profile tenants by tenant id profiletypes by profile type id profiles by…
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdProfiletypesByProfileTypeIdProfilesByProfileIdExport
+      x-operation-id-source: derived
+  /profile/v1.0/tenants/{tenantId}/exportevents:
+    get:
+      tags:
+      - Exports
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: queryString
+        in: query
+        schema:
+          type: string
+      - name: unordered
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: excludeProfile
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+            text/json:
+              schema:
+                type: string
+                format: binary
+      summary: Get profile tenants by tenant id exportevents
+      x-summary-source: derived
+      operationId: getProfileV10TenantsByTenantIdExportevents
+      x-operation-id-source: derived
+components:
+  schemas:
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    CM.Data.Core.Profiles.Api.Models.ApiProfileExport:
+      type: object
+      properties:
+        profile:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Shared.BoxedValue'
+        events:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiEventExport'
+        oldestEventDate:
+          type: string
+          format: date-time
+        latestEventDate:
+          type: string
+          format: date-time
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiEventExport:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        data:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Shared.BoxedValue'
+      additionalProperties: false
+    CM.Data.Core.Profiles.Shared.BoxedValue:
+      type: object
+      additionalProperties: false
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml
+- cm-com-mobile-marketing-cloud-cdp-profiles-v1-openapi.yml

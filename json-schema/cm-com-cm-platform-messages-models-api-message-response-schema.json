@@ -1,0 +1,537 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-platform-messages-models-api-message-response-schema.json",
+  "title": "CM.Platform.Messages.Models.ApiMessageResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-mmc-campaigns-v1-openapi.yml#/components/schemas/CM.Platform.Messages.Models.ApiMessageResponse",
+  "type": "object",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "isStatsComplete": {
+      "type": "boolean"
+    },
+    "isArchived": {
+      "type": "boolean"
+    },
+    "analytics": {
+      "$ref": "#/$defs/CM.Platform.Messages.Models.ApiMessageAnalytics"
+    },
+    "preview": {
+      "$ref": "#/$defs/CM.Platform.Messages.Models.ApiMessagePreview"
+    },
+    "body": {
+      "type": "string"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "countrySpecificSenders": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "grouping": {
+      "type": "string"
+    },
+    "ignoreUnsubscribes": {
+      "type": "boolean"
+    },
+    "name": {
+      "type": "string"
+    },
+    "recipients": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CM.Platform.Messages.Models.ApiRecipient"
+      }
+    },
+    "recurrence": {
+      "type": "string"
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CM.Platform.Messages.Models.Conversation"
+      }
+    },
+    "scheduledAtUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "senderPreset": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "senders": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "spread": {
+      "$ref": "#/$defs/CM.Platform.Messages.Models.ApiSpreadSettings"
+    },
+    "status": {
+      "type": "string"
+    },
+    "tariff": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "modifiedAtUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "createdAtUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "createdBy": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "updatedAtUtc": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "CM.Platform.Messages.Models.ApiCountryErrorStats": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "count": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "errorCode": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.ApiCountryStats": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "accepted": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "converted": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "delivered": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "deliveryTime": {
+          "format": "double",
+          "type": "number"
+        },
+        "dispatched": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "failed": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "messages": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "optedOut": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "optOutReceived": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isRead": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "recipients": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.ApiMessageAnalytics": {
+      "type": "object",
+      "properties": {
+        "accepted": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "converted": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "countryErrorStats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.ApiCountryErrorStats"
+          }
+        },
+        "countryStats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.ApiCountryStats"
+          }
+        },
+        "deduplicated": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "delivered": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "deliveryTime": {
+          "format": "double",
+          "type": "number"
+        },
+        "dispatched": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "euroPrice": {
+          "format": "double",
+          "type": "number"
+        },
+        "failed": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "localCurrency": {
+          "type": "string"
+        },
+        "localPrice": {
+          "format": "double",
+          "type": "number"
+        },
+        "messages": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "optedOut": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "isRead": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "optOutReceived": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "recipients": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "test": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "updatedAtUtc": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.ApiMessagePreview": {
+      "type": "object",
+      "properties": {
+        "previews": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "footerPreview": {
+          "type": "string"
+        },
+        "mediaPreviews": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.Media"
+          }
+        },
+        "titlePreviews": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "suggestionsPreview": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.ApiMessagePreviewSuggestion"
+          }
+        },
+        "previewCode": {
+          "type": "string"
+        },
+        "profileImage": {
+          "type": "string"
+        },
+        "sender": {
+          "type": "string"
+        },
+        "recipientsPerCountry": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.ApiRecipientsPerCountry"
+          }
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.ApiMessagePreviewSuggestion": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.ApiRecipient": {
+      "type": "object",
+      "properties": {
+        "contact": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "group": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "msisdn": {
+          "type": "string"
+        },
+        "pushId": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.ApiRecipientsPerCountry": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "countryCode": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.ApiSpreadSettings": {
+      "type": "object",
+      "properties": {
+        "durationMinutes": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "timeFrames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.ApiTimeFrame"
+          }
+        },
+        "until": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.ApiTimeFrame": {
+      "type": "object",
+      "properties": {
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "startTime": {
+          "type": "string"
+        },
+        "endTime": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.Conversation": {
+      "type": "object",
+      "properties": {
+        "media": {
+          "$ref": "#/$defs/CM.Platform.Messages.Models.Media"
+        },
+        "whatsAppTemplate": {
+          "$ref": "#/$defs/CM.Platform.Messages.Models.WhatsAppTemplate"
+        },
+        "text": {
+          "type": "string"
+        },
+        "header": {
+          "type": "string"
+        },
+        "footer": {
+          "type": "string"
+        },
+        "suggestions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.Suggestion"
+          }
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.Media": {
+      "type": "object",
+      "properties": {
+        "mediaName": {
+          "type": "string"
+        },
+        "mediaUri": {
+          "type": "string"
+        },
+        "mimeType": {
+          "type": "string"
+        },
+        "mediaType": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.Suggestion": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "OpenUrl",
+            "CalendarEvent",
+            "Dial",
+            "ViewLocation",
+            "Reply",
+            "OpenAppPage"
+          ],
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "postbackdata": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "viewLocation": {
+          "$ref": "#/$defs/CM.Platform.Messages.Models.Viewlocation"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.Viewlocation": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "string"
+        },
+        "longitude": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.WATemplateComponent": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "subType": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.WATemplateComponentParameter"
+          }
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.WATemplateComponentParameter": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "media": {
+          "$ref": "#/$defs/CM.Platform.Messages.Models.Media"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Messages.Models.WhatsAppTemplate": {
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "languageCode": {
+          "type": "string"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Messages.Models.WATemplateComponent"
+          }
+        }
+      }
+    }
+  }
+}

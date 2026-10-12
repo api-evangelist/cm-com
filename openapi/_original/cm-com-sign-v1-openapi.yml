@@ -1,0 +1,2900 @@
+# x-archived-from: cm-com-sign-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: '3.1.1'
+
+servers:
+  - url: https://api.cm.com/sign/v1
+  - url: https://api.cm.com/sign-sandbox/v1
+
+security: [ { JWT: [ ] } ]
+
+info:
+  version: "1"
+  title: Sign API
+  description: |
+    Sign by CM.com offers the ability to have end users sign PDF documents online.
+
+    Before you can start using the API, you need to be provided with credentials. You will have received these credentials, consisting of a Key and a Key Id, when you registered for Sign. If you have not yet received any credentials, you can request them via [this link](https://www.cm.com/app/verification-registration/sign). This will grant you access to the sandbox environment.
+
+    *The credentials provided by CM.com are confidential and should be kept secret.*
+
+tags:
+  - name: "Document"
+    description: "Upload documents"
+  - name: "Dossier"
+    description: "Manage dossier"
+  - name: "Invite"
+    description: "Manage invites"
+  - name: "Archive"
+    description: "Manage archive"
+  - name: "Channels"
+    description: "Retrieve invite channels"
+  - name: "Invitee"
+    description: ""
+  - name: "Identification"
+    description: ""
+  - name: "Payment"
+    description: ""
+  - name: "Client"
+    description: "Manage clients. A client consists of a key and secret and provides access to the API. Please note that access must be explicitly granted in order to use the client management calls."
+  - name: "Webhook"
+    description: "Manage webhooks"
+  - name: "Webhook Events"
+    description: |
+      Events sent to your webhook URL when something happens in the lifetime of a dossier. Webhooks are subscribed to via the `Webhook` endpoints.
+
+      More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.
+  - name: "Branding"
+    description: "Change the branding style that is being used in email communication"
+  - name: "Reassign Request"
+    description: "Manage reassignment requests"
+  - name: "Template"
+    description: "Manage templates"
+
+paths:
+  /upload:
+    post:
+      operationId: upload_document
+      summary: Upload document
+      description: |
+        Upload a new PDF document to be added to a dossier. Make sure to indicate the `Content-Type` correctly for the file parameter of the form data. The file should be no more than 10MB. The filename will be visible to the end user.
+      tags: [ Document ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUpload'
+            encoding:
+              file:
+                contentType: application/pdf
+
+      responses:
+        '200':
+          description: Successful upload with the description of the file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossiers:
+    post:
+      operationId: create_dossier
+      summary: Create dossier
+      description: |
+        Create a new dossier to sign. To be notified of changes to the dossier, subscribe to webhook events. For the event structure see the `Webhook Events` section.
+      tags: [ Dossier ]
+      requestBody:
+        description: |
+          You need to provide one or more file id's you've uploaded previously and add the invitees and fields for the persons that need to sign or review the document(s).
+
+          A dossier owner can be specified, but this is optional.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDossier'
+
+      responses:
+        '201':
+          description: The newly created dossier. Will return your dossierId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossiers/{dossierId}:
+    parameters:
+      - $ref: '#/components/parameters/DossierId'
+    get:
+      operationId: get_dossier
+      summary: Get dossier
+      description: |
+        Retrieve a single dossier and all its related information
+      tags: [ Dossier ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: replace_dossier
+      summary: Update dossier
+      description: |
+        Modify a single dossier and its related information
+      tags: [ Dossier ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifyDossier'
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidState'
+    delete:
+      operationId: delete_dossier
+      summary: Delete dossier
+      description: |
+        Remove a single dossier and its related information
+      tags: [ Dossier ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossiers/{dossierId}/download:
+    get:
+      operationId: download_dossier
+      summary: Download signed files
+      description: |
+        Download a ZIP file containing the complete result of a dossier. The ZIP file will include the PDF files and audit report.
+
+        You can also download the PDF file(s) and audit report separately by using the `type` query parameter
+      tags: [ Dossier ]
+      parameters:
+        - $ref: '#/components/parameters/DossierId'
+        - $ref: '#/components/parameters/DownloadType'
+        - $ref: '#/components/parameters/DownloadFile'
+      responses:
+        '200':
+          description: A ZIP or PDF file
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidState'
+
+  /dossiers/{dossierId}/invitees/{inviteeId}:
+    parameters:
+      - $ref: '#/components/parameters/DossierId'
+      - $ref: '#/components/parameters/InviteeId'
+    put:
+      operationId: replace_dossier_invitee
+      summary: Update invitee
+      description: |
+        Modify a single invitee and its related information.
+        When the dossier is in `pending` state only the `name`, `email` and `phoneNumber` can be modified.
+        Existing invites for the invitee are automatically invalidated if the `email` or `phoneNumber` is changed.
+      tags: [ Invitee ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifyInvitee'
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidState'
+
+  /dossiers/{dossierId}/invites:
+    parameters:
+      - $ref: '#/components/parameters/DossierId'
+    get:
+      operationId: list_dossier_invites
+      summary: Get all invites
+      description: |
+        List of all the invites in the dossier
+      tags: [ Invite ]
+      responses:
+        '200':
+          description: The list of all invites in the dossier
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      operationId: create_dossier_invite
+      summary: Create invites
+      description: |
+        Add invites to the dossier if allowed. In the response you will receive the id for this new invite.
+      tags: [ Invite ]
+      requestBody:
+        description: Add invites to the dossier that needs to be signed
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Invite'
+      responses:
+        '201':
+          description: |
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidState'
+
+  /dossiers/{dossierId}/invites/{inviteId}:
+    parameters:
+      - $ref: '#/components/parameters/DossierId'
+      - $ref: '#/components/parameters/InviteId'
+
+    get:
+      operationId: get_dossier_invite
+      summary: Get invite
+      description: |
+        Retrieve the invite from the dossier.
+      tags: [ Invite ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      operationId: delete_dossier_invite
+      summary: Delete invite
+      description: |
+        Remove a single invite from the dossier.
+      tags: [ Invite ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invite'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidState'
+
+  /archive:
+    get:
+      operationId: list_archive
+      summary: Get all dossiers
+      description: Retrieve all dossiers in the archive
+      tags: [ Archive ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Archive'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /archive/{archiveId}:
+    parameters:
+      - $ref: '#/components/parameters/ArchiveId'
+    delete:
+      operationId: delete_archive
+      summary: Delete dossier
+      description: Delete a dossier from the archive
+      tags: [ Archive ]
+      responses:
+        '201':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /archive/{archiveId}/files/{fileId}:
+    parameters:
+      - $ref: '#/components/parameters/ArchiveId'
+      - $ref: '#/components/parameters/FileId'
+    get:
+      operationId: get_archive_file
+      summary: Download file
+      description: Download a file from a dossier
+      tags: [ Archive ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: File download error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dossiers/{dossierId}/fields/{fieldId}/value:
+    parameters:
+      - $ref: '#/components/parameters/DossierId'
+      - $ref: '#/components/parameters/FieldId'
+
+    get:
+      operationId: get_field_value
+      summary: Get field value
+      description: |
+        Retrieve the field value.
+      tags: [ Dossier ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldValue'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossiers/{dossierId}/fieldvalues:
+    parameters:
+      - $ref: '#/components/parameters/DossierId'
+
+    get:
+      operationId: list_field_values
+      summary: Gets all field values
+      description: |
+        Returns the field values for fields of type checkbox, label, radio, text, and textarea
+      tags: [ Dossier ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldIdFieldValue'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossiers/{dossierId}/invitees/{inviteeId}/identifications:
+    parameters:
+      - $ref: '#/components/parameters/DossierId'
+      - $ref: '#/components/parameters/InviteeId'
+    get:
+      operationId: list_identifications
+      summary: Get identifications
+      description: |
+        Retrieve the identification methods and results per invitee.
+      tags: [ Identification ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentificationResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossiers/{dossierId}/invitees/{inviteeId}/payments:
+    parameters:
+      - $ref: '#/components/parameters/DossierId'
+      - $ref: '#/components/parameters/InviteeId'
+    get:
+      operationId: list_payments
+      summary: Get payments
+      description: |
+        Retrieve the payment methods and statuses per invitee.
+      tags: [ Payment ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/NotAvailable'
+
+  /clients/{kid}/branding:
+    parameters:
+      - $ref: '#/components/parameters/KeyId'
+    post:
+      operationId: replace_branding
+      summary: Update branding
+      description: |
+        Create or update branding
+      tags: [ Branding ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Branding'
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branding'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/NotAvailable'
+
+    get:
+      operationId: get_branding
+      summary: Get branding
+      description: |
+        Retrieve branding
+      tags: [ Branding ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branding'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /clients:
+    post:
+      operationId: create_client
+      tags: [ Client ]
+      summary: Create client
+      description: |
+        Create a client.
+
+        This endpoint is only available to API clients with admin access. Admin access allows an API client to
+        manage other API clients through the `/clients` endpoints. Admin access is not enabled by default and
+        must be explicitly granted by CM.com. It cannot be requested or changed through the API.
+
+        There is no dedicated endpoint to check your admin access in advance: calling this endpoint without admin
+        access returns `403 Forbidden`, while a successful call confirms you have admin access.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientCreate'
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientCreate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    get:
+      operationId: list_clients
+      summary: Get all clients
+      description: |
+        Retrieve all clients.
+
+        This endpoint is only available to API clients with admin access. Admin access allows an API client to
+        manage other API clients through the `/clients` endpoints. Admin access is not enabled by default and
+        must be explicitly granted by CM.com. It cannot be requested or changed through the API.
+
+        There is no dedicated endpoint to check your admin access in advance: calling this endpoint without admin
+        access returns `403 Forbidden`, while a successful call confirms you have admin access.
+      tags: [ Client ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /clients/{kid}:
+    parameters:
+      - $ref: '#/components/parameters/KeyId'
+    get:
+      operationId: get_client
+      summary: Get client
+      description: |
+        Retrieve the client.
+
+        This endpoint is only available to API clients with admin access. Admin access allows an API client to
+        manage other API clients through the `/clients` endpoints. Admin access is not enabled by default and
+        must be explicitly granted by CM.com. It cannot be requested or changed through the API.
+
+        There is no dedicated endpoint to check your admin access in advance: calling this endpoint without admin
+        access returns `403 Forbidden`, while a successful call confirms you have admin access.
+      tags: [ Client ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      operationId: replace_client
+      summary: Update client
+      description: |
+        Update a client.
+
+        This endpoint is only available to API clients with admin access. Admin access allows an API client to
+        manage other API clients through the `/clients` endpoints. Admin access is not enabled by default and
+        must be explicitly granted by CM.com. It cannot be requested or changed through the API.
+
+        There is no dedicated endpoint to check your admin access in advance: calling this endpoint without admin
+        access returns `403 Forbidden`, while a successful call confirms you have admin access.
+      tags: [ Client ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /clients/{kid}/webhooks:
+    parameters:
+      - $ref: '#/components/parameters/KeyId'
+
+    post:
+      operationId: create_client_webhook
+      summary: Add webhook
+      description: Add a webhook
+      tags: [ Webhook ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhook'
+      responses:
+        '201':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    get:
+      operationId: list_client_webhooks
+      summary: Get all webhooks
+      description: Retrieve all webhooks
+      tags: [ Webhook ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /clients/{kid}/webhooks/{webhookId}:
+    parameters:
+      - $ref: '#/components/parameters/KeyId'
+      - $ref: '#/components/parameters/WebhookId'
+
+    get:
+      operationId: get_client_webhook
+      summary: Get webhook
+      description: Retrieve a webhook
+      tags: [ Webhook ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      operationId: replace_client_webhook
+      summary: Update webhook
+      description: Update a webhook
+      tags: [ Webhook ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookUpdate'
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      operationId: delete_client_webhook
+      summary: Delete webhook
+      description: Delete a webhook
+      tags: [ Webhook ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /clients/{kid}/channels:
+    parameters:
+      - $ref: '#/components/parameters/KeyId'
+    get:
+      operationId: list_channels
+      summary: Get configured channels
+      description: Retrieve all channels that can be used to send an invite.
+      tags: [ Channels ]
+      responses:
+        '200':
+          description: |
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Channel'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /reassignrequests:
+    get:
+      operationId: list_reassignrequests
+      summary: Get all reassign requests
+      description: Get all reassignment requests of unexpired dossiers
+      tags: [ Reassign Request ]
+      responses:
+        '200':
+          description: Reassign requests have been retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReassignRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /reassignrequests/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ReassignRequestId'
+    get:
+      operationId: get_reassignrequest
+      summary: Get reassign request
+      description: Get a reassignment request
+      tags: [ Reassign Request ]
+      responses:
+        '200':
+          description: Reassign request has been retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReassignRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: replace_reassignrequest
+      summary: Update reassign request
+      description: Approve or decline a reassignment request
+      tags: [ Reassign Request ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifyReassignRequest'
+      responses:
+        '200':
+          description: Reassign request has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReassignRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /templates:
+    get:
+      parameters:
+        - in: query
+          name: page
+          description: The page of paginated templates to fetch. If not provided, gets the first page.
+          schema:
+            type: [ 'integer', 'null' ]
+            default: 1
+            examples: [ 1 ]
+        - in: query
+          name: sortBy
+          description: >
+            The template field to sort the templates by, order depends on the 'order' parameter.
+              * lastUsedAt - The date the template was last used at.
+              * name - The name of the template.
+          schema:
+            type: [ 'string', 'null' ]
+            default: 'lastUsedAt'
+            enum:
+              - lastUsedAt
+              - name
+        - in: query
+          name: order
+          description: >
+            The order to sort the templates by, depending on the 'sortBy' parameter.
+              * asc - Ascending. From A to Z of the name, or least recently used to most recently used.
+              * desc - Descending. From Z to A of the name, or most recently used to least recently used.
+          schema:
+            type: [ 'string', 'null' ]
+            default: 'asc'
+            enum:
+              - asc
+              - desc
+        - in: query
+          name: perPage
+          description: Number of templates to show in the response. If not provided, below 1, or above 100, will be set to 10.
+          schema:
+            type: [ 'integer', 'null' ]
+            default: 10
+            examples: [ 10 ]
+        - in: query
+          name: search
+          description: Filter the templates if their name contains the search text.
+          schema:
+            type: [ 'string', 'null' ]
+            examples: [ 'HR Template' ]
+      operationId: list_templates
+      summary: Get all templates
+      description: Retrieve a paginated response of all templates.
+      tags: [ Template ]
+      responses:
+        '200':
+          description: Templates have been retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of templates retrieved.
+                    examples: [ 1 ]
+                  perPage:
+                    type: integer
+                    description: Maximum number of templates to be shown in the data field. Can be set in the query parameter.
+                    examples: [ 10 ]
+                  currentPage:
+                    type: integer
+                    description: The current page of templates being returned.
+                    examples: [ 1 ]
+                  lastPage:
+                    type: integer
+                    description: The number of the last page containing templates.
+                    examples: [ 1 ]
+                  from:
+                    type: integer
+                    description: The index of the first template in the current page.
+                    examples: [ 1 ]
+                  to:
+                    type: integer
+                    description: The index of the last template in the current page.
+                    examples: [ 1 ]
+                  data:
+                    type: array
+                    description: The template objects with their data. Quantity returned depends on the 'perPage' parameter.
+                    items:
+                      $ref: '#/components/schemas/Template'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: create_template
+      summary: Create template
+      description: Create a new template.
+      tags: [ Template ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplate'
+      responses:
+        '201':
+          description: The template has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /templates/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: A unique uuid string that identifies a template.
+        required: true
+        example: '6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49'
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: get_template
+      summary: Get template
+      description: Get a specific template.
+      tags: [ Template ]
+      responses:
+        '200':
+          description: The template has been retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: replace_template
+      summary: Update template
+      description: Update a specific template.
+      tags: [ Template ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplate'
+      responses:
+        '200':
+          description: The template has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: delete_template
+      summary: Delete template
+      description: Delete a specific template.
+      tags: [ Template ]
+      responses:
+        '200':
+          description: The template has been deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+webhooks:
+  dossier.state.updated:
+    post:
+      operationId: webhook_dossier_state_updated
+      summary: Dossier state updated
+      description: |
+        The state of the dossier is updated. For example, from `pending` to `completed`. This event is sent by default.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierStateUpdatedEvent'
+            example:
+              id: "b041a287-bc92-4469-801e-ae1a39c08f6e"
+              type: "dossier.state.updated"
+              created: "2026-01-01T00:00:00+00:00"
+              dossier:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: "completed"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+  dossier.prepared:
+    post:
+      operationId: webhook_dossier_prepared
+      summary: Dossier prepared
+      description: |
+        The prepare step has been completed: fields are added to the dossier and invites should be sent. This event is sent by default.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierPreparedEvent'
+            example:
+              id: "c36f5fc9-b412-4aeb-9cbd-bdb6cdca581f"
+              type: "dossier.prepared"
+              created: "2026-01-01T00:00:00+00:00"
+              dossier:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: "draft"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+  dossier.invite.created:
+    post:
+      operationId: webhook_dossier_invite_created
+      summary: Invite created
+      description: |
+        An invite has been created.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteCreatedEvent'
+            example:
+              id: "523075b3-dae7-4f2e-89ba-b194d2b56c2f"
+              type: "dossier.invite.created"
+              created: "2026-01-01T00:00:00+00:00"
+              dossier:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: "draft"
+              invite:
+                id: "87aa2c40-7ad1-4493-8ede-640eab6d2f4e"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+  dossier.invite.expired:
+    post:
+      operationId: webhook_dossier_invite_expired
+      summary: Invite expired
+      description: |
+        An invite has expired.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteExpiredEvent'
+            example:
+              id: "115c17e0-e714-465c-a3a4-f33700a69d7b"
+              type: "dossier.invite.expired"
+              created: "2026-01-01T00:00:00+00:00"
+              dossier:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: "pending"
+              invite:
+                id: "87aa2c40-7ad1-4493-8ede-640eab6d2f4e"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+  dossier.invite.undelivered:
+    post:
+      operationId: webhook_dossier_invite_undelivered
+      summary: Invite undelivered
+      description: |
+        An invite cannot be delivered. This event is sent by default.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteUndeliveredEvent'
+            example:
+              id: "e5210e6e-058b-4898-9f71-16f18eb6c141"
+              type: "dossier.invite.undelivered"
+              created: "2026-01-01T00:00:00+00:00"
+              dossier:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: "pending"
+              invite:
+                id: "87aa2c40-7ad1-4493-8ede-640eab6d2f4e"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+  dossier.invite.viewed:
+    post:
+      operationId: webhook_dossier_invite_viewed
+      summary: Invite viewed
+      description: |
+        The invite has been viewed by the invitee.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteViewedEvent'
+            example:
+              id: "e20d315d-9b37-4407-a036-22f4fdafb226"
+              type: "dossier.invite.viewed"
+              created: "2026-01-01T00:00:00+00:00"
+              dossier:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: "pending"
+              invite:
+                id: "87aa2c40-7ad1-4493-8ede-640eab6d2f4e"
+              invitee:
+                id: "f6b72c37-9255-4272-8b21-f2f6ba9537ba"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+  dossier.invitee.state.updated:
+    post:
+      operationId: webhook_dossier_invitee_state_updated
+      summary: Invitee state updated
+      description: |
+        The invitee state is updated. For example, to `approved` or `declined`.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteeStateUpdatedEvent'
+            example:
+              id: "12a1eded-01ca-4e56-9e6c-125842dca977"
+              type: "dossier.invitee.state.updated"
+              created: "2026-01-01T00:00:00+00:00"
+              dossier:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: "pending"
+              invitee:
+                id: "f6b72c37-9255-4272-8b21-f2f6ba9537ba"
+                state: "approved"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+  dossier.invitee.reassignRequest.state.updated:
+    post:
+      operationId: webhook_dossier_invitee_reassignRequest_state_updated
+      summary: Reassign request state updated
+      description: |
+        The state of the reassign request is updated. For example, from `pending` to `approved`.
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.
+      tags: [ Webhook Events ]
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteeReassignRequestStateUpdatedEvent'
+            example:
+              id: "f5b8eb0b-e976-4dc4-88c9-069f377dd1c9"
+              type: "dossier.invitee.reassignRequest.state.updated"
+              created: "2026-01-01T00:00:00+00:00"
+              dossier:
+                id: "b659c273-954e-43cf-893a-0f74a7f87153"
+                state: "pending"
+              reassignRequest:
+                id: "44971ae0-88fc-43e7-9868-ceaacf6d3ee4"
+                state: "pending"
+                originalInvitee:
+                  id: "f6b72c37-9255-4272-8b21-f2f6ba9537ba"
+                  state: "reassigned"
+      responses:
+        '2XX':
+          $ref: '#/components/responses/WebhookReceived'
+
+components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access to the specified resource was denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InvalidState:
+      description: The request cannot be made because the state of the dossier does not match the state that is expected for this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotAvailable:
+      description: The request cannot be made because the feature is not available for your account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    WebhookReceived:
+      description: |
+        The event was received successfully. Any 2xx HTTP status code is accepted and the response body is ignored.
+
+        In case of a 5xx status code the event will be retried several times with an exponentially increasing delay of up to a maximum of 1 day between attempts. After 4 failed delivery attempts the event is dropped.
+
+  parameters:
+    DossierId:
+      name: dossierId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        a uuid string that identifies a dossier
+      example: 22470767-904e-4553-9586-d7ed4f2b330e
+
+    FileId:
+      name: fileId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        a uuid string that identifies a file
+      example: 22470767-904e-4553-9586-d7ed4f2b331f
+
+    InviteeId:
+      name: inviteeId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        a uuid string that identifies a single invitee
+      example: c4b5020f-a092-4516-b890-81a635ebe470
+
+    InviteId:
+      name: inviteId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        a uuid string that identifies a single invite
+      example: 6f840cea-796e-4d5d-97ce-20114af5f51c
+
+    DownloadType:
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - zip
+          - file
+          - auditReport
+      required: false
+      description: |
+        Specify the download type. Defaults to `zip`
+      example: zip
+
+    DownloadFile:
+      name: file
+      in: query
+      schema:
+        type: string
+        format: uuid
+      required: false
+      description: |
+        When a dossiers has multiple files and download type is `file` you must specify which file to download.
+
+        This parameter will match the `id` of a file object
+
+        When there is only one document per dossier you can omit this parameter and it will automatically determine the file to download.
+
+    KeyId:
+      name: kid
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        a uuid string that identifies the client
+      example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
+
+    WebhookId:
+      name: webhookId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        a uuid string that identifies a webhook
+      example: b411f416-bec1-4714-91c1-a97daad86b01
+
+    FieldId:
+      name: fieldId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        a uuid string that identifies a field
+      example: cb222836-fd18-4ec5-8283-63ca2cd2dc0f
+
+    ArchiveId:
+      name: archiveId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: |
+        a uuid string that identifies an archived dossier
+      example: a4dfcba2-cfaa-4240-8e48-5baa7a25bcac
+
+    ReassignRequestId:
+      name: id
+      in: path
+      schema:
+        type: string
+      required: true
+      description: A unique uuid string that identifies a reassign request.
+      example: '6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49'
+
+  schemas:
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+
+    FileUpload:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/pdf
+          description: The PDF document to upload.
+
+    FileId:
+      $ref: '#/components/schemas/FileReference'
+      readOnly: true
+
+    AttachmentId:
+      $ref: '#/components/schemas/FileReference'
+      readOnly: true
+
+    FileReference:
+      type: string
+      format: uuid
+      description: A unique reference number for this file.
+      examples: [ 8d817359-7eb8-4b6e-9030-17ac286b7dc0 ]
+
+    FileBase:
+      title: File
+      type: object
+      properties:
+        name:
+          type: string
+          description: Original name of the file without extension
+          maxLength: 255
+          examples: [ Purchase contract ]
+        hash:
+          type: string
+          description: A sha256 hash of the document
+          maxLength: 64
+          readOnly: true
+        uploadDateTime:
+          type: string
+          format: date-time
+          description: The time at which the file was uploaded
+          readOnly: true
+        size:
+          type: integer
+          description: The size of the file in bytes
+          examples: [ 3028 ]
+        contentType:
+          type: string
+          description: The content type identifying the type of file
+          examples: [ application/pdf ]
+          readOnly: true
+      required: [ name, hash, uploadDateTime, contentType ]
+
+    AttachmentBase:
+      title: Attachment
+      type: object
+      properties:
+        name:
+          type: string
+          description: Original name of the attachment without extension
+          maxLength: 255
+          examples: [ Attachment v1 ]
+        hash:
+          description: A sha256 hash of the attachment
+          maxLength: 64
+          readOnly: true
+        uploadDateTime:
+          type: string
+          format: date-time
+          description: The time at which the attachment was uploaded
+          readOnly: true
+        contentType:
+          type: string
+          description: The content type identifying the type of attachment
+          examples: [ application/pdf ]
+          readOnly: true
+
+    CreateFile:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/FileReference'
+          required: [ id ]
+        - $ref: '#/components/schemas/FileBase'
+
+    ModifyFile:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/FileReference'
+          required: [ id ]
+        - $ref: '#/components/schemas/FileBase'
+
+    File:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/FileId'
+          required: [ id ]
+        - $ref: '#/components/schemas/FileBase'
+
+    Attachment:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/AttachmentId'
+          required: [ id ]
+        - $ref: '#/components/schemas/AttachmentBase'
+
+    DossierId:
+      $ref: '#/components/schemas/DossierReference'
+      readOnly: true
+
+    DossierReference:
+      type: string
+      format: uuid
+      description: Id of the dossier
+      examples: [ 22470767-904e-4553-9586-d7ed4f2b330e ]
+
+    Locale:
+      type: string
+      enum:
+        - de-DE
+        - en-US
+        - es-ES
+        - fr-FR
+        - hu-HU
+        - it-IT
+        - ja-JP
+        - nl-NL
+        - pl-PL
+        - pt-PT
+        - ro-RO
+        - sk-SK
+      default: en-US
+
+    DossierBase:
+      title: Dossier
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/DossierId'
+        name:
+          type: string
+          description: human readable name for this dossier
+          maxLength: 255
+          examples: [ Purchase contract ]
+        state:
+          $ref: '#/components/schemas/DossierState'
+          readOnly: true
+        locale:
+          $ref: '#/components/schemas/Locale'
+          description: Locale of the language to be used in the dossier
+        completed:
+          type: boolean
+          examples: [ false ]
+          description: If the dossier is marked as complete
+          readOnly: true
+        prepare:
+          type: [ 'boolean', 'null' ]
+          examples: [ false ]
+          description: Place fields using the web interface
+        prepareReturnUrl:
+          type: [ 'string', 'null' ]
+          examples: [ https://example.com ]
+          description: Optionally redirect the user to your website after the fields are placed. The url must begin with https://
+        prepareUrl:
+          type: string
+          examples: [ https://www.cm.com/app/sign/prepare/00f00a... ]
+          description: |
+            The URL to the web interface to place fields. The URL is only valid for 60 minutes. Only available when the dossier has been created with `prepare`: `true`
+          readOnly: true
+        timezone:
+          type: [ 'string', 'null' ]
+          description: The identifier of a time zone in the IANA database. This will change the time zone of dates used in communication to the recipient and dossier owner. By default Etc/UTC is used when no value is set.
+          examples: [ Europe/Amsterdam ]
+        expiresIn:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 7776000
+          examples: [ 2592000 ]
+          default: 2592000
+          description: The expiry in seconds since the dossier was created
+        reminderIn:
+          type: [ 'integer', 'null' ]
+          minimum: 86400
+          maximum: 7776000
+          examples: [ 604800 ]
+          description: The time in seconds after the invite was sent to an invitee, after which an automatic reminder will be sent. Reminders only work if the invite emails were sent by Sign. To cancel all reminders for an existing dossier set value to `null`
+        expiresAt:
+          type: string
+          format: date-time
+          description: The date the dossier expires
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the dossier was created
+          readOnly: true
+      required: [ name ]
+
+    Dossier:
+      allOf:
+        - $ref: '#/components/schemas/DossierBase'
+        - type: object
+          properties:
+            owners:
+              type: array
+              items:
+                $ref: '#/components/schemas/DossierOwner'
+            files:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/File'
+            attachments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attachment'
+            invitees:
+              type: array
+              items:
+                $ref: '#/components/schemas/Invitee'
+          required: [ state, locale, completed, files,invitees ]
+
+    CreateDossier:
+      allOf:
+        - $ref: '#/components/schemas/DossierBase'
+        - type: object
+          properties:
+            archive:
+              type: boolean
+              default: false
+              description: This determines if the dossier needs to be archived.
+            files:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/CreateFile'
+            attachments:
+              type: array
+              minItems: 0
+              items:
+                $ref: '#/components/schemas/CreateFile'
+            owners:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateDossierOwner'
+            invitees:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateInvitee'
+            template:
+              type: [ 'string', 'null' ]
+              format: uuid
+              description: Create a dossier from a template. This means that files and field positions are automatically copied from the template. You can find the template ID in the dashboard.
+              default: null
+              examples: [ '06c2e210-54a8-417f-adf2-fc767c31c929' ]
+            templateLabelValues:
+              type: object
+              description: Key-value pairs for template labels. The key must match the exact value of the predefined label in the template. It will then be overwritten by the value in the request.
+              additionalProperties:
+                type: string
+                description: The value corresponding to the key.
+          required: [ name, files ]
+
+    ModifyDossier:
+      allOf:
+        - $ref: '#/components/schemas/DossierBase'
+        - type: object
+          properties:
+            owners:
+              type: array
+              items:
+                $ref: '#/components/schemas/ModifyDossierOwner'
+            files:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/ModifyFile'
+            invitees:
+              type: array
+              items:
+                $ref: '#/components/schemas/ModifyInvitee'
+            attachments:
+              type: array
+              minItems: 0
+              items:
+                $ref: '#/components/schemas/ModifyFile'
+
+    DossierWebhook:
+      description: Basic unprivileged information of the Dossier referred to by a webhook event
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/DossierReference'
+        state:
+          $ref: '#/components/schemas/DossierState'
+      required: [ id, state ]
+
+    InviteWebhook:
+      description: Basic unprivileged information of the Invite referred to by a webhook event
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/InviteReference'
+      required: [ id ]
+
+    InviteeWebhook:
+      description: Basic unprivileged information of the Invitee referred to by a webhook event. The `state` is only present when the invitee state was updated.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/InviteeReference'
+        state:
+          $ref: '#/components/schemas/InviteeState'
+      required: [ id ]
+
+    ReassignRequestWebhook:
+      description: Basic unprivileged information of the Reassign Request referred to by a webhook event
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID of the reassign request
+        state:
+          $ref: '#/components/schemas/ReassignRequestState'
+        originalInvitee:
+          type: object
+          description: The original invitee who requested reassignment
+          properties:
+            id:
+              $ref: '#/components/schemas/InviteeReference'
+            state:
+              $ref: '#/components/schemas/InviteeState'
+          required: [ id, state ]
+      required: [ id, state, originalInvitee ]
+
+    WebhookEventBase:
+      description: Properties shared by all webhook events. More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the webhook event
+          examples: [ "b041a287-bc92-4469-801e-ae1a39c08f6e" ]
+        created:
+          type: string
+          format: date-time
+          description: The date the webhook event has been created
+          examples: [ "2026-01-01T00:00:00+00:00" ]
+      required: [ id, created ]
+
+    DossierStateUpdatedEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: dossier.state.updated
+              description: The type of the event
+            dossier:
+              $ref: '#/components/schemas/DossierWebhook'
+          required: [ type, dossier ]
+
+    DossierPreparedEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: dossier.prepared
+              description: The type of the event
+            dossier:
+              $ref: '#/components/schemas/DossierWebhook'
+          required: [ type, dossier ]
+
+    DossierInviteCreatedEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: dossier.invite.created
+              description: The type of the event
+            dossier:
+              $ref: '#/components/schemas/DossierWebhook'
+            invite:
+              $ref: '#/components/schemas/InviteWebhook'
+          required: [ type, dossier, invite ]
+
+    DossierInviteExpiredEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: dossier.invite.expired
+              description: The type of the event
+            dossier:
+              $ref: '#/components/schemas/DossierWebhook'
+            invite:
+              $ref: '#/components/schemas/InviteWebhook'
+          required: [ type, dossier, invite ]
+
+    DossierInviteUndeliveredEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: dossier.invite.undelivered
+              description: The type of the event
+            dossier:
+              $ref: '#/components/schemas/DossierWebhook'
+            invite:
+              $ref: '#/components/schemas/InviteWebhook'
+          required: [ type, dossier, invite ]
+
+    DossierInviteViewedEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: dossier.invite.viewed
+              description: The type of the event
+            dossier:
+              $ref: '#/components/schemas/DossierWebhook'
+            invite:
+              $ref: '#/components/schemas/InviteWebhook'
+            invitee:
+              $ref: '#/components/schemas/InviteeWebhook'
+          required: [ type, dossier, invite, invitee ]
+
+    DossierInviteeStateUpdatedEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: dossier.invitee.state.updated
+              description: The type of the event
+            dossier:
+              $ref: '#/components/schemas/DossierWebhook'
+            invitee:
+              $ref: '#/components/schemas/InviteeWebhook'
+          required: [ type, dossier, invitee ]
+
+    DossierInviteeReassignRequestStateUpdatedEvent:
+      allOf:
+        - $ref: '#/components/schemas/WebhookEventBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              const: dossier.invitee.reassignRequest.state.updated
+              description: The type of the event
+            dossier:
+              $ref: '#/components/schemas/DossierWebhook'
+            reassignRequest:
+              $ref: '#/components/schemas/ReassignRequestWebhook'
+          required: [ type, dossier, reassignRequest ]
+
+    DossierState:
+      type: string
+      enum: [ draft, pending, completed, declined, expired, deleted ]
+      examples: [ pending ]
+      description: Every dossier is initialized with the draft state. When the dossier is pending, it will have sent out any invitations for signing. From this point, the dossier is mostly no longer editable. Once everyone has signed, the state becomes completed and the signed dossier will be ready for retrieval. If any invitee declines, the state of the dossier will become declined. After the dossier expiry time has passed, a dossier will always enter the expired state. In the expired state a dossier can no longer be completed or declined. Once the state is deleted the signed contracts are no longer downloadable and all contracts and sensitive information are removed from the system.
+
+    InviteeId:
+      $ref: '#/components/schemas/InviteeReference'
+      readOnly: true
+
+    InviteeReference:
+      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
+      type: string
+      format: uuid
+      examples: [ c6f7eb6f-7414-4f5e-9096-85c6c5a48f84 ]
+
+    InviteeState:
+      type: [ 'string', 'null' ]
+      enum: [ approved, declined, reassigned ]
+      examples: [ approved ]
+      description: Indicates if the dossier has been approved or declined by the user.
+
+    InviteReference:
+      description: Id of the invite
+      type: string
+      format: uuid
+      examples: [ 7b842910-41ef-4ca7-8b4a-4eeb9172c54b ]
+
+    InviteeBase:
+      title: Invitee
+      description: An invitee is someone who has been invited to review and/or sign the dossier.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the person invited to read and/or sign the document
+          maxLength: 255
+          examples: [ Peter Invitee ]
+        email:
+          type: string
+          format: email
+          description: A valid email address
+          maxLength: 255
+        locale:
+          $ref: '#/components/schemas/Locale'
+          description: Locale of the language to be used in invitations.
+          nullable: true
+        position:
+          type: integer
+          description: Set the order of signing. For example if there are two invitees set position `1` for the first invitee and position `2` for the second invitee. It is possible to set multiple invitees on the same position. Make sure there is no gap between the positions.
+          examples: [ 1 ]
+        authenticationMethods:
+          type: array
+          items:
+            type: string
+            enum: [ otp_sms, otp_email, otp_whatsapp, otp_voice ]
+            description: Additional user authentication is required before the user can view the dossier. Please note that this is only available when configured for your account.
+        identificationMethod:
+          $ref: '#/components/schemas/IdentificationMethod'
+          deprecated: true
+        identificationMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentificationMethod'
+        notifications:
+          type: [ 'array', 'null' ]
+          items:
+            type: string
+            enum: [ 'invite', 'signed', 'reviewed', 'declined', 'completed' ]
+            description: Determines which notifications should be sent over the configured channel. By default all notifications are sent.
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+          description: Additional payment is required. Please note that this is only available when configured for your account.
+        phoneNumber:
+          type: string
+          description: The phone number of the invitee in E.164 format. Required when identificationMethod is otp.
+          examples: [ '+31601234567' ]
+        reference:
+          type: string
+          description: A reference to an external identifier of your invitee.
+          maxLength: 255
+          examples: [ 6c38955e-7324-41e7-97dd-0bcf55e275e2 ]
+        readOnly:
+          type: boolean
+          description: Indicates that this invitee needs to review the dossier, instead of signing it
+          default: false
+        state:
+          type: string
+          enum: [ approved, declined ]
+          description: The invitee has approved or declined the dossier
+        stateComment:
+          type: [ 'string', 'null' ]
+          description: When the invitee declined the dossier this field may contain the reason for declining.
+          default: null
+          readOnly: true
+          examples: [ null ]
+        stateChanged:
+          type: [ 'string', 'null' ]
+          format: date-time
+          description: The date the invitee state has changed
+          default: null
+          readOnly: true
+          examples: [ null ]
+        redirectUrl:
+          type: [ 'string', 'null' ]
+          format: url
+          description: URL to redirect the invitee to after signing, approving or declining the dossier. If not set, the default confirmation page will be shown.
+          default: null
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+      required: [ name ]
+
+    Invitee:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/InviteeId'
+          required: [ id ]
+        - $ref: '#/components/schemas/InviteeBase'
+
+    CreateInvitee:
+      $ref: '#/components/schemas/InviteeBase'
+
+    ModifyInvitee:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/InviteeReference'
+          required: [ id ]
+        - $ref: '#/components/schemas/InviteeBase'
+
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: The total number of items
+          minimum: 1
+          examples: [ 1 ]
+        perPage:
+          type: integer
+          description: The number of items per page
+          examples: [ 10 ]
+        currentPage:
+          type: integer
+          description: The current page number
+          examples: [ 1 ]
+        lastPage:
+          type: integer
+          description: The page number of the last available page
+          examples: [ 1 ]
+        from:
+          type: integer
+          description: The number of the first item in the current page
+          examples: [ 1 ]
+        to:
+          type: integer
+          description: The number of the last item in the current page
+          examples: [ 1 ]
+
+    ArchiveInvitee:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/InviteeId'
+        name:
+          type: string
+          description: Name of the person invited to read and/or sign the document
+          maxLength: 255
+          examples: [ Peter Invitee ]
+        email:
+          type: string
+          format: email
+          description: A valid email address
+          maxLength: 255
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date the invitee was updated
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the invitee was created
+          readOnly: true
+
+    ArchiveFile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the file
+          examples: [ '730c6ec8-755b-450f-9ab6-f57111ab2a76' ]
+          readOnly: true
+        name:
+          type: string
+          description: Original name of the file without extension
+          maxLength: 255
+          examples: [ Purchase contract ]
+        contentType:
+          type: string
+          description: The content type identifying the type of file
+          examples: [ application/pdf ]
+          readOnly: true
+        size:
+          type: integer
+          description: The size of the file in bytes
+          examples: [ 3028 ]
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date the file was updated
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the file was created
+          readOnly: true
+
+    DossierOwnerId:
+      $ref: '#/components/schemas/DossierOwnerReference'
+      readOnly: true
+
+    DossierOwnerReference:
+      type: string
+      format: uuid
+      description: Unique Id of the person who created and manages the dossier
+      examples: [ c2b0ff41-f97a-421d-a4eb-85b158a2de2a ]
+
+    DossierOwnerBase:
+      title: Owner
+      type: object
+      description: A person who is the creator and owner of the dossier. This person will receive emails of certain events and will receive a copy of the signed dossier.
+      properties:
+        name:
+          type: string
+          description: Name of the person who created the dossier
+          maxLength: 255
+          examples: [ Mike Dossierowner ]
+        email:
+          type: string
+          format: email
+          description: A valid email address
+          maxLength: 255
+        cc:
+          type: boolean
+          description: When set to `true` the owner will be added to the cc field in email communication.
+          default: false
+        notifications:
+          type: [ 'array', 'null' ]
+          items:
+            type: string
+            enum: [ 'signed', 'reviewed', 'declined', 'completed', 'expired', 'invite.expired', 'invite.undelivered', 'reassigned' ]
+            description: Determines which notifications should be sent to the dossier owner. By default all notifications are sent.
+          examples: [ null ]
+      required: [ name, email ]
+
+    CreateDossierOwner:
+      $ref: '#/components/schemas/DossierOwnerBase'
+
+    DossierOwner:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/DossierOwnerId'
+          required: [ id ]
+        - $ref: '#/components/schemas/DossierOwnerBase'
+
+    ModifyDossierOwner:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/DossierOwnerReference'
+          required: [ id ]
+        - $ref: '#/components/schemas/DossierOwnerBase'
+
+    FieldId:
+      $ref: '#/components/schemas/FieldReference'
+      readOnly: true
+
+    FieldReference:
+      type: string
+      format: uuid
+      description: Unique Id of a field
+      examples: [ 50ee1534-6172-4228-84e8-653c6f65eaf0 ]
+
+    FieldType:
+      type: string
+      description: The type of field for the invitee.
+      enum: [ signature, signatureDate, initials, text, textarea, label, checkbox, radio, stamp ]
+      examples: [ 'signature' ]
+
+    FieldBase:
+      title: Field
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FieldType'
+        required:
+          type: boolean
+          examples: [ true ]
+          default: true
+          description: Indicates if the field is required and must be filled in by the user. When required is `true` and type is `checkbox` the field must be checked. For the `checkbox` type, the default value is `false`.
+        file:
+          $ref: '#/components/schemas/FileReference'
+        tag:
+          type: string
+          examples: [ '{signature1}' ]
+          maxLength: 64
+          description: The tag acts as a placeholder; the range and locations of the field are automatically determined based on the location(s) of the tag in the document. Add the tag to every page the field should include in case of initials. The tag should be hidden, for example by making it white.
+        tagRequired:
+          type: boolean
+          examples: [ true ]
+          default: true
+          description: Indicates if the tag must be present in the document. When this is set to `false` and the tag is not found in the document it will skip this field.
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldLocation'
+        invitee:
+          $ref: '#/components/schemas/InviteeReference'
+          readOnly: true
+      required: [ type, file ]
+
+    FieldLocation:
+      type: object
+      properties:
+        range:
+          type: string
+          pattern: '^\d+(-\d+)?$'
+          maxLength: 64
+          description: The page number within the PDF that this field occupies (e.g. `1`), or range for a initials field (e.g. `1-3`).
+          examples: [ "1" ]
+        x:
+          type: number
+          format: float
+          description: X position of the field in points.
+        y:
+          type: number
+          format: float
+          description: Y position of the field in points.
+        width:
+          type: number
+          format: float
+          description: Width of the field in points.
+        height:
+          type: number
+          format: float
+          description: Height of the field in points.
+
+    Field:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/FieldId'
+          required: [ id ]
+        - $ref: '#/components/schemas/FieldBase'
+
+    Invite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the invite
+          examples: [ '730c6ec8-755b-450f-9ab6-f57111ab1d93' ]
+          readOnly: true
+        inviteeId:
+          type: string
+          format: uuid
+          description: The ID of the invitee
+          examples: [ '7ab828ac-054e-4189-b24d-a9ab1bf23196' ]
+        inviteUri:
+          type: string
+          format: url
+          description: |
+            This is a link which the particular invitee can use to access and subsequently sign the dossier.
+          examples: [ https://www.cm.com/app/sign/invites/fjDKGjSXeKSmZbH5zKDjuPmpQqoMZDfAAr7iZuXd4e8pIubzP5FwBm4Y28dwXG8zEHk ]
+          readOnly: true
+        channel:
+          $ref: '#/components/schemas/ChannelType'
+          examples: [ email ]
+          description: |
+            Send invite via email, SMS or WhatsApp. Please note that SMS and WhatsApp are only available when configured for your account.
+
+            If this field is not provided or set to null, the invite will not be sent automatically. Instead, the `inviteUri` will be included in the response, and the link must be manually provided to the invitee.
+          nullable: true
+        emailConfig:
+          type: object
+          writeOnly: true
+          properties:
+            message:
+              type: string
+              description: Add your own message to the invite email.
+        reminder:
+          type: boolean
+          examples: [ false ]
+          description: Marker to indicate this invite is a reminder of an earlier invite
+        emailSentAt:
+          type: string
+          format: date-time
+          description: The date at which the email was sent that was requested by setting the `channel` property of an invite to `email`.
+          readOnly: true
+        expiresIn:
+          type: integer
+          format: int32
+          minimum: 60
+          maximum: 7776000
+          examples: [ 2592000 ]
+          default: 2592000
+          description: The expiry in seconds since invite was created
+        expiresAt:
+          type: string
+          format: date-time
+          description: The date the invite expires
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the invite was created
+          readOnly: true
+
+    Archive:
+      allOf:
+        - $ref: '#/components/schemas/Pagination'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    $ref: '#/components/schemas/DossierId'
+                  name:
+                    type: string
+                    description: Name of the dossier
+                    examples: [ Purchase contract ]
+                  invitees:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArchiveInvitee'
+                  files:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArchiveFile'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: The date the dossier was updated
+                    readOnly: true
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: The date the dossier was created
+                    readOnly: true
+
+    Payment:
+      title: Payment
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: The payment amount in cents
+          minimum: 1
+          examples: [ 100 ]
+        currency:
+          type: string
+          enum: [ EUR ]
+          description: The payment currency
+      required: [ amount, currency ]
+
+    PaymentResult:
+      allOf:
+        - $ref: '#/components/schemas/Payment'
+        - type: object
+          properties:
+            status:
+              type: string
+              enum: [ pending, success, expired ]
+              description: The payment status
+              examples: [ success ]
+            paymentMethod:
+              type: string
+              description: The payment method
+              examples: [ IDEAL ]
+            paymentReference:
+              type: string
+              description: The payment reference
+              examples: [ ch-9a0a32bc-bb25-4f5f-8aeb-681276a738fe ]
+
+    IdentificationResult:
+      title: Identification
+      type: object
+      properties:
+        identificationMethod:
+          $ref: '#/components/schemas/IdentificationMethod'
+          description: The result of the identification
+        status:
+          type: string
+          enum: [ open, success, expired, cancelled, failed ]
+          description: The identification status
+          examples: [ success ]
+        result:
+          type: object
+          description: The result of the identification. Fields will change depending on the identification method, available data or status.
+          additionalProperties: true
+          examples:
+            - transactionId: "123456789123456789"
+              issuerId: "ABNANL2A"
+              status: "success"
+              bin: "CMBANL9Z3xOcyYKUhR8s0mS+tbkNO2xF2/U/Ns3eIyMOWYWmOZeUGw8StPKPhAdRTyN1XWne1rgJQA"
+              name:
+                gender: "male"
+                initials: "A"
+                firstName: "Andre"
+                lastName: "Dijk"
+                lastNamePrefix: "van"
+              age:
+                dateOfBirth: "1974-01-31"
+                18yOrOlder: true
+
+    Branding:
+      title: Branding
+      type: object
+      properties:
+        buttonBackgroundColor:
+          type: string
+          description: The hex color code for the button background color
+          examples: [ '#000000' ]
+        buttonTextColor:
+          type: string
+          description: The hex color code for the button text color
+          examples: [ '#ffffff' ]
+        themePrimaryColor:
+          type: string
+          description: The hex color code for the primary color in the Sign front-end
+          examples: [ '#0000ff' ]
+        themeSuccessColor:
+          type: string
+          description: The hex color code for the success color in the Sign front-end
+          examples: [ '#00ff00' ]
+        logo:
+          type: string
+          description: Base64 encoded PNG image in Data URL format
+          examples: [ 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=' ]
+        logoEmail:
+          type: string
+          description: Base64 encoded PNG image in Data URL format
+          examples: [ 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=' ]
+
+    Client:
+      title: Client
+      type: object
+      properties:
+        kid:
+          type: string
+          description: JWT Key ID
+          examples: [ 'fbd6a3ba-7b95-4ed1-846a-9dfac9cfb704' ]
+          readOnly: true
+        name:
+          type: string
+          description: Client name to be used in communication to the end-user. Defaults to the account name when not set.
+          examples: [ 'Organization A' ]
+        description:
+          type: string
+          description: Client description
+          examples: [ 'API' ]
+        admin:
+          type: boolean
+          description: Indicates if client is authorized to manage clients
+          examples: [ false ]
+          readOnly: true
+        disabled:
+          type: boolean
+          description: Indicates if client access is disabled
+          examples: [ false ]
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the invite was created
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date the invite was created
+          readOnly: true
+
+    ClientCreate:
+      allOf:
+        - $ref: '#/components/schemas/Client'
+        - type: object
+          properties:
+            key:
+              type: string
+              description: JWT Key. This field is only present in the client create request
+              examples: [ 'fPm3MpxBBN5AKmvBQSrLxXCbE1pF6T07JjNXZwsJpUobknaqJA' ]
+              readOnly: true
+
+    WebhookUpdate:
+      type: object
+      properties:
+        url:
+          type: string
+          format: url
+          description: The URL must begin with https://
+          examples: [ 'https://example.com' ]
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookType'
+          description: The subscribed webhook events
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          examples:
+            - My-Custom-Header: "Example"
+          description: The request HTTP headers
+        disabled:
+          type: boolean
+          description: Provide with value false to re-enable automatically disabled webhooks.
+          examples: [ false ]
+
+    Webhook:
+      title: Webhook
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: a uuid string that identifies the webhook
+              examples: [ eab04267-d849-46d1-9fe3-e7ff0b2c55cf ]
+              readOnly: true
+        - $ref: '#/components/schemas/WebhookUpdate'
+        - type: object
+          properties:
+            disabled:
+              type: boolean
+              description: Webhooks may automatically be disabled if too many requests fail
+              readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              description: The date the invite was created
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              description: The date the invite was created
+              readOnly: true
+          required: [ url ]
+
+    WebhookType:
+      type: string
+      description: |
+        Webhook event types that can be subscribed to. By default, dossier.state.updated, dossier.prepared, and dossier.invite.undelivered events are sent.
+      enum:
+        - dossier.invite.created
+        - dossier.invite.expired
+        - dossier.invite.undelivered
+        - dossier.invite.viewed
+        - dossier.invitee.state.updated
+        - dossier.prepared
+        - dossier.state.updated
+        - dossier.invitee.reassignRequest.state.updated
+
+    FieldValue:
+      title: FieldValue
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [ 'boolean', 'integer', 'text' ]
+          description: The field value type
+          examples: [ text ]
+          readOnly: true
+        value:
+          type: [ boolean, integer, string ]
+          description: The value of the field
+          examples: [ Example ]
+          readOnly: true
+
+    FieldIdFieldValue:
+      allOf:
+        - type: object
+          properties:
+            field:
+              $ref: '#/components/schemas/FieldId'
+        - $ref: '#/components/schemas/FieldValue'
+
+    Channel:
+      title: Channel
+      type: object
+      properties:
+        channel:
+          $ref: '#/components/schemas/ChannelType'
+          examples: [ sms ]
+          readOnly: true
+        disabled:
+          type: boolean
+          description: Indicates if a channel is disabled
+          examples: [ false ]
+          readOnly: true
+
+    ChannelType:
+      type: string
+      enum: [ email, sms, whatsapp ]
+
+    IdentificationMethod:
+      type: string
+      enum: [ idin, iban, otp_sms, otp_email, otp_whatsapp, otp_voice, qualified ]
+      examples: [ idin ]
+      description: Additional user identification is required. When you select `qualified` it cannot be used with other identification methods. Please note that this is only available when configured for your account.
+
+    ReassignRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the reassign request
+          examples: [ '6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49' ]
+        url:
+          type: string
+          format: url
+          description: Url to open the reassign request.
+          examples: [ 'https://www.cm.com/app/sign/reassign/review/cFoU7JAiY3xZAAGdd43j64K6eNtLTmn8W89iwdew09qsQnaiZF6UzAFriB8ZaUfE0CtVr7UZXCcIjVRqZl7yBWIyUNAnX1NpAqgD' ]
+        state:
+          type: string
+          description: State of the reassign request
+          $ref: '#/components/schemas/ReassignRequestState'
+          examples: [ 'pending' ]
+        dossier:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: ID of the dossier
+              examples: [ '6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49' ]
+            name:
+              type: string
+              description: Name of the dossier
+              examples: [ 'Employment contract' ]
+            owner:
+              type: string
+              description: Name of the team, if the dossier was sent on behalf of a team, or the dossier owner
+              examples: [ 'Human Resources' ]
+        originalInvitee:
+          $ref: '#/components/schemas/Invitee'
+        newInvitee:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the new invitee
+              examples: [ 'John Doe' ]
+            email:
+              type: [ 'string', 'null' ]
+              format: email
+              description: Email of the new invitee.
+              examples: [ 'example@email.com' ]
+            phoneNumber:
+              type: [ 'string', 'null' ]
+              description: The phone number of the new invitee in E.164 format.
+              examples: [ '+31612345678' ]
+            message:
+              type: [ 'string', 'null' ]
+              maxLength: 1000
+              description: The custom message to be sent to the new invitee.
+              examples: [ 'Please sign John' ]
+        reason:
+          type: string
+          description: The reason for requesting reassignment.
+          examples: [ 'Reassigning to my secretary to sign in my place' ]
+        declineReason:
+          type: [ 'string', 'null' ]
+          description: The reason for declining the reassign request. Required when declining the reassign request.
+          examples: [ 'We need you to personally sign this dossier' ]
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the reassignment was requested in ISO 8601 format.
+          examples: [ '2026-01-01T00:00:00+00:00' ]
+
+    ModifyReassignRequest:
+      type: object
+      properties:
+        state:
+          type: string
+          description: State of the reassign request. Only 'approved' and 'declined' are allowed values when updating the reassign request.
+          $ref: '#/components/schemas/ReassignRequestState'
+          examples: [ 'approved' ]
+        declineReason:
+          type: [ 'string', 'null' ]
+          description: The reason for declining the reassign request. Required when declining the reassign request.
+          examples: [ 'We need you to personally sign this dossier' ]
+        newInvitee:
+          type: object
+          properties:
+            message:
+              type: [ 'string', 'null' ]
+              maxLength: 1000
+              description: The custom message to be sent to the new invitee if approving the reassign request.
+              examples: [ 'Please sign John' ]
+      required: [ state ]
+
+    ReassignRequestState:
+      type: string
+      enum: [ approved, declined, pending ]
+
+    Template:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the template.
+          examples: [ 'f3ab4c4b-4276-46cc-bba6-d575696454ad' ]
+        name:
+          type: string
+          description: Name of the template.
+          examples: [ 'Contract Template' ]
+        files:
+          type: array
+          description: Files linked to the template.
+          items:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/FileReference'
+              name:
+                type: string
+                description: Original name of the file without extension.
+                examples: [ 'Template Agreement' ]
+        attachments:
+          type: array
+          description: Attachments linked to the template.
+          items:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/FileReference'
+              name:
+                type: string
+                description: Original name of the attachment without extension.
+                examples: [ 'Employee Handbook' ]
+        fields:
+          type: array
+          description: Fields that will be linked to the file and invitee when applying to a dossier.
+          items:
+            type: object
+            properties:
+              type:
+                $ref: '#/components/schemas/FieldType'
+              required:
+                type: boolean
+                description: Boolean for if the field is required to be filled by the invitee.
+                examples: [ true ]
+              value:
+                type: string
+                description: The value of the field, if the type is 'label'.
+                examples: [ 'Salary' ]
+              file:
+                type: integer
+                description: The index of the file when creating the dossier to link this field to, starting from 0.
+                examples: [ 0 ]
+              invitee:
+                type: integer
+                description: The index of the invitee when creating the dossier to link this field to, starting from 0.
+                examples: [ 0 ]
+              locations:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldLocation'
+        lastUsedAt:
+          type: string
+          format: date-time
+          description: The date the template was last applied on a dossier, in ISO 8601 format.
+          examples: [ '2026-01-01T00:00:00+00:00' ]
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date the template was last updated, in ISO 8601 format.
+          examples: [ '2026-01-01T00:00:00+00:00' ]
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the template was created, in ISO 8601 format.
+          examples: [ '2026-01-01T00:00:00+00:00' ]
+
+    CreateTemplate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the template.
+          maxLength: 255
+          examples: [ 'Contract Template' ]
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/FileReference'
+        attachments:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/FileReference'
+        invitees:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The placeholder name of the recipient.
+                examples: [ 'Recipient' ]
+        fields:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                $ref: '#/components/schemas/FieldType'
+              required:
+                type: boolean
+                description: Boolean for if the field is required to be filled by the invitee.
+                examples: [ true ]
+              value:
+                type: [ 'string', 'null' ]
+                description: The value of the field, if the type is 'label'.
+                maxLength: 255
+                examples: [ 'Salary' ]
+              file:
+                type: [ 'integer', 'null' ]
+                description: The index of the file in this request to link the field to, starting from 0.
+                examples: [ 0 ]
+              invitee:
+                type: integer
+                description: The index of the invitee in this request to link the field to, starting from 0.
+                examples: [ 0 ]
+              locations:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldLocation'
+            required: [ type, required, invitee ]
+      required: [ name ]
+
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+        ```
+        Authorization: Bearer GENERATED_TOKEN_HERE
+        ```
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)

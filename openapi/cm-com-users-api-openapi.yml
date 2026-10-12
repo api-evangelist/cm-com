@@ -1,0 +1,624 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Users API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Users across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Users
+  description: User management and role assignment
+paths:
+  /entrance/v1.0/users:
+    post:
+      operationId: UsersController_createUser_v1.0
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a user
+      tags:
+      - Users
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/users/{userUuid}:
+    patch:
+      operationId: UsersController_patchUser_v1.0
+      parameters:
+      - name: userUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a user
+      tags:
+      - Users
+    delete:
+      operationId: UsersController_remove_v1.0
+      parameters:
+      - name: organisationId
+        required: true
+        in: query
+        description: Uuid of the organisation the claims apply to
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: entrancePlanId
+        required: true
+        in: query
+        description: Uuid of the entrance plan the claims apply to
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: userUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '204':
+          description: If user has claims on different organisations only removes claims on organisation. If last organisation deletes user.
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a user
+      tags:
+      - Users
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/users/{userUuid}/claims:
+    patch:
+      operationId: UsersController_patchUserClaims_v1.0
+      parameters:
+      - name: userUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimsDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update user claims
+      tags:
+      - Users
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/users/me:
+    get:
+      operationId: UsersController_getUser_v1.0
+      parameters: []
+      responses:
+        '200':
+          description: Returns authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get the authenticated user
+      tags:
+      - Users
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/users:
+    post:
+      operationId: UsersController_createUser_v2.0
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a user
+      tags:
+      - Users
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/users/{userUuid}:
+    patch:
+      operationId: UsersController_patchUser_v2.0
+      parameters:
+      - name: userUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update a user
+      tags:
+      - Users
+    delete:
+      operationId: UsersController_remove_v2.0
+      parameters:
+      - name: organisationId
+        required: true
+        in: query
+        description: Uuid of the organisation the claims apply to
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: entrancePlanId
+        required: true
+        in: query
+        description: Uuid of the entrance plan the claims apply to
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: userUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '204':
+          description: If user has claims on different organisations only removes claims on organisation. If last organisation deletes user.
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete a user
+      tags:
+      - Users
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/users/{userUuid}/claims:
+    patch:
+      operationId: UsersController_patchUserClaims_v2.0
+      parameters:
+      - name: userUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimsDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update user claims
+      tags:
+      - Users
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/users/me:
+    get:
+      operationId: UsersController_getUser_v2.0
+      parameters: []
+      responses:
+        '200':
+          description: Returns authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get the authenticated user
+      tags:
+      - Users
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    UserOrganisationClaimDto:
+      type: object
+      properties:
+        organisationId:
+          type: string
+          description: Uuid of the organisation the claims apply to
+          example: 00000000-0000-0000-0000-000000000000
+        claims:
+          type: array
+          example:
+          - ADMIN
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+      required:
+      - organisationId
+      - claims
+    UpdateUserDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 255
+          example: Jane
+        lastName:
+          type: string
+          maxLength: 255
+          example: Doe
+        username:
+          type: string
+          description: Either one of username or e-mail is mandatory
+          minLength: 6
+          maxLength: 255
+          example: myUserName
+        email:
+          type: string
+          description: Either one of username or e-mail is mandatory. Should be a valid e-mail.
+          maxLength: 255
+          example: jane.doe@example.com
+        password:
+          type: string
+          minLength: 6
+          description: Password must contain a minimum of 6 characters
+          example: MyStrong3x4mpl3P4ssword!
+      required:
+      - password
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    ClaimsDto:
+      type: object
+      properties:
+        organisationClaims:
+          description: Optional object which allows to give a user claims on a certain organisation
+          allOf:
+          - $ref: '#/components/schemas/UserOrganisationClaimDto'
+        entrancePlanClaims:
+          description: Optional object which allows to give a user claims on a certain entrance plan
+          allOf:
+          - $ref: '#/components/schemas/UserEntrancePlanClaimDto'
+    GenericResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          readOnly: true
+          example: Successfully uploaded file.
+        details:
+          type: array
+          items:
+            type: object
+          example:
+          - file: filename.csv
+      required:
+      - message
+      - details
+    UserEntrancePlanClaimDto:
+      type: object
+      properties:
+        entrancePlanId:
+          type: string
+          description: Uuid of the entrance plan the claims apply to
+          example: 00000000-0000-0000-0000-000000000000
+        claims:
+          type: array
+          example:
+          - ADMIN
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+      required:
+      - entrancePlanId
+      - claims
+    CreateUserDto:
+      type: object
+      properties:
+        cmPersonGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        firstName:
+          type: string
+          maxLength: 255
+          example: Jane
+        lastName:
+          type: string
+          maxLength: 255
+          example: Doe
+        username:
+          type: string
+          description: Either one of username or e-mail is mandatory
+          minLength: 6
+          maxLength: 255
+          example: myUserName
+        email:
+          type: string
+          description: Either one of username or e-mail is mandatory. Should be a valid e-mail.
+          maxLength: 255
+          example: jane.doe@example.com
+        password:
+          type: string
+          minLength: 6
+          description: Password must contain a minimum of 6 characters
+          example: MyStrong3x4mpl3P4ssword!
+        sendInvitation:
+          type: boolean
+          description: If set to true user will receive an invitation e-mail which needs to be accepted before access is granted
+          default: true
+        claims:
+          description: Optional object which allows to give a user claims on a certain organisation or entrance plan
+          allOf:
+          - $ref: '#/components/schemas/ClaimsDto'
+      required:
+      - password
+      - sendInvitation
+    UserDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+        cmPersonGuid:
+          type: string
+          readOnly: true
+        firstName:
+          type: string
+          readOnly: true
+        lastName:
+          type: string
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          readOnly: true
+        entrancePlanClaims:
+          type: array
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+      required:
+      - uuid
+      - cmPersonGuid
+      - firstName
+      - lastName
+      - username
+      - email
+      - entrancePlanClaims
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

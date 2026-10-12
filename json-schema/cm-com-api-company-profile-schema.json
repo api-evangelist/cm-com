@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-company-profile-schema.json",
+  "title": "Company Profile",
+  "description": "A company profile that represents a company with a physical address that can be used for requesting new phone\r\nnumbers within the CM.com Voice platform.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-company-profiles-v1-openapi.yml#/components/schemas/ApiCompanyProfile",
+  "required": [
+    "city",
+    "companyCountryCode",
+    "companyName",
+    "contactFirstName",
+    "contactLastName",
+    "emailAddresses",
+    "phoneNumberCountryCode",
+    "phoneNumberTypes",
+    "postalCode",
+    "profileName",
+    "registrationNumber",
+    "representativeFirstName",
+    "representativeLastName",
+    "street",
+    "streetNumber"
+  ],
+  "type": "object",
+  "properties": {
+    "guid": {
+      "type": "string",
+      "description": "Unique identifier of the company profile.",
+      "format": "uuid"
+    },
+    "voiceAccountGuid": {
+      "type": "string",
+      "description": "Unique identifier of the Logical Account or Voice Account.",
+      "format": "uuid"
+    },
+    "profileName": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string",
+      "description": "The name of the company profile. This name does not have to be equal to your company name, it's just to make\r\nthis profile more easily identifiable in our tooling. If the company has multiple branches, this profile\r\ncan be named 'Amsterdam Office' for example."
+    },
+    "companyName": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string",
+      "description": "The name of the company that will be using the phone numbers requested with this profile."
+    },
+    "registrationNumber": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string",
+      "description": "Business register number of the company (e.g. KVK number for Dutch companies)."
+    },
+    "representativeFirstName": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string",
+      "description": "First name of company’s representative that is authorized to sign contracts for the company."
+    },
+    "representativeLastName": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string",
+      "description": "Last name of company’s representative that is authorized to sign contracts for the company"
+    },
+    "representativePhoneNumber": {
+      "maxLength": 20,
+      "minLength": 6,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Phone number of company’s representative that is authorized to sign contracts for the company"
+    },
+    "companyCountryCode": {
+      "maxLength": 2,
+      "minLength": 2,
+      "type": "string",
+      "description": "Country code of the company address in ISO 3166-1 alpha-2 format."
+    },
+    "requiredFields": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Depending on the country of the company address, we might require additional information that needs to be\r\nsupplied with the API call. See the `Verify Required Fields` endpoint documentation for more information."
+    },
+    "region": {
+      "maxLength": 100,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Region of the company address."
+    },
+    "city": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string",
+      "description": "City of the company address."
+    },
+    "postalCode": {
+      "maxLength": 12,
+      "minLength": 1,
+      "type": "string",
+      "description": "Postal code of the company address."
+    },
+    "street": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string",
+      "description": "Street of the company address."
+    },
+    "streetNumber": {
+      "maxLength": 10,
+      "minLength": 1,
+      "type": "string",
+      "description": "Street number of the company address."
+    },
+    "streetNumberExt": {
+      "maxLength": 255,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Extra information about the street number. E.g. apartment or suite."
+    },
+    "phoneNumberCountryCode": {
+      "maxLength": 2,
+      "minLength": 2,
+      "type": "string",
+      "description": "The country code of the country this company profile will request numbers for. For example, if you supply\r\n`NL`, you will only be able to request Dutch phone numbers with this profile."
+    },
+    "phoneNumberTypes": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "description": "The types of phone numbers this profile is able to request. This can be `LOCAL`, `NATIONAL` and `TOLLFREE`."
+    },
+    "contactFirstName": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string",
+      "description": "First name of the person that CM.com will be able to contact regarding this profile. This contact can be about\r\nthe approval status of your profile or a request for additional information."
+    },
+    "contactLastName": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string",
+      "description": "Last name of the person that CM.com will be able to contact regarding this profile. This contact can be about\r\nthe approval status of your profile or a request for additional information."
+    },
+    "emailAddresses": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "email"
+      },
+      "description": "One or more email addresses that CM.com will be able to contact regarding this profile. This contact can be about\r\nthe approval status of your profile or a request for additional information."
+    },
+    "callbackUrl": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "URL that we'll send a POST request to when the status of the request has been updated. The body of this post\r\nrequest will contain the entire company profile, including the updated status."
+    },
+    "documents": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/ApiDocument"
+      },
+      "description": "List of documents that are legaly required for us to be able to request phone numbers."
+    },
+    "deletedOn": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "UTC DateTime on which the current profile was deleted. Can be null if the profile is still active.",
+      "format": "date-time"
+    },
+    "statusKey": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The current approval status of the company profile."
+    },
+    "statusComment": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional comment on the current approval status of the profile."
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiDocument": {
+      "title": "Document",
+      "type": "object",
+      "properties": {
+        "requirementKey": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The key of the requirement which this document represents."
+        },
+        "documentGuid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique identifier of the document in the Voice Documents API.",
+          "format": "uuid"
+        },
+        "approved": {
+          "type": "boolean",
+          "description": "Whether or not the document was approved by CM.com."
+        },
+        "approvalComment": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Additional information on the documents approval status, should only be filled in when the document has been\r\ndenied."
+        }
+      },
+      "additionalProperties": false,
+      "description": "A document that's required by rules and regulations of a specific country for requesting and operating phone\r\nnumbers."
+    }
+  }
+}

@@ -1,0 +1,165 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Complete Reservation API
+  version: '1.0'
+  description: 'Operations tagged CompleteReservation across 2 of this provider''s published API definitions: cm-com-live-museum-park-reseller-v1-openapi.yml, cm-com-live-museum-park-scan-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://globalreseller.nl/webservices
+- url: https://globalticket.com/webservices/scanapi
+security:
+- {}
+tags:
+- name: CompleteReservation
+paths:
+  /completeReservation:
+    post:
+      summary: /completeReservation
+      description: 'With this functionality you will be able to complete a reservation.
+
+
+        **Please note:** By calling this function you have confirmed the purchase of the tickets. The tickets will be billed by the relevant user (museum) in the production environment.
+
+
+        Tickets from the TEST environment are not valid at the museum.
+
+
+        **Contactinfo required**
+
+
+        For some clients it is mandatory to add contact info to this request. Below is the list of clients where this information is required.
+
+
+        | Museum name: | Required as of: |
+
+        |---|---|
+
+        | Van Gogh Museum | 01-01-2019 |
+
+        | Madame Tussaud Amsterdam | 01-01-2023 |
+
+        | Amsterdam Dungeon | 01-01-2023 |
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + customerEmailAddress + customerFirstName + customerSurname + environment + reservationId + userId)`
+
+
+        Please note: optional fields only needs to be included when an optional field is used.'
+      operationId: completereservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - environment
+              - userId
+              - reservationId
+              - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                environment:
+                  type: string
+                  description: '"test" or "production"'
+                  enum:
+                  - test
+                  - production
+                userId:
+                  type: integer
+                  description: The userId is a reference to the user (museum / attraction). The userId can be requested via getAvailableUsers and can be cached in your application.
+                  format: int32
+                reservationId:
+                  type: integer
+                  description: Include the reservationId from the createReservation request.
+                  format: int32
+                customerFirstName:
+                  type: string
+                  description: Firstname of the customer. (please read "Contactinfo required" below)
+                customerSurname:
+                  type: string
+                  description: Surname of the customer. (please read "Contactinfo required" below)
+                customerEmailAddress:
+                  type: string
+                  description: Emailaddress of the customer. (please read "Contactinfo required" below)
+                externalBarcodes:
+                  type: array
+                  description: Add your own barcodes with which tickets can also be scanned (one per ticket)
+                  items:
+                    type: string
+                HMACKey:
+                  type: string
+                  description: The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + customerEmailAddress + customerFirstName + customerSurname + environment + reservationId + userId).
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    ticketBarcodes:
+                    - barcode: 1231231928311
+                      ticketTypeId: 1001
+                      barcodeType: QR
+                    - barcode: 1287192831231
+                      ticketTypeId: 1001
+                      barcodeType: QR
+                    - barcode: 7172313127312
+                      ticketTypeId: 1002
+                      barcodeType: QR
+                    - barcode: 5181237123612312
+                      ticketTypeId: 1002
+                      barcodeType: QR
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  ticketBarcodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        barcode:
+                          type: integer
+                          example: 1231231928311
+                          default: 0
+                        ticketTypeId:
+                          type: integer
+                          example: 1001
+                          default: 0
+                        barcodeType:
+                          type: string
+                          example: QR
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: false
+                    error message: text
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  error message:
+                    type: string
+                    example: text
+      deprecated: false
+      tags:
+      - CompleteReservation
+    servers:
+    - url: https://globalreseller.nl/webservices
+x-refined-from:
+- cm-com-live-museum-park-reseller-v1-openapi.yml
+- cm-com-live-museum-park-scan-v1-openapi.yml

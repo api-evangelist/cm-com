@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-authorize-google-pay-transaction-schema.json",
+  "title": "AuthorizeGooglePayTransaction",
+  "description": "The paymentData.paymentMethodData returned by Google Pay that must be sent as-is to the Payment System",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml#/components/schemas/AuthorizeGooglePayTransaction",
+  "type": "object",
+  "properties": {
+    "description": {
+      "description": "Google Pay payment description",
+      "type": "string"
+    },
+    "info": {
+      "type": "object",
+      "properties": {
+        "cardDetails": {
+          "type": "string"
+        },
+        "cardNetwork": {
+          "type": "string"
+        }
+      }
+    },
+    "tokenizationData": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "type": {
+      "type": "string"
+    }
+  }
+}

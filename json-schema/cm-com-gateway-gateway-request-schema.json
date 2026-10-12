@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-gateway-gateway-request-schema.json",
+  "title": "Gateway_GatewayRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Gateway_GatewayRequest",
+  "required": [
+    "subject"
+  ],
+  "type": "object",
+  "properties": {
+    "from": {
+      "$ref": "#/$defs/Gateway_EmailAddress"
+    },
+    "replyTo": {
+      "$ref": "#/$defs/Gateway_EmailAddress"
+    },
+    "to": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Gateway_EmailAddress"
+      }
+    },
+    "cc": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Gateway_EmailAddress"
+      }
+    },
+    "bcc": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Gateway_EmailAddress"
+      }
+    },
+    "subject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "html": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "text": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "attachments": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/Gateway_EmailAttachment"
+      }
+    },
+    "customerReference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scheduledAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "inReplyTo": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "references": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "headers": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "Gateway_EmailAddress": {
+      "required": [
+        "email"
+      ],
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "Gateway_EmailAttachment": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contentType": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contentId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

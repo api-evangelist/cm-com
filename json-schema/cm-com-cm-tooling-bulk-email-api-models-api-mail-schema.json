@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-tooling-bulk-email-api-models-api-mail-schema.json",
+  "title": "CM.Tooling.BulkEmail.Api.Models.ApiMail",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-mobile-marketing-cloud-email-campaigns-v1-openapi.yml#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMail",
+  "type": "object",
+  "properties": {
+    "ID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "MailingID": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "FromAddress": {
+      "type": "string"
+    },
+    "FromName": {
+      "type": "string"
+    },
+    "ToAddress": {
+      "type": "string"
+    },
+    "ToName": {
+      "type": "string"
+    },
+    "Subject": {
+      "type": "string"
+    },
+    "TextBody": {
+      "type": "string"
+    },
+    "HtmlBody": {
+      "type": "string"
+    },
+    "CreatedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "CreatedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ModifiedOn": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "ModifiedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    }
+  }
+}

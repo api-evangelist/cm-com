@@ -1,0 +1,246 @@
+openapi: 3.2.0
+info:
+  title: Mobile Identity Number Verify API
+  description: Mobile Identity API
+  version: 1.0.0
+servers:
+- url: https://api.cm.com/mobile-identity/v1
+- url: https://api.cm.com/mobile-identity-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Number Verify
+  description: Verify a phone number
+paths:
+  /number-verify:
+    post:
+      operationId: create_number_verify
+      summary: Request number verify
+      description: Verify if a provided phone number is valid and online
+      tags:
+      - Number Verify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NumberVerifyRequest'
+      responses:
+        '200':
+          description: Phone number verification has been requested
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/NumberVerifyResponse'
+                - type: object
+                  properties:
+                    sessionUrl:
+                      type:
+                      - string
+                      - 'null'
+                      description: The URL loaded from the mobile device connected to the mobile network
+                      examples:
+                      - http://example.com/v1/dm/session/d635424bb0a54d388477cb17fa308655
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /number-verify/{transactionId}:
+    parameters:
+    - $ref: '#/components/parameters/TransactionId'
+    get:
+      operationId: get_number_verify
+      summary: Retrieve number verify
+      description: Retrieve a single number verify transaction and its information
+      tags:
+      - Number Verify
+      responses:
+        '200':
+          description: Phone number verification has been retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NumberVerifyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    NumberVerifyRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          description: The phone number to verify. Must be in E.164 format.
+          examples:
+          - '+31612345678'
+        callbackUrl:
+          type: string
+          description: Updates regarding the number verify transaction will be sent to the callback URL. It must begin with `https://`. See the [Number verify state](#tag/Callbacks/operation/callback_number_verify_state) callback for the payload that is sent.
+          format: url
+          examples:
+          - https://example.com
+      required:
+      - phoneNumber
+      - callbackUrl
+    NumberVerifyResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the number verify transaction
+          format: uuid
+          examples:
+          - 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
+        state:
+          $ref: '#/components/schemas/State'
+          description: State of the number verify transaction
+          examples:
+          - completed
+        match:
+          type:
+          - boolean
+          - 'null'
+          description: Is the number verified. If state is pending, match is null.
+          examples:
+          - true
+    ErrorCode:
+      type: integer
+      description: "Error code description:\n\n * 1000 - Unknown error\n * 1001 - Invalid request\n * 1002 - Supplier error\n * 1003 - Unsupported configuration\n * 2000 - Validation error\n * 2001 - Invalid `phoneNumber` field\n * 2002 - Invalid `serviceType` field\n * 2003 - Invalid `firstName` field\n * 2004 - Invalid `lastName` field\n * 2005 - Invalid `address` field\n * 2006 - Invalid `postalCode` field\n * 2007 - Invalid `dateOfBirth` field\n * 2008 - Invalid `callbackUrl` field\n * 3000 - Feature not enabled\n * 3001 - Phone number is not active\n"
+      enum:
+      - 1000
+      - 1001
+      - 1002
+      - 1003
+      - 2000
+      - 2001
+      - 2002
+      - 2003
+      - 2004
+      - 2005
+      - 2006
+      - 2007
+      - 2008
+      - 3000
+      - 3001
+      examples:
+      - 2001
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
+        message:
+          type: string
+          description: Description of the error that occurred.
+          examples:
+          - The phone number field is required
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+    State:
+      type: string
+      enum:
+      - pending
+      - completed
+      - unavailable
+  responses:
+    InternalServerError:
+      description: Errors related to the transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: Transaction could not be started
+            code: 1002
+    Unauthorized:
+      description: Errors related to the authorization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+            code: 1000
+    BadRequest:
+      description: Errors related to the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: The phone number field is required
+            code: 2001
+    NotFound:
+      description: Errors related to the request URL
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 404
+            message: Not found
+            code: 1000
+  parameters:
+    TransactionId:
+      name: transactionId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: A unique identifier for the transaction.
+      example: 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '
+    HMAC:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Used on callbacks sent by Mobile Identity to your `callbackUrl`. The header contains the HMAC-SHA256 signature of the request body, calculated with your client secret as the secret key, prefixed with `HMAC `:
+
+
+        ```
+
+        Authorization: HMAC MIi9ZMyar2v+o7H7LD7oNolO5LrTJaC+8uKvYUGqJvM=
+
+        ```
+
+        '

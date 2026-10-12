@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-no-content-result-schema.json",
+  "title": "NoContentResult",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-sip-thresholds-v1-openapi.yml#/components/schemas/NoContentResult",
+  "type": "object",
+  "properties": {
+    "statusCode": {
+      "type": "integer",
+      "format": "int32"
+    }
+  },
+  "additionalProperties": false
+}

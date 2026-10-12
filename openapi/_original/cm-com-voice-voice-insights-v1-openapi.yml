@@ -1,0 +1,554 @@
+# x-archived-from: cm-com-voice-voice-insights-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: Voice Insights API
+  version: v1
+servers:
+- url: https://api.cm.com
+paths:
+  /voice-insightsapi/v1/{accountGuid}/conversations:
+    get:
+      tags:
+      - Conversations
+      summary: Get conversations
+      description: Get Voice Conversations that are initiated by the given Account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Skip
+        in: query
+        description: The amount of items to skip
+        schema:
+          minimum: 0
+          type: integer
+          description: The amount of items to skip
+          format: int32
+      - name: Take
+        in: query
+        description: The amount of items to retrieve
+        schema:
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+          description: The amount of items to retrieve
+          format: int32
+      - name: CallStates
+        in: query
+        description: An array of call states to filter with
+        schema:
+          type: array
+          items:
+            type: string
+          description: An array of call states to filter with
+          nullable: true
+      - name: CallIds
+        in: query
+        description: An array of call ids to filter with
+        schema:
+          type: array
+          items:
+            type: string
+          description: An array of call ids to filter with
+          nullable: true
+      - name: TrunkIds
+        in: query
+        description: An array of trunk ids to filter with
+        schema:
+          type: array
+          items:
+            type: string
+          description: An array of trunk ids to filter with
+          nullable: true
+      - name: OrderBy
+        in: query
+        description: Order by specific sort order
+        schema:
+          type: string
+          description: Order by specific sort order
+          nullable: true
+      - name: Direction
+        in: query
+        description: Direction of the conversations
+        schema:
+          type: string
+          description: Direction of the conversations
+          nullable: true
+      - name: PeriodFrom
+        in: query
+        description: Date and time the period start from
+        schema:
+          type: string
+          description: Date and time the period start from
+          format: date-time
+          nullable: true
+      - name: PeriodTo
+        in: query
+        description: Date and time the period ends at
+        schema:
+          type: string
+          description: Date and time the period ends at
+          format: date-time
+          nullable: true
+      - name: VoiceAccountIds
+        in: query
+        description: Unique reference of the voice account
+        schema:
+          type: array
+          items:
+            type: string
+          description: Unique reference of the voice account
+          nullable: true
+      - name: CalleeIds
+        in: query
+        description: List of callee ids to search for
+        schema:
+          type: array
+          items:
+            type: string
+          description: List of callee ids to search for
+          nullable: true
+      - name: CallerIds
+        in: query
+        description: List of caller ids to search for
+        schema:
+          type: array
+          items:
+            type: string
+          description: List of caller ids to search for
+          nullable: true
+      - name: Applications
+        in: query
+        description: Applications linked to calls
+        schema:
+          type: array
+          items:
+            type: string
+          description: Applications linked to calls
+          nullable: true
+      - name: RetailPriceGroups
+        in: query
+        description: An array of Retail Price Group names to filter with
+        schema:
+          type: array
+          items:
+            type: string
+          description: An array of Retail Price Group names to filter with
+          nullable: true
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-CM-PAGINATION-SKIP:
+              description: The amount of items that have been skipped
+              schema:
+                type: number
+            X-CM-PAGINATION-TAKE:
+              description: The amount of items that have been taken
+              schema:
+                type: number
+            X-CM-PAGINATION-TOTAL:
+              description: The total amount of available items
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilteredConversations'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    AppAccount:
+      title: App Account
+      type: object
+      properties:
+        name:
+          type: string
+          description: Username of the app account
+          nullable: true
+      additionalProperties: false
+      description: Model containing App Account information
+    Application:
+      title: Application
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the application
+          nullable: true
+      additionalProperties: false
+      description: Model that represents an application
+    CallAttempt:
+      title: Call Attempt
+      type: object
+      properties:
+        callAttemptId:
+          type: string
+          description: Unique identifier of the Call Attempt
+          nullable: true
+        sipDisconnectCode:
+          type: string
+          description: SIP Disconnection Code
+          nullable: true
+        sipDisconnectReason:
+          type: string
+          description: SIP Disconnection Reason
+          nullable: true
+        callId:
+          type: string
+          description: Unique identifier of the conversation
+          nullable: true
+        startedOn:
+          type: string
+          description: The timestamp when the retry of the conversation was initiated
+          format: date-time
+          nullable: true
+        finishedOn:
+          type: string
+          description: The timestamp when the retry of the conversation was finished
+          format: date-time
+          nullable: true
+      additionalProperties: false
+      description: Model used to describe a Call Attempt
+    DisconnectCause:
+      title: Disconnect Cause
+      type: object
+      properties:
+        id:
+          type: integer
+          description: SIP code of the disconnect cause
+          format: int32
+        name:
+          type: string
+          description: Description of the disconnect cause
+          nullable: true
+      additionalProperties: false
+      description: Model that represents a disconnect cause
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          nullable: true
+      additionalProperties: false
+    FilterParameters:
+      type: object
+      properties:
+        callStates:
+          type: array
+          items:
+            type: string
+          description: An array of call states to filter with
+          nullable: true
+        callIds:
+          type: array
+          items:
+            type: string
+          description: An array of call ids to filter with
+          nullable: true
+        trunkIds:
+          type: array
+          items:
+            type: string
+          description: An array of trunk ids to filter with
+          nullable: true
+        orderBy:
+          type: string
+          description: Order by specific sort order
+          nullable: true
+        direction:
+          type: string
+          description: Direction of the conversations
+          nullable: true
+        periodFrom:
+          type: string
+          description: Date and time the period start from
+          format: date-time
+          nullable: true
+        periodTo:
+          type: string
+          description: Date and time the period ends at
+          format: date-time
+          nullable: true
+        voiceAccountIds:
+          type: array
+          items:
+            type: string
+          description: Unique reference of the voice account
+          nullable: true
+        calleeIds:
+          type: array
+          items:
+            type: string
+          description: List of callee ids to search for
+          nullable: true
+        callerIds:
+          type: array
+          items:
+            type: string
+          description: List of caller ids to search for
+          nullable: true
+        applications:
+          type: array
+          items:
+            type: string
+          description: Applications linked to calls
+          nullable: true
+        retailPriceGroups:
+          type: array
+          items:
+            type: string
+          description: An array of Retail Price Group names to filter with
+          nullable: true
+        skip:
+          minimum: 0
+          type: integer
+          description: The amount of items to skip
+          format: int32
+        take:
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+          description: The amount of items to retrieve
+          format: int32
+      additionalProperties: false
+      description: Class containing filter settings from the received request
+    FilteredConversations:
+      title: Filtered Conversations
+      type: object
+      properties:
+        conversations:
+          type: array
+          items:
+            $ref: '#/components/schemas/VoiceConversation'
+          description: List of conversations
+          nullable: true
+        totalHits:
+          type: integer
+          description: Total hits
+          format: int32
+      additionalProperties: false
+      description: Model that describes filtered conversations
+    PhoneNumber:
+      title: Phone Number
+      type: object
+      properties:
+        prefix:
+          type: string
+          description: The prefix of the phone number
+          nullable: true
+        id:
+          type: string
+          description: The full phone number
+          nullable: true
+        country:
+          type: string
+          description: The country where the phone number originates
+          nullable: true
+        type:
+          type: string
+          description: The Type of the phone number
+          nullable: true
+        cliIsValid:
+          type: boolean
+          description: "Determines whether the provided CLI is a valid phone number.\r\nApplies only for Caller"
+          nullable: true
+      additionalProperties: false
+      description: Model that represents a phone number
+    RetailPriceGroup:
+      title: Retail Price Group
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the destination
+          nullable: true
+        countryIsoCode:
+          type: string
+          description: The country code of the destination in ISO 3166-1 alpha-2 format
+          nullable: true
+      additionalProperties: false
+      description: Model that represents a Retail Price Group
+    SipAccount:
+      title: Sip Account
+      type: object
+      properties:
+        name:
+          type: string
+          description: Username of the SIP account
+          nullable: true
+      additionalProperties: false
+      description: Model containing SIP account information
+    State:
+      title: State
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Numeric identifier of the state
+          format: int32
+        name:
+          type: string
+          description: Name of the state
+          nullable: true
+      additionalProperties: false
+      description: Model that represents the state of a call
+    VoiceAccount:
+      title: Voice Account
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the voice account
+          nullable: true
+        guid:
+          type: string
+          description: Unique identifier of the Voice Account
+          nullable: true
+        externalId:
+          type: string
+          description: External identifier of the Voice Account
+          nullable: true
+        externalName:
+          type: string
+          description: Custom name of the Voice Account
+          nullable: true
+      additionalProperties: false
+      description: Model that represents a Voice Account
+    VoiceConversation:
+      title: Voice Conversation
+      type: object
+      properties:
+        trunkId:
+          type: string
+          description: The trunk id where the conversation has taken place
+          nullable: true
+        createdOn:
+          type: string
+          description: The date and time when the conversation has been created
+          format: date-time
+        callId:
+          type: string
+          description: The unique identifier of the conversation
+          nullable: true
+        callAttemptId:
+          type: string
+          description: The unique identifier of an attempt of the conversation
+          nullable: true
+        externalReference:
+          type: string
+          description: The external reference of the conversation
+          nullable: true
+        startedOn:
+          type: string
+          description: The timestamp when the conversation has started
+          format: date-time
+          nullable: true
+        answeredOn:
+          type: string
+          description: The timestamp when the conversation has been answered
+          format: date-time
+          nullable: true
+        finishedOn:
+          type: string
+          description: The timestamp when the conversation has successfully finished
+          format: date-time
+          nullable: true
+        durationInSeconds:
+          type: integer
+          description: The duration of the conversation in seconds
+          format: int32
+          nullable: true
+        isAnonymous:
+          type: boolean
+          description: Determines whether the caller is anonymous
+          nullable: true
+        caller:
+          $ref: '#/components/schemas/PhoneNumber'
+        callee:
+          $ref: '#/components/schemas/PhoneNumber'
+        originalCallee:
+          $ref: '#/components/schemas/PhoneNumber'
+        direction:
+          type: string
+          description: 'The direction of the conversation: Inbound or Outbound'
+          nullable: true
+        state:
+          $ref: '#/components/schemas/State'
+        sipDisconnectCode:
+          type: string
+          description: The SIP disconnect code of the conversation
+          nullable: true
+        sipDisconnectReason:
+          type: string
+          description: The SIP disconnect reason of the conversation
+          nullable: true
+        disconnectCause:
+          $ref: '#/components/schemas/DisconnectCause'
+        voiceAccount:
+          $ref: '#/components/schemas/VoiceAccount'
+        application:
+          $ref: '#/components/schemas/Application'
+        outboundRetailPriceGroup:
+          $ref: '#/components/schemas/RetailPriceGroup'
+        customerIp:
+          type: string
+          description: The IP address who originated the conversation
+          nullable: true
+        sipAccount:
+          $ref: '#/components/schemas/SipAccount'
+        appAccount:
+          $ref: '#/components/schemas/AppAccount'
+        callAttempts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CallAttempt'
+          description: List of corresponding call attempts
+          nullable: true
+      additionalProperties: false
+      description: Model that represents a Voice Conversation
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

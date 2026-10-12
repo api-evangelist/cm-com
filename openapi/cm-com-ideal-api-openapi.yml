@@ -1,0 +1,1194 @@
+openapi: 3.2.0
+info:
+  title: Payments Gateway I DEAL API
+  description: Common payments API
+  version: 1.27.22
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+- url: /api/v1
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: iDEAL
+  description: iDEAL is a widely used online payment method in the Netherlands, allowing customers to pay directly from their bank accounts.
+  externalDocs:
+    url: https://www.ideal.nl/en/
+paths:
+  /paymentmethods/ideal/v1/transactions:
+    post:
+      operationId: createIdealTransaction
+      description: Create a new iDEAL payment transaction. After receiving a HTTP status 201 you have to redirect the consumer to the url given in **action.redirect.url**. The **id** field in the response can be used in future calls as **transactionId** to reference this transaction (for instance in a refund).
+      tags:
+      - iDEAL
+      summary: Create payment
+      requestBody:
+        description: Create iDEAL Transaction
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdealPayment'
+            examples:
+              standardIdeal:
+                $ref: '#/components/examples/standardIdeal'
+              webhook:
+                $ref: '#/components/examples/webhook'
+              fastCheckout:
+                $ref: '#/components/examples/fastCheckout'
+              payFastRequestUserToken:
+                $ref: '#/components/examples/payFastRequestUserToken'
+              payFast:
+                $ref: '#/components/examples/payFast'
+      responses:
+        '201':
+          description: The iDEAL transaction was created successfully. The response contains the transaction details and a redirect URL to complete the payment.
+          headers:
+            Digest:
+              $ref: '#/components/headers/Digest'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdealTransaction'
+              examples:
+                openIdeal:
+                  $ref: '#/components/examples/openIdeal'
+                successIdeal:
+                  $ref: '#/components/examples/successIdeal'
+                iDEALCheckout:
+                  $ref: '#/components/examples/iDEALCheckout'
+                payFast:
+                  $ref: '#/components/examples/payFast-2'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/ideal/v1/transactions/{transactionId}:
+    get:
+      operationId: getIdealTransaction
+      description: Retrieve details for an existing iDEAL transaction, either created in de API directly or through an iDEAL QR-code. This endpoint must be used to obtain the status for a transaction.
+      tags:
+      - iDEAL
+      summary: Fetch payment
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          description: Returns the transaction details for the iDEAL transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdealTransaction'
+              examples:
+                openIdeal:
+                  $ref: '#/components/examples/openIdeal'
+                successIdeal:
+                  $ref: '#/components/examples/successIdeal'
+                refundIdeal:
+                  $ref: '#/components/examples/refundIdeal'
+                iDEALCheckout:
+                  $ref: '#/components/examples/iDEALCheckout'
+                payFast:
+                  $ref: '#/components/examples/payFast-2'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/ideal/v1/transactions/{transactionId}/refunds:
+    post:
+      operationId: refundIdealPayment
+      description: Create a refund for a previous made iDEAL transaction. A payment must be fully processed to be able to refund them. This may take up to 30 minutes.
+      tags:
+      - iDEAL
+      summary: Refund iDEAL payment
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Refund'
+      responses:
+        '201':
+          description: The iDEAL refund was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdealTransaction'
+              examples:
+                refund:
+                  $ref: '#/components/examples/refundIdeal'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+    get:
+      operationId: getIdealRefunds
+      tags:
+      - iDEAL
+      summary: Fetch refunds
+      description: Retrieve refunds for an iDEAL transaction.
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          $ref: '#/components/responses/RefundsResponse'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/ideal/v1/transactions/{transactionId}/userToken:
+    get:
+      operationId: getIdealPayFastUserToken
+      parameters:
+      - $ref: '#/components/parameters/TransactionId'
+      summary: Fetch Pay Fast User Token
+      description: 'Retrieve the Pay Fast User Token that was generated by iDEAL for this transaction.
+
+
+        If no User Token was requested, the payment is not successful, the Consumer did not give consent, or the User Token is not yet available, a 404 status is returned.'
+      tags:
+      - iDEAL
+      responses:
+        '200':
+          description: iDEAL Pay Fast User Token which must be used to create an iDEAL Pay Fast payment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdealPayFastUserToken-2'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+  /paymentmethods/ideal/v1/debtors/{userToken}/preferences:
+    get:
+      operationId: getIdealPayFastUserPreferences
+      summary: Get consumers preferred bank account
+      description: Get the preferred bank account of the consumer by userToken before creating a Pay Fast transaction. The response must be rendered in the checkout so that the consumer can review it. If a 404 is returned a new token can be requested.
+      parameters:
+      - $ref: '#/components/parameters/IdealPayFastUserToken'
+      tags:
+      - iDEAL
+      responses:
+        '200':
+          description: The preferenced bank account of the consumer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IDealPayFastDebtorPreferences'
+        4XX:
+          $ref: '#/components/responses/UserError'
+        5XX:
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    FinalStatusEvent:
+      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - FINALSTATUS
+      example: FINALSTATUS
+    RedirectAction:
+      description: URL where consumer should be redirected to by the merchant to perform the payment.
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          description: URL where consumer should be redirected to by the merchant to perform the payment.
+          type: string
+          format: url
+          example: https://issuer.tld/ideal/start?trxid=213981209381209390821&random=wreq0dq90vgq0ew923123
+    Description:
+      description: Description of the underlying value or reason of the payment.
+      type: string
+      maxLength: 255
+      example: Order at yourdomain.tld
+    IdealPayment:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        required:
+        - purchaseId
+        - description
+        properties:
+          expiresAt:
+            allOf:
+            - $ref: '#/components/schemas/Datetime'
+            - description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes EXPIRED. If left empty, the value defaults to 30 mins.
+          purchaseId:
+            $ref: '#/components/schemas/PurchaseID'
+          description:
+            $ref: '#/components/schemas/IDEALDescription'
+          checkout:
+            $ref: '#/components/schemas/IdealCheckout'
+          requestUserToken:
+            $ref: '#/components/schemas/IdealPayFastRequestUserToken'
+          expectedDebtor:
+            $ref: '#/components/schemas/IdealPayFastExpectedDebtor'
+    IdealAddress:
+      type: object
+      title: Address
+      properties:
+        firstName:
+          type: string
+          description: The first name of the consumer
+          example: John
+          minLength: 1
+        lastName:
+          type: string
+          description: The last name of the consumer
+          example: Doe
+          minLength: 1
+        companyName:
+          type: string
+          description: The company name of the consumer
+          example: Cookie factory
+          minLength: 1
+        postalCode:
+          type: string
+          description: The postal code of the address without spaces
+          example: 1234AB
+          minLength: 1
+        houseNumber:
+          type: string
+          description: The house number of the address
+          example: '100'
+          minLength: 1
+        addition:
+          type: string
+          description: The addition of the address
+          example: 2B
+          minLength: 1
+        street:
+          type: string
+          description: The street of the address
+          example: Bankastraat
+          minLength: 1
+        city:
+          type: string
+          description: The city of the address
+          example: Amsterdam
+          minLength: 1
+        countryName:
+          type: string
+          description: Name of the country
+          example: Netherlands
+          minLength: 1
+    ReturnUrls:
+      type: object
+      description: 'URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this object we can redirect consumer to a dedicated page per payment result status. Either this object or the returnUrl field is mandatory.'
+      required:
+      - success
+      - cancelled
+      - expired
+      - failed
+      properties:
+        success:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-success.html
+        cancelled:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-cancelled.html
+        expired:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-expired.html
+        failed:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-failed.html
+    RefundsList:
+      description: Details of all refunds belonging to a transaction.
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundDetails'
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+      type: string
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
+    Refund:
+      description: Refund an already successfully processed payment.
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
+
+            '
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+    IDealPayFastDebtorPreferences:
+      type: object
+      required:
+      - issuerName
+      - issuerLogoUrl
+      - maskedIban
+      properties:
+        issuerName:
+          description: The name of the issuer bank.
+          type: string
+          minLength: 1
+          maxLength: 36
+          example: Test Bank
+        issuerLogoUrl:
+          description: The logo URL of the issuer bank.
+          type: string
+          format: uri
+          example: https://ideal.ext/logos/issuer.png
+        maskedIban:
+          description: The masked consumer IBAN.
+          type: string
+          example: NL44RABO******6789
+          minLength: 1
+    RefundStatus:
+      description: '* `SUCCESS`    - Refund has succeeded.
+
+        * `PENDING`    - Refund is waiting to be processed.
+
+        * `FAILURE`    - Refund has failed.
+
+        * `CANCELLED`  - Refund has been cancelled.
+
+        '
+      type: string
+      enum:
+      - SUCCESS
+      - PENDING
+      - FAILURE
+      - CANCELLED
+      example: SUCCESS
+    TransactionWebhooks:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhook'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
+
+        '
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - id
+        - reference
+        - amount
+        - currency
+        - status
+        - description
+        properties:
+          id:
+            $ref: '#/components/schemas/TransactionId'
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
+          description:
+            $ref: '#/components/schemas/Description'
+    ReturnURLOneOf:
+      oneOf:
+      - type: object
+        required:
+        - returnUrls
+        properties:
+          returnUrls:
+            $ref: '#/components/schemas/ReturnUrls'
+      - type: object
+        required:
+        - returnUrl
+        properties:
+          returnUrl:
+            $ref: '#/components/schemas/ReturnUrl'
+    StatusAuthorized:
+      description: The transaction has been authorized.
+      type: string
+      format: enum
+      enum:
+      - AUTHORIZED
+      example: AUTHORIZED
+    IDEALDescription:
+      maxLength: 35
+      description: 'Description of the underlying value or reason of the payment.
+
+
+        Ultimately appears on the payment statement and confirmation screen.
+
+        '
+    StatusFailure:
+      description: The transaction has failed.
+      type: string
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
+    PaymentWithoutDescriptionAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - type: object
+        properties:
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
+    TransactionWithoutOrderIdLanguageRefundsAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt'
+      - type: object
+        required:
+        - createdAt
+        properties:
+          createdAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time when the transaction was created.
+    PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - reference
+        - amount
+        properties:
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
+    StatusExpired:
+      description: The transaction has expired.
+      type: string
+      format: enum
+      enum:
+      - EXPIRED
+      example: EXPIRED
+    RefundStatusEvent:
+      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+        '
+      type: string
+      enum:
+      - REFUND_STATUS
+      example: REFUND_STATUS
+    PurchaseID:
+      description: 'Unique identification of the order within the Merchant''s system. This value
+
+        appears on the bank statement of the Consumer.
+
+
+        The purchaseID can only contain letters and numbers.'
+      type: string
+      minLength: 1
+      maxLength: 35
+      pattern: ^[A-Za-z0-9]{1,35}$
+      example: PO1234567
+    Currency:
+      description: ISO 4217 currency code.
+      type: string
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
+      type: string
+      format: enum
+      enum:
+      - CANCELLED
+      example: CANCELLED
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    IdealTransactionId:
+      description: 'The 16-digit transaction ID within the iDEAL scheme as known by the acquirer and issuing bank, and
+
+        used in the credit transfer. The value can have leading zeros.
+
+        This value is `null` if the status `FAILURE`.'
+      type:
+      - string
+      - 'null'
+      minLength: 16
+      maxLength: 16
+      example: '1234567890123456'
+    Payment:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
+      - type: object
+        required:
+        - description
+        properties:
+          description:
+            $ref: '#/components/schemas/Description'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    IdealTransaction:
+      allOf:
+      - $ref: '#/components/schemas/Transaction'
+      - type: object
+        required:
+        - purchaseId
+        - action
+        - idealTransactionId
+        - status
+        properties:
+          description:
+            $ref: '#/components/schemas/IDEALDescription'
+          status:
+            description: 'The status of the transaction.
+
+
+              **Note:** `AUTHORIZED` is a transient, non-final status that should not occur for iDEAL, since iDEAL is an instant payment method with no separate authorization step. In rare cases, it may briefly be observed before the status resolves to its final value. It should not be relied upon and does not indicate a final outcome.'
+            oneOf:
+            - $ref: '#/components/schemas/StatusOpen'
+            - $ref: '#/components/schemas/StatusSuccess'
+            - $ref: '#/components/schemas/StatusCancelled'
+            - $ref: '#/components/schemas/StatusExpired'
+            - $ref: '#/components/schemas/StatusFailure'
+            - $ref: '#/components/schemas/StatusAuthorized'
+          purchaseId:
+            $ref: '#/components/schemas/PurchaseID'
+          action:
+            type: object
+            description: Next action to be performed by merchant (or consumer) to complete the payment.
+            properties:
+              redirect:
+                $ref: '#/components/schemas/RedirectAction'
+          issuer:
+            $ref: '#/components/schemas/BIC'
+          requestUserToken:
+            $ref: '#/components/schemas/IdealPayFastRequestUserToken'
+          expectedDebtor:
+            $ref: '#/components/schemas/IdealPayFastExpectedDebtor'
+          notificationResult:
+            type: string
+            format: enum
+            enum:
+            - PUSH_SENT_SHOW_WAITING_SCREEN
+            - REDIRECT
+            description: 'The value `PUSH_SENT_SHOW_WAITING_SCREEN` indicates the issuer attempted to send the notification, and the Merchant should show a "waiting for notification"-screen to the Consumer. The value `REDIRECT` indicates the Consumer should be redirected to the `checkoutUrl` as with the normal iDEAL flow.
+
+
+              This field is only returned when the Pay Fast flow was initiated using the `expectedDebtor`-field.'
+          consumer:
+            $ref: '#/components/schemas/IdealConsumer'
+          idealTransactionId:
+            $ref: '#/components/schemas/IdealTransactionId'
+    StatusOpen:
+      description: The transaction is open and can be paid.
+      type: string
+      format: enum
+      enum:
+      - OPEN
+      example: OPEN
+    TransactionWithoutOrderId:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
+      - type: object
+        required:
+        - language
+        - expiresAt
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+          refunds:
+            $ref: '#/components/schemas/Refunds'
+    TransactionWebhook:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    Transaction:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderId'
+      - type: object
+        required:
+        - orderId
+        properties:
+          orderId:
+            allOf:
+            - deprecated: true
+            - $ref: '#/components/schemas/Uuid'
+    IdealConsumer:
+      description: contains the Name and IBAN that were used by the consumer that completed the payment. This field is null until the payment is completed.
+      type: object
+      properties:
+        name:
+          description: Name of the consumer
+          type: string
+          example: John
+        bic:
+          $ref: '#/components/schemas/BIC'
+        iban:
+          description: IBAN of the consumer
+          type: string
+          example: NL24RABO8487376045
+        checkoutDetails:
+          description: 'The checkout details defined by the consumer before completing the transaction.
+
+
+            By default, the invoice address will be the same as the shipping address unless it is explicitly changed by the
+
+            consumer.
+
+
+            This field is only available if the transaction status is `SUCCESS` and checkout data was requested.'
+          type: object
+          properties:
+            contactDetails:
+              type: object
+              title: DebtorContactDetails
+              properties:
+                firstName:
+                  type: string
+                  description: The first name of the consumer (can be different from the first name in the contact details)
+                  example: Edsger
+                  minLength: 1
+                lastName:
+                  type: string
+                  description: The last name of the consumer (can be different from the last name in the contact details)
+                  example: Dijkstra
+                  minLength: 1
+                phoneNumber:
+                  type: string
+                  description: The phone number of the consumer in E.164 format
+                  pattern: ^\+[1-9][0-9]{1,14}$
+                  example: '+31612345678'
+                email:
+                  type: string
+                  description: The e-mail address of the consumer
+                  format: email
+                  example: edsger@domain.nl
+                  minLength: 1
+            shippingAddress:
+              $ref: '#/components/schemas/IdealAddress'
+            invoiceAddress:
+              $ref: '#/components/schemas/IdealAddress'
+    IdealPayFastUserToken:
+      description: iDEAL Pay Fast User Token as generated by iDEAL, which is received in the response of a Create iDEAL Transaction when the field `"requestUserToken"` is set to `true`.
+      type: string
+      minLength: 1
+      maxLength: 128
+      example: Z7xmaEJlB3rDLpmln9xbUlaQ
+    PaymentWithoutDescriptionExpiresAtAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
+      - type: object
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+    BIC:
+      description: Bank Identification Code
+      deprecated: true
+      type: string
+      minLength: 8
+      maxLength: 11
+      example: RABONL2U
+    IdealPayFastExpectedDebtor:
+      type: object
+      description: 'If the Merchant is in possession of a User Token, obtained through a previous transaction, and the Consumer has indicated that he wants to reuse the bank account that was displayed after retrieving it from the `getDebtorPreferences`-endpoint, the User Token and browsers user-agent can be provided to enable the enhanced flow.
+
+
+        The Consumer for which a User Token is used MUST hold an account with the merchant. The Merchant MUST only use the iDEAL User Token that was received in the last transaction for the Consumer.'
+      required:
+      - userToken
+      properties:
+        userToken:
+          $ref: '#/components/schemas/IdealPayFastUserToken'
+        userAgent:
+          type: string
+          description: The User-Agent contains a characteristic string that allows the network protocol peers to identify the application type, operating system, software vendor, or software version of the requesting software user agent.
+          minLength: 0
+          maxLength: 500
+    IdealPayFastRequestUserToken:
+      description: 'Requests a User Token for future Pay Fast transactions with the same Consumer.
+
+
+        When enabled and the Consumer consents, a User Token will be generated that enables push notifications in future transactions.
+
+
+        Only request User Tokens for Consumers who have established accounts with your service and can be reliably identified on return visits.'
+      type: boolean
+      default: false
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
+    IdealPayFastUserToken-2:
+      type: object
+      required:
+      - transactionId
+      - userToken
+      properties:
+        transactionId:
+          $ref: '#/components/schemas/TransactionId'
+        userToken:
+          $ref: '#/components/schemas/IdealPayFastUserToken'
+    RefundDetails:
+      description: Details of a refund.
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - reason
+      - status
+      - created
+      - updated
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/Uuid'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+        created:
+          $ref: '#/components/schemas/Datetime'
+        updated:
+          $ref: '#/components/schemas/Datetime'
+    Refunds:
+      description: Details of refunds for a transaction
+      type: object
+      required:
+      - refundedAmount
+      - refundedPendingAmount
+      properties:
+        refundedAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
+          type: integer
+          minimum: 0
+          maximum: 99999999
+          example: 300
+        refundedPendingAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
+          type: integer
+          minimum: 1
+          maximum: 99999999
+          example: 100
+    IdealCheckout:
+      description: 'An iDEAL payment with iDEAL Checkout allow users to centrally manage their shipping, invoice and contact details in an iDEAL profile and provide these to a Merchant as part of the iDEAL payment.
+
+
+        Use this object to enable the iDEAL Checkout flow and specify the shipping costs and the consumer details to be returned after a successful payment.'
+      type: object
+      properties:
+        shippingCost:
+          description: 'Shipping costs in euro cents.
+
+
+            This value must be less or equal to the total transaction amount, which includes these shipping costs.'
+          type: integer
+          example: 100
+          minimum: 0
+          maximum: 99999999
+        requestedDetails:
+          description: According to GDPR, the merchant is responsible for requesting what is meant 'good enough' data fields for them in order to finalize the order and deliver the goods.
+          type: object
+          properties:
+            debtorContactDetails:
+              type: object
+              title: DebtorContactDetailsRequestData
+              description: With the Debtor Contact Details, you (the merchant) can indicate which data you want to retrieve from iDEAL Checkout in the Create Transaction response.
+              properties:
+                firstName:
+                  type: boolean
+                  description: Request to provide the first name of the consumer
+                  default: false
+                lastName:
+                  type: boolean
+                  description: Request to provide the last name of the consumer
+                  default: false
+                phoneNumber:
+                  type: boolean
+                  description: Request to provide the phone number of the consumer in E.164 format
+                  default: false
+                email:
+                  type: boolean
+                  description: Request to provide the e-mail address of the consumer
+                  default: false
+            shippingAddress:
+              type: boolean
+              description: Request to provide the shipping address of the consumer
+              default: false
+            invoiceAddress:
+              type: boolean
+              description: Request to provide the invoice address of the consumer
+              default: false
+      required:
+      - shippingCost
+      - requestedDetails
+  examples:
+    openIdeal:
+      summary: Open transaction
+      value:
+        id: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+        orderId: 68dcf257-b15d-4a86-9baa-4cf60c6c8a5c
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        currency: EUR
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-08T17:36:50Z'
+        language: nl
+        idealTransactionId: null
+        status: OPEN
+        action:
+          redirect:
+            url: https://ideal.acceptance.cmpayments.nl/issuermock/8153309507457504?ec=7wgoao5EJ7qDo8yT373ic1pOfQY9S81B02xbDRXO
+        createdAt: '2025-05-08T17:06:49Z'
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+    successIdeal:
+      summary: Successful transaction (also applicable for FAILED, EXPIRED or CANCELLED)
+      value:
+        id: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+        orderId: 68dcf257-b15d-4a86-9baa-4cf60c6c8a5c
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        currency: EUR
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-08T17:36:50Z'
+        language: nl
+        idealTransactionId: '8153248198760451'
+        status: SUCCESS
+        action: null
+        createdAt: '2025-05-08T17:06:49Z'
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+        consumer:
+          name: J. Doe
+          bic: TESTXX10
+          iban: NL57TEST0890594562
+    refundIdeal:
+      summary: Refund transaction
+      value:
+        id: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+        orderId: 68dcf257-b15d-4a86-9baa-4cf60c6c8a5c
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        currency: EUR
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-08T17:36:50Z'
+        language: nl
+        idealTransactionId: '8153248198760451'
+        status: SUCCESS
+        action: null
+        createdAt: '2025-05-08T17:06:49Z'
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+        consumer:
+          name: J. Doe
+          bic: TESTXX10
+          iban: NL57TEST0890594562
+        refunds:
+          refundedAmount: 3999
+          refundedPendingAmount: 2000
+    fastCheckout:
+      summary: Fast Checkout
+      value:
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+        checkout:
+          shippingCost: 100
+          requestedDetails:
+            debtorContactDetails:
+              firstName: true
+              lastName: true
+              phoneNumber: false
+              email: true
+            shippingAddress: true
+            invoiceAddress: false
+    payFast-2:
+      summary: Pay Fast
+      value:
+        id: 7893d743-9363-45a9-a63c-9691f07f55ee
+        amount: 5999
+        purchaseID: PO1234567
+        description: Your order at My Web Shop.
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        language: nl
+        expiresAt: '2024-07-22T15:34:05Z'
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+        status: OPEN
+        expectedDebtor:
+          userToken: Z7xmaEJlB3rDLpmln9xbUlaQ
+          userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0
+        checkoutUrl: https://issuer.tld/ideal/start?trxid=1234567890123456&random=wreq0dq90vgq0ew923123
+        notificationResult: PUSH_SENT_SHOW_WAITING_SCREEN
+        transactionId: null
+        consumer: null
+        createdAt: '2024-07-22T15:04:05Z'
+        updatedAt: '2024-07-22T15:04:05Z'
+    payFast:
+      summary: Pay Fast
+      value:
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+        expectedDebtor:
+          userToken: Z7xmaEJlB3rDLpmln9xbUlaQ,
+          userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0
+    iDEALCheckout:
+      summary: Fast Checkout
+      value:
+        id: 72149cbf-d4a1-4309-9872-6ec19fa782cc
+        orderId: 68dcf257-b15d-4a86-9baa-4cf60c6c8a5c
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        currency: EUR
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-08T17:36:50Z'
+        language: nl
+        idealTransactionId: '8153248198760451'
+        status: SUCCESS
+        action: null
+        createdAt: '2025-05-08T17:06:49Z'
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+        checkout:
+          shippingCost: 100
+          requestedDetails:
+            debtorContactDetails:
+              firstName: true
+              lastName: true
+              phoneNumber: false
+              email: true
+            shippingAddress: true
+            invoiceAddress: false
+        consumer:
+          name: J. Doe
+          bic: TESTXX10
+          iban: NL57TEST0890594562
+          checkoutDetails:
+            contactDetails:
+              firstName: John
+              email: john.doe@cm.com
+            shippingAddress:
+              firstName: John
+              lastName: Doe
+              street: Konijnenberg
+              houseNumber: '24'
+              postalCode: 4825BD
+              city: Breda
+              countryName: Netherlands
+    standardIdeal:
+      summary: Standard transaction
+      value:
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+    webhook:
+      summary: Standard transaction with webhook subscription
+      value:
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+        webhooks:
+        - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+          - REFUND_STATUS
+    payFastRequestUserToken:
+      summary: Request a Pay Fast user-token
+      value:
+        reference: bcbb3733-4d3e-4a4d-9254-1ddb90e6e081
+        amount: 5999
+        purchaseId: PO1234567
+        description: Your order at My Web Shop.
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+        requestUserToken: true
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+  responses:
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+    RefundsResponse:
+      description: Details of all refunds belonging to a transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundsList'
+  parameters:
+    IdealPayFastUserToken:
+      name: userToken
+      description: iDEAL Pay Fast User Token as generated by iDEAL, which is received in the response of a Create iDEAL Transaction when the field `"requestUserToken"` is set to `true`.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/IdealPayFastUserToken'
+    TransactionId:
+      name: transactionId
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/TransactionId'
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: OAuth 2.0 Client Credentials Grant.
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/authorization/oauth2/token
+          scopes: {}

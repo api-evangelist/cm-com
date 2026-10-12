@@ -1,0 +1,174 @@
+openapi: 3.2.0
+info:
+  title: Merchant Security API
+  description: '## Payment Acceptance Made Easy
+
+    The MerchantAPI allows merchants to interact with and retrieve information from the PayPlaza payment system.'
+  contact:
+    name: Development
+    url: https://www.payplaza.com
+    email: development@payplaza.com
+  version: 1.9.0
+servers:
+- url: /merchant/v1
+security:
+- ApiKeyAuth: []
+tags:
+- name: Security
+  description: For managing API keys
+paths:
+  /apikeys:
+    get:
+      operationId: getApiKeys
+      tags:
+      - Security
+      summary: Retrieve details about the available APIKeys
+      responses:
+        '200':
+          description: The list of APIKeys known
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAPIKeyResponse'
+        '400':
+          description: Bad request.
+        '401':
+          description: Not Authorized.
+        '500':
+          description: Internal server error.
+    post:
+      operationId: createApiKey
+      tags:
+      - Security
+      summary: Create new API key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAPIKeyRequest'
+        required: true
+      responses:
+        '201':
+          description: An API Key is successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAPIKeyResponse'
+        '400':
+          description: Bad request.
+        '401':
+          description: Not Authorized.
+        '500':
+          description: Internal server error.
+  /apikeys/id/{id}:
+    delete:
+      operationId: deleteApiKey
+      tags:
+      - Security
+      summary: Delete an API key
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No content.
+        '400':
+          description: Bad request.
+        '401':
+          description: Not Authorized.
+        '403':
+          description: Forbidden.
+        '500':
+          description: Internal server error.
+components:
+  schemas:
+    ZonedDateTime:
+      format: date-time
+      type: string
+      example: '2022-03-10T12:15:50-04:00'
+    CreateAPIKeyResponse:
+      required:
+      - id
+      - label
+      - apikey
+      type: object
+      properties:
+        id:
+          maxLength: 15
+          minLength: 15
+          pattern: \d{15}
+          type: string
+        label:
+          type: string
+        apikey:
+          maxLength: 50
+          minLength: 50
+          pattern: '[a-z-A-Z0-9]{50}'
+          type: string
+    GetAPIKeyResponse:
+      required:
+      - id
+      - label
+      type: object
+      properties:
+        id:
+          maxLength: 15
+          minLength: 15
+          pattern: \d{15}
+          type: string
+        label:
+          description: The label given by the user
+          type: string
+        lastUsage:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        validity:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/Validity'
+    Validity:
+      type: object
+      properties:
+        from:
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/ZonedDateTime'
+        until:
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/ZonedDateTime'
+    CreateAPIKeyRequest:
+      required:
+      - label
+      type: object
+      properties:
+        label:
+          type: string
+        validity:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/Validity'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: Authentication via the API Key provided by PayPlaza
+      name: API-Key
+      in: header
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

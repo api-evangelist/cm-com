@@ -1,0 +1,1149 @@
+{
+  "@context": {
+    "@vocab": "https://cm.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "cm": "https://cm.com/schema#",
+    "HealthResponse": "cm:HealthResponse",
+    "status": {
+      "@id": "cm:status",
+      "@type": "xsd:string"
+    },
+    "service": {
+      "@id": "cm:service",
+      "@type": "xsd:string"
+    },
+    "version": {
+      "@id": "cm:version",
+      "@type": "xsd:string"
+    },
+    "ErrorResponse": "cm:ErrorResponse",
+    "message": {
+      "@id": "cm:message",
+      "@type": "xsd:string"
+    },
+    "ConnectGet": "cm:ConnectGet",
+    "query": {
+      "@id": "cm:query",
+      "@container": "@list"
+    },
+    "ConnectCustom": "cm:ConnectCustom",
+    "method": {
+      "@id": "cm:method",
+      "@type": "xsd:string"
+    },
+    "path": {
+      "@id": "cm:path",
+      "@type": "xsd:string"
+    },
+    "data": {
+      "@id": "cm:data"
+    },
+    "Gateway_EmailAddress": "cm:Gateway_EmailAddress",
+    "email": {
+      "@id": "cm:email",
+      "@type": "xsd:string"
+    },
+    "name": {
+      "@id": "cm:name",
+      "@type": "xsd:string"
+    },
+    "Gateway_EmailAttachment": "cm:Gateway_EmailAttachment",
+    "fileName": {
+      "@id": "cm:fileName",
+      "@type": "xsd:string"
+    },
+    "content": {
+      "@id": "cm:content",
+      "@type": "xsd:string"
+    },
+    "contentType": {
+      "@id": "cm:contentType",
+      "@type": "xsd:string"
+    },
+    "contentId": {
+      "@id": "cm:contentId",
+      "@type": "xsd:string"
+    },
+    "Gateway_EmailResponseDto": "cm:Gateway_EmailResponseDto",
+    "success": {
+      "@id": "cm:success",
+      "@type": "xsd:boolean"
+    },
+    "messageId": {
+      "@id": "cm:messageId",
+      "@type": "xsd:string"
+    },
+    "batchId": {
+      "@id": "cm:batchId",
+      "@type": "xsd:string"
+    },
+    "Gateway_GatewayRequest": "cm:Gateway_GatewayRequest",
+    "from": {
+      "@id": "cm:from",
+      "@type": "@id"
+    },
+    "replyTo": {
+      "@id": "cm:replyTo",
+      "@type": "@id"
+    },
+    "to": {
+      "@id": "cm:to",
+      "@container": "@list"
+    },
+    "cc": {
+      "@id": "cm:cc",
+      "@container": "@list"
+    },
+    "bcc": {
+      "@id": "cm:bcc",
+      "@container": "@list"
+    },
+    "subject": {
+      "@id": "cm:subject",
+      "@type": "xsd:string"
+    },
+    "html": {
+      "@id": "cm:html",
+      "@type": "xsd:string"
+    },
+    "text": {
+      "@id": "cm:text",
+      "@type": "xsd:string"
+    },
+    "attachments": {
+      "@id": "cm:attachments",
+      "@container": "@list"
+    },
+    "customerReference": {
+      "@id": "cm:customerReference",
+      "@type": "xsd:string"
+    },
+    "scheduledAt": {
+      "@id": "cm:scheduledAt",
+      "@type": "xsd:string"
+    },
+    "inReplyTo": {
+      "@id": "cm:inReplyTo",
+      "@type": "xsd:string"
+    },
+    "references": {
+      "@id": "cm:references",
+      "@type": "xsd:string"
+    },
+    "headers": {
+      "@id": "cm:headers"
+    },
+    "Gateway_ProblemDetails": "cm:Gateway_ProblemDetails",
+    "type": {
+      "@id": "cm:type",
+      "@type": "xsd:string"
+    },
+    "title": {
+      "@id": "cm:title",
+      "@type": "xsd:string"
+    },
+    "detail": {
+      "@id": "cm:detail",
+      "@type": "xsd:string"
+    },
+    "instance": {
+      "@id": "cm:instance",
+      "@type": "xsd:string"
+    },
+    "Configuration_AccountConfig": "cm:Configuration_AccountConfig",
+    "id": {
+      "@id": "cm:id",
+      "@type": "xsd:integer"
+    },
+    "logicalAccount": {
+      "@id": "cm:logicalAccount",
+      "@type": "xsd:string"
+    },
+    "technicalAccount": {
+      "@id": "cm:technicalAccount",
+      "@type": "xsd:string"
+    },
+    "organization": {
+      "@id": "cm:organization",
+      "@type": "xsd:integer"
+    },
+    "suspended": {
+      "@id": "cm:suspended",
+      "@type": "xsd:boolean"
+    },
+    "suspendedReason": {
+      "@id": "cm:suspendedReason",
+      "@type": "xsd:string"
+    },
+    "cmCompany": {
+      "@id": "cm:cmCompany",
+      "@type": "xsd:integer"
+    },
+    "ipWhitelistEnabled": {
+      "@id": "cm:ipWhitelistEnabled",
+      "@type": "xsd:boolean"
+    },
+    "productToken": {
+      "@id": "cm:productToken",
+      "@type": "@id"
+    },
+    "planName": {
+      "@id": "cm:planName",
+      "@type": "xsd:string"
+    },
+    "defaultRecipientCount": {
+      "@id": "cm:defaultRecipientCount",
+      "@type": "xsd:integer"
+    },
+    "defaultAttachmentSizeInBytes": {
+      "@id": "cm:defaultAttachmentSizeInBytes",
+      "@type": "xsd:integer"
+    },
+    "isActive": {
+      "@id": "cm:isActive",
+      "@type": "xsd:boolean"
+    },
+    "isValid": {
+      "@id": "cm:isValid",
+      "@type": "xsd:boolean"
+    },
+    "Configuration_AccountConfigGetResponse": "cm:Configuration_AccountConfigGetResponse",
+    "statusCode": {
+      "@id": "cm:statusCode",
+      "@type": "@id"
+    },
+    "account": {
+      "@id": "cm:account",
+      "@type": "@id"
+    },
+    "Configuration_AccountConfigPostDto": "cm:Configuration_AccountConfigPostDto",
+    "Configuration_AccountConfigResponse": "cm:Configuration_AccountConfigResponse",
+    "accountConfig": {
+      "@id": "cm:accountConfig",
+      "@type": "@id"
+    },
+    "Configuration_AccountDetails": "cm:Configuration_AccountDetails",
+    "defaultAttachmentSize": {
+      "@id": "cm:defaultAttachmentSize",
+      "@type": "xsd:integer"
+    },
+    "createdOn": {
+      "@id": "cm:createdOn",
+      "@type": "xsd:dateTime"
+    },
+    "emailCount": {
+      "@id": "cm:emailCount",
+      "@type": "xsd:integer"
+    },
+    "Configuration_AccountDetailsListControllerResponse": "cm:Configuration_AccountDetailsListControllerResponse",
+    "Configuration_AccountStatus": "cm:Configuration_AccountStatus",
+    "Configuration_AccountUpdateRequest": "cm:Configuration_AccountUpdateRequest",
+    "recipientCount": {
+      "@id": "cm:recipientCount",
+      "@type": "xsd:integer"
+    },
+    "Configuration_BooleanControllerResponse": "cm:Configuration_BooleanControllerResponse",
+    "Configuration_BooleanNullableControllerResponse": "cm:Configuration_BooleanNullableControllerResponse",
+    "Configuration_ConfigResponse": "cm:Configuration_ConfigResponse",
+    "Configuration_DataRetention": "cm:Configuration_DataRetention",
+    "statusMessage": {
+      "@id": "cm:statusMessage",
+      "@type": "xsd:string"
+    },
+    "logicalAccountId": {
+      "@id": "cm:logicalAccountId",
+      "@type": "xsd:string"
+    },
+    "retentionValue": {
+      "@id": "cm:retentionValue",
+      "@type": "xsd:integer"
+    },
+    "retentionPeriod": {
+      "@id": "cm:retentionPeriod",
+      "@type": "@id"
+    },
+    "Configuration_DataRetentionRequest": "cm:Configuration_DataRetentionRequest",
+    "Configuration_DateBucketOptions": "cm:Configuration_DateBucketOptions",
+    "Configuration_DnsEntry": "cm:Configuration_DnsEntry",
+    "host": {
+      "@id": "cm:host",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "cm:value",
+      "@type": "xsd:string"
+    },
+    "purpose": {
+      "@id": "cm:purpose",
+      "@type": "xsd:string"
+    },
+    "priority": {
+      "@id": "cm:priority",
+      "@type": "xsd:integer"
+    },
+    "Configuration_DnsRecord": "cm:Configuration_DnsRecord",
+    "dnsStatus": {
+      "@id": "cm:dnsStatus",
+      "@type": "xsd:integer"
+    },
+    "Configuration_DnsRecordGetDto": "cm:Configuration_DnsRecordGetDto",
+    "fromDomain": {
+      "@id": "cm:fromDomain",
+      "@type": "xsd:integer"
+    },
+    "Configuration_DnsRecordGetResponse": "cm:Configuration_DnsRecordGetResponse",
+    "dnsRecords": {
+      "@id": "cm:dnsRecords",
+      "@container": "@list"
+    },
+    "Configuration_DomainConfig": "cm:Configuration_DomainConfig",
+    "accountId": {
+      "@id": "cm:accountId",
+      "@type": "xsd:string"
+    },
+    "domain": {
+      "@id": "cm:domain",
+      "@type": "xsd:string"
+    },
+    "modifiedOn": {
+      "@id": "cm:modifiedOn",
+      "@type": "xsd:dateTime"
+    },
+    "deletedOn": {
+      "@id": "cm:deletedOn",
+      "@type": "xsd:dateTime"
+    },
+    "clickTracking": {
+      "@id": "cm:clickTracking",
+      "@type": "xsd:boolean"
+    },
+    "openTracking": {
+      "@id": "cm:openTracking",
+      "@type": "xsd:boolean"
+    },
+    "sendingEnabled": {
+      "@id": "cm:sendingEnabled",
+      "@type": "xsd:boolean"
+    },
+    "receivingEnabled": {
+      "@id": "cm:receivingEnabled",
+      "@type": "xsd:boolean"
+    },
+    "Configuration_DomainConfigIEnumerableControllerResponse": "cm:Configuration_DomainConfigIEnumerableControllerResponse",
+    "Configuration_DomainConfigPostDto": "cm:Configuration_DomainConfigPostDto",
+    "Configuration_DomainConfigResponse": "cm:Configuration_DomainConfigResponse",
+    "domainConfig": {
+      "@id": "cm:domainConfig",
+      "@type": "@id"
+    },
+    "Configuration_DomainValidityResponse": "cm:Configuration_DomainValidityResponse",
+    "dnsEntries": {
+      "@id": "cm:dnsEntries",
+      "@container": "@list"
+    },
+    "Configuration_EmailAggregateMetrics": "cm:Configuration_EmailAggregateMetrics",
+    "totalSent": {
+      "@id": "cm:totalSent",
+      "@type": "xsd:integer"
+    },
+    "totalBounced": {
+      "@id": "cm:totalBounced",
+      "@type": "xsd:integer"
+    },
+    "totalDelivered": {
+      "@id": "cm:totalDelivered",
+      "@type": "xsd:integer"
+    },
+    "deliveryRate": {
+      "@id": "cm:deliveryRate",
+      "@type": "xsd:decimal"
+    },
+    "bounceRate": {
+      "@id": "cm:bounceRate",
+      "@type": "xsd:decimal"
+    },
+    "totalAbused": {
+      "@id": "cm:totalAbused",
+      "@type": "xsd:decimal"
+    },
+    "totalSpamRelated": {
+      "@id": "cm:totalSpamRelated",
+      "@type": "xsd:decimal"
+    },
+    "totalSpam": {
+      "@id": "cm:totalSpam",
+      "@type": "xsd:decimal"
+    },
+    "spamRate": {
+      "@id": "cm:spamRate",
+      "@type": "xsd:decimal"
+    },
+    "Configuration_EmailAlert": "cm:Configuration_EmailAlert",
+    "alertName": {
+      "@id": "cm:alertName",
+      "@type": "xsd:string"
+    },
+    "metric": {
+      "@id": "cm:metric",
+      "@type": "xsd:string"
+    },
+    "threshold": {
+      "@id": "cm:threshold",
+      "@type": "xsd:string"
+    },
+    "recipient": {
+      "@id": "cm:recipient",
+      "@type": "xsd:string"
+    },
+    "createdDate": {
+      "@id": "cm:createdDate",
+      "@type": "xsd:dateTime"
+    },
+    "updatedDate": {
+      "@id": "cm:updatedDate",
+      "@type": "xsd:dateTime"
+    },
+    "Configuration_EmailAlertDto": "cm:Configuration_EmailAlertDto",
+    "Configuration_EmailAlertListControllerResponse": "cm:Configuration_EmailAlertListControllerResponse",
+    "Configuration_EmailDomainGraphMetrics": "cm:Configuration_EmailDomainGraphMetrics",
+    "totalRequest": {
+      "@id": "cm:totalRequest",
+      "@type": "xsd:integer"
+    },
+    "emailDomain": {
+      "@id": "cm:emailDomain",
+      "@type": "xsd:string"
+    },
+    "Configuration_EmailEventAggregateMetrics": "cm:Configuration_EmailEventAggregateMetrics",
+    "totalUniqueOpenCount": {
+      "@id": "cm:totalUniqueOpenCount",
+      "@type": "xsd:decimal"
+    },
+    "totalUniqueClickCount": {
+      "@id": "cm:totalUniqueClickCount",
+      "@type": "xsd:decimal"
+    },
+    "totalOpenCount": {
+      "@id": "cm:totalOpenCount",
+      "@type": "xsd:decimal"
+    },
+    "totalClickCount": {
+      "@id": "cm:totalClickCount",
+      "@type": "xsd:decimal"
+    },
+    "openRate": {
+      "@id": "cm:openRate",
+      "@type": "xsd:decimal"
+    },
+    "clickRate": {
+      "@id": "cm:clickRate",
+      "@type": "xsd:decimal"
+    },
+    "clickToOpenRate": {
+      "@id": "cm:clickToOpenRate",
+      "@type": "xsd:decimal"
+    },
+    "Configuration_EmailEventGraphMetric": "cm:Configuration_EmailEventGraphMetric",
+    "axisCount": {
+      "@id": "cm:axisCount",
+      "@type": "xsd:decimal"
+    },
+    "timeOffset": {
+      "@id": "cm:timeOffset",
+      "@type": "xsd:dateTime"
+    },
+    "dateBucketOption": {
+      "@id": "cm:dateBucketOption",
+      "@type": "@id"
+    },
+    "Configuration_EmailFeatureInfo": "cm:Configuration_EmailFeatureInfo",
+    "featureName": {
+      "@id": "cm:featureName",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "cm:description",
+      "@type": "xsd:string"
+    },
+    "active": {
+      "@id": "cm:active",
+      "@type": "xsd:boolean"
+    },
+    "createdAt": {
+      "@id": "cm:createdAt",
+      "@type": "xsd:dateTime"
+    },
+    "updatedAt": {
+      "@id": "cm:updatedAt",
+      "@type": "xsd:dateTime"
+    },
+    "Configuration_EmailFeatureRequest": "cm:Configuration_EmailFeatureRequest",
+    "Configuration_EmailFeaturesInfoResponse": "cm:Configuration_EmailFeaturesInfoResponse",
+    "featureFlags": {
+      "@id": "cm:featureFlags",
+      "@container": "@list"
+    },
+    "Configuration_EmailGraphAggregate": "cm:Configuration_EmailGraphAggregate",
+    "totalSoftBounced": {
+      "@id": "cm:totalSoftBounced",
+      "@type": "xsd:decimal"
+    },
+    "totalHardBounced": {
+      "@id": "cm:totalHardBounced",
+      "@type": "xsd:decimal"
+    },
+    "Configuration_EmailAttachment": "cm:Configuration_EmailAttachment",
+    "inline": {
+      "@id": "cm:inline",
+      "@type": "xsd:boolean"
+    },
+    "sizeBytes": {
+      "@id": "cm:sizeBytes",
+      "@type": "xsd:integer"
+    },
+    "url": {
+      "@id": "cm:url",
+      "@type": "xsd:string"
+    },
+    "checksumSha256": {
+      "@id": "cm:checksumSha256",
+      "@type": "xsd:string"
+    },
+    "truncated": {
+      "@id": "cm:truncated",
+      "@type": "xsd:boolean"
+    },
+    "Configuration_EmailAttachmentListControllerResponse": "cm:Configuration_EmailAttachmentListControllerResponse",
+    "Configuration_EmailAttachmentMetadata": "cm:Configuration_EmailAttachmentMetadata",
+    "Configuration_EmailDetail": "cm:Configuration_EmailDetail",
+    "direction": {
+      "@id": "cm:direction",
+      "@type": "xsd:string"
+    },
+    "rfcMessageId": {
+      "@id": "cm:rfcMessageId",
+      "@type": "xsd:string"
+    },
+    "fromAddress": {
+      "@id": "cm:fromAddress",
+      "@type": "xsd:string"
+    },
+    "fromName": {
+      "@id": "cm:fromName",
+      "@type": "xsd:string"
+    },
+    "toHeader": {
+      "@id": "cm:toHeader",
+      "@type": "xsd:string"
+    },
+    "originalRecipient": {
+      "@id": "cm:originalRecipient",
+      "@type": "xsd:string"
+    },
+    "sentDate": {
+      "@id": "cm:sentDate",
+      "@type": "xsd:dateTime"
+    },
+    "receivedAt": {
+      "@id": "cm:receivedAt",
+      "@type": "xsd:dateTime"
+    },
+    "attachmentCount": {
+      "@id": "cm:attachmentCount",
+      "@type": "xsd:integer"
+    },
+    "referencesJson": {
+      "@id": "cm:referencesJson",
+      "@type": "xsd:string"
+    },
+    "hasTruncatedAttachment": {
+      "@id": "cm:hasTruncatedAttachment",
+      "@type": "xsd:boolean"
+    },
+    "rawContent": {
+      "@id": "cm:rawContent",
+      "@type": "xsd:string"
+    },
+    "bodyTextBody": {
+      "@id": "cm:bodyTextBody",
+      "@type": "xsd:string"
+    },
+    "bodyHtmlBody": {
+      "@id": "cm:bodyHtmlBody",
+      "@type": "xsd:string"
+    },
+    "Configuration_EmailDetailControllerResponse": "cm:Configuration_EmailDetailControllerResponse",
+    "Configuration_EmailListItem": "cm:Configuration_EmailListItem",
+    "Configuration_EmailsGetResponse": "cm:Configuration_EmailsGetResponse",
+    "totalCount": {
+      "@id": "cm:totalCount",
+      "@type": "xsd:integer"
+    },
+    "emails": {
+      "@id": "cm:emails",
+      "@container": "@list"
+    },
+    "Configuration_EmailInboundWebhookControllerResponse": "cm:Configuration_EmailInboundWebhookControllerResponse",
+    "webhookResponse": {
+      "@id": "cm:webhookResponse",
+      "@container": "@list"
+    },
+    "Configuration_EmailInboundWebhookRequest": "cm:Configuration_EmailInboundWebhookRequest",
+    "webhookUrl": {
+      "@id": "cm:webhookUrl",
+      "@type": "xsd:string"
+    },
+    "usePresignedAttachments": {
+      "@id": "cm:usePresignedAttachments",
+      "@type": "xsd:boolean"
+    },
+    "presignedUrlExpiryHours": {
+      "@id": "cm:presignedUrlExpiryHours",
+      "@type": "xsd:integer"
+    },
+    "Configuration_EmailInboundWebhookResponse": "cm:Configuration_EmailInboundWebhookResponse",
+    "modifiedAt": {
+      "@id": "cm:modifiedAt",
+      "@type": "xsd:dateTime"
+    },
+    "Configuration_EmailInboundWebhookResponseControllerResponse": "cm:Configuration_EmailInboundWebhookResponseControllerResponse",
+    "Configuration_EmailInboundWebhookUpdateRequest": "cm:Configuration_EmailInboundWebhookUpdateRequest",
+    "resetPresignedUrlExpiryHours": {
+      "@id": "cm:resetPresignedUrlExpiryHours",
+      "@type": "xsd:boolean"
+    },
+    "Configuration_EmailInvoice": "cm:Configuration_EmailInvoice",
+    "processedDate": {
+      "@id": "cm:processedDate",
+      "@type": "xsd:dateTime"
+    },
+    "bundleName": {
+      "@id": "cm:bundleName",
+      "@type": "xsd:string"
+    },
+    "bundleSize": {
+      "@id": "cm:bundleSize",
+      "@type": "xsd:integer"
+    },
+    "sentEmailCount": {
+      "@id": "cm:sentEmailCount",
+      "@type": "xsd:integer"
+    },
+    "pricePerUnit": {
+      "@id": "cm:pricePerUnit",
+      "@type": "xsd:decimal"
+    },
+    "totalPayableAmount": {
+      "@id": "cm:totalPayableAmount",
+      "@type": "xsd:decimal"
+    },
+    "localCurrency": {
+      "@id": "cm:localCurrency",
+      "@type": "xsd:string"
+    },
+    "localTotalPayableAmount": {
+      "@id": "cm:localTotalPayableAmount",
+      "@type": "xsd:decimal"
+    },
+    "Configuration_EmailInvoiceResponse": "cm:Configuration_EmailInvoiceResponse",
+    "accountName": {
+      "@id": "cm:accountName",
+      "@type": "xsd:string"
+    },
+    "invoice": {
+      "@id": "cm:invoice",
+      "@type": "@id"
+    },
+    "Configuration_EmailInvoiceResponseListControllerResponse": "cm:Configuration_EmailInvoiceResponseListControllerResponse",
+    "Configuration_EmailLogs": "cm:Configuration_EmailLogs",
+    "customer": {
+      "@id": "cm:customer",
+      "@type": "xsd:string"
+    },
+    "batchGuid": {
+      "@id": "cm:batchGuid",
+      "@type": "xsd:string"
+    },
+    "sender": {
+      "@id": "cm:sender",
+      "@type": "xsd:string"
+    },
+    "requestedOn": {
+      "@id": "cm:requestedOn",
+      "@type": "xsd:dateTime"
+    },
+    "processed": {
+      "@id": "cm:processed",
+      "@type": "xsd:dateTime"
+    },
+    "logged": {
+      "@id": "cm:logged",
+      "@type": "xsd:dateTime"
+    },
+    "messageStatusId": {
+      "@id": "cm:messageStatusId",
+      "@type": "xsd:integer"
+    },
+    "statusDetail": {
+      "@id": "cm:statusDetail",
+      "@type": "xsd:string"
+    },
+    "sent": {
+      "@id": "cm:sent",
+      "@type": "xsd:dateTime"
+    },
+    "finalized": {
+      "@id": "cm:finalized",
+      "@type": "xsd:dateTime"
+    },
+    "clicked": {
+      "@id": "cm:clicked",
+      "@type": "xsd:boolean"
+    },
+    "opened": {
+      "@id": "cm:opened",
+      "@type": "xsd:boolean"
+    },
+    "clickedCount": {
+      "@id": "cm:clickedCount",
+      "@type": "xsd:integer"
+    },
+    "openedCount": {
+      "@id": "cm:openedCount",
+      "@type": "xsd:integer"
+    },
+    "lastClicked": {
+      "@id": "cm:lastClicked",
+      "@type": "xsd:dateTime"
+    },
+    "lastOpened": {
+      "@id": "cm:lastOpened",
+      "@type": "xsd:dateTime"
+    },
+    "Configuration_EmailLogsGetResponse": "cm:Configuration_EmailLogsGetResponse",
+    "logs": {
+      "@id": "cm:logs",
+      "@container": "@list"
+    },
+    "Configuration_EmailMetricsTrends": "cm:Configuration_EmailMetricsTrends",
+    "metricType": {
+      "@id": "cm:metricType",
+      "@type": "xsd:string"
+    },
+    "previousValue": {
+      "@id": "cm:previousValue",
+      "@type": "xsd:integer"
+    },
+    "currentValue": {
+      "@id": "cm:currentValue",
+      "@type": "xsd:integer"
+    },
+    "trend": {
+      "@id": "cm:trend",
+      "@type": "xsd:string"
+    },
+    "tooltipTrend": {
+      "@id": "cm:tooltipTrend",
+      "@type": "xsd:string"
+    },
+    "Configuration_EmailOverViewResponse": "cm:Configuration_EmailOverViewResponse",
+    "emailGraphAggregates": {
+      "@id": "cm:emailGraphAggregates",
+      "@container": "@list"
+    },
+    "emailDomainMetrics": {
+      "@id": "cm:emailDomainMetrics"
+    },
+    "emailAggregateMetrics": {
+      "@id": "cm:emailAggregateMetrics",
+      "@type": "@id"
+    },
+    "emailUnsubscribeMetrics": {
+      "@id": "cm:emailUnsubscribeMetrics",
+      "@type": "@id"
+    },
+    "emailEventAggregateMetrics": {
+      "@id": "cm:emailEventAggregateMetrics",
+      "@type": "@id"
+    },
+    "emailEventGraphMetrics": {
+      "@id": "cm:emailEventGraphMetrics",
+      "@container": "@list"
+    },
+    "emailMetricsTrends": {
+      "@id": "cm:emailMetricsTrends",
+      "@container": "@list"
+    },
+    "clickTrackingEnabled": {
+      "@id": "cm:clickTrackingEnabled",
+      "@type": "xsd:boolean"
+    },
+    "openTrackingEnabled": {
+      "@id": "cm:openTrackingEnabled",
+      "@type": "xsd:boolean"
+    },
+    "Configuration_EmailOverviewRequest": "cm:Configuration_EmailOverviewRequest",
+    "senders": {
+      "@id": "cm:senders",
+      "@type": "xsd:string"
+    },
+    "recipients": {
+      "@id": "cm:recipients",
+      "@type": "xsd:string"
+    },
+    "emailTypes": {
+      "@id": "cm:emailTypes",
+      "@type": "xsd:string"
+    },
+    "statuses": {
+      "@id": "cm:statuses",
+      "@type": "xsd:string"
+    },
+    "sendingDomains": {
+      "@id": "cm:sendingDomains",
+      "@type": "xsd:string"
+    },
+    "emailOverViewOption": {
+      "@id": "cm:emailOverViewOption",
+      "@type": "@id"
+    },
+    "startDate": {
+      "@id": "cm:startDate",
+      "@type": "xsd:dateTime"
+    },
+    "endDate": {
+      "@id": "cm:endDate",
+      "@type": "xsd:dateTime"
+    },
+    "Configuration_EmailTrackingSettingsDto": "cm:Configuration_EmailTrackingSettingsDto",
+    "Configuration_EmailUnsubscribeMetrics": "cm:Configuration_EmailUnsubscribeMetrics",
+    "totalBounce": {
+      "@id": "cm:totalBounce",
+      "@type": "xsd:decimal"
+    },
+    "totalBouncedByEmailAction": {
+      "@id": "cm:totalBouncedByEmailAction",
+      "@type": "xsd:decimal"
+    },
+    "totalManualBounce": {
+      "@id": "cm:totalManualBounce",
+      "@type": "xsd:decimal"
+    },
+    "totalBounceByHeaderOrLink": {
+      "@id": "cm:totalBounceByHeaderOrLink",
+      "@type": "xsd:decimal"
+    },
+    "Configuration_EmailUsage": "cm:Configuration_EmailUsage",
+    "emailsSent": {
+      "@id": "cm:emailsSent",
+      "@type": "xsd:integer"
+    },
+    "emailTierLimit": {
+      "@id": "cm:emailTierLimit",
+      "@type": "xsd:integer"
+    },
+    "tierName": {
+      "@id": "cm:tierName",
+      "@type": "xsd:string"
+    },
+    "resetPeriodInDays": {
+      "@id": "cm:resetPeriodInDays",
+      "@type": "xsd:decimal"
+    },
+    "nextResetTime": {
+      "@id": "cm:nextResetTime",
+      "@type": "xsd:dateTime"
+    },
+    "emailUsagePercentage": {
+      "@id": "cm:emailUsagePercentage",
+      "@type": "xsd:decimal"
+    },
+    "Configuration_ExtendedAccount": "cm:Configuration_ExtendedAccount",
+    "suspendReason": {
+      "@id": "cm:suspendReason",
+      "@type": "xsd:string"
+    },
+    "planId": {
+      "@id": "cm:planId",
+      "@type": "xsd:integer"
+    },
+    "deletedAt": {
+      "@id": "cm:deletedAt",
+      "@type": "xsd:dateTime"
+    },
+    "contractTerm": {
+      "@id": "cm:contractTerm",
+      "@type": "xsd:string"
+    },
+    "currency": {
+      "@id": "cm:currency",
+      "@type": "xsd:string"
+    },
+    "price": {
+      "@id": "cm:price",
+      "@type": "xsd:integer"
+    },
+    "Configuration_ExtendedAccountControllerResponse": "cm:Configuration_ExtendedAccountControllerResponse",
+    "Configuration_Int32ControllerResponse": "cm:Configuration_Int32ControllerResponse",
+    "Configuration_Int64ControllerResponse": "cm:Configuration_Int64ControllerResponse",
+    "Configuration_IpAssignmentInfo": "cm:Configuration_IpAssignmentInfo",
+    "ipType": {
+      "@id": "cm:ipType",
+      "@type": "xsd:string"
+    },
+    "ipCount": {
+      "@id": "cm:ipCount",
+      "@type": "xsd:integer"
+    },
+    "Configuration_LogFilters": "cm:Configuration_LogFilters",
+    "logTimeRangeType": {
+      "@id": "cm:logTimeRangeType",
+      "@type": "@id"
+    },
+    "referenceId": {
+      "@id": "cm:referenceId",
+      "@type": "xsd:string"
+    },
+    "searchText": {
+      "@id": "cm:searchText",
+      "@type": "xsd:string"
+    },
+    "Configuration_ManualWebhookRetryRequest": "cm:Configuration_ManualWebhookRetryRequest",
+    "webhookLogId": {
+      "@id": "cm:webhookLogId",
+      "@type": "xsd:string"
+    },
+    "personGuid": {
+      "@id": "cm:personGuid",
+      "@type": "xsd:string"
+    },
+    "Configuration_MessageStatusHistory": "cm:Configuration_MessageStatusHistory",
+    "Configuration_MessageStatusHistoryListControllerResponse": "cm:Configuration_MessageStatusHistoryListControllerResponse",
+    "Configuration_MultiDomainConfigResponse": "cm:Configuration_MultiDomainConfigResponse",
+    "domains": {
+      "@id": "cm:domains",
+      "@container": "@list"
+    },
+    "Configuration_ObjectControllerResponse": "cm:Configuration_ObjectControllerResponse",
+    "Configuration_OnboardingAction": "cm:Configuration_OnboardingAction",
+    "actionId": {
+      "@id": "cm:actionId",
+      "@type": "@id"
+    },
+    "isOptional": {
+      "@id": "cm:isOptional",
+      "@type": "xsd:boolean"
+    },
+    "isCompleted": {
+      "@id": "cm:isCompleted",
+      "@type": "xsd:boolean"
+    },
+    "Configuration_OnboardingActionListControllerResponse": "cm:Configuration_OnboardingActionListControllerResponse",
+    "Configuration_OnboardingActionType": "cm:Configuration_OnboardingActionType",
+    "Configuration_PricePlanRequest": "cm:Configuration_PricePlanRequest",
+    "pricePlan": {
+      "@id": "cm:pricePlan",
+      "@type": "xsd:string"
+    },
+    "Configuration_ProblemDetails": "cm:Configuration_ProblemDetails",
+    "Configuration_ProductTokenDetails": "cm:Configuration_ProductTokenDetails",
+    "Configuration_ProductTokenRegenerationResult": "cm:Configuration_ProductTokenRegenerationResult",
+    "token": {
+      "@id": "cm:token",
+      "@type": "xsd:string"
+    },
+    "isSuccess": {
+      "@id": "cm:isSuccess",
+      "@type": "xsd:boolean"
+    },
+    "Configuration_ProductTokenRegenerationResultControllerResponse": "cm:Configuration_ProductTokenRegenerationResultControllerResponse",
+    "Configuration_ProductTokens": "cm:Configuration_ProductTokens",
+    "Configuration_RetentionPeriod": "cm:Configuration_RetentionPeriod",
+    "Configuration_SenderScore": "cm:Configuration_SenderScore",
+    "calculatedOn": {
+      "@id": "cm:calculatedOn",
+      "@type": "xsd:dateTime"
+    },
+    "score": {
+      "@id": "cm:score",
+      "@type": "xsd:decimal"
+    },
+    "unsubscribeRate": {
+      "@id": "cm:unsubscribeRate",
+      "@type": "xsd:decimal"
+    },
+    "Configuration_SenderScoreControllerResponse": "cm:Configuration_SenderScoreControllerResponse",
+    "Configuration_SenderScoreDto": "cm:Configuration_SenderScoreDto",
+    "Configuration_SenderScoreListControllerResponse": "cm:Configuration_SenderScoreListControllerResponse",
+    "Configuration_StatusCode": "cm:Configuration_StatusCode",
+    "Configuration_StringControllerResponse": "cm:Configuration_StringControllerResponse",
+    "Configuration_SuspendAccountRequest": "cm:Configuration_SuspendAccountRequest",
+    "reason": {
+      "@id": "cm:reason",
+      "@type": "xsd:string"
+    },
+    "Configuration_TimeRangePickerOptions": "cm:Configuration_TimeRangePickerOptions",
+    "Configuration_TokenValidation": "cm:Configuration_TokenValidation",
+    "Configuration_TokenValidationControllerResponse": "cm:Configuration_TokenValidationControllerResponse",
+    "Configuration_WebhookLogEvent": "cm:Configuration_WebhookLogEvent",
+    "eventName": {
+      "@id": "cm:eventName",
+      "@type": "xsd:string"
+    },
+    "eventDetails": {
+      "@id": "cm:eventDetails",
+      "@type": "xsd:string"
+    },
+    "eventDate": {
+      "@id": "cm:eventDate",
+      "@type": "xsd:dateTime"
+    },
+    "attemptNumber": {
+      "@id": "cm:attemptNumber",
+      "@type": "xsd:integer"
+    },
+    "Configuration_WebhookLogFilters": "cm:Configuration_WebhookLogFilters",
+    "eventTypes": {
+      "@id": "cm:eventTypes",
+      "@type": "xsd:string"
+    },
+    "statusCodes": {
+      "@id": "cm:statusCodes",
+      "@type": "xsd:string"
+    },
+    "Configuration_WebhookLogStatusDetails": "cm:Configuration_WebhookLogStatusDetails",
+    "eventType": {
+      "@id": "cm:eventType",
+      "@type": "xsd:integer"
+    },
+    "eventTypeName": {
+      "@id": "cm:eventTypeName",
+      "@type": "xsd:string"
+    },
+    "webhookId": {
+      "@id": "cm:webhookId",
+      "@type": "xsd:integer"
+    },
+    "currentStatus": {
+      "@id": "cm:currentStatus",
+      "@type": "xsd:string"
+    },
+    "currentStatusCode": {
+      "@id": "cm:currentStatusCode",
+      "@type": "xsd:integer"
+    },
+    "currentStatusDetails": {
+      "@id": "cm:currentStatusDetails",
+      "@type": "xsd:string"
+    },
+    "lastUpdatedAt": {
+      "@id": "cm:lastUpdatedAt",
+      "@type": "xsd:dateTime"
+    },
+    "totalAttempts": {
+      "@id": "cm:totalAttempts",
+      "@type": "xsd:integer"
+    },
+    "manualAttempts": {
+      "@id": "cm:manualAttempts",
+      "@type": "xsd:integer"
+    },
+    "automaticAttempts": {
+      "@id": "cm:automaticAttempts",
+      "@type": "xsd:integer"
+    },
+    "eventTimeline": {
+      "@id": "cm:eventTimeline",
+      "@container": "@list"
+    },
+    "Configuration_WebhookLogStatusDetailsControllerResponse": "cm:Configuration_WebhookLogStatusDetailsControllerResponse",
+    "Configuration_WebhookLogSummaryResponse": "cm:Configuration_WebhookLogSummaryResponse",
+    "webhookType": {
+      "@id": "cm:webhookType",
+      "@type": "xsd:integer"
+    },
+    "webhookTypeName": {
+      "@id": "cm:webhookTypeName",
+      "@type": "xsd:string"
+    },
+    "statusDetails": {
+      "@id": "cm:statusDetails",
+      "@type": "xsd:string"
+    },
+    "lastRetriedAt": {
+      "@id": "cm:lastRetriedAt",
+      "@type": "xsd:dateTime"
+    },
+    "Configuration_WebhookLogsData": "cm:Configuration_WebhookLogsData",
+    "Configuration_WebhookLogsDataControllerResponse": "cm:Configuration_WebhookLogsDataControllerResponse",
+    "Configuration_WebhookPayloadDetails": "cm:Configuration_WebhookPayloadDetails",
+    "payload": {
+      "@id": "cm:payload",
+      "@type": "xsd:string"
+    },
+    "Configuration_WebhookPayloadDetailsControllerResponse": "cm:Configuration_WebhookPayloadDetailsControllerResponse",
+    "Configuration_WebhookPostDto": "cm:Configuration_WebhookPostDto",
+    "Configuration_WebhookSecret": "cm:Configuration_WebhookSecret",
+    "secretKey": {
+      "@id": "cm:secretKey",
+      "@type": "xsd:string"
+    },
+    "Configuration_WebhookSecretControllerResponse": "cm:Configuration_WebhookSecretControllerResponse",
+    "Configuration_WhitelistedIp": "cm:Configuration_WhitelistedIp",
+    "ipv4Range": {
+      "@id": "cm:ipv4Range",
+      "@type": "xsd:string"
+    },
+    "Configuration_WhitelistedIpControllerResponse": "cm:Configuration_WhitelistedIpControllerResponse",
+    "Configuration_WhitelistedIpListControllerResponse": "cm:Configuration_WhitelistedIpListControllerResponse",
+    "Suppression_ConfigurationErrorCode": "cm:Suppression_ConfigurationErrorCode",
+    "Suppression_EmailKind": "cm:Suppression_EmailKind",
+    "Suppression_EmailSuppression": "cm:Suppression_EmailSuppression",
+    "unsubscribeType": {
+      "@id": "cm:unsubscribeType",
+      "@type": "xsd:integer"
+    },
+    "emailType": {
+      "@id": "cm:emailType",
+      "@type": "xsd:integer"
+    },
+    "Suppression_EmailSuppressionListControllerResponse": "cm:Suppression_EmailSuppressionListControllerResponse",
+    "Suppression_EmailUnsubscribe": "cm:Suppression_EmailUnsubscribe",
+    "messageRequestId": {
+      "@id": "cm:messageRequestId",
+      "@type": "xsd:string"
+    },
+    "Suppression_EmailUnsubscribeFilters": "cm:Suppression_EmailUnsubscribeFilters",
+    "unsubscribeTypes": {
+      "@id": "cm:unsubscribeTypes",
+      "@type": "xsd:string"
+    },
+    "searchEmail": {
+      "@id": "cm:searchEmail",
+      "@type": "xsd:string"
+    },
+    "Suppression_EmailUnsubscribeResult": "cm:Suppression_EmailUnsubscribeResult",
+    "count": {
+      "@id": "cm:count",
+      "@type": "xsd:integer"
+    },
+    "unsubscribedEmails": {
+      "@id": "cm:unsubscribedEmails",
+      "@container": "@list"
+    },
+    "Suppression_EmailUnsubscribeResultControllerResponse": "cm:Suppression_EmailUnsubscribeResultControllerResponse"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "CM.com API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects CM.com's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-13) from openapi/cm-com-conversational-ai-v1-openapi.yml, openapi/cm-com-conversational-router-v1-openapi.yml, openapi/cm-com-conversational-router-v2-openapi.yml.",
+  "dcterms:created": "2026-10-13",
+  "dcterms:source": [
+    "openapi/cm-com-conversational-ai-v1-openapi.yml",
+    "openapi/cm-com-conversational-router-v1-openapi.yml",
+    "openapi/cm-com-conversational-router-v2-openapi.yml",
+    "openapi/cm-com-customer-engagement-v1-openapi.yml",
+    "openapi/cm-com-email-gateway-api-v1-openapi.yml"
+  ]
+}

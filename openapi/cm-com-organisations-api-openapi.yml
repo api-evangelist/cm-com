@@ -1,0 +1,2066 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Organisations API
+  contact: {}
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  version: '1.0'
+  description: 'Operations tagged Organisations across 2 of this provider''s published API definitions: cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com
+security:
+- cookie: []
+tags:
+- name: Organisations
+  description: Organisation management
+paths:
+  /entrance/v1.0/organisations:
+    post:
+      operationId: OrganisationsController_create_v1.0
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganisationDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a new organisation
+      tags:
+      - Organisations
+    get:
+      operationId: OrganisationsController_findAllByUser_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: cmAccountGuids
+        required: false
+        in: query
+        description: Comma separated values for CM Account Id
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List organisations for current user
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}:
+    get:
+      operationId: OrganisationsController_findOne_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationWithConfigDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get organisation details
+      tags:
+      - Organisations
+    patch:
+      operationId: OrganisationsController_patch_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganisationDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update an organisation
+      tags:
+      - Organisations
+    delete:
+      operationId: OrganisationsController_remove_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/features:
+    get:
+      operationId: OrganisationsController_findFeatures_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureStateDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all features and their enabled state for an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/features/{key}:
+    patch:
+      operationId: OrganisationsController_patchFeature_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: key
+        required: true
+        in: path
+        schema:
+          enum:
+          - INTERSOLVE
+          - PUBLIQ
+          - GLOBAL_TICKET
+          - CHECK_IN_ENTIRE_ORDER
+          - TIMESLOTS
+          - ANALYTICS_REPORT
+          - OFFLINE_SYNC_TODAYS_TIMESLOTS
+          - VENUE_LINKING
+          - TICKET_IMPORT
+          - GO_CITY
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFeatureDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Enable or disable a feature for an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/settings:
+    get:
+      operationId: OrganisationsController_findSettings_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SettingStateDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all settings and their enabled state for an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/settings/{key}:
+    patch:
+      operationId: OrganisationsController_patchSetting_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: key
+        required: true
+        in: path
+        schema:
+          enum:
+          - SWA_ANALYTICS_PRESET
+          - CREATE_DEFAULT_ENTRANCE_PLAN
+          - TIMEZONE
+          - ALWAYS_DISPLAY_ALL_PRODUCTS_IN_ANALYTICS
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSettingDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingStateDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Enable or disable a setting for an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/users:
+    get:
+      operationId: OrganisationsController_findOrganisationUsers_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: includePlanUsers
+        required: false
+        in: query
+        description: Include users with claims on entrance plans (only) in the resultset
+        schema:
+          type: boolean
+      - name: claims
+        required: false
+        in: query
+        description: Comma separated values for claims
+        schema:
+          example:
+          - OBSERVER
+          - EDITOR
+          type: array
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+      - name: invitationStatus
+        required: false
+        in: query
+        description: Comma separated values for invitation status
+        schema:
+          example:
+          - INVITED
+          type: array
+          items:
+            type: string
+            enum:
+            - ACCEPTED
+            - INVITED
+            - REVOKED
+            - EXPIRED
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List organisation users
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/invited-users:
+    get:
+      operationId: OrganisationsController_findOrganisationInvitedUsers_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: includePlanUsers
+        required: false
+        in: query
+        description: Include users with claims on entrance plans (only) in the resultset
+        schema:
+          type: boolean
+      - name: claims
+        required: false
+        in: query
+        description: Comma separated values for claims
+        schema:
+          example:
+          - OBSERVER
+          - EDITOR
+          type: array
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+      - name: invitationStatus
+        required: false
+        in: query
+        description: Comma separated values for invitation status
+        schema:
+          example:
+          - INVITED
+          type: array
+          items:
+            type: string
+            enum:
+            - ACCEPTED
+            - INVITED
+            - REVOKED
+            - EXPIRED
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List invited organisation users
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/configuration:
+    post:
+      operationId: OrganisationsController_createConfiguration_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganisationConfigurationDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationConfigurationResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create organisation configuration
+      tags:
+      - Organisations
+    patch:
+      operationId: OrganisationsController_patchConfiguration_v1.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganisationConfigurationDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationConfigurationResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update organisation configuration
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/configuration/{upstreamPlatform}:
+    delete:
+      operationId: OrganisationsController_removeConfiguration_v1.0
+      parameters:
+      - name: upstreamPlatform
+        required: true
+        in: path
+        schema: {}
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete organisation configuration
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/go-city/terminal-profile:
+    get:
+      description: Uses the stored Go City credentials. With refresh=true the cache is bypassed, which tests the connection.
+      operationId: OrganisationsController_getGoCityTerminalProfile_v1.0
+      parameters:
+      - name: refresh
+        required: true
+        in: query
+        schema:
+          type: boolean
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoCityTerminalProfileDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get the Go City terminal and its offers
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations:
+    post:
+      operationId: OrganisationsController_create_v2.0
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganisationDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create a new organisation
+      tags:
+      - Organisations
+    get:
+      operationId: OrganisationsController_findAllByUser_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: cmAccountGuids
+        required: false
+        in: query
+        description: Comma separated values for CM Account Id
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List organisations for current user
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}:
+    get:
+      operationId: OrganisationsController_findOne_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationWithConfigDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get organisation details
+      tags:
+      - Organisations
+    patch:
+      operationId: OrganisationsController_patch_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganisationDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update an organisation
+      tags:
+      - Organisations
+    delete:
+      operationId: OrganisationsController_remove_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/features:
+    get:
+      operationId: OrganisationsController_findFeatures_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureStateDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all features and their enabled state for an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/features/{key}:
+    patch:
+      operationId: OrganisationsController_patchFeature_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: key
+        required: true
+        in: path
+        schema:
+          enum:
+          - INTERSOLVE
+          - PUBLIQ
+          - GLOBAL_TICKET
+          - CHECK_IN_ENTIRE_ORDER
+          - TIMESLOTS
+          - ANALYTICS_REPORT
+          - OFFLINE_SYNC_TODAYS_TIMESLOTS
+          - VENUE_LINKING
+          - TICKET_IMPORT
+          - GO_CITY
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFeatureDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureStateDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Enable or disable a feature for an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/settings:
+    get:
+      operationId: OrganisationsController_findSettings_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SettingStateDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List all settings and their enabled state for an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/settings/{key}:
+    patch:
+      operationId: OrganisationsController_patchSetting_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: key
+        required: true
+        in: path
+        schema:
+          enum:
+          - SWA_ANALYTICS_PRESET
+          - CREATE_DEFAULT_ENTRANCE_PLAN
+          - TIMEZONE
+          - ALWAYS_DISPLAY_ALL_PRODUCTS_IN_ANALYTICS
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSettingDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingStateDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Enable or disable a setting for an organisation
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/users:
+    get:
+      operationId: OrganisationsController_findOrganisationUsers_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: includePlanUsers
+        required: false
+        in: query
+        description: Include users with claims on entrance plans (only) in the resultset
+        schema:
+          type: boolean
+      - name: claims
+        required: false
+        in: query
+        description: Comma separated values for claims
+        schema:
+          example:
+          - OBSERVER
+          - EDITOR
+          type: array
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+      - name: invitationStatus
+        required: false
+        in: query
+        description: Comma separated values for invitation status
+        schema:
+          example:
+          - INVITED
+          type: array
+          items:
+            type: string
+            enum:
+            - ACCEPTED
+            - INVITED
+            - REVOKED
+            - EXPIRED
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List organisation users
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/invited-users:
+    get:
+      operationId: OrganisationsController_findOrganisationInvitedUsers_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: includePlanUsers
+        required: false
+        in: query
+        description: Include users with claims on entrance plans (only) in the resultset
+        schema:
+          type: boolean
+      - name: claims
+        required: false
+        in: query
+        description: Comma separated values for claims
+        schema:
+          example:
+          - OBSERVER
+          - EDITOR
+          type: array
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+      - name: invitationStatus
+        required: false
+        in: query
+        description: Comma separated values for invitation status
+        schema:
+          example:
+          - INVITED
+          type: array
+          items:
+            type: string
+            enum:
+            - ACCEPTED
+            - INVITED
+            - REVOKED
+            - EXPIRED
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/UserDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List invited organisation users
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/configuration:
+    post:
+      operationId: OrganisationsController_createConfiguration_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganisationConfigurationDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationConfigurationResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Create organisation configuration
+      tags:
+      - Organisations
+    patch:
+      operationId: OrganisationsController_patchConfiguration_v2.0
+      parameters:
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganisationConfigurationDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationConfigurationResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Update organisation configuration
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/configuration/{upstreamPlatform}:
+    delete:
+      operationId: OrganisationsController_removeConfiguration_v2.0
+      parameters:
+      - name: upstreamPlatform
+        required: true
+        in: path
+        schema: {}
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '204':
+          description: ''
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Delete organisation configuration
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/go-city/terminal-profile:
+    get:
+      description: Uses the stored Go City credentials. With refresh=true the cache is bypassed, which tests the connection.
+      operationId: OrganisationsController_getGoCityTerminalProfile_v2.0
+      parameters:
+      - name: refresh
+        required: true
+        in: query
+        schema:
+          type: boolean
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoCityTerminalProfileDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get the Go City terminal and its offers
+      tags:
+      - Organisations
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    OrganisationWithConfigDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+          example: 00000000-0000-0000-0000-000000000000
+        cmAccountGuid:
+          type: string
+          readOnly: true
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          readOnly: true
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          readOnly: true
+          example: CM.com NV
+        email:
+          type: string
+          readOnly: true
+          example: myOrganisation@cm.com
+        upstreamPlatform:
+          type: string
+          readOnly: true
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+        claims:
+          type: array
+          example:
+          - EDITOR
+          - ADMIN
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+        features:
+          type: array
+          example:
+          - INTERSOLVE
+          items:
+            type: string
+            enum:
+            - INTERSOLVE
+            - PUBLIQ
+            - GLOBAL_TICKET
+            - CHECK_IN_ENTIRE_ORDER
+            - TIMESLOTS
+            - ANALYTICS_REPORT
+            - OFFLINE_SYNC_TODAYS_TIMESLOTS
+            - VENUE_LINKING
+            - TICKET_IMPORT
+            - GO_CITY
+        settings:
+          example:
+          - key: SWA_ANALYTICS_PRESET
+            config:
+              filterDateOption: TODAY
+              filterPreset:
+                filterTimeslots: true
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganisationSettingDto'
+        configurations:
+          readOnly: true
+          type: array
+          items:
+            type: string
+      required:
+      - configurations
+    UserDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          readOnly: true
+        cmPersonGuid:
+          type: string
+          readOnly: true
+        firstName:
+          type: string
+          readOnly: true
+        lastName:
+          type: string
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          readOnly: true
+        entrancePlanClaims:
+          type: array
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
+      required:
+      - uuid
+      - cmPersonGuid
+      - firstName
+      - lastName
+      - username
+      - email
+      - entrancePlanClaims
+    UpstreamPlatformEnum:
+      type: string
+      enum:
+      - ENMA_SUBSCRIBER
+      - GENERAL_ADMISSION
+      - SEATED_TICKETING
+      - GLOBAL_TICKET
+      - INTERSOLVE
+      - PUBLIQ
+      - YOURTICKETPROVIDER
+      - PASS_TEST
+      - PASS_NATIONAAL_MILITAIR_MUSEUM
+      - PASS_WEC
+      - PASS_CENTRAAL_MUSEUM
+      - PHOENIX_DES_LUMIERES
+      - PORT_DES_LUMIERES
+      - SMOOTHR_DEMO_ACCOUNT
+      - ENTRANCE_MANAGEMENT
+      - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+      - ELECTRIC_IBIZA_ENTERTAINMENT
+      - MOMICE_KLM_OPEN
+      - CUSTOMER_DATA_PLATFORM
+      - GO_CITY
+      description: The upstream platform for which this configuration is intended
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    UpdateFeatureDto:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          example: true
+          description: Enable or disable the feature for the organisation.
+        config:
+          type: object
+          additionalProperties: true
+          description: Free-form configuration for the feature. When omitted, any existing config is preserved.
+      required:
+      - enabled
+    GoCityTerminalProfileDto:
+      type: object
+      properties:
+        terminalId:
+          type: string
+          example: apicmtest
+          description: Go City terminal id (the integration username)
+        displayName:
+          type: string
+          example: Heineken International B.V
+        status:
+          type: string
+          example: ENABLED
+          description: Terminal status as reported by Go City
+        offers:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoCityOfferDto'
+      required:
+      - terminalId
+      - displayName
+      - offers
+    Organisation:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com NV
+        cmAccountGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmCrmId:
+          type: number
+          example: 123456
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+      required:
+      - uuid
+      - name
+      - email
+      - upstreamPlatform
+    GoCityOfferDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ac7c9cec-3f8d-42a7-86cc-446fed191e3a
+          description: Go City offer id
+        name:
+          type: string
+          example: Heineken Experience
+      required:
+      - id
+      - name
+    UpdateSettingDto:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          example: true
+          description: Enable or disable the setting for the organisation.
+        config:
+          type: object
+          additionalProperties: true
+          description: Free-form configuration for the setting. When omitted, any existing config is preserved.
+      required:
+      - enabled
+    CreateOrganisationDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com NV
+        cmAccountGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmCrmId:
+          type: number
+          example: 123456
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        callbackUrl:
+          type: string
+          maxLength: 255
+          description: Should be valid url. Will be used to POST scan events towards
+          example: https://yourdomain.tld/scanning/callback
+        callbackConfiguration:
+          type: object
+          description: Generic JSON configuration for callbacks
+          example:
+            apiKey: your-api-key
+            apiSecret: your-api-secret
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+      required:
+      - name
+      - email
+      - upstreamPlatform
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    OrganisationConfigurationResponseDto:
+      type: object
+      properties:
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: INTERSOLVE
+          description: The name of the upstream of the configuration
+      required:
+      - upstreamPlatform
+    FeatureStateDto:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+          - INTERSOLVE
+          - PUBLIQ
+          - GLOBAL_TICKET
+          - CHECK_IN_ENTIRE_ORDER
+          - TIMESLOTS
+          - ANALYTICS_REPORT
+          - OFFLINE_SYNC_TODAYS_TIMESLOTS
+          - VENUE_LINKING
+          - TICKET_IMPORT
+          - GO_CITY
+          example: GLOBAL_TICKET
+        category:
+          type: string
+          enum:
+          - FEATURE
+          - SETTING
+          example: FEATURE
+        enabled:
+          type: boolean
+          example: false
+          description: Whether the feature is enabled for the organisation.
+        config:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Free-form configuration for the feature. Shape depends on the feature key; null when unset.
+      required:
+      - key
+      - category
+      - enabled
+    UpdateOrganisationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com NV
+        cmAccountGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmCrmId:
+          type: number
+          example: 123456
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        callbackUrl:
+          type: string
+          maxLength: 255
+          description: Should be valid url. Will be used to POST scan events towards
+          example: https://yourdomain.tld/scanning/callback
+        callbackConfiguration:
+          type: object
+          description: Generic JSON configuration for callbacks
+          example:
+            apiKey: your-api-key
+            apiSecret: your-api-secret
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    OrganisationSettingDto:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+          - SWA_ANALYTICS_PRESET
+          - CREATE_DEFAULT_ENTRANCE_PLAN
+          - TIMEZONE
+          - ALWAYS_DISPLAY_ALL_PRODUCTS_IN_ANALYTICS
+          example: SWA_ANALYTICS_PRESET
+        config:
+          type: object
+          additionalProperties: true
+          description: Free-form configuration for the setting. Shape depends on the setting key.
+      required:
+      - key
+    CreateOrganisationConfigurationDto:
+      type: object
+      properties:
+        upstreamPlatform:
+          description: The upstream platform for which this configuration is intended
+          example: INTERSOLVE
+          allOf:
+          - $ref: '#/components/schemas/UpstreamPlatformEnum'
+        configuration:
+          type: object
+          description: Configuration object specific to the upstream platform
+          example:
+            apiKey: your-api-key
+            apiSecret: your-api-secret
+            propertyX: 1234
+        callbackUrl:
+          type: string
+          maxLength: 255
+          description: Should be valid url. Will be used to POST scan events towards
+          example: https://yourdomain.tld/scanning/callback
+      required:
+      - upstreamPlatform
+    SettingStateDto:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+          - SWA_ANALYTICS_PRESET
+          - CREATE_DEFAULT_ENTRANCE_PLAN
+          - TIMEZONE
+          - ALWAYS_DISPLAY_ALL_PRODUCTS_IN_ANALYTICS
+          example: TIMEZONE
+        category:
+          type: string
+          enum:
+          - FEATURE
+          - SETTING
+          example: SETTING
+        enabled:
+          type: boolean
+          example: true
+          description: Whether the setting is enabled for the organisation.
+        config:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Free-form configuration for the setting. Shape depends on the setting key; null when unset.
+      required:
+      - key
+      - category
+      - enabled
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

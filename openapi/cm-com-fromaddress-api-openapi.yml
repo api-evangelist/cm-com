@@ -1,0 +1,228 @@
+openapi: 3.2.0
+info:
+  version: v1
+  title: BulkEmail From Address API
+servers:
+- url: http://api.cm.com
+tags:
+- name: FromAddress
+paths:
+  /bulkemail/v1.0/accounts/{accountID}/fromaddresses:
+    get:
+      tags:
+      - FromAddress
+      summary: Get all fromaddresses for an account
+      operationId: FromAddress_GetFromAddressesAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: filter
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+    post:
+      tags:
+      - FromAddress
+      summary: Create a new fromaddress
+      operationId: FromAddress_AddFromAddressAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+      responses:
+        '201':
+          description: From address successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+  /bulkemail/v1.0/accounts/{accountID}/fromaddresses/{fromAddressID}:
+    get:
+      tags:
+      - FromAddress
+      summary: Get a specific fromaddress
+      operationId: FromAddress_GetFromAddressAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fromAddressID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+    put:
+      tags:
+      - FromAddress
+      summary: Update the fromaddress except for the emailaddress
+      operationId: FromAddress_UpdateFromAddressAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fromAddressID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+    delete:
+      tags:
+      - FromAddress
+      summary: Delete a fromaddress
+      operationId: FromAddress_DeleteFromAddressAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fromAddressID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    CM.Tooling.BulkEmail.Api.Models.ApiFromAddress:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Name:
+          type: string
+        EmailAddress:
+          type: string
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string
+  requestBodies:
+    CM.Tooling.BulkEmail.Api.Models.ApiFromAddress:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+      required: true

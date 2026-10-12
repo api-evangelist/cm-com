@@ -1,0 +1,417 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-filtered-conversations-schema.json",
+  "title": "Filtered Conversations",
+  "description": "Model that describes filtered conversations",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-voice-insights-v1-openapi.yml#/components/schemas/FilteredConversations",
+  "type": "object",
+  "properties": {
+    "conversations": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/VoiceConversation"
+      },
+      "description": "List of conversations"
+    },
+    "totalHits": {
+      "type": "integer",
+      "description": "Total hits",
+      "format": "int32"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "AppAccount": {
+      "title": "App Account",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Username of the app account"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model containing App Account information"
+    },
+    "Application": {
+      "title": "Application",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Name of the application"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents an application"
+    },
+    "CallAttempt": {
+      "title": "Call Attempt",
+      "type": "object",
+      "properties": {
+        "callAttemptId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique identifier of the Call Attempt"
+        },
+        "sipDisconnectCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "SIP Disconnection Code"
+        },
+        "sipDisconnectReason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "SIP Disconnection Reason"
+        },
+        "callId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique identifier of the conversation"
+        },
+        "startedOn": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The timestamp when the retry of the conversation was initiated",
+          "format": "date-time"
+        },
+        "finishedOn": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The timestamp when the retry of the conversation was finished",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model used to describe a Call Attempt"
+    },
+    "DisconnectCause": {
+      "title": "Disconnect Cause",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "SIP code of the disconnect cause",
+          "format": "int32"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Description of the disconnect cause"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents a disconnect cause"
+    },
+    "PhoneNumber": {
+      "title": "Phone Number",
+      "type": "object",
+      "properties": {
+        "prefix": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The prefix of the phone number"
+        },
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The full phone number"
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The country where the phone number originates"
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The Type of the phone number"
+        },
+        "cliIsValid": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Determines whether the provided CLI is a valid phone number.\r\nApplies only for Caller"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents a phone number"
+    },
+    "RetailPriceGroup": {
+      "title": "Retail Price Group",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Name of the destination"
+        },
+        "countryIsoCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The country code of the destination in ISO 3166-1 alpha-2 format"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents a Retail Price Group"
+    },
+    "SipAccount": {
+      "title": "Sip Account",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Username of the SIP account"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model containing SIP account information"
+    },
+    "State": {
+      "title": "State",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Numeric identifier of the state",
+          "format": "int32"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Name of the state"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents the state of a call"
+    },
+    "VoiceAccount": {
+      "title": "Voice Account",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Name of the voice account"
+        },
+        "guid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Unique identifier of the Voice Account"
+        },
+        "externalId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "External identifier of the Voice Account"
+        },
+        "externalName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Custom name of the Voice Account"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents a Voice Account"
+    },
+    "VoiceConversation": {
+      "title": "Voice Conversation",
+      "type": "object",
+      "properties": {
+        "trunkId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The trunk id where the conversation has taken place"
+        },
+        "createdOn": {
+          "type": "string",
+          "description": "The date and time when the conversation has been created",
+          "format": "date-time"
+        },
+        "callId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The unique identifier of the conversation"
+        },
+        "callAttemptId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The unique identifier of an attempt of the conversation"
+        },
+        "externalReference": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The external reference of the conversation"
+        },
+        "startedOn": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The timestamp when the conversation has started",
+          "format": "date-time"
+        },
+        "answeredOn": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The timestamp when the conversation has been answered",
+          "format": "date-time"
+        },
+        "finishedOn": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The timestamp when the conversation has successfully finished",
+          "format": "date-time"
+        },
+        "durationInSeconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The duration of the conversation in seconds",
+          "format": "int32"
+        },
+        "isAnonymous": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Determines whether the caller is anonymous"
+        },
+        "caller": {
+          "$ref": "#/$defs/PhoneNumber"
+        },
+        "callee": {
+          "$ref": "#/$defs/PhoneNumber"
+        },
+        "originalCallee": {
+          "$ref": "#/$defs/PhoneNumber"
+        },
+        "direction": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The direction of the conversation: Inbound or Outbound"
+        },
+        "state": {
+          "$ref": "#/$defs/State"
+        },
+        "sipDisconnectCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The SIP disconnect code of the conversation"
+        },
+        "sipDisconnectReason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The SIP disconnect reason of the conversation"
+        },
+        "disconnectCause": {
+          "$ref": "#/$defs/DisconnectCause"
+        },
+        "voiceAccount": {
+          "$ref": "#/$defs/VoiceAccount"
+        },
+        "application": {
+          "$ref": "#/$defs/Application"
+        },
+        "outboundRetailPriceGroup": {
+          "$ref": "#/$defs/RetailPriceGroup"
+        },
+        "customerIp": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The IP address who originated the conversation"
+        },
+        "sipAccount": {
+          "$ref": "#/$defs/SipAccount"
+        },
+        "appAccount": {
+          "$ref": "#/$defs/AppAccount"
+        },
+        "callAttempts": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/CallAttempt"
+          },
+          "description": "List of corresponding call attempts"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Model that represents a Voice Conversation"
+    }
+  }
+}

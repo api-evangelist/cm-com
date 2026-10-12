@@ -1,0 +1,777 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-cm-platform-channels-models-channel-types-whats-app-api-whats-app-template-response-schema.json",
+  "title": "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-messaging-channels-api-v1-2-openapi.yml#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse",
+  "required": [
+    "id",
+    "accountId",
+    "channelId",
+    "templateCategoryId",
+    "enabledLanguages",
+    "isActive",
+    "isIncomplete",
+    "isPending",
+    "isValidationRequested",
+    "createdOnUtc"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "accountId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "channelId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "facebookNamespaceId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "templateCategoryId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "generatedLayout": {
+      "enum": [
+        "AUTHENTICATION_OTP_COPY",
+        "AUTHENTICATION_OTP_ONE_TAP",
+        "MARKETING_CAROUSEL",
+        "MARKETING_COUPONS",
+        "MARKETING_LIMITED_TIME_OFFER",
+        "UTILITY_CAROUSEL"
+      ],
+      "type": "string"
+    },
+    "facebookName": {
+      "type": "string"
+    },
+    "enabledLanguages": {
+      "type": "array",
+      "items": {
+        "format": "uuid",
+        "type": "string"
+      }
+    },
+    "assistedMode": {
+      "type": "boolean"
+    },
+    "interactiveSettings": {
+      "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsResponse"
+    },
+    "headerSettings": {
+      "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsResponse"
+    },
+    "rejectionReason": {
+      "type": "string"
+    },
+    "settings": {
+      "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateSettingsResponse"
+    },
+    "languagesStatus": {
+      "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageStatus"
+    },
+    "languages": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse"
+      }
+    },
+    "isActive": {
+      "type": "boolean"
+    },
+    "isIncomplete": {
+      "type": "boolean"
+    },
+    "isPending": {
+      "type": "boolean"
+    },
+    "isValidationRequested": {
+      "type": "boolean"
+    },
+    "rejectedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "cancelledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "deletedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "fulfilledOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "updatedOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "createdOnUtc": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "metaCallbackHistory": {
+      "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaCallbackHistory"
+    },
+    "entityStatus": {
+      "enum": [
+        "ACTIVE",
+        "PENDING",
+        "ELIGIBLE",
+        "NOT_VALIDATED",
+        "CUSTOMER_ACTION_REQUIRED",
+        "EXPIRED",
+        "REJECTED",
+        "CANCELLED",
+        "DELETED"
+      ],
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "none",
+            "text",
+            "image",
+            "document",
+            "video"
+          ],
+          "type": "string"
+        },
+        "replacementFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField"
+          }
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse": {
+      "type": "object",
+      "properties": {
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        },
+        "generatedLayoutButtonText": {
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "PHONENUMBER",
+            "URL",
+            "QUICK_REPLY",
+            "OTP_COPY",
+            "OTP_ONE_TAP",
+            "CODE_COPY"
+          ],
+          "type": "string"
+        },
+        "urlType": {
+          "enum": [
+            "STATIC",
+            "DYNAMIC"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "buttonGrouping": {
+          "type": "object",
+          "properties": {
+            "QUICK_REPLY": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse"
+              }
+            },
+            "CALL_TO_ACTION": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse"
+              }
+            },
+            "OTHER": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse"
+              }
+            }
+          }
+        },
+        "isGeneratedLayout": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutResponse": {
+      "type": "object",
+      "properties": {
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "enum": [
+            "IMAGE",
+            "VIDEO"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardResponse": {
+      "type": "object",
+      "properties": {
+        "buttons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse"
+          }
+        },
+        "header": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader"
+        },
+        "body": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutResponse": {
+      "type": "object",
+      "properties": {
+        "carouselSettings": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsResponse"
+        },
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardResponse"
+          }
+        },
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader"
+        },
+        "buttonSettings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse"
+          }
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCategory": {
+      "required": [
+        "id",
+        "name",
+        "metaOverride"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "metaOverride": {
+          "type": "boolean"
+        },
+        "metaOverrideOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutResponse": {
+      "type": "object",
+      "properties": {
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "otpSettings": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings": {
+      "type": "object",
+      "properties": {
+        "copyCodeExpirationMinutes": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutResponse": {
+      "type": "object",
+      "properties": {
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTap": {
+      "type": "object",
+      "properties": {
+        "autofillText": {
+          "type": "string"
+        },
+        "supportedApps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTapSupportedApps"
+          }
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTapSupportedApps": {
+      "type": "object",
+      "properties": {
+        "packageName": {
+          "type": "string"
+        },
+        "signatureHash": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest": {
+      "type": "object",
+      "properties": {
+        "oneTap": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTap"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse": {
+      "type": "object",
+      "properties": {
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        },
+        "generatedLayoutButtonText": {
+          "type": "string"
+        },
+        "buttonText": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "otp": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "PHONENUMBER",
+            "URL",
+            "QUICK_REPLY",
+            "OTP_COPY",
+            "OTP_ONE_TAP",
+            "CODE_COPY"
+          ],
+          "type": "string"
+        },
+        "urlType": {
+          "enum": [
+            "STATIC",
+            "DYNAMIC"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "buttons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse"
+          }
+        },
+        "isGeneratedLayout": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutResponse": {
+      "type": "object",
+      "properties": {
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "hasExpiration": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageMetaCallbackHistory": {
+      "required": [
+        "languageId",
+        "events"
+      ],
+      "type": "object",
+      "properties": {
+        "languageId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "events": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate"
+            }
+          }
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse": {
+      "required": [
+        "id",
+        "category",
+        "name",
+        "header",
+        "body",
+        "content",
+        "footer",
+        "isActive",
+        "isIncomplete",
+        "isPending",
+        "isValidationRequested",
+        "createdOnUtc"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCategory"
+        },
+        "name": {
+          "type": "string"
+        },
+        "header": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutResponse"
+        },
+        "headerContent": {
+          "type": "string"
+        },
+        "body": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutResponse"
+        },
+        "content": {
+          "type": "string"
+        },
+        "footer": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutResponse"
+        },
+        "footerContent": {
+          "type": "string"
+        },
+        "interactiveSettings": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsResponse"
+        },
+        "carouselLayoutSettings": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutResponse"
+        },
+        "limitedTimeOffer": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutResponse"
+        },
+        "messageSendTimeToLiveSeconds": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "rejectionReason": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "isIncomplete": {
+          "type": "boolean"
+        },
+        "isPending": {
+          "type": "boolean"
+        },
+        "isValidationRequested": {
+          "type": "boolean"
+        },
+        "rejectedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "fulfilledOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "updatedOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "createdOnUtc": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "metaCallbackHistory": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageMetaCallbackHistory"
+        },
+        "entityStatus": {
+          "enum": [
+            "ACTIVE",
+            "PENDING",
+            "ELIGIBLE",
+            "NOT_VALIDATED",
+            "CUSTOMER_ACTION_REQUIRED",
+            "EXPIRED",
+            "REJECTED",
+            "CANCELLED",
+            "DELETED"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageStatus": {
+      "required": [
+        "total",
+        "active",
+        "languageCategoryOverrideActive"
+      ],
+      "type": "object",
+      "properties": {
+        "total": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "active": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "languageCategoryOverrideActive": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaCallbackHistory": {
+      "required": [
+        "templateId",
+        "events"
+      ],
+      "type": "object",
+      "properties": {
+        "templateId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "events": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate"
+            }
+          }
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "index": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "generatedLayoutExampleValue": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "isGeneratedLayout": {
+          "type": "boolean"
+        },
+        "replacementFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField"
+          }
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate": {
+      "type": "object",
+      "properties": {
+        "message_template_id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "message_template_name": {
+          "type": "string"
+        },
+        "message_template_language": {
+          "type": "string"
+        },
+        "previous_category": {
+          "type": "string"
+        },
+        "new_category": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "previous_quality_score": {
+          "type": "string"
+        },
+        "new_quality_score": {
+          "type": "string"
+        },
+        "disable_info": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateDisableInfo"
+        },
+        "other_info": {
+          "$ref": "#/$defs/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateOtherInfo"
+        },
+        "event": {
+          "type": "string"
+        },
+        "requester": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateDisableInfo": {
+      "type": "object",
+      "properties": {
+        "disable_date": {
+          "type": "string"
+        }
+      }
+    },
+    "CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateOtherInfo": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

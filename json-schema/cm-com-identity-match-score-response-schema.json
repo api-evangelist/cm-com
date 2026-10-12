@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-identity-match-score-response-schema.json",
+  "title": "IdentityMatchScoreResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-mobile-identity-v1-openapi.yml#/components/schemas/IdentityMatchScoreResponse",
+  "type": "object",
+  "properties": {
+    "state": {
+      "$ref": "#/$defs/ResponseState"
+    },
+    "firstNameScore": {
+      "type": "integer",
+      "description": "Score of the match of the provided first name to the provided phone number. The value can be `-1` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator.",
+      "minimum": -1,
+      "maximum": 100
+    },
+    "lastNameScore": {
+      "type": "integer",
+      "description": "Score of the match of the provided last name to the provided phone number. The value can be `-1` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator.",
+      "minimum": -1,
+      "maximum": 100
+    },
+    "nameScore": {
+      "type": "integer",
+      "description": "Score of the match of the provided full name to the provided phone number. The value can be `-1` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator.",
+      "minimum": -1,
+      "maximum": 100
+    },
+    "addressScore": {
+      "type": "integer",
+      "description": "Score of the match of the provided address to the provided phone number. The value can be `-1` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator.",
+      "minimum": -1,
+      "maximum": 100
+    },
+    "postalCodeScore": {
+      "type": "integer",
+      "description": "Score of the match of the provided postal code to the provided phone number. The value can be `-1` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator.",
+      "minimum": -1,
+      "maximum": 100
+    },
+    "dateOfBirthScore": {
+      "type": "integer",
+      "description": "Score of the match of the provided date of birth to the provided phone number. The value can be `-1` if the data is not available or accessible, or if an unexpected error is returned when retrieving the data from the operator.",
+      "minimum": -1,
+      "maximum": 100
+    }
+  },
+  "$defs": {
+    "ResponseState": {
+      "type": "string",
+      "description": "State that indicates whether the request was successful or the data could not be retrieved due to unavailability.",
+      "enum": [
+        "success",
+        "unavailable"
+      ]
+    }
+  }
+}

@@ -1,0 +1,850 @@
+# x-archived-from: cm-com-halo-core-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: HALO Core API
+  description: Execute core operations on the HALO platform
+  license:
+    name: ""
+  version: 1.0.0
+servers:
+  - url: /halo
+paths:
+  /core/v1/accounts/{account_id}/cultures:
+    get:
+      tags:
+        - Studio
+      description: |-
+        Retrieve all cultures for an account.
+
+        Required permission: `HALO.Core_Cultures_Read`
+      operationId: get_cultures
+      parameters:
+        - name: account_id
+          in: path
+          description: Account identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Cultures
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CultureView"
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /core/v1/accounts/{account_id}/cultures/{culture_code}:
+    get:
+      tags:
+        - Studio
+      description: |-
+        Retrieve culture by code.
+
+        Required permission: `HALO.Core_Cultures_Read`
+      operationId: get_culture_by_code
+      parameters:
+        - name: account_id
+          in: path
+          description: Account identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: culture_code
+          in: path
+          description: Culture identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Culture
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CultureView"
+        "404":
+          description: Culture not found
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /core/v1/accounts/{account_id}/profiles:
+    get:
+      tags:
+        - Studio
+      description: |-
+        Retrieve all profiles for an account.
+
+        Required permission: `HALO.Core_Profiles_Read`
+      operationId: get_profiles
+      parameters:
+        - name: account_id
+          in: path
+          description: Account identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProfileView"
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /core/v1/accounts/{account_id}/profiles/{profile_id}:
+    get:
+      tags:
+        - Studio
+      description: |-
+        Retrieve profile by ID.
+
+        Required permission: `HALO.Core_Profiles_Read`
+      operationId: get_profile_by_id
+      parameters:
+        - name: account_id
+          in: path
+          description: Account identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: profile_id
+          in: path
+          description: Profile identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileView"
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /core/v1/accounts/{account_id}/profiles/{profile_id}/conversations/{conversation_id}:
+    get:
+      tags:
+        - Conversations
+      description: |-
+        Retrieve a conversation by ID.
+
+        Required permission: `HALO.Core_Conversations_Read`
+      operationId: get_conversation
+      parameters:
+        - name: account_id
+          in: path
+          description: Account identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: profile_id
+          in: path
+          description: Profile identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: conversation_id
+          in: path
+          description: Conversation identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: view
+          in: query
+          description: "View mode for conversation (default: transcript)"
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Conversation
+          content:
+            application/json:
+              schema: {}
+        "404":
+          description: Conversation not found
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+  /core/v1/accounts/{account_id}/profiles/{profile_id}/conversations/{conversation_id}/handover:
+    post:
+      tags:
+        - Conversations
+      description: |-
+        Handover a conversation to a different agent or system.
+
+        Required permission: `HALO.Core_Conversations_Handover`
+      operationId: handover_conversation
+      parameters:
+        - name: account_id
+          in: path
+          description: Account identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: profile_id
+          in: path
+          description: Profile identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: conversation_id
+          in: path
+          description: Conversation identifier
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HandoverInput"
+        required: true
+      responses:
+        "204":
+          description: Handover successful
+      security:
+        - X-CM-SSO-ACCOUNTGUID: []
+        - {}
+components:
+  schemas:
+    AdditionalProperties:
+      oneOf:
+        - type: boolean
+        - $ref: "#/components/schemas/JsonSchema"
+    ContentPart:
+      oneOf:
+        - type: object
+          required:
+            - text
+            - type
+          properties:
+            text:
+              type: string
+            type:
+              type: string
+              enum:
+                - text
+        - type: object
+          required:
+            - text
+            - type
+          properties:
+            redacted:
+              type: boolean
+            signature:
+              type:
+                - string
+                - "null"
+            text:
+              type: string
+            type:
+              type: string
+              enum:
+                - thinking
+        - type: object
+          required:
+            - json_value
+            - type
+          properties:
+            json_value:
+              $ref: "#/components/schemas/Value"
+            type:
+              type: string
+              enum:
+                - json
+        - allOf:
+            - $ref: "#/components/schemas/MediaContentPart"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - media
+        - type: object
+          description: |-
+            OpenAI Responses API `phase: "commentary"` text: an intermediate
+            preamble emitted before a tool call, distinct from the turn's final
+            answer. Plain assistant-authored text, not hidden reasoning like
+            `Thinking`.
+          required:
+            - text
+            - type
+          properties:
+            text:
+              type: string
+            type:
+              type: string
+              enum:
+                - commentary
+    CultureView:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+    DematerializedMediaContentPart:
+      type: object
+      required:
+        - mime_type
+        - data_uri
+        - data_hash
+      properties:
+        data_hash:
+          type: string
+        data_uri:
+          $ref: "#/components/schemas/MediaDataUri"
+        metadata:
+          $ref: "#/components/schemas/Value"
+        mime_type:
+          type: string
+        name:
+          type:
+            - string
+            - "null"
+    HandoverInput:
+      oneOf:
+        - allOf:
+            - $ref: "#/components/schemas/TextRouterHandoverInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text_router_v2
+        - allOf:
+            - $ref: "#/components/schemas/TextMscHandoverInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text_msc
+        - allOf:
+            - $ref: "#/components/schemas/TextMarketplaceHandoverInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text_marketplace
+        - allOf:
+            - $ref: "#/components/schemas/TextLoggingHandoverInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - text_logging
+        - allOf:
+            - $ref: "#/components/schemas/VoiceMscHandoverInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_msc_handover
+        - allOf:
+            - $ref: "#/components/schemas/VoiceForwardInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_forward
+        - allOf:
+            - $ref: "#/components/schemas/VoiceTransferInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_transfer
+        - allOf:
+            - $ref: "#/components/schemas/VoiceCustomHandoverInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_custom
+        - allOf:
+            - $ref: "#/components/schemas/VoiceLoggingHandoverInput"
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - voice_logging
+    JsonSchema:
+      allOf:
+        - type:
+            - object
+            - "null"
+          description: |-
+            any remaining JSON Schema keywords we don't model explicitly. catch-all
+            for things like `pattern`, `format`, `minLength`, etc. — keywords that
+            strict-mode openai rejects and that we deliberately don't surface as
+            typed fields, but pass through for non-strict consumers.
+          additionalProperties:
+            $ref: "#/components/schemas/Value"
+          propertyNames:
+            type: string
+        - type: object
+          properties:
+            $defs:
+              type:
+                - object
+                - "null"
+              description: |-
+                `$defs`: named subschemas usable from `$ref`. accepts the legacy
+                `definitions` key as an alias on input.
+              additionalProperties:
+                $ref: "#/components/schemas/JsonSchema"
+              propertyNames:
+                type: string
+            $ref:
+              type:
+                - string
+                - "null"
+              description: "`$ref`: pointer to a definition (e.g. `#/$defs/Name`)."
+            additionalItems:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/JsonSchema"
+                  description: "`additionalItems`: schema for items beyond the tuple defined by `items`."
+            additionalProperties:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/AdditionalProperties"
+                  description: "For objects: allow/deny extra keys"
+            anyOf:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/JsonSchema"
+              description: "`anyOf`: a tagged union of acceptable schemas."
+            const:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/Value"
+                  description: "`const`: a single allowed value. spec is type-agnostic."
+            description:
+              type:
+                - string
+                - "null"
+            enum:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/Value"
+              description: "`enum`: any allowed values. spec is type-agnostic, hence `JsonValue`."
+            exclusiveMaximum:
+              type:
+                - number
+                - "null"
+              format: double
+              description: "`exclusiveMaximum`: numbers/integers strictly less than this."
+            exclusiveMinimum:
+              type:
+                - number
+                - "null"
+              format: double
+              description: "`exclusiveMinimum`: numbers/integers strictly greater than this."
+            items:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/JsonSchema"
+                  description: "For arrays: a schema for the items"
+            properties:
+              type:
+                - object
+                - "null"
+              description: "For objects: property-name -> schema"
+              additionalProperties:
+                $ref: "#/components/schemas/JsonSchema"
+              propertyNames:
+                type: string
+            required:
+              type:
+                - array
+                - "null"
+              items:
+                type: string
+              description: "For objects: names of required properties"
+            title:
+              type:
+                - string
+                - "null"
+              description: "`title`: human-readable label."
+            type:
+              oneOf:
+                - type: "null"
+                - $ref: "#/components/schemas/JsonTypeSpec"
+    JsonType:
+      type: string
+      enum:
+        - object
+        - array
+        - string
+        - number
+        - integer
+        - boolean
+        - "null"
+    JsonTypeSpec:
+      oneOf:
+        - $ref: "#/components/schemas/JsonType"
+        - type: array
+          items:
+            $ref: "#/components/schemas/JsonType"
+      description: 'JSON Schema `type` field: either a single type (`"string"`) or a union (`["array", "null"]`).'
+    MaterializedMediaContentPart:
+      type: object
+      required:
+        - mime_type
+        - data
+        - data_uri
+        - data_hash
+        - metadata
+      properties:
+        data:
+          type: string
+        data_hash:
+          type: string
+        data_uri:
+          $ref: "#/components/schemas/MediaDataUri"
+        metadata:
+          $ref: "#/components/schemas/Value"
+        mime_type:
+          type: string
+        name:
+          type:
+            - string
+            - "null"
+    MediaContentPart:
+      oneOf:
+        - type: object
+          description: A new media content part which is not yet uploaded into HALO
+          required:
+            - Transient
+          properties:
+            Transient:
+              $ref: "#/components/schemas/TransientMediaContentPart"
+              description: A new media content part which is not yet uploaded into HALO
+        - type: object
+          description: A media content part with data, and can be dematerialized
+          required:
+            - Materialized
+          properties:
+            Materialized:
+              $ref: "#/components/schemas/MaterializedMediaContentPart"
+              description: A media content part with data, and can be dematerialized
+        - type: object
+          description: A media content part without data, but it can be downloaded
+          required:
+            - Dematerialized
+          properties:
+            Dematerialized:
+              $ref: "#/components/schemas/DematerializedMediaContentPart"
+              description: A media content part without data, but it can be downloaded
+    MediaDataUri:
+      type: string
+    ProfileView:
+      type: object
+      required:
+        - id
+        - name
+        - workspace_type
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        workspace_type:
+          $ref: "#/components/schemas/WorkspaceType"
+          description: "Workspace kind: `conversational` or `automation`."
+    TextLoggingHandoverInput:
+      type: object
+      description: |-
+        Logging-only handover input for text channels.
+        Can optionally include a goodbye message to send before logging.
+      properties:
+        goodbye_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+    TextMarketplaceHandoverInput:
+      type: object
+      required:
+        - messaging_adapter_id
+      properties:
+        context:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        goodbye_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        marketplace_adapter_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+        messaging_adapter_id:
+          type: string
+          format: uuid
+        routing:
+          type:
+            - string
+            - "null"
+    TextMscHandoverInput:
+      type: object
+      required:
+        - messaging_adapter_id
+        - name
+        - email
+      properties:
+        email:
+          type: string
+        goodbye_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        messaging_adapter_id:
+          type: string
+          format: uuid
+        msc_profile:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        name:
+          type: string
+        phone_number:
+          type:
+            - string
+            - "null"
+        routing_keywords:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+        web_store_referrer:
+          type:
+            - string
+            - "null"
+    TextRouterHandoverInput:
+      type: object
+      required:
+        - target_state_name_id
+        - context
+      properties:
+        context:
+          type: object
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        goodbye_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        target_state_name_id:
+          type: string
+          format: uuid
+    TransientMediaContentPart:
+      type: object
+      required:
+        - mime_type
+        - data
+        - data_hash
+      properties:
+        data:
+          type: string
+        data_hash:
+          type: string
+        metadata:
+          $ref: "#/components/schemas/Value"
+        mime_type:
+          type: string
+        name:
+          type:
+            - string
+            - "null"
+    Value: {}
+    VoiceCustomHandoverInput:
+      type: object
+      required:
+        - custom_type
+        - custom_config
+      properties:
+        custom_config:
+          type: object
+          additionalProperties:
+            type: string
+          propertyNames:
+            type: string
+        custom_type:
+          type: string
+        goodbye_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+    VoiceForwardInput:
+      type: object
+      required:
+        - callee_id
+      properties:
+        anonymous:
+          type:
+            - boolean
+            - "null"
+        callee_id:
+          type: string
+        caller_id:
+          type:
+            - string
+            - "null"
+        goodbye_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+    VoiceLoggingHandoverInput:
+      type: object
+      description: |-
+        Logging-only handover input for voice channels.
+        Just logs to analytics without sending any messages.
+    VoiceMscHandoverInput:
+      type: object
+      required:
+        - environment
+        - msc_api_key
+      properties:
+        environment:
+          type: string
+        goodbye_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+        msc_api_key:
+          type: string
+        routing_keywords:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+        web_store_referrer:
+          type:
+            - string
+            - "null"
+    VoiceTransferInput:
+      type: object
+      required:
+        - distribution_group
+        - distribution_group_algorithm
+      properties:
+        cm_context_variables:
+          type:
+            - object
+            - "null"
+          additionalProperties: {}
+          propertyNames:
+            type: string
+        distribution_group:
+          type: string
+        distribution_group_algorithm:
+          type: integer
+          format: int32
+          minimum: 0
+        goodbye_content:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/ContentPart"
+    WorkspaceType:
+      type: string
+      description: |-
+        Workspace kind of a profile, stored as varchar and constrained by a CHECK
+        (`'conversational' | 'automation'`). `Conversational` is the DB default.
+      enum:
+        - conversational
+        - automation
+  securitySchemes:
+    X-CM-SSO-ACCOUNTGUID:
+      type: apiKey
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID

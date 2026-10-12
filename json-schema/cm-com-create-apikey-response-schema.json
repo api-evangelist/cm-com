@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-create-apikey-response-schema.json",
+  "title": "CreateAPIKeyResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-payments-pos-cloud-api-v1-9-0-openapi.yml#/components/schemas/CreateAPIKeyResponse",
+  "required": [
+    "id",
+    "label",
+    "apikey"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "maxLength": 15,
+      "minLength": 15,
+      "pattern": "\\d{15}",
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "apikey": {
+      "maxLength": 50,
+      "minLength": 50,
+      "pattern": "[a-z-A-Z0-9]{50}",
+      "type": "string"
+    }
+  }
+}

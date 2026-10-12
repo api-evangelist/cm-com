@@ -1,0 +1,414 @@
+# x-archived-from: cm-com-verification-otp-v2-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: '3.1.1'
+
+servers:
+  - url: https://api.cm.com/otp/v2
+
+security:
+  - ProductToken: [ ]
+
+tags:
+  - name: OTP
+
+info:
+  version: '2'
+  title: OTP as a Service API
+  description: |
+    Protect your organisation and users against fraudulent login attempts and potential catastrophic effects on your business. CM.com offers a unique Hybrid Two-factor, One Time Password solution that can be delivered via our high quality SMS routes, to your app via push, or via a voice call, or email message.
+
+    **How to start**
+    - [Register](https://www.cm.com/register/) for an account.
+    - Retrieve your API product token via the [Messaging Gateway](https://www.cm.com/app/gateway/) app.
+
+paths:
+  /otp:
+    post:
+      operationId: create_otp
+      summary: Create code
+      description: Create code
+      tags: [ OTP ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: '#/components/schemas/CreateOtpSms'
+                - $ref: '#/components/schemas/CreateOtpRcs'
+                - $ref: '#/components/schemas/CreateOtpPush'
+                - $ref: '#/components/schemas/CreateOtpVoice'
+                - $ref: '#/components/schemas/CreateOtpEmail'
+                - $ref: '#/components/schemas/CreateOtpWhatsApp'
+      responses:
+        '200':
+          description: The code has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OtpResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/UnknownError'
+
+  /otp/{id}/verify:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      operationId: verify_otp
+      summary: Verify code
+      description: Verify code
+      tags: [ OTP ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpVerify'
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OtpResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/UnknownError'
+
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: The identifier of the OTP
+      example: 5924b029-6ede-4cb9-a252-0440a85fd350
+
+  schemas:
+    CreateOtpBase:
+      type: object
+      properties:
+        channel:
+          type: string
+          description: The channel to send the code.
+        digits:
+          type: integer
+          description: The length of the code.
+          minimum: 4
+          maximum: 10
+          default: 5
+        expiry:
+          type: integer
+          description: The expiry of the code in seconds.
+          minimum: 10
+          maximum: 3600
+          default: 60
+      required: [ channel ]
+
+    CreateOtpMessage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CreateOtpBase'
+      properties:
+        from:
+          type: string
+          description: The number or name of the sender. This must be a valid phone number in E.164 format or an alphanumeric string between 3 and 11 characters. Please note that alphanumeric senders are not supported in all countries.
+          examples: [ '+31601234567' ]
+        to:
+          type: string
+          description: The receiver of the code. This must be a valid phone number in E.164 format.
+          examples: [ '+31602345678' ]
+        message:
+          type: string
+          description: Set a custom message. You can use the placeholder {code}, this will be replaced by the actual code.
+          maxLength: 160
+          examples: [ 'Your code is: {code}' ]
+      required: [ from, to ]
+
+    CreateOtpSms:
+      type: object
+      title: Create OTP (SMS)
+      allOf:
+        - $ref: '#/components/schemas/CreateOtpMessage'
+      properties:
+        channel:
+          examples: [ sms ]
+          enum:
+            - sms
+
+    CreateOtpPush:
+      type: object
+      title: Create OTP (Push)
+      allOf:
+        - $ref: '#/components/schemas/CreateOtpMessage'
+      properties:
+        channel:
+          examples: [ push ]
+          enum:
+            - push
+        pushAppKey:
+          type: string
+          description: The app key.
+          format: uuid
+      required: [ pushAppKey ]
+
+    CreateOtpRcs:
+      type: object
+      title: Create OTP (RCS)
+      allOf:
+        - $ref: '#/components/schemas/CreateOtpMessage'
+      properties:
+        channel:
+          examples: [ rcs ]
+          enum:
+            - rcs
+
+    CreateOtpVoice:
+      type: object
+      title: Create OTP (Voice)
+      allOf:
+        - $ref: '#/components/schemas/CreateOtpBase'
+      properties:
+        channel:
+          examples: [ voice ]
+          enum:
+            - voice
+        from:
+          type: string
+          description: The number of the sender. This must be a valid phone number in E.164 format.
+          examples: [ '+31601234567' ]
+        to:
+          type: string
+          description: The number of the receiver. This must be a valid phone number in E.164 format.
+          examples: [ '+31602345678' ]
+        locale:
+          type: string
+          description: Set the spoken language in the voice call.
+          enum:
+            - de-DE
+            - en-AU
+            - en-GB
+            - en-IN
+            - en-US
+            - es-ES
+            - fr-CA
+            - fr-FR
+            - it-IT
+            - ja-JP
+            - nl-NL
+          default: en-GB
+        anonymous:
+          type: boolean
+          description: Set whether the number of the caller (from) is hidden in the voice call.
+          default: true
+        message:
+          type: string
+          description: Set a custom message to be used in the voice call.
+          maxLength: 500
+        gender:
+          type: string
+          description: Set the gender of the text-to-speech voice used in the voice call.
+          enum:
+            - male
+            - female
+          default: female
+        number:
+          type: integer
+          format: int32
+          description: Set which text-to-speech voice to use in the voice call. For the list of numbers, see [TTS voices](https://developers.cm.com/voice/docs/supported-languages).
+          minimum: 1
+          maximum: 2147483647
+        premium:
+          type: boolean
+          description: Set whether a premium text-to-speech voice is used in the voice call. Enabling this may incur additional cost.
+          default: false
+      required: [ from, to ]
+
+    CreateOtpEmail:
+      title: Create OTP (Email)
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CreateOtpBase'
+      properties:
+        channel:
+          examples: [ email ]
+          enum:
+            - email
+        to:
+          type: string
+          description: The email address of the receiver.
+          format: email
+          examples: [ 'example@example.com' ]
+        locale:
+          type: string
+          description: The locale for the email template.
+        message:
+          type: string
+          description: Set a custom message to be used in the email message.
+          maxLength: 500
+      required: [ to ]
+
+    CreateOtpWhatsApp:
+      title: Create OTP (WhatsApp)
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CreateOtpBase'
+      properties:
+        channel:
+          examples: [ whatsapp ]
+          enum:
+            - whatsapp
+        from:
+          type: string
+          description: The number of the sender. This must be a valid phone number in E.164 format.
+          examples: [ '+31601234567' ]
+        to:
+          type: string
+          description: The number of the receiver. This must be a valid phone number in E.164 format.
+          examples: [ '+31602345678' ]
+        message:
+          type: string
+          description: Set a custom message. You can use the placeholder {code}, this will be replaced by the actual code.
+          maxLength: 160
+        locale:
+          type: string
+          description: The locale of the message. This must match with configured locales for the template.
+      required: [ from, to ]
+
+    OtpResponse:
+      type: object
+      title: OTP Response
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The identifier for the code. Use this in combination with the received code to verify the code.
+          readOnly: true
+        channel:
+          type: string
+          description: The channel used to send the code.
+          enum:
+            - email
+            - push
+            - rcs
+            - sms
+            - voice
+            - whatsapp
+          examples: [ sms ]
+        verified:
+          type: boolean
+          description: Indicates if the code is verified. Once a code has been successfully validated, it cannot be validated again.
+          default: false
+          readOnly: true
+        createdAt:
+          type: string
+          description: The date the OTP was created.
+          format: date-time
+          readOnly: true
+        expiresAt:
+          type: string
+          description: The date the OTP will expire.
+          format: date-time
+          readOnly: true
+
+    OtpVerify:
+      type: object
+      title: OTP Verification Request
+      properties:
+        code:
+          type: string
+          description: The code received via the specified channel.
+          examples: [ '12345' ]
+      required: [ code ]
+
+    ErrorResponse:
+      title: Error response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples: [ 400 ]
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          examples: [ The request is invalid ]
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+
+    ErrorCode:
+      type: integer
+      description: >
+        Error code description:
+
+         * 1000 - Unknown error
+         * 1001 - Invalid request
+         * 2000 - Validation error
+         * 2001 - Invalid `channel` field
+         * 2002 - Invalid `from` field
+         * 2003 - Invalid `to` field
+         * 2004 - Invalid `message` field
+         * 2005 - Invalid `digits` field
+         * 2006 - Invalid `expiry` field
+         * 2007 - Invalid `locale` field
+         * 2008 - Invalid `pushAppKey` field
+         * 2009 - Invalid `anonymous` field
+         * 3001 - OTP was not found
+         * 3002 - OTP has expired
+         * 3003 - OTP is already verified
+         * 3004 - Too many attempts
+         * 3005 - Channel is not configured
+         * 3006 - Subscription is required
+         * 4001 - Failed to send message
+
+      enum: [ 1000, 1001, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 3001, 3002, 3003, 3004, 3005, 3006, 4001 ]
+      examples: [ 1000 ]
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: The request is invalid
+            code: 2000
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+            code: 3006
+    UnknownError:
+      description: Unknown error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: An unknown error occurred.
+            code: 1000
+
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-ProductToken

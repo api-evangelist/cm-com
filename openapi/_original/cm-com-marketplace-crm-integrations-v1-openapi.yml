@@ -1,0 +1,62 @@
+# x-archived-from: cm-com-marketplace-crm-integrations-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: Marketplace - CRM Integrations
+  version: 1.0.0
+  description: |
+    Connect customer relationship management platforms to CM Marketplace so contact and deal data cascades to every enabled CM product.
+  license:
+    name: Proprietary
+    identifier: LicenseRef-CM.com-Proprietary
+
+servers:
+  - url: https://api.cm.com/marketplace/crm-integrations/v1
+    description: Production
+
+tags:
+  - name: Health
+    description: Service health
+
+security:
+  - BearerAuth: []
+
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      summary: Health check
+      description: Returns the health status of the CRM Integrations API.
+      tags:
+        - Health
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Service is unavailable
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy]
+          example: healthy
+        service:
+          type: string
+          example: crm-integrations
+        version:
+          type: string
+          example: 1.0.0

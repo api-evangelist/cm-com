@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-number-check-request-schema.json",
+  "title": "NumberCheckRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-verification-number-validation-v1-openapi.yml#/components/schemas/NumberCheckRequest",
+  "type": "object",
+  "properties": {
+    "phoneNumber": {
+      "type": "string",
+      "description": "The phone number to check. Must start with a `+`."
+    },
+    "connectionType": {
+      "description": "The type of connection to use when retrieving the data. Defaults to `static` if not provided.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ConnectionType"
+        },
+        {
+          "type": [
+            "null"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "phoneNumber"
+  ],
+  "$defs": {
+    "ConnectionType": {
+      "type": "string",
+      "description": "Connection type description:\n\n * `hlr` - Home Location Register lookup. Returns real-time network status including whether the number is active, along with static data derived from the phone number.\n * `mnp` - Mobile Number Portability lookup. Returns ported status including data about the ported-to operator, along with static data derived from the phone number.\n * `static` - No lookup conducted. Returns static data derived from the phone number itself.\n",
+      "enum": [
+        "hlr",
+        "mnp",
+        "static"
+      ]
+    }
+  }
+}

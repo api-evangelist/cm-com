@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-rule-dto-schema.json",
+  "title": "RuleDto",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-live-entrance-management-v1-openapi.yml#/components/schemas/RuleDto",
+  "type": "object",
+  "properties": {
+    "uuid": {
+      "type": "string",
+      "readOnly": true
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "maxValidations": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Amount a ticket can be validated (successfully scanned) on the rule. When 0 the ticket cannot be scanned."
+    },
+    "maxValidationScope": {
+      "type": "string",
+      "enum": [
+        "UNRESTRICTED",
+        "DAILY",
+        "SAME_DAY"
+      ],
+      "description": "Defines the scope of maxValidations. UNRESTRICTED: total limit across entire validity period, DAILY: limit resets each day, SAME_DAY: all scans must occur on the same calendar day."
+    },
+    "validFrom": {
+      "format": "date-time",
+      "type": "string",
+      "description": "Barcodes can be scanned from this date onwards"
+    },
+    "validUntil": {
+      "format": "date-time",
+      "type": "string",
+      "description": "Barcodes can be scanned until this date."
+    },
+    "daysValidAfterPurchase": {
+      "type": "number",
+      "description": "Amount of days a barcode can be validated after its issued date (whole days, timestamp is not taken into account)"
+    },
+    "shouldValidateTimeslotMoment": {
+      "type": "boolean",
+      "description": "If set to true a barcode with a timeslot can only be scanned on the (whole) day of the timeslot"
+    },
+    "minutesBeforeTimeslot": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 120,
+      "description": "Minutes before the timeslot moment a barcode may be scanned. When set (with or without minutesAfterTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true."
+    },
+    "minutesAfterTimeslot": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 120,
+      "description": "Minutes after the timeslot moment a barcode may be scanned. When set (with or without minutesBeforeTimeslot) the scan is validated against an exact time window around the timeslot instead of the whole day. Only applies when shouldValidateTimeslotMoment is true."
+    },
+    "shouldValidateOnParent": {
+      "type": "boolean",
+      "description": "If set to true barcodes will be validated on the top-level parent of the entrance plan."
+    },
+    "scanColour": {
+      "type": "string",
+      "default": "#3ddc97",
+      "description": "Colour (hexcode) that is used on scanner display for successful checkins (Default is green)."
+    },
+    "scanMessage": {
+      "type": "string",
+      "maxLength": 255,
+      "default": "Barcode successfully checked in.",
+      "description": "Message displayed on successful checkin."
+    },
+    "requiresPhotoVerification": {
+      "type": "boolean",
+      "description": "If set to true a successful checkin requires staff to verify the visitor against a photo (e.g. Museumpass Belgium) before it is registered."
+    },
+    "requiresConfirmationQuestion": {
+      "type": "boolean",
+      "description": "If set to true a successful checkin requires staff to answer a confirmation question before it is registered."
+    },
+    "confirmationQuestion": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "Question shown to staff. Required when requiresConfirmationQuestion is true."
+    },
+    "venueSectionId": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "externalId of venueSection the rule applies to"
+    },
+    "eventId": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "externalId of event the rule applies to"
+    },
+    "productId": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "externalId of product the rule applies to"
+    },
+    "primaryConstraintId": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "externalId of constraint the rule applies to"
+    },
+    "secondaryConstraintId": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "externalId of constraint the rule applies to"
+    },
+    "tertiaryConstraintId": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "externalId of constraint the rule applies to"
+    }
+  },
+  "required": [
+    "uuid",
+    "name",
+    "maxValidations",
+    "maxValidationScope",
+    "shouldValidateTimeslotMoment",
+    "shouldValidateOnParent",
+    "requiresPhotoVerification",
+    "requiresConfirmationQuestion"
+  ]
+}

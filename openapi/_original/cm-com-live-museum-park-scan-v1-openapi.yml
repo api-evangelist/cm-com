@@ -1,0 +1,1307 @@
+# x-archived-from: cm-com-live-museum-park-scan-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.1.0
+info:
+  title: Scan API
+  version: "1.0"
+  description: |-
+    Every operation is a `POST` request with an `application/x-www-form-urlencoded` body. Every request includes your public `apiKey` and an `HMACKey`. The `HMACKey` is calculated from the input fields; the calculation is listed on each operation as `Base64 encode - SHA256(...)`, where the fields between the brackets are concatenated. Only include optional parameters in the HMAC if you are using those parameters. A `*` after a field marks it as optional.
+servers:
+  - url: https://globalticket.com/webservices/scanapi
+components:
+  securitySchemes: {}
+security:
+  - {}
+paths:
+  /getBarcodeStatus:
+    post:
+      summary: /getBarcodeStatus
+      description: |-
+        This function allows you to get the status of a barcode (valid / invalid) and information about the ticket(s).
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + barcodeNumber)`
+      operationId: set-status
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - HMACKey
+                - barcodeNumber
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + barcodeNumber)."
+                barcodeNumber:
+                  type: string
+                  description: The barcode number of the ticket for which the status is to be checked
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "barcodeValid": true
+                    "dateOfPurchase": "2012-04-21T18:25:43Z"
+                    "dateCheckedIn": "2012-04-21T18:25:43-05:00"
+                    "numberOfTickets": 1
+                    "numberOfTicketTypes": 1
+                    "totalPrice": 1.10
+                    "tickets":
+                      - "ticketTypeId": 1
+                        "description": "Volwassene"
+                        "ticketTypePrice": 1.19
+                        "numberOfTickets": 1
+              schema:
+                type: object
+                properties:
+                  barcodeValid:
+                    type: boolean
+                    example: true
+                    default: true
+                  dateOfPurchase:
+                    type: string
+                    example: 2012-04-21T18:25:43Z
+                  dateCheckedIn:
+                    type: string
+                    example: 2012-04-21T18:25:43-05:00
+                  numberOfTickets:
+                    type: integer
+                    example: 1
+                    default: 0
+                  numberOfTicketTypes:
+                    type: integer
+                    example: 1
+                    default: 0
+                  totalPrice:
+                    type: number
+                    example: 1.1
+                    default: 0
+                  tickets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ticketTypeId:
+                          type: integer
+                          example: 1
+                          default: 0
+                        description:
+                          type: string
+                          example: Volwassene
+                        ticketTypePrice:
+                          type: number
+                          example: 1.19
+                          default: 0
+                        numberOfTickets:
+                          type: integer
+                          example: 1
+                          default: 0
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "errorCode": "INVALID_AUTHENTICATION"
+                    "errorMessage": "Please check your apiKey and IP addresses. - 54.242.111.53"
+              schema:
+                type: object
+                properties:
+                  errorCode:
+                    type: string
+                    example: INVALID_AUTHENTICATION
+                  errorMessage:
+                    type: string
+                    example: Please check your apiKey and IP addresses. - 54.242.111.53
+      deprecated: false
+  /setBarcodeStatus:
+    post:
+      summary: /setBarcodeStatus
+      description: |-
+        This function allows you to set the barcode (ticket) status to “checked in”.
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + barcodeNumber)`
+      operationId: setbarcodestatus
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - HMACKey
+                - barcodeNumber
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + barcodeNumber)."
+                barcodeNumber:
+                  type: string
+                  description: The barcode number of the ticket for which the status is to be set
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "errorCode": 1
+                    "errorMessage": "contactInfo add was successfully."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  errorCode:
+                    type: integer
+                    example: 1
+                    default: 0
+                  errorMessage:
+                    type: string
+                    example: contactInfo add was successfully.
+      deprecated: false
+  /getAvailability:
+    post:
+      summary: /getAvailability
+      description: |-
+        With this functionality you can retrieve the availability of a specified article (ticket type).
+
+        > **Note:** This function only returns tickettypes that have been made available for sale through API.
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + ticketTypeId + ticketDate*)`
+      operationId: getavailability-1
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - HMACKey
+                - ticketTypeId
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + ticketTypeId + ticketDate*). Only include ticketDate in the HMAC if you are using this param"
+                ticketTypeId:
+                  type: integer
+                  description: Unique identifier for a particular tickettype
+                  format: int32
+                ticketDate:
+                  type: string
+                  description: This param is optional, default value is the current date.
+                  default: currentDate
+                  format: date
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "availibilityType": "text"
+                    "availableTickets": 1
+                    "numberOfTicketTypes": 1
+                    "timeslots":
+                      - "time": "16:00"
+                        "tickets": 1
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  availibilityType:
+                    type: string
+                    example: text
+                  availableTickets:
+                    type: integer
+                    example: 1
+                    default: 0
+                  numberOfTicketTypes:
+                    type: integer
+                    example: 1
+                    default: 0
+                  timeslots:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: string
+                          example: 16:00
+                        tickets:
+                          type: integer
+                          example: 1
+                          default: 0
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": false
+                    "errorMessage": "No tickets available."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: No tickets available.
+      deprecated: false
+  /createReservation:
+    post:
+      summary: /createReservation
+      description: |-
+        With this functionality you can create a reservation. Create a reservation for a single ticket type, or for multiple ticket types by sending the `tickets` object.
+
+        > **Note:** Reservations are by default valid for 15 minutes. Please use “reservationValidUntil” to prevent errors at the completeReservation method.
+
+        **HMACKey:**
+        - Single ticket type: not documented
+        - Multiple ticket types: `Base64 encode - SHA256(apiKey + ticketDate + tickets)`
+
+        **HMAC calculation of the `tickets` array**
+
+        Sort the entries by ticketTypeId ascending and the keys within each entry alphabetically, then concatenate the values. Example (PHP):
+
+        ```php
+        $tickets = [
+          '321' => [ 'ticketNumber' => 2, 'ticketTime' => '10:00' ],
+          '123' => [ 'ticketTime' => '12:00', 'ticketNumber' => 3 ],
+        ];
+
+        // sorted and concatenated:
+        $result = '123312:00321210:00';
+        ```
+      operationId: createreservation-1
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+                - type: object
+                  title: Single ticket type
+                  required:
+                  - apiKey
+                  - ticketTypeId
+                  - ticketNumber
+                  - HMACKey
+                  properties:
+                    apiKey:
+                      type: string
+                      description: Your public apiKey needs to be included in every request
+                    ticketTypeId:
+                      type: integer
+                      description: Unique identifier for a particular tickettype
+                      format: int32
+                    ticketNumber:
+                      type: integer
+                      description: Number of tickets for which a reservation is to be created
+                      format: int32
+                    ticketDate:
+                      type: string
+                      description: Date of the tickets that the reservation has to be created for
+                      default: current date
+                      format: date
+                    ticketTime:
+                      type: string
+                      description: Timeslot of tickets for which a reservation is to be created
+                      format: date-time
+                    HMACKey:
+                      type: string
+                      description: The HMACKey is calculated based on the input fields
+                - type: object
+                  title: Multiple ticket types
+                  required:
+                  - apiKey
+                  - tickets
+                  - HMACKey
+                  properties:
+                    apiKey:
+                      type: string
+                      description: Your public apiKey needs to be included in every request
+                    ticketDate:
+                      type: string
+                      description: Date of the tickets that the reservation has to be created for
+                      default: current date
+                      format: date
+                    tickets:
+                      type: object
+                      description: Object keyed by ticketTypeId; each entry holds the ticketNumber and ticketTime for that ticket type.
+                      additionalProperties:
+                        type: object
+                        properties:
+                          ticketNumber:
+                            type: integer
+                            description: The number of ticket for a ticket type
+                            format: int32
+                          ticketTime:
+                            type: string
+                            description: The timeslot for a ticket type
+                      example:
+                        "321":
+                          ticketNumber: 2
+                          ticketTime: "10:00"
+                        "123":
+                          ticketTime: "12:00"
+                          ticketNumber: 3
+                    HMACKey:
+                      type: string
+                      description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + ticketDate + tickets). ticketTypeId sorted ascending, and data array keys are sorted alphabetically, values are concatenated. For the example tickets the result is 123312:00321210:00. Only include optional params in the HMAC if you are using those params."
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "reservationId": 1
+                    "reservationValidUntil": "10:00:00"
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservationId:
+                    type: integer
+                    example: 1
+                    default: 0
+                  reservationValidUntil:
+                    type: string
+                    description: Reservations are by default valid for 15 minutes. Use reservationValidUntil to prevent errors at the completeReservation method.
+                    example: 10:00:00
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": false
+                    "errorMessage": "No tickets available."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: No tickets available.
+      deprecated: false
+  /updateReservation:
+    post:
+      summary: /updateReservation
+      description: |-
+        With this functionality you can update a reservation. Update a reservation for a single ticket type, or for multiple ticket types by sending the `tickets` object.
+
+        **HMACKey:**
+        - Single ticket type: `Base64 encode - SHA256(apiKey + reservationId + ticketTypeId + ticketNumber + ticketDate + ticketTime)`
+        - Multiple ticket types: `Base64 encode - SHA256(apiKey + reservationId + ticketDate + tickets)`
+
+        **HMAC calculation of the `tickets` array**
+
+        Sort the entries by ticketTypeId ascending and the keys within each entry alphabetically, then concatenate the values. Example (PHP):
+
+        ```php
+        $tickets = [
+          '321' => [ 'ticketNumber' => 2, 'ticketTime' => '10:00' ],
+          '123' => [ 'ticketTime' => '12:00', 'ticketNumber' => 3 ],
+        ];
+
+        // sorted and concatenated:
+        $result = '123312:00321210:00';
+        ```
+      operationId: updatereservation
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+                - type: object
+                  title: Single ticket type
+                  required:
+                  - apiKey
+                  - reservationId
+                  - ticketTypeId
+                  - ticketNumber
+                  - HMACKey
+                  properties:
+                    apiKey:
+                      type: string
+                      description: Your public apiKey needs to be included in every request
+                    reservationId:
+                      type: integer
+                      description: The reservation identifier to update
+                      format: int32
+                    ticketTypeId:
+                      type: integer
+                      description: Unique identifier for a particular tickettype
+                      format: int32
+                    ticketNumber:
+                      type: integer
+                      description: Number of tickets for which a reservation is to be created
+                      format: int32
+                    ticketDate:
+                      type: string
+                      description: Date of the tickets that the reservation has to be created for
+                      default: current date
+                      format: date
+                    ticketTime:
+                      type: string
+                      description: Timeslot of tickets for which a reservation is to be created
+                      format: date-time
+                    HMACKey:
+                      type: string
+                      description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + reservationId + ticketTypeId + ticketNumber + ticketDate + ticketTime). Only include optional params in the HMAC if you are using those params."
+                - type: object
+                  title: Multiple ticket types
+                  required:
+                  - apiKey
+                  - reservationId
+                  - tickets
+                  - HMACKey
+                  properties:
+                    apiKey:
+                      type: string
+                      description: Your public apiKey needs to be included in every request
+                    reservationId:
+                      type: integer
+                      description: The reservation identifier to update
+                      format: int32
+                    ticketDate:
+                      type: string
+                      description: Date of the tickets that the reservation has to be created for
+                      default: current date
+                      format: date
+                    tickets:
+                      type: object
+                      description: Object keyed by ticketTypeId; each entry holds the ticketNumber and ticketTime for that ticket type.
+                      additionalProperties:
+                        type: object
+                        properties:
+                          ticketNumber:
+                            type: integer
+                            description: The number of ticket for a ticket type
+                            format: int32
+                          ticketTime:
+                            type: string
+                            description: The timeslot for a ticket type
+                      example:
+                        "321":
+                          ticketNumber: 2
+                          ticketTime: "10:00"
+                        "123":
+                          ticketTime: "12:00"
+                          ticketNumber: 3
+                    HMACKey:
+                      type: string
+                      description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + reservationId + ticketDate + tickets). ticketTypeId sorted ascending, and data array keys are sorted alphabetically, values are concatenated. For the example tickets the result is 123312:00321210:00. Only include optional params in the HMAC if you are using those params."
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "reservationId": 1
+                    "reservationValidUntil": "2026-05-29 10:00:00"
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservationId:
+                    type: integer
+                    example: 1
+                    default: 0
+                  reservationValidUntil:
+                    type: string
+                    description: Reservations are by default valid for 15 minutes. Use reservationValidUntil to prevent errors at the completeReservation method.
+                    example: 2026-05-29 10:00:00
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": false
+                    "errorMessage": "No tickets available."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: No tickets available.
+      deprecated: false
+  /completeReservation:
+    post:
+      summary: /completeReservation
+      description: |-
+        With this functionality you can complete an earlier made reservation. The output contains the barcodes of the reservation.
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + reservationId + scanTicket*)`
+      operationId: completereservation-1
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - reservationId
+                - scanTicket
+                - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                reservationId:
+                  type: integer
+                  description: Reservation identifier that is provided by createReservation call
+                  format: int32
+                scanTicket:
+                  type: boolean
+                  description: This param is optional, default value is false. This param is used to sell and scan the ticket in one call.
+                  default: false
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + reservationId + scanTicket*). Only include optional params in the HMAC if you are using those params"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "reservationId": 1
+                    "barcodes":
+                      - "ticketId": 1001
+                        "barcode": 1231231928311
+                        "description": "text"
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservationId:
+                    type: integer
+                    example: 1
+                    default: 0
+                  barcodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ticketId:
+                          type: integer
+                          example: 1001
+                          default: 0
+                        barcode:
+                          type: integer
+                          example: 1231231928311
+                          default: 0
+                        description:
+                          type: string
+                          example: text
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": false
+                    "errorMessage": "No tickets available."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: No tickets available.
+      deprecated: false
+  /cancelReservation:
+    post:
+      summary: /cancelReservation
+      description: |-
+        With this functionality you can cancel an earlier created reservation. Please note that you can only cancel a completed reservation.
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + reservationId)`
+      operationId: cancelreservation
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - reservationId
+                - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                reservationId:
+                  type: integer
+                  description: Reservation identifier that is provided by createReservation call
+                  format: int32
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + reservationId)."
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "reservationId": 1
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservationId:
+                    type: integer
+                    example: 1
+                    default: 0
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": false
+                    "errorMessage": "Reservation not found or already cancelled."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: Reservation not found or already cancelled.
+      deprecated: false
+  /releaseCapacity:
+    post:
+      summary: /releaseCapacity
+      description: |-
+        With this functionality you can force release the reserved capacity for a reservation. Please note that this is only possible for pending reservations and will not cancel the reservation. You can use the cancelReservation endpoint for this.
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + reservationId)`
+      operationId: releasecapacity
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - reservationId
+                - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request.
+                reservationId:
+                  type: integer
+                  description: Reservation identifier that is provided by createReservation call
+                  format: int32
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + reservationId)."
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "reservationId": 1
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservationId:
+                    type: integer
+                    example: 1
+                    default: 0
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": false
+                    "errorMessage": "Reservation not found or already cancelled."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  errorMessage:
+                    type: string
+                    example: Reservation not found or already cancelled.
+      deprecated: false
+  /getTicketTypes:
+    post:
+      summary: /getTicketTypes
+      description: |-
+        With this functionality you can retrieve the ticket types that have been made available for sale through API.
+
+        > **Note:** This function only shows tickettypes that have been made available for sale through API.
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey)`
+      operationId: gettickettypes-2
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey)."
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "ticketTypes":
+                      - "ticketTypeId": 1
+                        "title": "Volwassene"
+                        "price": 1
+                        "posId": 1234
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  ticketTypes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ticketTypeId:
+                          type: integer
+                          example: 1
+                          default: 0
+                        title:
+                          type: string
+                          example: Volwassene
+                        price:
+                          type: integer
+                          example: 1
+                          default: 0
+                        posId:
+                          type: integer
+                          description: PosId (PLU-code) is a unique identifier that can be set within the ticketing system to match products to external systems.
+                          example: 1234
+                          default: 0
+        4XX:
+          description: 4XX
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "errorCode": 1
+                    "errorMessage": "contactInfo add was successfully."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  errorCode:
+                    type: integer
+                    example: 1
+                    default: 0
+                  errorMessage:
+                    type: string
+                    example: contactInfo add was successfully.
+      deprecated: false
+  /getTurnover:
+    post:
+      summary: /getTurnover
+      description: |-
+        With this function you can retrieve the turnover, discount and the number of tickets sold during a selected period. Use the startDate and endDate parameters to select a period.
+
+        > **Note:** The maximum period per request is restricted to one month.
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + startDate + endDate)`
+      operationId: getturnover
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - startDate
+                - endDate
+                - HMACKey
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                startDate:
+                  type: string
+                  description: Startdate of the period for which turnover is requested (yyyy-mm-dd)
+                  format: date
+                endDate:
+                  type: string
+                  description: enddate of the period for which turnover is requested (yyyy-mm-dd)
+                  format: date
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + startDate + endDate)."
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "ticketCountTotal": 2
+                    "ticketTurnoverTotal": 120
+                    "turnoverDiscount": 20
+                    "turnoverTotal": 100
+                    "turnoverDetails":
+                      - "ticketTypeId": 123
+                        "ticketCount": 1
+                        "ticketTurnoverTotal": 60
+                        "turnoverDiscount": 10
+                        "turnoverTotal": 50
+                        "posId": 1234
+                        "purchaseDate": "2022-10-03"
+                      - "ticketTypeId": 123
+                        "ticketCount": 1
+                        "ticketTurnoverTotal": 60
+                        "turnoverDiscount": 10
+                        "turnoverTotal": 50
+                        "posId": 1234
+                        "purchaseDate": "2022-10-03"
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  ticketCountTotal:
+                    type: integer
+                    example: 2
+                    default: 0
+                  ticketTurnoverTotal:
+                    type: integer
+                    description: Total turnover of ticket sales before discounts.
+                    example: 120
+                    default: 0
+                  turnoverDiscount:
+                    type: integer
+                    description: Total discount given during the requested turnover period.
+                    example: 20
+                    default: 0
+                  turnoverTotal:
+                    type: integer
+                    description: The total ticketTurnoverTotal minus the turnoverDiscount.
+                    example: 100
+                    default: 0
+                  turnoverDetails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ticketTypeId:
+                          type: integer
+                          example: 123
+                          default: 0
+                        ticketCount:
+                          type: integer
+                          example: 1
+                          default: 0
+                        ticketTurnoverTotal:
+                          type: integer
+                          example: 60
+                          default: 0
+                        turnoverDiscount:
+                          type: integer
+                          example: 10
+                          default: 0
+                        turnoverTotal:
+                          type: integer
+                          example: 50
+                          default: 0
+                        posId:
+                          type: integer
+                          description: PosId (PLU-code) is a unique identifier that can be set within the ticketing system to match products to external systems.
+                          example: 1234
+                          default: 0
+                        purchaseDate:
+                          type: string
+                          example: 2022-10-03
+        "400":
+          description: "400"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "errorCode": 400
+                    "errorMessage": "Period exceeds 30 days."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  errorCode:
+                    type: integer
+                    example: 400
+                    default: 0
+                  errorMessage:
+                    type: string
+                    example: Period exceeds 30 days.
+      deprecated: false
+  /getGroupReservations:
+    post:
+      summary: /getGroupReservations
+      description: |-
+        With this function you can retrieve the Groups and Education reservations for a specific date.
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + date + language)`
+      operationId: getgroupreservations
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - apiKey
+                - HMACKey
+                - date
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                HMACKey:
+                  type: string
+                  description: "The HMACKey is calculated based on the input fields. Base64 encode - SHA256(apiKey + date + language)."
+                date:
+                  type: string
+                  description: The date for which to retrieve reservations in the format YYYY-MM-DD
+                language:
+                  type: string
+                  description: The language in which results are returned
+                  default: nl
+                dateType:
+                  type: string
+                  description: "Search for reservations by this type, valid values are: 'ticket', 'purchase' and 'update'"
+                  default: ticket
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "reservations":
+                      - "reservationId": 1234
+                        "reservationCode": "a11aaa1a1aaaaaaa"
+                        "reservationDate": "2025-01-01"
+                        "reservationTime": "14:00"
+                        "totalPrice": "0.00"
+                        "pricePaid": "0.00"
+                        "currency": "EUR"
+                        "vatPercentage": 9
+                        "invoice": false
+                        "paymentMethod": "online"
+                        "tickets":
+                          - "ticketTypeId": "1234"
+                            "ticketTitle": "Adult"
+                            "ticketPrice": "0.00"
+                            "ticketNumber": "2"
+                          - "ticketTypeId": "1235"
+                            "ticketTitle": "Children"
+                            "ticketPrice": "0.00"
+                            "ticketNumber": "2"
+                        "activity": "Activity title"
+                        "expositionId": "-"
+                        "durationInMinutes": 60
+                        "group": "John Doe and friends"
+                        "remarks": ""
+                        "newsletter": true
+                        "customField": ""
+                        "contact":
+                          "firstName": "John"
+                          "insertion": ""
+                          "surName": "Doe"
+                        "address":
+                          "street": "Streetname"
+                          "houseNumber": "102"
+                          "postalCode": "1234 AA"
+                          "city": "Amsterdam"
+                          "country": "NL"
+                        "status": "active"
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  reservations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reservationId:
+                          type: integer
+                          example: 1234
+                          default: 0
+                        reservationCode:
+                          type: string
+                          example: a11aaa1a1aaaaaaa
+                        reservationDate:
+                          type: string
+                          example: 2025-01-01
+                        reservationTime:
+                          type: string
+                          example: 14:00
+                        totalPrice:
+                          type: string
+                          example: 0.00
+                        pricePaid:
+                          type: string
+                          example: 0.00
+                        currency:
+                          type: string
+                          example: EUR
+                        vatPercentage:
+                          type: integer
+                          example: 9
+                          default: 0
+                        invoice:
+                          type: boolean
+                          example: false
+                          default: true
+                        paymentMethod:
+                          type: string
+                          example: online
+                        tickets:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              ticketTypeId:
+                                type: string
+                                example: 1234
+                              ticketTitle:
+                                type: string
+                                example: Adult
+                              ticketPrice:
+                                type: string
+                                example: 0.00
+                              ticketNumber:
+                                type: string
+                                example: 2
+                        activity:
+                          type: string
+                          example: Activity title
+                        expositionId:
+                          type: string
+                          example: '-'
+                        durationInMinutes:
+                          type: integer
+                          example: 60
+                          default: 0
+                        group:
+                          type: string
+                          example: John Doe and friends
+                        remarks:
+                          type: string
+                          example: ''
+                        newsletter:
+                          type: boolean
+                          example: true
+                          default: true
+                        customField:
+                          type: string
+                          example: ''
+                        contact:
+                          type: object
+                          properties:
+                            firstName:
+                              type: string
+                              example: John
+                            insertion:
+                              type: string
+                              example: ''
+                            surName:
+                              type: string
+                              example: Doe
+                        address:
+                          type: object
+                          properties:
+                            street:
+                              type: string
+                              example: Streetname
+                            houseNumber:
+                              type: string
+                              example: 102
+                            postalCode:
+                              type: string
+                              example: 1234 AA
+                            city:
+                              type: string
+                              example: Amsterdam
+                            country:
+                              type: string
+                              example: NL
+                        status:
+                          type: string
+                          example: active
+        4XX:
+          description: 4XX
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    "success": true
+                    "errorCode": 1
+                    "errorMessage": "contactInfo add was successfully."
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  errorCode:
+                    type: integer
+                    example: 1
+                    default: 0
+                  errorMessage:
+                    type: string
+                    example: contactInfo add was successfully.
+      deprecated: false
+      x-readme:
+        code-samples:
+          - language: curl
+            code: >-
+              curl --location 'https://www.globalticket.com/webservices/scanapi/getGroupReservations' \
+
+              --form 'apiKey="XXX"' \
+
+              --form 'date="2025-01-01"' \
+
+              --form 'HMACKey="XXX"'
+        samples-languages:
+          - curl
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

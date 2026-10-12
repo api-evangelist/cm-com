@@ -1,0 +1,2244 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Analytics API
+  version: '1.0'
+  description: 'Operations tagged Analytics across 3 of this provider''s published API definitions: cm-com-halo-analytics-v1-openapi.yml, cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /halo
+- url: https://api.cm.com
+tags:
+- name: Analytics
+paths:
+  /analytics/v1/accounts/{account_id}/logging/feedback-scores:
+    post:
+      tags:
+      - Analytics
+      description: 'Create a feedback score for a conversation interaction.
+
+
+        Required permission: `HALO.Analytics_Logging_FeedbackScores`'
+      operationId: create_feedback_score_external
+      parameters:
+      - name: account_id
+        in: path
+        description: The account ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFeedbackScoreRequest'
+        required: true
+      responses:
+        '200':
+          description: Feedback score created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackScoreResponse'
+        '400':
+          description: Bad request - invalid input
+        '404':
+          description: Account not found
+      security:
+      - X-CM-SSO-ACCOUNTGUID: []
+      - {}
+      summary: Create feedback score external
+      x-summary-source: derived
+    servers:
+    - url: /halo
+  /analytics/v1/accounts/{account_id}/metrics:
+    get:
+      tags:
+      - Analytics
+      description: 'Get conversation metrics for an account.
+
+
+        Required permission: `HALO.Analytics_API`'
+      operationId: get_metrics
+      parameters:
+      - name: account_id
+        in: path
+        description: The account ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: from_date
+        in: query
+        description: Start date for metrics calculation (ISO 8601 format, UTC expected). Defaults to 30 days ago.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: until_date
+        in: query
+        description: End date for metrics calculation (ISO 8601 format, UTC expected). Defaults to now.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: profile_id
+        in: query
+        description: Optional profile ID to filter metrics
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsData'
+        '400':
+          description: Bad request - invalid query parameters
+        '404':
+          description: Account not found
+        '422':
+          description: Validation error - invalid date range
+      security:
+      - X-CM-SSO-ACCOUNTGUID: []
+      - {}
+      summary: Get metrics
+      x-summary-source: derived
+    servers:
+    - url: /halo
+  /entrance/v1.0/organisations/{organisationUuid}/analytics/scan-progress:
+    get:
+      operationId: AnalyticsController_getScanProgress_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanProgressResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan progress data
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/analytics/widgets:
+    get:
+      operationId: AnalyticsController_getWidgets_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsWidgetResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get analytics widget data
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/analytics/by-product:
+    get:
+      operationId: AnalyticsController_getScansByProduct_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByProductItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scans grouped by product
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/analytics/scans-by-product:
+    get:
+      operationId: AnalyticsController_getProductsByScanLogs_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByProductItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get products by scan logs
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/analytics/by-entrance-plan:
+    get:
+      operationId: AnalyticsController_getScansByEntrancePlan_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByEntrancePlanItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scans grouped by entrance plan
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/analytics/clicker-scans:
+    get:
+      operationId: AnalyticsController_getClickerScans_v1.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClickerScansItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get clicker arrivals and departures per entrance plan (ticket filters do not…
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/analytics/venue/{venueUuid}:
+    get:
+      operationId: AnalyticsController_getVenueScanOverview_v1.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByVenueItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get venue scan overview
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v1.0/organisations/{organisationUuid}/analytics/logs:
+    get:
+      operationId: AnalyticsController_getScanLogsByOrganisation_v1.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: statusCodes
+        required: false
+        in: query
+        description: Comma separated values for scan status codes
+        schema:
+          example: 200,401
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: deviceIds
+        required: false
+        in: query
+        description: Comma separated values for device ids
+        schema:
+          example: 872HA,AH84A
+          type: string
+      - name: ticketIds
+        required: false
+        in: query
+        description: Comma separated values for ticket ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: orderIds
+        required: false
+        in: query
+        description: Comma separated values for order ids
+        schema:
+          example: CM12345678,CM0000001
+          type: string
+      - name: productIds
+        required: false
+        in: query
+        description: Comma separated values for product ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: eventIds
+        required: false
+        in: query
+        description: Comma separated values for event ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: includeRelatedEntrancePlans
+        required: false
+        in: query
+        description: When true, include scan logs from the entire entrance plan collection the requested plan belongs to (its related plans across the collection) instead of only the requested entrance plan. Only affects entrance-plan-scoped requests; ignored for organisation-scoped requests.
+        schema:
+          example: true
+          type: boolean
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List scan logs for organisation
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/analytics/scan-progress:
+    get:
+      operationId: AnalyticsController_getScanProgress_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanProgressResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scan progress data
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/analytics/widgets:
+    get:
+      operationId: AnalyticsController_getWidgets_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsWidgetResponseDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get analytics widget data
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/analytics/by-product:
+    get:
+      operationId: AnalyticsController_getScansByProduct_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByProductItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scans grouped by product
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/analytics/scans-by-product:
+    get:
+      operationId: AnalyticsController_getProductsByScanLogs_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByProductItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get products by scan logs
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/analytics/by-entrance-plan:
+    get:
+      operationId: AnalyticsController_getScansByEntrancePlan_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByEntrancePlanItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get scans grouped by entrance plan
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/analytics/clicker-scans:
+    get:
+      operationId: AnalyticsController_getClickerScans_v2.0
+      parameters:
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClickerScansItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get clicker arrivals and departures per entrance plan (ticket filters do not…
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/analytics/venue/{venueUuid}:
+    get:
+      operationId: AnalyticsController_getVenueScanOverview_v2.0
+      parameters:
+      - name: venueUuid
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: startAt
+        required: true
+        in: query
+        description: Start date of filter period. Must be in the past
+        schema:
+          format: date-time
+          type: string
+      - name: endAt
+        required: true
+        in: query
+        description: End date of filter period. Defaults to current datetime (also if set in the future)
+        schema:
+          format: date-time
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: products
+        required: false
+        in: query
+        description: Comma separated values for product externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: events
+        required: false
+        in: query
+        description: Comma separated values for event externalId
+        schema:
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+      - name: filterTimeslots
+        required: false
+        in: query
+        description: If true will consider tickets that have their timeslot within the filter's date range. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: includeClickerScans
+        required: false
+        in: query
+        description: If true, clicker scans (ticketless arrivals/departures) are kept when filtering on products, product types, events or sale origins. Without such filters they are always included. Default is false.
+        schema:
+          example: true
+          type: boolean
+      - name: productTypes
+        required: false
+        in: query
+        description: Comma separated values for product types
+        schema:
+          example: REGULAR,GUEST_LIST
+          type: string
+      - name: saleOrigins
+        required: false
+        in: query
+        description: Comma separated values for ticket sale origins
+        schema:
+          example: SHOP,GUEST_LIST
+          type: string
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScansByVenueItemDto'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: Get venue scan overview
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+  /entrance/v2.0/organisations/{organisationUuid}/analytics/logs:
+    get:
+      operationId: AnalyticsController_getScanLogsByOrganisation_v2.0
+      parameters:
+      - name: order
+        required: false
+        in: query
+        schema:
+          default: ASC
+          type: string
+          enum:
+          - ASC
+          - DESC
+      - name: page
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          default: 1
+          type: number
+      - name: take
+        required: false
+        in: query
+        schema:
+          minimum: 1
+          maximum: 5000
+          default: 25
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: Returns only records that match the search query. Searches in most common fields such as name, description and for tickets all visitor data.
+        schema:
+          minLength: 1
+          maxLength: 255
+          type: string
+      - name: statusCodes
+        required: false
+        in: query
+        description: Comma separated values for scan status codes
+        schema:
+          example: 200,401
+          type: string
+      - name: entrancePlanIds
+        required: false
+        in: query
+        description: Comma separated values for entrance plan uuids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: deviceIds
+        required: false
+        in: query
+        description: Comma separated values for device ids
+        schema:
+          example: 872HA,AH84A
+          type: string
+      - name: ticketIds
+        required: false
+        in: query
+        description: Comma separated values for ticket ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: orderIds
+        required: false
+        in: query
+        description: Comma separated values for order ids
+        schema:
+          example: CM12345678,CM0000001
+          type: string
+      - name: productIds
+        required: false
+        in: query
+        description: Comma separated values for product ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: eventIds
+        required: false
+        in: query
+        description: Comma separated values for event ids
+        schema:
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          type: string
+      - name: scannedAtStart
+        required: true
+        in: query
+        description: scannedAt start date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T12:00:00.000Z'
+          type: string
+      - name: scannedAtEnd
+        required: true
+        in: query
+        description: scannedAt end date (ISO format)
+        schema:
+          format: date-time
+          example: '2024-12-03T23:00:00.000Z'
+          type: string
+      - name: includeRelatedEntrancePlans
+        required: false
+        in: query
+        description: When true, include scan logs from the entire entrance plan collection the requested plan belongs to (its related plans across the collection) instead of only the requested entrance plan. Only affects entrance-plan-scoped requests; ignored for organisation-scoped requests.
+        schema:
+          example: true
+          type: boolean
+      - name: organisationUuid
+        required: true
+        in: path
+        schema: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PageDto'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ScanLog'
+        4XX:
+          description: The request could not be processed. The body contains a standardized error object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - cookie: []
+      summary: List scan logs for organisation
+      tags:
+      - Analytics
+    servers:
+    - url: https://api.cm.com
+components:
+  schemas:
+    CreateFeedbackScoreRequest:
+      type: object
+      description: "Request to create a feedback score for a conversation interaction.\n\nExample:\n```json\n{\n    \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"interaction_id\": \"987fcdeb-51a2-3c4d-e5f6-789012345678\",\n    \"score\": 4,\n    \"comment\": \"The assistant was very helpful and resolved my issue quickly.\",\n    \"product_source\": \"HALO_WEB_WIDGET\"\n}\n```"
+      required:
+      - account_id
+      - conversation_id
+      - score
+      properties:
+        account_id:
+          type: string
+          format: uuid
+          description: The account ID this feedback belongs to
+        comment:
+          type:
+          - string
+          - 'null'
+          description: Optional comment from the user explaining their score
+        conversation_id:
+          type: string
+          format: uuid
+          description: The conversation ID for this feedback score
+        interaction_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The specific interaction ID within the conversation (optional)
+        product_source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/ProductSource'
+            description: The product source where the feedback was submitted
+        profile_id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: The profile ID associated with this feedback (optional)
+        score:
+          type: integer
+          format: int32
+          description: The feedback score (0-4 range, will be normalized to 1-5 for storage)
+    FeedbackScoreResponse:
+      type: object
+      description: Response returned after creating or updating a feedback score.
+      required:
+      - id
+      - conversation_id
+      - score
+      - product_source
+      - created
+      properties:
+        comment:
+          type:
+          - string
+          - 'null'
+          description: Optional comment from the user explaining their score
+        conversation_id:
+          type: string
+          format: uuid
+          description: The conversation ID for this feedback score
+        created:
+          type: string
+          format: date-time
+          description: When the feedback score was created
+        id:
+          type: integer
+          format: int32
+          description: The unique identifier of the feedback score
+        interaction_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The specific interaction ID within the conversation (optional)
+        product_source:
+          type: string
+          description: The product source where the feedback was submitted
+        profile_id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: The profile ID associated with this feedback (null if not provided)
+        score:
+          type: integer
+          format: int32
+          description: The feedback score (e.g., 1-5 rating)
+    MetricsData:
+      type: object
+      description: Aggregated metrics data.
+      required:
+      - total_conversations_count
+      - total_average_conversation_duration_seconds
+      - total_average_interactions_per_conversation
+      properties:
+        average_recognition_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+        product_metrics:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ProductMetrics'
+        total_average_conversation_duration_seconds:
+          type: integer
+          format: int64
+        total_average_interactions_per_conversation:
+          type: number
+          format: double
+        total_conversations_count:
+          type: integer
+          format: int64
+    ProductMetrics:
+      type: object
+      description: Per-product metrics data.
+      required:
+      - product
+      - conversations_count
+      - average_conversation_duration_seconds
+      - average_interactions_per_conversation
+      properties:
+        average_conversation_duration_seconds:
+          type: integer
+          format: int64
+        average_interactions_per_conversation:
+          type: number
+          format: double
+        average_recognition_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+        conversations_count:
+          type: integer
+          format: int64
+        product:
+          type: string
+    ProductSource:
+      type: string
+      description: Product source enum for feedback scores
+      enum:
+      - CAIC
+      - MSC
+      - HALO_TEST_CENTER
+      - WEB_CONVERSATIONS
+      - CPAAS
+    ScanLog:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        scannedValue:
+          type: string
+          maxLength: 255
+          example: CMLQLGRPA
+        scannedAt:
+          format: date-time
+          type: string
+        scanStatusCode:
+          type: number
+          description: Result of the scan
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        errorDetails:
+          type: string
+          readOnly: true
+        deviceId:
+          type: string
+          readOnly: true
+          example: 9UY8G
+        deviceLabel:
+          type: string
+          readOnly: true
+          example: Scanner Entrance 1
+        mdmDeviceInfo:
+          type: object
+          readOnly: true
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+      required:
+      - externalId
+      - scannedValue
+      - scannedAt
+      - scanStatusCode
+      - errorDetails
+      - deviceId
+      - deviceLabel
+      - mdmDeviceInfo
+      - ticket
+    ClickerScansItemDto:
+      type: object
+      properties:
+        entrancePlanId:
+          type: string
+          description: Entrance plan uuid
+        name:
+          type: string
+        arrivals:
+          type: number
+          description: Clicker arrivals (ARRIVAL, 201)
+        departures:
+          type: number
+          description: Clicker departures (ticketless DEPARTURE, 301)
+        net:
+          type: number
+          description: Arrivals minus departures; can be negative when departures were tapped more often
+      required:
+      - entrancePlanId
+      - arrivals
+      - departures
+      - net
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    ScansByVenueItemDto:
+      type: object
+      properties: {}
+    ScanProgressResponseDto:
+      type: object
+      properties:
+        checkins:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        errors:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        checkouts:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        groupIntervalMs:
+          type: number
+          readOnly: true
+        effectiveEndAt:
+          format: date-time
+          type: string
+          readOnly: true
+      required:
+      - checkins
+      - errors
+      - checkouts
+      - groupIntervalMs
+      - effectiveEndAt
+    ScansByEntrancePlanItemDto:
+      type: object
+      properties: {}
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    ScansByProductItemDto:
+      type: object
+      properties: {}
+    Ticket:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        barcode:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+        externalBarcode:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+        orderId:
+          type: string
+          maxLength: 255
+          example: BP28857934
+        issuedAt:
+          format: date-time
+          type: string
+          maxLength: 255
+          description: Must be in the past
+        timeSlotMomentAt:
+          format: date-time
+          type: string
+        expiresAt:
+          format: date-time
+          type: string
+        ticketDetails:
+          type: string
+          maxLength: 255
+          description: Used to provide additional ticket details displayed on the scanners
+          example: Row 8, seat 15
+        firstName:
+          type: string
+          maxLength: 255
+          example: Jane
+        lastName:
+          type: string
+          maxLength: 255
+          example: Doe
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        phoneNumber:
+          type: string
+          maxLength: 20
+          example: '+31612345678'
+        paymentReference:
+          type: string
+          maxLength: 255
+          description: Reference to an external payment
+          example: N270570809-DZ8HSB
+        status:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+          example: INVALID
+        statusDetails:
+          type: string
+          maxLength: 255
+          description: Additional details as to why a status is invalid
+          example: Ticket is refunded by user
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+        saleOrigin:
+          type: string
+          enum:
+          - GUEST_LIST
+          - PARTNER_API
+          - SHOP
+          - BACKOFFICE_ORDER
+          - CM_POS
+          - SECONDARY_TICKETING_CM
+          - SECONDARY_TICKETING_TICKET_SWAP
+          example: SHOP
+      required:
+      - uuid
+      - barcode
+      - externalBarcode
+      - orderId
+      - issuedAt
+      - email
+      - status
+      - productId
+      - upstreamPlatform
+    AnalyticsWidgetResponseDto:
+      type: object
+      properties:
+        currentVisitors:
+          type: number
+          readOnly: true
+        totalVisitors:
+          type: number
+          readOnly: true
+        totalCheckouts:
+          type: number
+          readOnly: true
+        showUpPercentage:
+          type: number
+          readOnly: true
+        totalTickets:
+          type: number
+          readOnly: true
+        otherTickets:
+          type: number
+          readOnly: true
+      required:
+      - currentVisitors
+      - totalVisitors
+      - totalCheckouts
+      - showUpPercentage
+      - totalTickets
+      - otherTickets
+  securitySchemes:
+    X-CM-SSO-ACCOUNTGUID:
+      type: apiKey
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID
+    cookie:
+      type: apiKey
+      in: cookie
+      name: connect.sid
+x-refined-from:
+- cm-com-halo-analytics-v1-openapi.yml
+- cm-com-live-entrance-management-v1-openapi.yml
+- cm-com-live-entrance-management-v2-openapi.yml

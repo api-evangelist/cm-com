@@ -1,0 +1,85 @@
+openapi: 3.2.0
+info:
+  title: Global Reseller Check Contact API
+  version: '1.0'
+  description: The Global Reseller API allows API users to pull availability and ticket types for connected clients.
+servers:
+- url: https://globalreseller.nl/webservices
+security:
+- {}
+tags:
+- name: CheckContact
+paths:
+  /checkContact:
+    post:
+      summary: /checkContact
+      description: 'This functionality is used to check if "addContact" was successful.
+
+
+        **HMACKey:** `Base64 encode - SHA256(apiKey + reservationId)`'
+      operationId: checkcontact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - apiKey
+              - reservationId
+              properties:
+                apiKey:
+                  type: string
+                  description: Your public apiKey needs to be included in every request
+                reservationId:
+                  type: integer
+                  description: Include the reservationId from the createReservation request.
+                  format: int32
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: true
+                    message: contactInfo add was successfully.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    default: true
+                  message:
+                    type: string
+                    example: contactInfo add was successfully.
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    success: false
+                    message: contactInfo add failed.
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                    default: true
+                  message:
+                    type: string
+                    example: contactInfo add failed.
+      deprecated: false
+      tags:
+      - CheckContact
+x-readme:
+  headers:
+  - key: Cache-Control
+    value: no-cache
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

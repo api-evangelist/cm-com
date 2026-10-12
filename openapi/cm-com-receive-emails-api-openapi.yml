@@ -1,0 +1,515 @@
+openapi: 3.2.0
+info:
+  title: Email Gateway Receive Emails API
+  version: '1.0'
+  description: Send transactional and marketing emails, manage domains, suppressions, webhooks, and more.
+servers:
+- url: https://api.cm.com
+  description: Production
+tags:
+- name: Receive Emails
+paths:
+  /email/configuration/v1/accounts/{logicalAccountId}/emails/receiving:
+    get:
+      summary: List received emails
+      tags:
+      - Receive Emails
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: LogTimeRangeType
+        in: query
+        schema:
+          $ref: '#/components/schemas/Configuration_TimeRangePickerOptions'
+      - name: Direction
+        in: query
+        description: Filter by direction.
+        schema:
+          type: string
+      - name: SearchText
+        in: query
+        description: Free-text search.
+        schema:
+          type: string
+      - name: StartDate
+        in: query
+        description: Required with EndDate when LogTimeRangeType is a custom range.
+        schema:
+          type: string
+          format: date-time
+      - name: EndDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: timezone
+        in: query
+        description: IANA time zone used to render timestamps.
+        schema:
+          type: string
+          default: UTC
+      - name: pageNumber
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: itemsPerPage
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailsGetResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_26
+      security:
+      - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccountId}/emails/receiving/{emailId}:
+    get:
+      summary: Get received email
+      tags:
+      - Receive Emails
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: emailId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: timezone
+        in: query
+        description: IANA time zone used to render timestamps.
+        schema:
+          type: string
+          default: UTC
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailDetailControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_27
+      security:
+      - ProductToken: []
+  /email/configuration/v1/accounts/{logicalAccountId}/emails/receiving/{emailId}/attachments:
+    get:
+      summary: List received email attachments
+      tags:
+      - Receive Emails
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: emailId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_EmailAttachmentListControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration_ProblemDetails'
+      operationId: op_28
+      security:
+      - ProductToken: []
+components:
+  schemas:
+    Configuration_EmailAttachment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fileName:
+          type:
+          - string
+          - 'null'
+        contentType:
+          type:
+          - string
+          - 'null'
+        inline:
+          type: boolean
+        contentId:
+          type:
+          - string
+          - 'null'
+        sizeBytes:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        url:
+          type:
+          - string
+          - 'null'
+        checksumSha256:
+          type:
+          - string
+          - 'null'
+        truncated:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailAttachmentMetadata:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fileName:
+          type:
+          - string
+          - 'null'
+        contentType:
+          type:
+          - string
+          - 'null'
+        inline:
+          type: boolean
+        contentId:
+          type:
+          - string
+          - 'null'
+        sizeBytes:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        checksumSha256:
+          type:
+          - string
+          - 'null'
+        truncated:
+          type: boolean
+      additionalProperties: false
+    Configuration_EmailDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        direction:
+          type:
+          - string
+          - 'null'
+        rfcMessageId:
+          type:
+          - string
+          - 'null'
+        fromAddress:
+          type:
+          - string
+          - 'null'
+        fromName:
+          type:
+          - string
+          - 'null'
+        toHeader:
+          type:
+          - string
+          - 'null'
+        originalRecipient:
+          type:
+          - string
+          - 'null'
+        subject:
+          type:
+          - string
+          - 'null'
+        sentDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        receivedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        sizeBytes:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        attachmentCount:
+          type: integer
+          format: int32
+        inReplyTo:
+          type:
+          - string
+          - 'null'
+        cc:
+          type:
+          - string
+          - 'null'
+        bcc:
+          type:
+          - string
+          - 'null'
+        referencesJson:
+          type:
+          - string
+          - 'null'
+        headers:
+          type:
+          - string
+          - 'null'
+        hasTruncatedAttachment:
+          type: boolean
+        rawContent:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type: string
+          format: date-time
+        bodyTextBody:
+          type:
+          - string
+          - 'null'
+        bodyHtmlBody:
+          type:
+          - string
+          - 'null'
+        attachments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_EmailAttachmentMetadata'
+      additionalProperties: false
+    Configuration_EmailAttachmentListControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_EmailAttachment'
+      additionalProperties: false
+    Configuration_TimeRangePickerOptions:
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      type: integer
+      format: int32
+    Configuration_EmailsGetResponse:
+      type: object
+      properties:
+        statusCode:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        totalCount:
+          type: integer
+          format: int64
+        emails:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_EmailListItem'
+      additionalProperties: false
+    Configuration_EmailListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        from:
+          type:
+          - string
+          - 'null'
+        fromName:
+          type:
+          - string
+          - 'null'
+        toHeader:
+          type:
+          - string
+          - 'null'
+        originalRecipient:
+          type:
+          - string
+          - 'null'
+        subject:
+          type:
+          - string
+          - 'null'
+        receivedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        sizeBytes:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        attachmentCount:
+          type: integer
+          format: int32
+        direction:
+          type:
+          - string
+          - 'null'
+        attachments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_EmailAttachmentMetadata'
+      additionalProperties: false
+    Configuration_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    Configuration_EmailDetailControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          $ref: '#/components/schemas/Configuration_EmailDetail'
+      additionalProperties: false
+    Configuration_StatusCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 429
+      - 500
+      - 999
+      type: integer
+      format: int32
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-PRODUCTTOKEN
+      description: Your CM.com product token. Find it in the Email Gateway App → Settings → Integration.

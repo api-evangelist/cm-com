@@ -1,0 +1,1169 @@
+# x-archived-from: cm-com-voice-sip-accounts-v1-openapi.yml
+# x-archived-on: 2026-10-13
+openapi: 3.0.1
+info:
+  title: Sip Accounts API
+  version: v1
+servers:
+- url: https://api.cm.com
+paths:
+  /voice-sipaccountsapi/v1/{accountGuid}/sipaccounts/{sipAccountGuid}/restrictions:
+    get:
+      tags:
+      - Restrictions
+      summary: Get SIP Account Restrictions
+      description: Get the restrictions set for the given SIP Account.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRestriction'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{accountGuid}/sipaccounts/restrictions/{threshold}:
+    get:
+      tags:
+      - Restrictions
+      summary: Get Restrictions By Threshold
+      description: Get all blacklist restrictions for all SIP Accounts where the traffic costs are higher then the given threshold.
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: threshold
+        in: path
+        description: The threshold to search the blacklist restrictions for.
+        required: true
+        schema:
+          type: number
+          format: double
+        example: 4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRestriction'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{accountGuid}/sipaccounts/{sipAccountGuid}/restrictions/{restrictionType}:
+    put:
+      tags:
+      - Restrictions
+      summary: Update Restrictions
+      description: "Update the restrictions that are set up for the given SIP Account.\n\r\n\r**CAUTION!** This action will overwrite ALL current restrictions, so when adding a restriction to the existing list, send the entire current list of restrictions with the new restriction appended."
+      parameters:
+      - name: accountGuid
+        in: path
+        description: Unique identifier of the Logical Account or Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: restrictionType
+        in: path
+        description: Sets the type of the restrictions, this can be either set to `whitelist` or `blacklist`. When set to `whitelist`, only calls to the given prefixes will be allowed, when set to `blacklist`, only calls to the given prefixes will be blocked.
+        required: true
+        schema:
+          $ref: '#/components/schemas/RestrictionType'
+        example: blacklist
+      requestBody:
+        description: List of the new restrictions to be set.
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRestriction'
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRestriction'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRestriction'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRestriction'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiRestriction'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}:
+    get:
+      tags:
+      - Sip Accounts
+      summary: Get SIP Account
+      description: Get a single SIP Account by it's unique identifier.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipAccount'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    delete:
+      tags:
+      - Sip Accounts
+      summary: Delete SIP Account
+      description: Delete the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts:
+    get:
+      tags:
+      - Sip Accounts
+      summary: Get SIP Accounts
+      description: Get all SIP Accounts belonging to the given Voice Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: includeConfig
+        in: query
+        description: Whether or not to include the SIP Account configuration, defaults to `true`.
+        schema:
+          type: boolean
+          example: true
+        example: true
+      - name: q
+        in: query
+        description: The search query that can be applied to search through the items before they get paginated.
+        schema:
+          type: string
+          example: ''
+        example: ''
+      - name: skip
+        in: query
+        description: The amount of items to be skipped, defaults to 0.
+        schema:
+          type: integer
+          format: int32
+          example: 0
+        example: 0
+      - name: take
+        in: query
+        description: The amount of items to take, defaults to 25.
+        schema:
+          type: integer
+          format: int32
+          example: 25
+        example: 25
+      responses:
+        '200':
+          description: Success
+          headers:
+            X-CM-PAGINATION-SKIP:
+              description: The amount of items that have been skipped
+              schema:
+                type: number
+            X-CM-PAGINATION-TAKE:
+              description: The amount of items that have been taken
+              schema:
+                type: number
+            X-CM-PAGINATION-TOTAL:
+              description: The total amount of available items
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiSipAccount'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+      - Sip Accounts
+      summary: Create SIP Account
+      description: Create a new SIP Account for the given Voice Account. The username and password for the new SIP Account will be automatically generated by CM.com.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipAccount'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/enable:
+    put:
+      tags:
+      - Sip Accounts
+      summary: Enable SIP Account
+      description: Updates the `isActive` state of the SIP Account to true.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/disable:
+    put:
+      tags:
+      - Sip Accounts
+      summary: Disable SIP Account
+      description: Updates the `isActive` state of the SIP Account to false, meaning this SIP Account is no longer able to make or receive calls.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/prison:
+    delete:
+      tags:
+      - Sip Accounts
+      summary: Delete SIP Account From Prison
+      description: When the wrong password of the SIP Account was entered too many times, the account get's a temporary ban by being put in prison. This endpoint allows you to remove the SIP Account from prison.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/displayname:
+    put:
+      tags:
+      - Sip Accounts
+      summary: Update SIP Account Display Name
+      description: Update the display name for the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: CM.Voice.SipAccounts.Api.Models.Api.ApiUpdateDisplayNameRequest
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateDisplayNameRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateDisplayNameRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateDisplayNameRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiUpdateDisplayNameRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipAccount'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/credentials:
+    get:
+      tags:
+      - Sip Accounts
+      summary: Get SIP Account Credentials
+      description: Get the username and decrypted password for the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipAccountCredentials'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/resetpassword:
+    put:
+      tags:
+      - Sip Accounts
+      summary: Reset SIP Account Password
+      description: Generates a new password for the given SIP Account. The new decrypted password will be returned in the response body.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipAccountCredentials'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/config:
+    get:
+      tags:
+      - Sip Config
+      summary: Get SIP Account Config
+      description: Get the configuration for the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipConfig'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    put:
+      tags:
+      - Sip Config
+      summary: Update SIP Account Config
+      description: Update the configuration for the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: New sip config
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/ApiSipConfig'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiSipConfig'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ApiSipConfig'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ApiSipConfig'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSipConfig'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/trunks:
+    get:
+      tags:
+      - Sip Config
+      summary: Get active SIP Trunks
+      description: Get a list of all currently active CM.com SIP Trunks.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: sipAccountGuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiTrunk'
+        '401':
+          description: Unauthorized
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/platformdomains:
+    get:
+      tags:
+      - Sip Config
+      summary: Get active Platform Domains
+      description: Get a list of all currently active CM.com Platform Domains.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sipAccountGuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPlatformDomain'
+        '401':
+          description: Unauthorized
+  /voice-sipaccountsapi/v1/{voiceAccountGuid}/sipAccounts/{sipAccountGuid}/sipEndpoints:
+    get:
+      tags:
+      - Sip Endpoints
+      summary: Get SIP Account Endpoints
+      description: Get all SIP Endpoints that are set up for the given SIP Account.
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiSipEndpoint'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+    put:
+      tags:
+      - Sip Endpoints
+      summary: Update SIP Account Endpoints
+      description: "Update the SIP Endpoints that are set up for the given SIP Account.\n\r\n\r**CAUTION!** This action will overwrite ALL current SIP Endpoints, so when adding an Endpoint to the existing list, send the entire current list of SIP Endpoints with the new Endpoint appended."
+      parameters:
+      - name: voiceAccountGuid
+        in: path
+        description: Unique identifier of the Voice Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      - name: sipAccountGuid
+        in: path
+        description: Unique identifier of the SIP Account.
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 00000000-0000-0000-0000-000000000000
+      requestBody:
+        description: CM.Voice.SipAccounts.Api.Models.Api.ApiSipEndpoint
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiSipEndpoint'
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiSipEndpoint'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiSipEndpoint'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiSipEndpoint'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiSipEndpoint'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorCollection'
+components:
+  schemas:
+    ApiPlatformDomain:
+      title: Platform Domain
+      type: object
+      properties:
+        domain:
+          type: string
+          description: URL of the given Platform Domain.
+          nullable: true
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiTrunk'
+          description: List of SIP Trunks in this Platform Domain.
+          nullable: true
+      additionalProperties: false
+      description: CM.com Platform Domain containing SIP Trunks.
+    ApiRestriction:
+      title: Restriction
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username of the SIP Account.
+          nullable: true
+          example: MySIPAccount
+        prefix:
+          type: string
+          description: Phone number prefix affected by the restriction.
+          nullable: true
+          example: '3176'
+        restrictionType:
+          $ref: '#/components/schemas/RestrictionType'
+        forcedByCm:
+          type: boolean
+          description: Whether this restriction was created and enforced by CM or not. This value cannot be set or updated via the API.
+      additionalProperties: false
+      description: A whitelist or blaclist based restriction that can be placed on a SIP Account.
+    ApiSipAccount:
+      title: Sip Account
+      type: object
+      properties:
+        guid:
+          type: string
+          description: Unique identifier of the SIP Account.
+          nullable: true
+        createdOn:
+          type: string
+          description: Date and time on which the SIP Account was created.
+          format: date-time
+        customerAccountGuid:
+          type: string
+          description: The unique identifier of the Voice Account which this SIP Account is part of.
+          nullable: true
+        name:
+          type: string
+          description: Display name of the SIP Account.
+          nullable: true
+        username:
+          type: string
+          description: Username of the SIP Account. The username is generated automatically by CM.com and cannot be changed.
+          nullable: true
+        isActive:
+          type: boolean
+          description: Whether or not the SIP Account is set to active.
+        inPrison:
+          type: boolean
+          description: Whether the account has a temporary ban after entering the wrong password too many times.
+          nullable: true
+        config:
+          $ref: '#/components/schemas/ApiSipConfig'
+      additionalProperties: false
+      description: A SIP Account that can be used to make calls via the CM.com Platform.
+    ApiSipAccountCredentials:
+      title: Sip Account Credentials
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username of the SIP Account.
+          nullable: true
+        password:
+          type: string
+          description: Password of the SIP Account.
+          nullable: true
+      additionalProperties: false
+      description: The login credentials for a SIP Account.
+    ApiSipConfig:
+      title: Sip Config
+      type: object
+      properties:
+        cpsLimit:
+          type: integer
+          description: Limit of the amount of calls that can be set up per second.
+          format: int32
+          example: 2
+        ccLimit:
+          type: integer
+          description: Limit of the amount of calls that can take place concurrently.
+          format: int32
+          example: 100
+        alwaysAnonymous:
+          type: boolean
+          description: Whether or not outbound calls from this SIP Account will always be dialed out with CLI anonymous.
+          example: false
+        hasAnonymousOverride:
+          type: boolean
+          description: When set to true, this option guarantees routing that support anonymous calls.
+          example: false
+        defaultOutboundCallerId:
+          type: string
+          description: The CLI used when making outbound calls. This does not override a valid CLI that is already provided in the SIP invite.
+          nullable: true
+          example: ''
+        restrictionType:
+          type: string
+          description: Sets the type of prefix restrictions placed on this SIP Account, this can be either set to `whitelist` or `blacklist`. When set to `whitelist`, only calls to the given prefixes will be allowed, when set to `blacklist`, only calls to the given prefixes will be blocked.
+          nullable: true
+          example: blacklist
+        primaryTrunkId:
+          type: string
+          description: Platform name or domain of the primary SIP trunk or DNS that will be used. The `/trunks` and `/platformdomains` endpoints can be used to get a list of currently active SIP Trunks and Platform Domains.
+          nullable: true
+          example: outbound02
+        secondaryTrunkId:
+          type: string
+          description: Platform name or domain of the secondary (backup) SIP trunk that will be used. The `/trunks` and `/platformdomains` endpoints can be used to get a list of currently active SIP Trunks and Platform Domains. **When using DNS, reach out to support for a backup DNS.**
+          nullable: true
+          example: outbound01
+        blockNonEerToEer:
+          type: boolean
+          description: All calls with a non-European CLI to a European country will be blocked for this SIP account.
+          example: false
+        allowPremium:
+          type: boolean
+          description: Allow calls to premium pay-per-minute or pay-per-call numbers.
+          example: false
+      additionalProperties: false
+      description: SIP configuration containing settings that define how a SIP Account can be used.
+    ApiSipEndpoint:
+      title: Sip Endpoint
+      type: object
+      properties:
+        guid:
+          type: string
+          description: Unique identifier of the SIP Endpoint.
+          nullable: true
+          example: 00000000-0000-0000-0000-000000000000
+        createdOn:
+          type: string
+          description: Date and time on which the SIP Endpoint was created.
+          format: date-time
+          example: '2020-01-01T00:00:00Z'
+        hostname:
+          type: string
+          description: Hostname of the SIP Endpoint, when given, the IP address should be left blank.
+          nullable: true
+          example: example.com
+        ipAddress:
+          type: string
+          description: External IP address of the SIP Endpoint, when given, the hostname should be left blank.
+          nullable: true
+          example: 0.0.0.0
+        port:
+          type: integer
+          description: Port number of the SIP Endpoint, when set to 0 any port number will be used.
+          format: int32
+          example: 5060
+        subnetMask:
+          type: integer
+          description: Subnet mask of the SIP Endpoint.
+          format: int32
+          example: 32
+        isTrusted:
+          type: boolean
+          description: Whether authentication is required for the SIP endpoints to use the SIP Account or not. It is not recommended to set this to true.
+          example: true
+      additionalProperties: false
+      description: SIP Endpoint that represents a device that can make or receive VOIP phone calls.
+    ApiTrunk:
+      title: Trunk
+      type: object
+      properties:
+        city:
+          type: string
+          description: City where the SIP Trunk is located.
+          nullable: true
+        countryCode:
+          type: string
+          description: Countrycode of the country where the SIP Trunk is located in ISO 3166 format.
+          nullable: true
+        code:
+          type: string
+          description: Code of the SIP Trunk (name of the platform).
+          nullable: true
+        description:
+          type: string
+          description: Description of the SIP Trunk.
+          nullable: true
+        externalIps:
+          type: array
+          items:
+            type: string
+          description: IP Addresses of the SIP Trunk.
+          nullable: true
+      additionalProperties: false
+      description: CM.com SIP Trunk.
+    ApiUpdateDisplayNameRequest:
+      title: Update Display Name Request
+      type: object
+      properties:
+        name:
+          type: string
+          description: New display name for the SIP Account.
+          nullable: true
+          example: My new display name
+      additionalProperties: false
+      description: Api sip Account model
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+          nullable: true
+      additionalProperties: false
+    RestrictionType:
+      title: Restriction Type
+      enum:
+      - Blacklist
+      - Whitelist
+      - Unknown
+      type: string
+      description: List of available user restriction types.
+  securitySchemes:
+    X-CM-PRODUCTTOKEN:
+      type: apiKey
+      description: Your producttoken
+      name: X-CM-PRODUCTTOKEN
+      in: header
+security:
+- X-CM-PRODUCTTOKEN: []
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

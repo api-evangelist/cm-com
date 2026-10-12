@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-street-number-and-postal-code-validation-request-schema.json",
+  "title": "Street Number And Postal Code Validation Request",
+  "description": "API request model for validating street number and postal code combination",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-company-profiles-v1-openapi.yml#/components/schemas/ApiStreetNumberAndPostalCodeValidationRequest",
+  "type": "object",
+  "properties": {
+    "streetNumber": {
+      "maxLength": 10,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Street number of the company address"
+    },
+    "streetNumberExt": {
+      "maxLength": 255,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Extra information about the street number. E.g. apartment or suite"
+    },
+    "postalCode": {
+      "maxLength": 12,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Postal code of the company address"
+    }
+  },
+  "additionalProperties": false
+}

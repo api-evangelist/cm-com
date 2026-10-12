@@ -1,0 +1,272 @@
+openapi: 3.2.0
+info:
+  version: v1
+  title: BulkEmail From Domains API
+servers:
+- url: http://api.cm.com
+tags:
+- name: FromDomains
+paths:
+  /bulkemail/v1.0/accounts/{accountID}/fromdomains:
+    get:
+      tags:
+      - FromDomains
+      summary: Get all fromdomains for an account
+      operationId: FromDomains_GetFromDomainsAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: skip
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: take
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: filter
+        in: query
+        description: ''
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+    post:
+      tags:
+      - FromDomains
+      summary: Create a new fromdomain
+      operationId: FromDomains_AddFromDomainAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+        required: true
+      responses:
+        '201':
+          description: From domain successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+  /bulkemail/v1.0/accounts/{accountID}/fromdomains/{fromDomainID}:
+    get:
+      tags:
+      - FromDomains
+      summary: Get a specific fromdomain
+      operationId: FromDomains_GetFromDomainAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fromDomainID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromAddress'
+    delete:
+      tags:
+      - FromDomains
+      summary: Delete a fromdomain
+      operationId: FromDomains_DeleteFromDomainAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fromDomainID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+  /bulkemail/v1.0/accounts/{accountID}/fromdomains/{fromDomainID}/verify:
+    post:
+      tags:
+      - FromDomains
+      summary: Verify a from domain
+      operationId: FromDomains_VerifyFromDomainAsync
+      parameters:
+      - name: accountID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: fromDomainID
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
+components:
+  schemas:
+    CM.Tooling.BulkEmail.Api.Models.ApiFromAddress:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Name:
+          type: string
+        EmailAddress:
+          type: string
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiFromDomain:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Domain:
+          type: string
+        IsValid:
+          type: boolean
+        DnsEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomainDnsEntry'
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiFromDomainDnsEntry:
+      type: object
+      properties:
+        Host:
+          type: string
+        Type:
+          type: string
+        Value:
+          type: string
+        IsValid:
+          type: boolean

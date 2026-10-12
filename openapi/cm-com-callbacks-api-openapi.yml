@@ -1,0 +1,268 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Callbacks API
+  version: 1.0.0
+  description: 'Operations tagged Callbacks across 2 of this provider''s published API definitions: cm-com-verification-identity-hub-v1-openapi.yml, cm-com-verification-mobile-identity-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com/identity-hub/v1
+- url: https://api.cm.com/mobile-identity/v1
+- url: https://api.cm.com/mobile-identity-sandbox/v1
+security:
+- JWT: []
+tags:
+- name: Callbacks
+  description: Updates sent to the `callbackUrl` provided when creating a transaction
+paths: {}
+webhooks:
+  transactionState:
+    post:
+      operationId: callback_transaction_state
+      summary: Transaction state
+      description: 'Sent to the `callbackUrl` provided when creating the transaction, every time the state of the transaction changes. No callbacks are sent when no `callbackUrl` was provided. Use it as a trigger to retrieve the latest details with the Get transaction endpoint.
+
+
+        The request is signed so you can verify its authenticity and integrity. The signature is calculated using HMAC-SHA256, with the request body as the message and the client secret as the secret key, and is sent in the `Authorization` header. Repeat this calculation on the received body and compare the result with the header value.
+
+
+        Respond with a status code in the 2xx range; the response body is ignored. When your endpoint responds with a 5xx status code, the callback is retried several times.'
+      tags:
+      - Callbacks
+      security:
+      - HMAC: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionStateEvent'
+            examples:
+              success:
+                $ref: '#/components/examples/transaction-state-event'
+      responses:
+        2XX:
+          description: Callback received. Any status code in the 2xx range is accepted, the response body is ignored.
+    servers:
+    - url: https://api.cm.com/identity-hub/v1
+  numberVerifyState:
+    post:
+      operationId: callback_number_verify_state
+      summary: Number verify state
+      description: 'Sent to the `callbackUrl` provided when requesting the number verify, every time the state of the number verify transaction changes. Use it as a trigger to retrieve the latest details with the Retrieve number verify endpoint.
+
+
+        The request is signed so you can verify its authenticity and integrity. The signature is calculated using HMAC-SHA256, with the request body as the message and the client secret as the secret key, and is sent in the `Authorization` header. Repeat this calculation on the received body and compare the result with the header value.
+
+
+        Respond with a status code in the 2xx range; the response body is ignored. When your endpoint responds with a 5xx status code, the callback is retried several times.'
+      tags:
+      - Callbacks
+      security:
+      - HMAC: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NumberVerifyStateEvent'
+            examples:
+              completed:
+                $ref: '#/components/examples/number-verify-state-event'
+      responses:
+        2XX:
+          description: Callback received. Any status code in the 2xx range is accepted, the response body is ignored.
+    servers:
+    - url: https://api.cm.com/mobile-identity/v1
+    - url: https://api.cm.com/mobile-identity-sandbox/v1
+components:
+  examples:
+    transaction-state-event:
+      summary: Transaction state changed to success
+      value:
+        id: 58128784-9e8d-4424-a89d-08bfe273381c
+        type: transaction.state
+        created: '2026-01-01T00:00:00+00:00'
+        transaction:
+          id: b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+          state: success
+          method: idin
+          methodType: full
+    number-verify-state-event:
+      summary: Number verify completed
+      value:
+        id: 58128784-9e8d-4424-a89d-08bfe273381c
+        type: numberVerify.state
+        created: '2026-01-01T00:00:00+00:00'
+        numberVerify:
+          id: 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
+          state: completed
+          match: true
+  schemas:
+    EventType:
+      type: string
+      description: "Supported event types:\n\n * `transaction.state` - The state of the transaction has been updated.\n"
+      enum:
+      - transaction.state
+      examples:
+      - transaction.state
+    TransactionStateEvent:
+      title: Transaction State Event
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the event.
+          examples:
+          - 58128784-9e8d-4424-a89d-08bfe273381c
+        type:
+          $ref: '#/components/schemas/EventType'
+        created:
+          type: string
+          format: date-time
+          description: The time the event was created, in ISO 8601 format.
+          examples:
+          - '2026-01-01T00:00:00+00:00'
+        transaction:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The UUID of the transaction.
+              examples:
+              - b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+            state:
+              $ref: '#/components/schemas/TransactionState'
+            method:
+              type:
+              - string
+              - 'null'
+              description: The identification method selected by the end-user. `null` until the end-user has selected a method.
+              examples:
+              - idin
+            methodType:
+              type:
+              - string
+              - 'null'
+              description: The type of the selected method, when a method offers more than one (e.g. `basic` or `full` for ID Scan). `null` when not applicable.
+              examples:
+              - full
+          required:
+          - id
+          - state
+          - method
+          - methodType
+      required:
+      - id
+      - type
+      - created
+      - transaction
+    TransactionState:
+      type: string
+      description: "Possible transaction states:\n\n * `created` - The transaction has been created but the end-user has not started the flow yet.\n * `started` - The end-user has selected a method and started the transaction.\n * `success` - The transaction has been completed successfully.\n * `failed` - The transaction could not be completed.\n"
+      enum:
+      - created
+      - started
+      - success
+      - failed
+      examples:
+      - success
+    EventType_2:
+      type: string
+      description: "Supported event types:\n\n * `numberVerify.state` - The number verify transaction has been updated.\n"
+      enum:
+      - numberVerify.state
+      examples:
+      - numberVerify.state
+    State:
+      type: string
+      enum:
+      - pending
+      - completed
+      - unavailable
+    NumberVerifyStateEvent:
+      title: Number Verify State Event
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the event.
+          examples:
+          - 58128784-9e8d-4424-a89d-08bfe273381c
+        type:
+          $ref: '#/components/schemas/EventType_2'
+        created:
+          type: string
+          format: date-time
+          description: The time the event was created, in ISO 8601 format.
+          examples:
+          - '2026-01-01T00:00:00+00:00'
+        numberVerify:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: ID of the number verify transaction
+              examples:
+              - 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
+            state:
+              $ref: '#/components/schemas/State'
+              description: State of the number verify transaction
+              examples:
+              - completed
+            match:
+              type:
+              - boolean
+              - 'null'
+              description: Is the number verified. If state is pending, match is null.
+              examples:
+              - true
+          required:
+          - id
+          - state
+          - match
+      required:
+      - id
+      - type
+      - created
+      - numberVerify
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp` in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key ID of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '
+    HMAC:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Used on callbacks sent by Identity Hub to your `callbackUrl`. The header contains the HMAC-SHA256 signature of the request body, calculated with your client secret as the secret key, prefixed with `HMAC `:
+
+
+        ```
+
+        Authorization: HMAC MIi9ZMyar2v+o7H7LD7oNolO5LrTJaC+8uKvYUGqJvM=
+
+        ```
+
+        '
+x-refined-from:
+- cm-com-verification-identity-hub-v1-openapi.yml
+- cm-com-verification-mobile-identity-v1-openapi.yml

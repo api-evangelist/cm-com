@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-request-dtmf-instruction-schema.json",
+  "title": "Request Dtmf Instruction",
+  "description": "Instruction to place a call and request DTMF from the callee.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-voice-api-v2-openapi.yml#/components/schemas/RequestDtmfInstruction",
+  "required": [
+    "caller",
+    "prompt",
+    "valid-prompt"
+  ],
+  "type": "object",
+  "properties": {
+    "instruction-id": {
+      "maxLength": 64,
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional string that allows you to uniquely identify the placed outbound call. Its value is also included\r\nin the callback and Call Detail Records (CDRs)."
+    },
+    "callee": {
+      "maxLength": 24,
+      "pattern": "^(\\+|00)?[1-9]\\d{6,14}$",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The number to dial. When the number is invalid, the request will be rejected. Must be in valid international\r\nE.164 format."
+    },
+    "callees": {
+      "pattern": "^(\\+|00)?[1-9]\\d{6,14}$",
+      "maxItems": 100,
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "List of multiple numbers to dial. When the list contains one or more invalid numbers, the request will be\r\nrejected. Must be in valid international E.164 format."
+    },
+    "caller": {
+      "maxLength": 24,
+      "minLength": 1,
+      "pattern": "^(\\+|00)?[1-9]\\d{6,14}$",
+      "type": "string",
+      "description": "The caller ID to display on the recipient's phone. Must be in valid international E.164 format."
+    },
+    "anonymous": {
+      "type": "boolean",
+      "description": "Indicates whether the caller ID should be hidden. Defaults to `false`."
+    },
+    "callback-url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "URL that will be called when the call is finished. The body of this POST request will contain details about\r\nthe call or calls.",
+      "format": "uri"
+    },
+    "max-ringing-timeout": {
+      "maximum": 60,
+      "minimum": 10,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Determines how long the Voice API will wait for the callee to answer the call. Cancels the ringing call\r\nafter the timeout period exceeded. Defaults to `60`.",
+      "format": "int32"
+    },
+    "prompt": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "type": "string",
+      "description": "The prompt to play which describes what DTMF input is requested from the callee. This can be either TTS or\r\nSSML, or the path to an audio file in your Voice Audio Manager."
+    },
+    "prompt-type": {
+      "$ref": "#/$defs/PromptType"
+    },
+    "valid-prompt": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "type": "string",
+      "description": "The prompt to play when the . This can be either TTS or SSML, or the path to an audio file in your Voice Audio Manager."
+    },
+    "valid-prompt-type": {
+      "$ref": "#/$defs/PromptType"
+    },
+    "invalid-prompt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The prompt, which is either the path and name of the file to play, or the string that needs to be tts-ed."
+    },
+    "invalid-prompt-type": {
+      "$ref": "#/$defs/PromptType"
+    },
+    "min-digits": {
+      "maximum": 64,
+      "minimum": 1,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The minimum number of digits for the dtmf input.",
+      "format": "int32"
+    },
+    "max-digits": {
+      "maximum": 64,
+      "minimum": 1,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The maximum number of digits for the dtmf input.",
+      "format": "int32"
+    },
+    "max-attempts": {
+      "maximum": 10,
+      "minimum": 1,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The maximum number of attempts to input valid dtmf.",
+      "format": "int32"
+    },
+    "timeout": {
+      "maximum": 10000,
+      "minimum": 1000,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The max. time in ms between the end of the prompt audio and the first digit, or between digits. If no digit\r\nis received before this timeout, it is counted as an attempt and the prompt is restarted. Value must be\r\nbetween 1000 and 10000 ms. Defaults to `5000`.",
+      "format": "int32"
+    },
+    "terminators": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The keys that will end dtmf input. Usually `#` or `*`. Defaults to `#`."
+    },
+    "regex": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The regex to match the input against. An attempt will fail if the input does not match this regular\r\nexpression. Defaults to `[0-9]*`."
+    },
+    "voice": {
+      "$ref": "#/$defs/Voice"
+    },
+    "voicemail-response": {
+      "$ref": "#/$defs/VoicemailResponse"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "Gender": {
+      "title": "Gender",
+      "enum": [
+        "Male",
+        "Female"
+      ],
+      "type": "string",
+      "description": "Genders supported by TTS."
+    },
+    "PromptType": {
+      "title": "Prompt Type",
+      "enum": [
+        "File",
+        "TTS",
+        "TTS_SSML"
+      ],
+      "type": "string",
+      "description": "The type of the prompt, to distinguish between a filename and a string that needs to be tts-ed."
+    },
+    "Voice": {
+      "title": "Voice",
+      "required": [
+        "gender",
+        "language",
+        "number"
+      ],
+      "type": "object",
+      "properties": {
+        "language": {
+          "maxLength": 6,
+          "minLength": 5,
+          "pattern": "^[a-zA-Z]{2,3}-[a-zA-Z]{2,3}$",
+          "type": "string",
+          "description": "The language (5 character locale) of the voice to use. Examples: en-US, en-GB, nl-NL. Defaults to en-GB"
+        },
+        "gender": {
+          "$ref": "#/$defs/Gender"
+        },
+        "number": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "type": "integer",
+          "description": "Usually `1`, but if the selected language and gender support multiple voices, you can use this to make\r\na selection between the different ones. To see the available voices, please see the\r\n<a href=\"/voice/tts/supported-languages\">TTS voices documentation</a>.",
+          "format": "int32"
+        },
+        "volume": {
+          "maximum": 4,
+          "minimum": -4,
+          "type": "integer",
+          "description": "The volume level of the voice. Must be a value between -4 and 4. Defaults to 0.",
+          "format": "int32"
+        },
+        "premium": {
+          "type": "boolean",
+          "description": "Whether to use a premium text-to-speech voice. Please be aware that additional costs will be charged for the\r\nuse of premium voices. Defaults to `false`."
+        }
+      },
+      "additionalProperties": false,
+      "description": "The properties in this class are used to select the required TTS voice."
+    },
+    "VoicemailResponse": {
+      "title": "Voicemail Response",
+      "enum": [
+        "Ignore",
+        "Restart",
+        "Stop",
+        "Disconnect"
+      ],
+      "type": "string",
+      "description": "The type that determines the flow of Voicemail detection."
+    }
+  }
+}

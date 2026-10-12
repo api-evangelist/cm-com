@@ -1,0 +1,238 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: ticketing@cm.com
+    name: CM.com Ticketing
+    url: https://www.cm.com
+  description: Integrate your own systems with CM.com Ticketing.
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+  termsOfService: https://www.cm.com/terms-of-service/
+  title: External Ticketing Marketing Trackers API
+  version: '0.1'
+servers:
+- url: /ticketing/v1
+tags:
+- name: Marketing Trackers
+paths:
+  /events/{event_id}/marketing-trackers:
+    get:
+      description: Returns the marketing trackers of an event, grouped by channel (shop). Each group has totals for clicks, orders and tickets sold, and lists its trackers with their own statistics and the tracking link to share.
+      operationId: ListMarketingTrackers
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/handler.viewportMarketingTrackersResponse'
+                type: array
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: List marketing trackers
+      tags:
+      - Marketing Trackers
+    post:
+      description: Creates a marketing tracker for one of your event's channels (shops). Pass the channel's `uuid`, as returned by `GET /events/{event_id}/channels`, as `viewport_uuid`. The tracker gets its own tracking link, so you can see how many clicks, orders and tickets each promotion brings in. Supported channels are `INSTAGRAM`, `FACEBOOK`, `TIKTOK`, `WHATSAPP`, `NEWSLETTER`, `X`, `SHOPIFY` and `OTHER`. The `SPOTIFY` and `AUTOMATED_EMAIL` channels are managed by CM.com and cannot be created here.
+      operationId: CreateMarketingTracker
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handler.createMarketingTrackerRequest'
+              description: Marketing tracker payload
+              summary: request
+        description: Marketing tracker payload
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handler.createMarketingTrackerResponse'
+          description: Created
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: validation error / viewport_not_found / invalid_channel
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: tracker_already_exists
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: Create marketing tracker
+      tags:
+      - Marketing Trackers
+  /events/{event_id}/marketing-trackers/{tracker_id}:
+    delete:
+      description: Deletes a marketing tracker. Only trackers that you created can be deleted; the `SPOTIFY` and `AUTOMATED_EMAIL` trackers are managed by CM.com and cannot be deleted.
+      operationId: DeleteMarketingTracker
+      parameters:
+      - description: Event ID (UUID)
+        in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - description: Marketing Tracker ID (UUID)
+        in: path
+        name: tracker_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: event_not_found / tracker_not_found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rest.HttpError'
+          description: internal_server_error
+      security:
+      - SystemTokenAuth: []
+      summary: Delete marketing tracker
+      tags:
+      - Marketing Trackers
+components:
+  schemas:
+    handler.marketingTrackerDetail:
+      properties:
+        channel:
+          type: string
+        clicks:
+          type: integer
+        conversion_rate:
+          type: number
+        link:
+          type: string
+        mails_sent:
+          type: integer
+        name:
+          type: string
+        orders:
+          type: integer
+        tickets_sold:
+          type: integer
+        uuid:
+          type: string
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+    handler.createMarketingTrackerRequest:
+      properties:
+        channel:
+          type: string
+        name:
+          type: string
+        viewport_uuid:
+          type: string
+      type: object
+    handler.createMarketingTrackerResponse:
+      properties:
+        channel:
+          type: string
+        clicks:
+          type: integer
+        created_at:
+          type: string
+        deliveries:
+          type: integer
+        event_uuid:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        orders:
+          type: integer
+        products:
+          type: integer
+        viewport_uuid:
+          type: string
+      type: object
+    handler.viewportMarketingTrackersResponse:
+      properties:
+        channel_uuid:
+          type: string
+        conversion_rate:
+          type: number
+        marketing_trackers:
+          items:
+            $ref: '#/components/schemas/handler.marketingTrackerDetail'
+          type: array
+          uniqueItems: false
+        orders:
+          type: integer
+        tickets_sold:
+          type: integer
+        total_clicks:
+          type: integer
+        uri:
+          type: string
+      type: object
+  securitySchemes:
+    SystemTokenAuth:
+      description: Send your organisation's system token in this header.
+      in: header
+      name: X-CM-SSO-ACCOUNTGUID
+      type: apiKey
+externalDocs:
+  description: ''
+  url: ''

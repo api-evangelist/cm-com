@@ -1,0 +1,115 @@
+openapi: 3.2.0
+info:
+  title: iDIN Directory API
+  description: iDIN is a service by the banks, that allows customers to identify themselves on websites, using the same secure methods as their own bank uses.
+  version: '1.0'
+servers:
+- url: https://api.cm.com/idin/v1.0
+tags:
+- name: Directory
+paths:
+  /directory:
+    post:
+      operationId: list_banks
+      tags:
+      - Directory
+      summary: Get bank list
+      description: Retrieve a listing of all the banks and their identifiers. The result is grouped by country. It is encouraged to cache this list, but you should refresh the list at least once a day.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DirectoryRequest'
+        required: true
+      responses:
+        '200':
+          description: List of banks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectoryResponse'
+        default:
+          description: Any non-compliant request will return an error object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    IssuerID:
+      pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$
+      type: string
+      description: 'An identifier for the bank. Used as the value of the <option> in bank selector dropdowns. The end user selects a value and iDIN will direct the end user to that bank, so that the user can identify himself.
+
+        '
+      examples:
+      - RABONL2U
+    MerchantToken:
+      type: string
+      description: a UUID string that is unique and private to you as a merchant. Do not share this key, keep it safe. Example 3c01abeb-b031-4fea-9f2d-c55c283cd78e
+      format: uuid
+      examples:
+      - 3c01abeb-b031-4fea-9f2d-c55c283cd78e
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that a bank is not available or that the system is offline, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here then in production mode.
+        code:
+          type: integer
+          format: int32
+          description: Low level and/or internal error code describing the error.
+      description: 'Whenever an error occurs, you are expected to show the message to the user
+
+        and to give the user the option of trying again. Errors can happen for a variety of reasons,
+
+        but a common reason is because the issuer the user chose is temporarily not available.
+
+        '
+    DirectoryResponse:
+      title: ArrayOfCountries
+      type: array
+      items:
+        title: Country
+        type: object
+        properties:
+          country:
+            maxLength: 128
+            minLength: 1
+            type: string
+            description: The readable name of the country
+          issuers:
+            title: ArrayOfIssuers
+            type: array
+            items:
+              $ref: '#/components/schemas/Issuer'
+    DirectoryRequest:
+      $ref: '#/components/schemas/TokenizedRequest'
+    Issuer:
+      type: object
+      properties:
+        issuer_id:
+          $ref: '#/components/schemas/IssuerID'
+        issuer_name:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: 'The name of the issuing bank intended for display purposes. Used as the content of the <option> in HTML dropdowns.
+
+            '
+          examples:
+          - Rabobank
+    TokenizedRequest:
+      title: TokenRequestParameters
+      required:
+      - merchant_token
+      type: object
+      properties:
+        merchant_token:
+          $ref: '#/components/schemas/MerchantToken'

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-tts-preview-request-schema.json",
+  "title": "ApiTtsPreviewRequest",
+  "description": "Model describing a TTS voice to fetch the preview audio file for.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-tts-v1-openapi.yml#/components/schemas/ApiTtsPreviewRequest",
+  "required": [
+    "gender",
+    "isPremium",
+    "language",
+    "voiceNumber"
+  ],
+  "type": "object",
+  "properties": {
+    "language": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z]{2}-[a-zA-Z]{2}$",
+      "type": "string",
+      "description": "ISO-639 language code and ISO-3166 country code."
+    },
+    "gender": {
+      "$ref": "#/$defs/ApiGender"
+    },
+    "voiceNumber": {
+      "minimum": 0,
+      "exclusiveMinimum": true,
+      "type": "integer",
+      "description": "The voice number, used to identify this voice.",
+      "format": "int32"
+    },
+    "isPremium": {
+      "type": "boolean",
+      "description": "Whether or not this is a premium TTS voice."
+    },
+    "encoding": {
+      "$ref": "#/$defs/Encoding"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ApiGender": {
+      "title": "Gender",
+      "enum": [
+        "Male",
+        "Female"
+      ],
+      "type": "string",
+      "description": "Available genders for TTS voices."
+    },
+    "Encoding": {
+      "title": "Encoding",
+      "enum": [
+        "Mp3",
+        "Ogg",
+        "Pcm"
+      ],
+      "type": "string",
+      "description": "The encoding of the audio."
+    }
+  }
+}

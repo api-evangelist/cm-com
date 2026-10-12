@@ -1,0 +1,734 @@
+openapi: 3.2.0
+info:
+  title: Cm Com Webhook Events API
+  version: '1'
+  description: 'Operations tagged Webhook Events across 2 of this provider''s published API definitions: cm-com-sign-v1-openapi.yml, cm-com-verification-id-scan-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.cm.com/sign/v1
+- url: https://api.cm.com/sign-sandbox/v1
+- url: https://api.cm.com/id-scan/v1
+security:
+- JWT: []
+tags:
+- name: Webhook Events
+  description: 'Events sent to your webhook URL when something happens in the lifetime of a dossier. Webhooks are subscribed to via the `Webhook` endpoints.
+
+
+    More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.'
+paths: {}
+webhooks:
+  dossier.state.updated:
+    post:
+      operationId: webhook_dossier_state_updated
+      summary: Dossier state updated
+      description: 'The state of the dossier is updated. For example, from `pending` to `completed`. This event is sent by default.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierStateUpdatedEvent'
+            example:
+              id: b041a287-bc92-4469-801e-ae1a39c08f6e
+              type: dossier.state.updated
+              created: '2026-01-01T00:00:00+00:00'
+              dossier:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: completed
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived'
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  dossier.prepared:
+    post:
+      operationId: webhook_dossier_prepared
+      summary: Dossier prepared
+      description: 'The prepare step has been completed: fields are added to the dossier and invites should be sent. This event is sent by default.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierPreparedEvent'
+            example:
+              id: c36f5fc9-b412-4aeb-9cbd-bdb6cdca581f
+              type: dossier.prepared
+              created: '2026-01-01T00:00:00+00:00'
+              dossier:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: draft
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived'
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  dossier.invite.created:
+    post:
+      operationId: webhook_dossier_invite_created
+      summary: Invite created
+      description: 'An invite has been created.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteCreatedEvent'
+            example:
+              id: 523075b3-dae7-4f2e-89ba-b194d2b56c2f
+              type: dossier.invite.created
+              created: '2026-01-01T00:00:00+00:00'
+              dossier:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: draft
+              invite:
+                id: 87aa2c40-7ad1-4493-8ede-640eab6d2f4e
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived'
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  dossier.invite.expired:
+    post:
+      operationId: webhook_dossier_invite_expired
+      summary: Invite expired
+      description: 'An invite has expired.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteExpiredEvent'
+            example:
+              id: 115c17e0-e714-465c-a3a4-f33700a69d7b
+              type: dossier.invite.expired
+              created: '2026-01-01T00:00:00+00:00'
+              dossier:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: pending
+              invite:
+                id: 87aa2c40-7ad1-4493-8ede-640eab6d2f4e
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived'
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  dossier.invite.undelivered:
+    post:
+      operationId: webhook_dossier_invite_undelivered
+      summary: Invite undelivered
+      description: 'An invite cannot be delivered. This event is sent by default.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteUndeliveredEvent'
+            example:
+              id: e5210e6e-058b-4898-9f71-16f18eb6c141
+              type: dossier.invite.undelivered
+              created: '2026-01-01T00:00:00+00:00'
+              dossier:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: pending
+              invite:
+                id: 87aa2c40-7ad1-4493-8ede-640eab6d2f4e
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived'
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  dossier.invite.viewed:
+    post:
+      operationId: webhook_dossier_invite_viewed
+      summary: Invite viewed
+      description: 'The invite has been viewed by the invitee.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteViewedEvent'
+            example:
+              id: e20d315d-9b37-4407-a036-22f4fdafb226
+              type: dossier.invite.viewed
+              created: '2026-01-01T00:00:00+00:00'
+              dossier:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: pending
+              invite:
+                id: 87aa2c40-7ad1-4493-8ede-640eab6d2f4e
+              invitee:
+                id: f6b72c37-9255-4272-8b21-f2f6ba9537ba
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived'
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  dossier.invitee.state.updated:
+    post:
+      operationId: webhook_dossier_invitee_state_updated
+      summary: Invitee state updated
+      description: 'The invitee state is updated. For example, to `approved` or `declined`.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteeStateUpdatedEvent'
+            example:
+              id: 12a1eded-01ca-4e56-9e6c-125842dca977
+              type: dossier.invitee.state.updated
+              created: '2026-01-01T00:00:00+00:00'
+              dossier:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: pending
+              invitee:
+                id: f6b72c37-9255-4272-8b21-f2f6ba9537ba
+                state: approved
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived'
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  dossier.invitee.reassignRequest.state.updated:
+    post:
+      operationId: webhook_dossier_invitee_reassignRequest_state_updated
+      summary: Reassign request state updated
+      description: 'The state of the reassign request is updated. For example, from `pending` to `approved`.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInviteeReassignRequestStateUpdatedEvent'
+            example:
+              id: f5b8eb0b-e976-4dc4-88c9-069f377dd1c9
+              type: dossier.invitee.reassignRequest.state.updated
+              created: '2026-01-01T00:00:00+00:00'
+              dossier:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: pending
+              reassignRequest:
+                id: 44971ae0-88fc-43e7-9868-ceaacf6d3ee4
+                state: pending
+                originalInvitee:
+                  id: f6b72c37-9255-4272-8b21-f2f6ba9537ba
+                  state: reassigned
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived'
+    servers:
+    - url: https://api.cm.com/sign/v1
+    - url: https://api.cm.com/sign-sandbox/v1
+  transaction.state.updated:
+    post:
+      operationId: webhook_transaction_state_updated
+      summary: Transaction state updated
+      description: 'The state of a transaction is updated. For example, from `pending` to `completed`. The `resultId` is only present when the state is `completed`. This event is sent by default.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionStateUpdatedEvent'
+            example:
+              id: b041a287-bc92-4469-801e-ae1a39c08f6e
+              type: transaction.state.updated
+              created: '2026-01-01T00:00:00+00:00'
+              transaction:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: completed
+                resultId: e6b7ce66-df56-4316-bb36-3d014ed84636
+      responses:
+        2XX:
+          $ref: '#/components/responses/WebhookReceived_2'
+    servers:
+    - url: https://api.cm.com/id-scan/v1
+  task.state.updated:
+    post:
+      operationId: webhook_task_state_updated
+      summary: Task state updated
+      description: 'The state of a task is updated. For example, from `pending` to `completed`. This event is sent by default.
+
+
+        Your server implementation should return a 2xx HTTP status code if the event was received successfully. The response body is ignored.'
+      tags:
+      - Webhook Events
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskStateUpdatedEvent'
+            example:
+              id: c36f5fc9-b412-4aeb-9cbd-bdb6cdca581f
+              type: task.state.updated
+              created: '2026-01-01T00:00:00+00:00'
+              transaction:
+                id: b659c273-954e-43cf-893a-0f74a7f87153
+                state: pending
+              task:
+                type: document_scan
+                state: completed
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookReceived_2'
+    servers:
+    - url: https://api.cm.com/id-scan/v1
+components:
+  schemas:
+    DossierReference:
+      type: string
+      format: uuid
+      description: Id of the dossier
+      examples:
+      - 22470767-904e-4553-9586-d7ed4f2b330e
+    DossierInviteCreatedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invite.created
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          invite:
+            $ref: '#/components/schemas/InviteWebhook'
+        required:
+        - type
+        - dossier
+        - invite
+    DossierPreparedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.prepared
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+        required:
+        - type
+        - dossier
+    DossierWebhook:
+      description: Basic unprivileged information of the Dossier referred to by a webhook event
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/DossierReference'
+        state:
+          $ref: '#/components/schemas/DossierState'
+      required:
+      - id
+      - state
+    DossierStateUpdatedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.state.updated
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+        required:
+        - type
+        - dossier
+    DossierState:
+      type: string
+      enum:
+      - draft
+      - pending
+      - completed
+      - declined
+      - expired
+      - deleted
+      examples:
+      - pending
+      description: Every dossier is initialized with the draft state. When the dossier is pending, it will have sent out any invitations for signing. From this point, the dossier is mostly no longer editable. Once everyone has signed, the state becomes completed and the signed dossier will be ready for retrieval. If any invitee declines, the state of the dossier will become declined. After the dossier expiry time has passed, a dossier will always enter the expired state. In the expired state a dossier can no longer be completed or declined. Once the state is deleted the signed contracts are no longer downloadable and all contracts and sensitive information are removed from the system.
+    WebhookEventBase:
+      description: Properties shared by all webhook events. More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the webhook event
+          examples:
+          - b041a287-bc92-4469-801e-ae1a39c08f6e
+        created:
+          type: string
+          format: date-time
+          description: The date the webhook event has been created
+          examples:
+          - '2026-01-01T00:00:00+00:00'
+      required:
+      - id
+      - created
+    DossierInviteViewedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invite.viewed
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          invite:
+            $ref: '#/components/schemas/InviteWebhook'
+          invitee:
+            $ref: '#/components/schemas/InviteeWebhook'
+        required:
+        - type
+        - dossier
+        - invite
+        - invitee
+    InviteeState:
+      type:
+      - string
+      - 'null'
+      enum:
+      - approved
+      - declined
+      - reassigned
+      examples:
+      - approved
+      description: Indicates if the dossier has been approved or declined by the user.
+    ReassignRequestWebhook:
+      description: Basic unprivileged information of the Reassign Request referred to by a webhook event
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID of the reassign request
+        state:
+          $ref: '#/components/schemas/ReassignRequestState'
+        originalInvitee:
+          type: object
+          description: The original invitee who requested reassignment
+          properties:
+            id:
+              $ref: '#/components/schemas/InviteeReference'
+            state:
+              $ref: '#/components/schemas/InviteeState'
+          required:
+          - id
+          - state
+      required:
+      - id
+      - state
+      - originalInvitee
+    DossierInviteeReassignRequestStateUpdatedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invitee.reassignRequest.state.updated
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          reassignRequest:
+            $ref: '#/components/schemas/ReassignRequestWebhook'
+        required:
+        - type
+        - dossier
+        - reassignRequest
+    ReassignRequestState:
+      type: string
+      enum:
+      - approved
+      - declined
+      - pending
+    InviteeWebhook:
+      description: Basic unprivileged information of the Invitee referred to by a webhook event. The `state` is only present when the invitee state was updated.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/InviteeReference'
+        state:
+          $ref: '#/components/schemas/InviteeState'
+      required:
+      - id
+    InviteReference:
+      description: Id of the invite
+      type: string
+      format: uuid
+      examples:
+      - 7b842910-41ef-4ca7-8b4a-4eeb9172c54b
+    DossierInviteeStateUpdatedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invitee.state.updated
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          invitee:
+            $ref: '#/components/schemas/InviteeWebhook'
+        required:
+        - type
+        - dossier
+        - invitee
+    DossierInviteExpiredEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invite.expired
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          invite:
+            $ref: '#/components/schemas/InviteWebhook'
+        required:
+        - type
+        - dossier
+        - invite
+    InviteeReference:
+      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
+      type: string
+      format: uuid
+      examples:
+      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
+    InviteWebhook:
+      description: Basic unprivileged information of the Invite referred to by a webhook event
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/InviteReference'
+      required:
+      - id
+    DossierInviteUndeliveredEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invite.undelivered
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          invite:
+            $ref: '#/components/schemas/InviteWebhook'
+        required:
+        - type
+        - dossier
+        - invite
+    TransactionState:
+      type: string
+      description: Current state of the transaction
+      enum:
+      - pending
+      - completed
+      - failed
+    TaskType:
+      type: string
+      enum:
+      - document_scan
+      - face_liveness
+      - face_match
+    TaskState:
+      type: string
+      enum:
+      - pending
+      - completed
+      - aborted
+      - maximum_attempts_exceeded
+    TransactionStateUpdatedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase_2'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: transaction.state.updated
+            description: The type of the event.
+          transaction:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The unique identifier of the transaction.
+              state:
+                $ref: '#/components/schemas/TransactionState'
+              resultId:
+                $ref: '#/components/schemas/WebhookResultId'
+            required:
+            - id
+            - state
+        required:
+        - type
+        - transaction
+    WebhookEventBase_2:
+      description: Properties shared by all webhook events. More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: A unique identifier for the event.
+        created:
+          type: string
+          format: date-time
+          description: The date the event was created.
+      required:
+      - id
+      - created
+    WebhookResultId:
+      type: string
+      format: uuid
+      description: A unique identifier to retrieve the transaction results. This field is only present when the transaction state is completed.
+    TaskStateUpdatedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase_2'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: task.state.updated
+            description: The type of the event.
+          transaction:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The unique identifier of the transaction the task belongs to.
+              state:
+                $ref: '#/components/schemas/TransactionState'
+            required:
+            - id
+            - state
+          task:
+            type: object
+            properties:
+              type:
+                $ref: '#/components/schemas/TaskType'
+              state:
+                $ref: '#/components/schemas/TaskState'
+            required:
+            - type
+            - state
+        required:
+        - type
+        - transaction
+        - task
+  responses:
+    WebhookReceived:
+      description: 'The event was received successfully. Any 2xx HTTP status code is accepted and the response body is ignored.
+
+
+        In case of a 5xx status code the event will be retried several times with an exponentially increasing delay of up to a maximum of 1 day between attempts. After 4 failed delivery attempts the event is dropped.
+
+        '
+    WebhookReceived_2:
+      description: 'The event was received successfully. Any 2xx HTTP status code is accepted and the response body is ignored.
+
+
+        In case of a 4xx status code, the event is dropped and not retried. In case of a 5xx status code, a timeout or a connection error, the event will be retried a few times with an increasing delay before it''s dropped.
+
+        '
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'In order to authenticate you need to use your credentials to generate a JWT Bearer token. The [JWT token](https://jwt.io/introduction/) has to be generated using the `HS256` algorithm and your credentials. This JWT has to contain the following attributes: `iat`, `nbf`, `exp`  in the payload, as well as the attribute `kid` in the header of the JWT. This `kid` attribute needs to contain the Key Id of your credentials.
+
+
+        The generated token needs to be passed via the HTTP Authorization header like:
+
+
+        ```
+
+        Authorization: Bearer GENERATED_TOKEN_HERE
+
+        ```
+
+
+        There are many libraries available for different programming languages that can help you to generate a JWT. See the Libraries tab on [https://jwt.io](https://jwt.io)
+
+        '
+x-refined-from:
+- cm-com-sign-v1-openapi.yml
+- cm-com-verification-id-scan-v1-openapi.yml

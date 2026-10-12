@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/cm-com/main/json-schema/cm-com-api-phone-number-range-schema.json",
+  "title": "Phone Number Range",
+  "description": "Details of a phone number range.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/cm-com-voice-number-requests-v1-openapi.yml#/components/schemas/ApiPhoneNumberRange",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unique identifier of the phone number range."
+    },
+    "start": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The starting phone number in a range.",
+      "format": "int64"
+    },
+    "size": {
+      "type": "integer",
+      "description": "The size of the range.",
+      "format": "int32"
+    },
+    "countryCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The country code in ISO 3166-1 alpha-2 format."
+    },
+    "voiceAccountGuid": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unique identifier of the Voice Account."
+    },
+    "validFrom": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Date and time the range is assigned to, and in use by the Voice Account.",
+      "format": "date-time"
+    },
+    "validTo": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Date and time the range is no longer assigned to, nor in use by the Voice Account.",
+      "format": "date-time"
+    },
+    "orderId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unique identifier of the order in which the range was requested."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,493 @@
+openapi: 3.2.0
+info:
+  title: Email Gateway Suppressions API
+  version: '1.0'
+  description: Send transactional and marketing emails, manage domains, suppressions, webhooks, and more.
+servers:
+- url: https://api.cm.com
+  description: Production
+tags:
+- name: Suppressions
+paths:
+  /email/suppression/v1/accounts/{logicalAccountId}/manual:
+    post:
+      summary: Add manual suppression
+      tags:
+      - Suppressions
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Suppression_UnsubscribeRequestDto'
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Suppression_UnsubscribeRequestDto'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Suppression_UnsubscribeRequestDto'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Suppression_UnsubscribeRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suppression_ObjectControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suppression_ProblemDetails'
+        '500':
+          description: Internal Server Error
+      operationId: op_15
+      security:
+      - ProductToken: []
+  /email/suppression/v1/accounts/{logicalAccountId}/subscriptions:
+    post:
+      summary: Search unsubscribes
+      tags:
+      - Suppressions
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: timezone
+        in: query
+        schema:
+          type: string
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: pageNumber
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Suppression_EmailUnsubscribeFilters'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Suppression_EmailUnsubscribeFilters'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Suppression_EmailUnsubscribeFilters'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Suppression_EmailUnsubscribeFilters'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suppression_EmailUnsubscribeResultControllerResponse'
+      operationId: op_16
+      security:
+      - ProductToken: []
+    get:
+      summary: List suppressions
+      tags:
+      - Suppressions
+      parameters:
+      - name: logicalAccountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: searchEmail
+        in: query
+        schema:
+          type: string
+      - name: emailType
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: -1
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: pageNumber
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suppression_SuppressionListResultControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suppression_ProblemDetails'
+        '500':
+          description: Internal Server Error
+      operationId: op_17
+      security:
+      - ProductToken: []
+  /email/suppression/v1/{uniqueKey}:
+    post:
+      summary: Update suppression
+      tags:
+      - Suppressions
+      parameters:
+      - name: uniqueKey
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Suppression_UnsubscribeFromLinkRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Suppression_UnsubscribeFromLinkRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Suppression_UnsubscribeFromLinkRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Suppression_UnsubscribeFromLinkRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suppression_ObjectControllerResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suppression_ProblemDetails'
+        '500':
+          description: Internal Server Error
+      operationId: op_18
+      security:
+      - ProductToken: []
+components:
+  schemas:
+    Suppression_EmailKind:
+      enum:
+      - 0
+      - 1
+      - 2
+      - -1
+      type: integer
+      format: int32
+    Suppression_EmailUnsubscribeResult:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        unsubscribedEmails:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Suppression_EmailUnsubscribe'
+      additionalProperties: false
+    Suppression_SuppressionListResultControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/Suppression_ConfigurationErrorCode'
+        data:
+          $ref: '#/components/schemas/Suppression_SuppressionListResult'
+      additionalProperties: false
+    Suppression_EmailUnsubscribeFilters:
+      type: object
+      properties:
+        logTimeRangeType:
+          $ref: '#/components/schemas/Configuration_TimeRangePickerOptions'
+        unsubscribeTypes:
+          type:
+          - string
+          - 'null'
+        startDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        endDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        searchEmail:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Suppression_UnsubscribeType:
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      type: integer
+      format: int32
+    Suppression_EmailUnsubscribe:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        messageRequestId:
+          type: string
+          format: uuid
+        sender:
+          type:
+          - string
+          - 'null'
+        recipient:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        reason:
+          type:
+          - string
+          - 'null'
+        emailType:
+          type: integer
+          format: int32
+        unsubscribeType:
+          type: integer
+          format: int32
+        logicalAccount:
+          type: string
+          format: uuid
+      additionalProperties: false
+    Suppression_UnsubscribeFromLinkRequest:
+      type: object
+      properties:
+        unsubscribeReason:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Configuration_TimeRangePickerOptions:
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      type: integer
+      format: int32
+    Suppression_SuppressionListResult:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        unsubscribedEmails:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Suppression_SuppressionListItem'
+      additionalProperties: false
+    Suppression_SuppressionListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        sender:
+          type:
+          - string
+          - 'null'
+        recipient:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        reason:
+          type:
+          - string
+          - 'null'
+        emailType:
+          type: integer
+          format: int32
+        unsubscribeType:
+          type: integer
+          format: int32
+        logicalAccount:
+          type: string
+          format: uuid
+        domain:
+          type:
+          - string
+          - 'null'
+        failureCount:
+          type: integer
+          format: int32
+        expirationDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      additionalProperties: false
+    Suppression_UnsubscribeRequestDto:
+      required:
+      - recipient
+      type: object
+      properties:
+        sender:
+          type:
+          - string
+          - 'null'
+          format: email
+        recipient:
+          type:
+          - string
+          - 'null'
+          format: email
+        unsubscribeType:
+          $ref: '#/components/schemas/Suppression_UnsubscribeType'
+        emailType:
+          $ref: '#/components/schemas/Suppression_EmailKind'
+      additionalProperties: false
+    Suppression_ObjectControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/Suppression_ConfigurationErrorCode'
+        data:
+          type:
+          - object
+          - 'null'
+      additionalProperties: false
+    Suppression_EmailUnsubscribeResultControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/Suppression_ConfigurationErrorCode'
+        data:
+          $ref: '#/components/schemas/Suppression_EmailUnsubscribeResult'
+      additionalProperties: false
+    Suppression_ConfigurationErrorCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 500
+      type: integer
+      format: int32
+    Suppression_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      in: header
+      name: X-CM-PRODUCTTOKEN
+      description: Your CM.com product token. Find it in the Email Gateway App → Settings → Integration.

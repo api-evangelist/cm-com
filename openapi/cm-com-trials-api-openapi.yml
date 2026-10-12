@@ -1,0 +1,167 @@
+openapi: 3.2.0
+info:
+  title: Channels Trials API
+  description: Check channel availability and manage onboarding for SMS, WhatsApp, RCS, and other supported channels.
+  version: v1
+  license:
+    name: Proprietary
+    url: https://www.cm.com
+servers:
+- url: https://api.cm.com
+  description: Production Server
+security:
+- ProductToken: []
+tags:
+- name: Trials
+paths:
+  /channels/v1/accounts/{accountId}/trials/messaging/status:
+    get:
+      tags:
+      - Trials
+      summary: Get a trial status
+      operationId: Trials_GetMessagingTrialStatusAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiTrialStatus'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiTrialStatus'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiTrialStatus'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiTrialStatus'
+  /channels/v1/accounts/{accountId}/trials/messaging/whitelist:
+    get:
+      tags:
+      - Trials
+      summary: Get Messaging trial number whitelist
+      operationId: Trials_GetMessagingTrialNumberWhitelistAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/xml:
+              schema:
+                type: array
+                items:
+                  type: string
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: string
+  /channels/v1/accounts/{accountId}/trials/messaging/whitelist/{number}:
+    post:
+      tags:
+      - Trials
+      summary: Adds a Messaging trial whitelisted number
+      operationId: Trials_AddMessagingTrialWhitelistNumberAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: number
+        in: path
+        description: The number.
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/xml:
+              schema:
+                type: array
+                items:
+                  type: string
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: string
+    delete:
+      tags:
+      - Trials
+      summary: Delete a Messaging trial whitelisted number
+      operationId: Trials_DeleteMessagingTrialWhitelistNumberAsync
+      parameters:
+      - name: accountId
+        in: path
+        description: The account identifier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: number
+        in: path
+        description: The number.
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: NoContent
+components:
+  schemas:
+    CM.Platform.Channels.Models.Channels.ApiTrialStatus:
+      type: object
+      properties:
+        messagingTrialActive:
+          type: boolean
+        messagingNumberWhitelist:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    ProductToken:
+      type: apiKey
+      description: Product token for authentication. Obtain from your CM.com dashboard under Messaging > Product Tokens.
+      name: producttoken
+      in: header
