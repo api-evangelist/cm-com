@@ -1,12 +1,7 @@
 generated: '2026-10-13'
-method: none
+method: searched
 source:
-- https://zapier.com/apps/cm-com/integrations
 - https://zapier.com/apps/cm/integrations
-- https://n8n.io/integrations/cm-com/
-- https://n8n.io/integrations/cm/
-- https://composio.dev/toolkits/cm-com
-- https://monid.ai/tools/cm-com
 checked:
 - https://composio.dev/toolkits/cm-com
 - https://monid.ai/tools/cm-com
@@ -15,6 +10,226 @@ checked:
 - https://zapier.com/apps/cm-com/integrations
 - https://zapier.com/apps/cm/integrations
 summary: null
-marketplace_apps: []
-edges: []
-templates: []
+marketplace_apps:
+- marketplace: zapier
+  channel: ipaas-listing
+  app: cm
+  url: https://zapier.com/apps/cm/integrations
+  external_url: https://www.cm.com/
+  partner_tier: BRONZE
+  triggers: []
+  actions:
+  - key: textMessage
+    label: Send Text (SMS/Push) Message
+  - key: voiceMessage
+    label: Send Voice (Text to Speech) Call
+  searches:
+  - key: numberVerifier
+    label: Lookup or Validate Phone Number
+edges:
+- partner_name: Facebook Lead Ads (for Business admins)
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/facebook-lead-ads-beta
+  direction: third-party
+  category: Ads & Conversion
+  partner_url: https://facebook.com/
+- partner_name: Shopify
+  partner: shopify
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/shopify
+  direction: third-party
+  category: eCommerce
+  partner_url: https://www.shopify.com/
+- partner_name: Gmail
+  partner: gmail
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/gmail
+  direction: third-party
+  category: Email
+  partner_url: https://mail.google.com/
+- partner_name: Facebook Conversions
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/facebook-conversions
+  direction: third-party
+  category: Ads & Conversion
+  partner_url: https://developers.facebook.com/docs/marketing-api/server-side-api/guides/zapier-integration
+- partner_name: Stripe (Legacy)
+  partner: stripe
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/stripe-legacy
+  direction: third-party
+  category: Payment Processing
+  partner_url: https://stripe.com/
+- partner_name: Customer.io
+  partner: customer-io
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/customerio
+  direction: third-party
+  category: Email
+  partner_url: https://customer.io/?utm_source=zapier.com&utm_medium=referral&utm_campaign=zapier-landing-page
+- partner_name: Odoo ERP Self Hosted
+  partner: odoo
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/openerp
+  direction: third-party
+  category: CRM (Customer Relationship Management)
+  partner_url: https://www.odoo.com/
+- partner_name: Zoho Analytics
+  partner: zoho-analytics
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/zoho-analytics
+  direction: third-party
+  category: Analytics
+  partner_url: https://go.zoho.com/EI5
+- partner_name: Tookan
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/tookan
+  direction: third-party
+  category: Scheduling & Booking
+  partner_url: http://tookanapp.com/
+- partner_name: ProcurementExpress.com
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/procurementexpresscom
+  direction: third-party
+  category: Proposal & Invoice Management
+  partner_url: https://www.procurementexpress.com/
+- partner_name: Google Forms (Legacy)
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/google-forms-legacy
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: http://google.com/
+- partner_name: Magento
+  partner: magento
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/magento
+  direction: third-party
+  category: eCommerce
+  partner_url: https://magento.com/
+- partner_name: CM.com
+  partner: cm-com
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/cm
+  direction: third-party
+  category: Phone & SMS
+  partner_url: https://www.cm.com/
+templates:
+- title: Have CM.com call you with the Weather forecast for tomorrow
+  url: https://zapier.com/apps/cm/integrations/schedule/28563/have-cmcom-call-you-with-the-weather-forecast-for-tomorrow
+  apps:
+  - schedule
+  - weather
+  - cm
+- title: Send CM.com text (SMS/Push) messages for new GitHub mentions
+  url: https://zapier.com/apps/cm/integrations/github/27357/send-cmcom-text-smspush-messages-for-new-github-mentions
+  apps:
+  - github
+  - cm
+- title: Send CM.com SMS messages for Google Calendar events
+  url: https://zapier.com/apps/cm/integrations/google-calendar/28182/send-cmcom-sms-messages-for-google-calendar-events
+  apps:
+  - google-calendar
+  - cm
+- title: Make CM.com calls when Google Calendar events are about to start
+  url: https://zapier.com/apps/cm/integrations/google-calendar/28235/make-cmcom-calls-when-google-calendar-events-are-about-to-start
+  apps:
+  - google-calendar
+  - cm
+- title: Send CM.com SMS for new Gmail emails matching a search [Business Gmail Accounts Only]
+  url: https://zapier.com/apps/cm/integrations/gmail/28238/send-cmcom-sms-for-new-gmail-emails-matching-a-search-business-gmail-accounts-only
+  apps:
+  - gmail
+  - cm
+- title: Send CM.com SMS for new rows in Google Sheets
+  url: https://zapier.com/apps/cm/integrations/google-sheets/28243/send-cmcom-sms-for-new-rows-in-google-sheets
+  apps:
+  - google-sheets
+  - cm
+- title: Send CM.com SMS for new Deskpro tickets
+  url: https://zapier.com/apps/cm/integrations/deskpro/28247/send-cmcom-sms-for-new-deskpro-tickets
+  apps:
+  - deskpro
+  - cm
+- title: Receive CM.com SMS for new Teachable registrations
+  url: https://zapier.com/apps/cm/integrations/teachable/28379/receive-cmcom-sms-for-new-teachable-registrations
+  apps:
+  - teachable
+  - cm
+- title: Receive CM.com SMS notifications for new WebinarGeek registrations
+  url: https://zapier.com/apps/cm/integrations/webinargeek/28382/receive-cmcom-sms-notifications-for-new-webinargeek-registrations
+  apps:
+  - webinargeek
+  - cm
+- title: Receive CM.com SMS notifications when new Calendly invitees are created
+  url: https://zapier.com/apps/calendly/integrations/cm/28391/receive-cmcom-sms-notifications-when-new-calendly-invitees-are-created
+  apps:
+  - calendly
+  - cm
+- title: Receive CM.com SMS for new AWeber subscribers
+  url: https://zapier.com/apps/aweber/integrations/cm/31238/receive-cmcom-sms-for-new-aweber-subscribers
+  apps:
+  - aweber
+  - cm
+- title: Send text messages in CM.com when new customers are added to Yoobi
+  url: https://zapier.com/apps/cm/integrations/yoobi-software/1051151/send-text-messages-in-cmcom-when-new-customers-are-added-to-yoobi
+  apps:
+  - yoobi-software
+  - cm
+template_total: 43

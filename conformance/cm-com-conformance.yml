@@ -1,23 +1,11 @@
 generated: '2026-10-13'
 method: derived
 generator: derive-conformance.py
-source: openapi/ (53 document(s), 567 mutating operations)
+source: openapi/ (167 document(s), 559 mutating operations)
 standards:
-- id: openapi-3.0
+- id: openapi-3.2
   conforms: true
-  evidence: the document declares 3.0.0
-- id: openapi-3.0
-  conforms: true
-  evidence: the document declares 3.0.1
-- id: openapi-3.0
-  conforms: true
-  evidence: the document declares 3.0.3
-- id: openapi-3.1
-  conforms: true
-  evidence: the document declares 3.1.0
-- id: openapi-3.1
-  conforms: true
-  evidence: the document declares 3.1.1
+  evidence: the document declares 3.2.0
 - id: oauth2
   conforms: true
   evidence: 'securitySchemes: ApiKeyAuth (apiKey), BearerAuth (http), HMAC (apiKey), JWT (http), ProductToken (apiKey), SystemTokenAuth (apiKey),
@@ -27,7 +15,7 @@ standards:
   evidence: no response declares application/problem+json
 - id: idempotency
   conforms: true
-  evidence: X-Idempotency-Key declared on 1 of 567 mutating operations (partial)
+  evidence: X-Idempotency-Key declared on 1 of 559 mutating operations (partial)
 - id: pagination
   conforms: true
   evidence: list operations take cursor, page, page_index, page_size

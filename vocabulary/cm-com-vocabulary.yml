@@ -2,421 +2,427 @@ generated: '2026-10-13'
 method: derived
 generator: derive-vocabulary.py
 source:
-- openapi/cm-com-conversational-ai-v1-openapi.yml
-- openapi/cm-com-conversational-router-v1-openapi.yml
-- openapi/cm-com-conversational-router-v2-openapi.yml
-- openapi/cm-com-customer-engagement-v1-openapi.yml
-- openapi/cm-com-email-gateway-api-v1-openapi.yml
+- openapi/cm-com-addcontact-api-openapi.yml
+- openapi/cm-com-analytics-api-openapi.yml
+- openapi/cm-com-analytics-filter-presets-api-openapi.yml
+- openapi/cm-com-analytics-report-subscriptions-api-openapi.yml
+- openapi/cm-com-apisettings-api-openapi.yml
 vocabulary:
   name: CM.com Domain Vocabulary
   description: 'Terms declared by CM.com''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
     Derived, not authored.'
   version: '2026-10-13'
   terms:
-  - term: Health
-    definition: Service health check endpoints
-    tags:
-    - Resource Group
-    source: openapi/cm-com-conversational-ai-v1-openapi.yml
-  - term: Connect
-    definition: Connect the customer to the adapter they configured in the Connect product
-    tags:
-    - Resource Group
-    source: openapi/cm-com-conversational-router-v1-openapi.yml
-  - term: entrance-management
-    definition: Entrance Management API for event scanning and access control
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Authentication
-    definition: User authentication and session management
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Events
-    definition: Event management and configuration
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Entrance Plans
-    definition: Entrance plan configuration and assignment
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Scanning
-    definition: Scan API for barcode scanning, validate, check-in, and check-out operations
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Analytics
-    definition: Scan statistics and analytics data
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
   - term: Analytics - Filter Presets
     definition: Saved filter presets for analytics views
     tags:
     - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Organisations
-    definition: Organisation management
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Users
-    definition: User management and role assignment
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Invitations
-    definition: User invitation lifecycle
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Products
-    definition: Products management and configuration
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Tickets
-    definition: Ticket management and lookup
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Venues
-    definition: Venue configuration
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Constraints
-    definition: Constraint management and configuration
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Scanning Rules
-    definition: Rules governing scan behaviour
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Scanning Conditions
-    definition: Conditions attached to entrance plans and scanning rules
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Exports
-    definition: Data export jobs and downloads
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Imports
-    definition: Data import operations
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Uploads
-    definition: File upload handling
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Reset Password
-    definition: Password reset request flow
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Structured Logging
-    definition: Client-side structured log ingestion
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Service tokens
-    definition: Machine-to-machine service token management
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Settings
-    definition: System and organisation settings
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Onboarding
-    definition: Organisation onboarding flows
-    tags:
-    - Resource Group
-    source: openapi/cm-com-live-entrance-management-v1-openapi.yml
-  - term: Authorization
-    definition: OAuth2.0 Authorization Framework
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: Checkout
-    definition: Checkout endpoints for using the CM hosted checkout.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: Bancontact
-    definition: Bancontact is a popular payment method in Belgium, allowing customers to pay online using their Bancontact card.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: Cards
-    definition: Creditcard payments allow customers to pay online using their credit or debit cards.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: iDEAL
-    definition: iDEAL is a widely used online payment method in the Netherlands, allowing customers to pay directly from their bank accounts.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: iDEAL-QR
-    definition: iDEAL-QR codes can be used to initiate a predefined iDEAL transaction by scanning the QR-code by a Consumer mobile device.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: in3
-    definition: in3 is a Dutch BNPL method where customers pay in 3 installments, at no extra cost and without having to register with the Bureau
-      Krediet Registratie (BKR). in3 guarantees settlement after receiving the first installment.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: Klarna
-    definition: Klarna is a payment method that allows customers to pay for their purchases later, either in installments or at a later date.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: Paymentmethods
-    definition: Payment methods available in the API.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: PayPal
-    definition: PayPal is a widely used online payment system that allows customers to pay for goods and services using their PayPal account.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: Riverty
-    definition: Riverty is a payment method that allows customers to pay for their purchases in installments or at a later date.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: ApplePay
+    source: openapi/cm-com-analytics-filter-presets-api-openapi.yml
+  - term: Apple Pay
     definition: Apple Pay is a mobile payment and digital wallet service that allows customers to make secure, contactless payments in stores
       (using NFC), within iOS apps, and on the web.
     tags:
     - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: GooglePay
-    definition: Google Pay is a fast and secure payment method that allows customers to pay online using their Google account.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: BelfiusPayButton
-    definition: Belfius Pay Button is a Belgian online payment method that allows customers to pay securely using their Belfius bank account.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: SepaDirectDebit
-    definition: SEPA Direct Debit allows merchants to collect payments directly from customer bank accounts within the SEPA zone.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: BankTransfer
-    definition: Bank Transfer payment method allows customers to pay by transferring funds directly from their bank account.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: Utils
-    definition: Utility endpoints for health checks and other functionalities.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
-  - term: Security
-    definition: For managing API keys
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-pos-cloud-api-v1-9-0-openapi.yml
-  - term: Stores
-    definition: Operations related to stores
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-pos-cloud-api-v1-9-0-openapi.yml
-  - term: Terminals
-    definition: Operations related to terminals
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-pos-cloud-api-v1-9-0-openapi.yml
-  - term: Version
-    definition: Retrieves system information
-    tags:
-    - Resource Group
-    source: openapi/cm-com-payments-pos-cloud-api-v1-9-0-openapi.yml
-  - term: Seal
-    definition: Seal a document with a certificate
-    tags:
-    - Resource Group
-    source: openapi/cm-com-sign-seal-v1-openapi.yml
-  - term: Document
-    definition: Upload documents
-    tags:
-    - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
-  - term: Dossier
-    definition: Manage dossier
-    tags:
-    - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
-  - term: Invite
-    definition: Manage invites
-    tags:
-    - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
+    source: openapi/cm-com-apple-pay-api-openapi.yml
   - term: Archive
     definition: Manage archive
     tags:
     - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
-  - term: Channels
-    definition: Retrieve invite channels
+    source: openapi/cm-com-archive-api-openapi.yml
+  - term: Authentication
+    definition: User authentication and session management
     tags:
     - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
+    source: openapi/cm-com-authentication-api-openapi.yml
+  - term: Authorization
+    definition: OAuth2.0 Authorization Framework
+    tags:
+    - Resource Group
+    source: openapi/cm-com-authorization-api-openapi.yml
+  - term: Bancontact
+    definition: Bancontact is a popular payment method in Belgium, allowing customers to pay online using their Bancontact card.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-bancontact-api-openapi.yml
+  - term: BankTransfer
+    definition: Bank Transfer payment method allows customers to pay by transferring funds directly from their bank account.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-banktransfer-api-openapi.yml
+  - term: BelfiusPayButton
+    definition: Belfius Pay Button is a Belgian online payment method that allows customers to pay securely using their Belfius bank account.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-belfiuspaybutton-api-openapi.yml
+  - term: Branding
+    definition: Change the branding style that is being used in email communication
+    tags:
+    - Resource Group
+    source: openapi/cm-com-branding-api-openapi.yml
+  - term: Callbacks
+    definition: Updates sent to the `callbackUrl` provided when creating a transaction
+    tags:
+    - Resource Group
+    source: openapi/cm-com-callbacks-api-openapi.yml
+  - term: Cards
+    definition: Creditcard payments allow customers to pay online using their credit or debit cards.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-cards-api-openapi.yml
+  - term: Checkout
+    definition: Checkout endpoints for using the CM hosted checkout.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-checkout-api-openapi.yml
   - term: Client
     definition: Manage clients. A client consists of a key and secret and provides access to the API. Please note that access must be explicitly
       granted in order to use the client management calls.
     tags:
     - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
-  - term: Webhook
-    definition: Manage webhooks
+    source: openapi/cm-com-client-api-openapi.yml
+  - term: Configuration
+    definition: Configure how transactions behave, such as which image quality checks are enforced for document scans.
     tags:
     - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
+    source: openapi/cm-com-configuration-api-openapi.yml
+  - term: Connect
+    definition: Connect the customer to the adapter they configured in the Connect product
+    tags:
+    - Resource Group
+    source: openapi/cm-com-connect-api-openapi.yml
+  - term: Constraints
+    definition: Constraint management and configuration
+    tags:
+    - Resource Group
+    source: openapi/cm-com-constraints-api-openapi.yml
+  - term: Document
+    definition: Upload documents
+    tags:
+    - Resource Group
+    source: openapi/cm-com-document-api-openapi.yml
+  - term: Dossier
+    definition: Manage dossier
+    tags:
+    - Resource Group
+    source: openapi/cm-com-dossier-api-openapi.yml
+  - term: Entrance Plans
+    definition: Entrance plan configuration and assignment
+    tags:
+    - Resource Group
+    source: openapi/cm-com-entrance-plans-api-openapi.yml
+  - term: Events
+    definition: Event management and configuration
+    tags:
+    - Resource Group
+    source: openapi/cm-com-events-api-openapi.yml
+  - term: Exports
+    definition: Data export jobs and downloads
+    tags:
+    - Resource Group
+    source: openapi/cm-com-exports-api-openapi.yml
+  - term: GooglePay
+    definition: Google Pay is a fast and secure payment method that allows customers to pay online using their Google account.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-googlepay-api-openapi.yml
+  - term: Health
+    definition: Service health check endpoints
+    tags:
+    - Resource Group
+    source: openapi/cm-com-health-api-openapi.yml
+  - term: iDEAL
+    definition: iDEAL is a widely used online payment method in the Netherlands, allowing customers to pay directly from their bank accounts.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-ideal-api-openapi.yml
+  - term: iDEAL-QR
+    definition: iDEAL-QR codes can be used to initiate a predefined iDEAL transaction by scanning the QR-code by a Consumer mobile device.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-ideal-qr-api-openapi.yml
+  - term: Identity Match
+    definition: Request an Identity Match check
+    tags:
+    - Resource Group
+    source: openapi/cm-com-identity-match-api-openapi.yml
+  - term: Imports
+    definition: Data import operations
+    tags:
+    - Resource Group
+    source: openapi/cm-com-imports-api-openapi.yml
+  - term: in3
+    definition: in3 is a Dutch BNPL method where customers pay in 3 installments, at no extra cost and without having to register with the Bureau
+      Krediet Registratie (BKR). in3 guarantees settlement after receiving the first installment.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-in3-api-openapi.yml
+  - term: Invitations
+    definition: User invitation lifecycle
+    tags:
+    - Resource Group
+    source: openapi/cm-com-invitations-api-openapi.yml
+  - term: Invite
+    definition: Manage invites
+    tags:
+    - Resource Group
+    source: openapi/cm-com-invite-api-openapi.yml
+  - term: Klarna
+    definition: Klarna is a payment method that allows customers to pay for their purchases later, either in installments or at a later date.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-klarna-api-openapi.yml
+  - term: Number
+    definition: Check a phone number
+    tags:
+    - Resource Group
+    source: openapi/cm-com-number-api-openapi.yml
+  - term: Number Verify
+    definition: Verify a phone number
+    tags:
+    - Resource Group
+    source: openapi/cm-com-number-verify-api-openapi.yml
+  - term: Onboarding
+    definition: Organisation onboarding flows
+    tags:
+    - Resource Group
+    source: openapi/cm-com-onboarding-api-openapi.yml
+  - term: Organisations
+    definition: Organisation management
+    tags:
+    - Resource Group
+    source: openapi/cm-com-organisations-api-openapi.yml
+  - term: Pay Pal
+    definition: PayPal is a widely used online payment system that allows customers to pay for goods and services using their PayPal account.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-pay-pal-api-openapi.yml
+  - term: Products
+    definition: Products management and configuration
+    tags:
+    - Resource Group
+    source: openapi/cm-com-products-api-openapi.yml
+  - term: Reassign Request
+    definition: Manage reassignment requests
+    tags:
+    - Resource Group
+    source: openapi/cm-com-reassign-request-api-openapi.yml
+  - term: Reset Password
+    definition: Password reset request flow
+    tags:
+    - Resource Group
+    source: openapi/cm-com-reset-password-api-openapi.yml
+  - term: Riverty
+    definition: Riverty is a payment method that allows customers to pay for their purchases in installments or at a later date.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-riverty-api-openapi.yml
+  - term: Scanning
+    definition: Scan API for barcode scanning, validate, check-in, and check-out operations
+    tags:
+    - Resource Group
+    source: openapi/cm-com-scanning-api-openapi.yml
+  - term: Scanning Conditions
+    definition: Conditions attached to entrance plans and scanning rules
+    tags:
+    - Resource Group
+    source: openapi/cm-com-scanning-conditions-api-openapi.yml
+  - term: Scanning Rules
+    definition: Rules governing scan behaviour
+    tags:
+    - Resource Group
+    source: openapi/cm-com-scanning-rules-api-openapi.yml
+  - term: Seal
+    definition: Seal a document with a certificate
+    tags:
+    - Resource Group
+    source: openapi/cm-com-seal-api-openapi.yml
+  - term: Security
+    definition: For managing API keys
+    tags:
+    - Resource Group
+    source: openapi/cm-com-security-api-openapi.yml
+  - term: SepaDirectDebit
+    definition: SEPA Direct Debit allows merchants to collect payments directly from customer bank accounts within the SEPA zone.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-sepadirectdebit-api-openapi.yml
+  - term: Service tokens
+    definition: Machine-to-machine service token management
+    tags:
+    - Resource Group
+    source: openapi/cm-com-service-tokens-api-openapi.yml
+  - term: Settings
+    definition: System and organisation settings
+    tags:
+    - Resource Group
+    source: openapi/cm-com-settings-api-openapi.yml
+  - term: SIM Swap
+    definition: Request a SIM Swap check
+    tags:
+    - Resource Group
+    source: openapi/cm-com-sim-swap-api-openapi.yml
+  - term: Stores
+    definition: Operations related to stores
+    tags:
+    - Resource Group
+    source: openapi/cm-com-stores-api-openapi.yml
+  - term: Structured Logging
+    definition: Client-side structured log ingestion
+    tags:
+    - Resource Group
+    source: openapi/cm-com-structured-logging-api-openapi.yml
+  - term: Terminals
+    definition: Operations related to terminals
+    tags:
+    - Resource Group
+    source: openapi/cm-com-terminals-api-openapi.yml
+  - term: Tickets
+    definition: Ticket management and lookup
+    tags:
+    - Resource Group
+    source: openapi/cm-com-tickets-api-openapi.yml
+  - term: Transactions
+    definition: Create or get transactions with identification tasks.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-transactions-api-openapi.yml
+  - term: Uploads
+    definition: File upload handling
+    tags:
+    - Resource Group
+    source: openapi/cm-com-uploads-api-openapi.yml
+  - term: Users
+    definition: User management and role assignment
+    tags:
+    - Resource Group
+    source: openapi/cm-com-users-api-openapi.yml
+  - term: Utils
+    definition: Utility endpoints for health checks and other functionalities.
+    tags:
+    - Resource Group
+    source: openapi/cm-com-utils-api-openapi.yml
+  - term: Venues
+    definition: Venue configuration
+    tags:
+    - Resource Group
+    source: openapi/cm-com-venues-api-openapi.yml
+  - term: Version
+    definition: Retrieves system information
+    tags:
+    - Resource Group
+    source: openapi/cm-com-version-api-openapi.yml
   - term: Webhook Events
     definition: Events sent to your webhook URL when something happens in the lifetime of a dossier. Webhooks are subscribed to via the `Webhook`
       endpoints. More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.
     tags:
     - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
-  - term: Branding
-    definition: Change the branding style that is being used in email communication
-    tags:
-    - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
-  - term: Reassign Request
-    definition: Manage reassignment requests
-    tags:
-    - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
-  - term: Template
-    definition: Manage templates
-    tags:
-    - Resource Group
-    source: openapi/cm-com-sign-v1-openapi.yml
-  - term: Transactions
-    definition: Create or get transactions with identification tasks.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-id-scan-v1-openapi.yml
-  - term: Webhooks
-    definition: Manage the webhooks that receive notifications when the state of a transaction or task changes.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-id-scan-v1-openapi.yml
-  - term: Configuration
-    definition: Configure how transactions behave, such as which image quality checks are enforced for document scans.
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-id-scan-v1-openapi.yml
-  - term: Transaction
-    definition: Create and retrieve transactions
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-identity-hub-v1-openapi.yml
-  - term: Callbacks
-    definition: Updates sent to the `callbackUrl` provided when creating a transaction
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-identity-hub-v1-openapi.yml
-  - term: Identity Match
-    definition: Request an Identity Match check
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-mobile-identity-v1-openapi.yml
-  - term: SIM Swap
-    definition: Request a SIM Swap check
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-mobile-identity-v1-openapi.yml
-  - term: Number Verify
-    definition: Verify a phone number
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-mobile-identity-v1-openapi.yml
-  - term: Number
-    definition: Check a phone number
-    tags:
-    - Resource Group
-    source: openapi/cm-com-verification-number-validation-v1-openapi.yml
-  - term: Health Response
-    definition: Standard health check response
+    source: openapi/cm-com-webhook-events-api-openapi.yml
+  - term: CreateFeedbackScoreRequest
+    definition: 'Request to create a feedback score for a conversation interaction. Example: ```json { "account_id": "550e8400-e29b-41d4-a716-446655440000",
+      "conversation_id": "123e4567-e89b-12d3-a456-426614174000", "interaction_id": "987fcdeb-51a2-3c4d-e5f6-789012345678", "score": 4, "comment":
+      "The assistant was very helpful and resolved my issue quickly.", "product_source": "HALO_WEB_WIDGET" } ```'
     tags:
     - Object
-    source: openapi/cm-com-conversational-ai-v1-openapi.yml#/components/schemas/HealthResponse
-  - term: Error Response
-    definition: Standard error response
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/CreateFeedbackScoreRequest
+  - term: FeedbackScoreResponse
+    definition: Response returned after creating or updating a feedback score.
     tags:
     - Object
-    source: openapi/cm-com-conversational-ai-v1-openapi.yml#/components/schemas/ErrorResponse
-  - term: ConnectGet
-    definition: 'Object declared by the contract with fields: query.'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/FeedbackScoreResponse
+  - term: MetricsData
+    definition: Aggregated metrics data.
     tags:
     - Object
-    source: openapi/cm-com-conversational-router-v1-openapi.yml#/components/schemas/ConnectGet
-  - term: ConnectCustom
-    definition: 'Object declared by the contract with fields: method, path, query, data.'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/MetricsData
+  - term: ProductMetrics
+    definition: Per-product metrics data.
     tags:
     - Object
-    source: openapi/cm-com-conversational-router-v1-openapi.yml#/components/schemas/ConnectCustom
-  - term: Gateway_EmailAddress
-    definition: 'Object declared by the contract with fields: email, name.'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/ProductMetrics
+  - term: ProductSource
+    definition: Product source enum for feedback scores
+    tags:
+    - Enumeration
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/ProductSource
+  - term: ScanLog
+    definition: 'Object declared by the contract with fields: externalId, scannedValue, scannedAt, scanStatusCode, errorDetails, deviceId, deviceLabel,
+      mdmDeviceInfo, ticket.'
     tags:
     - Object
-    source: openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Gateway_EmailAddress
-  - term: Gateway_EmailAttachment
-    definition: 'Object declared by the contract with fields: fileName, content, contentType, contentId.'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/ScanLog
+  - term: ClickerScansItemDto
+    definition: 'Object declared by the contract with fields: entrancePlanId, name, arrivals, departures, net.'
     tags:
     - Object
-    source: openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Gateway_EmailAttachment
-  - term: Gateway_EmailResponseDto
-    definition: 'Object declared by the contract with fields: status, message, success, messageId, batchId.'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/ClickerScansItemDto
+  - term: ErrorDto
+    definition: 'Object declared by the contract with fields: errorCode, description, httpStatus.'
     tags:
     - Object
-    source: openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Gateway_EmailResponseDto
-  - term: Gateway_GatewayRequest
-    definition: 'Object declared by the contract with fields: from, replyTo, to, cc, bcc, subject, html, text, attachments, customerReference,
-      scheduledAt, inReplyTo. (2 more)'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/ErrorDto
+  - term: ScanProgressResponseDto
+    definition: 'Object declared by the contract with fields: checkins, errors, checkouts, groupIntervalMs, effectiveEndAt.'
     tags:
     - Object
-    source: openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Gateway_GatewayRequest
-  - term: Gateway_ProblemDetails
-    definition: 'Object declared by the contract with fields: type, title, status, detail, instance.'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/ScanProgressResponseDto
+  - term: PageMetaDto
+    definition: 'Object declared by the contract with fields: page, take, skip, itemCount, pageCount, hasPreviousPage, hasNextPage.'
     tags:
     - Object
-    source: openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Gateway_ProblemDetails
-  - term: Configuration_AccountConfig
-    definition: 'Object declared by the contract with fields: id, logicalAccount, technicalAccount, name, organization, suspended, suspendedReason,
-      cmCompany, ipWhitelistEnabled, productToken, planName, defaultRecipientCount. (3 more)'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/PageMetaDto
+  - term: PageDto
+    definition: 'Object declared by the contract with fields: data, meta.'
     tags:
     - Object
-    source: openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Configuration_AccountConfig
-  - term: Configuration_AccountConfigGetResponse
-    definition: 'Object declared by the contract with fields: statusCode, message, account.'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/PageDto
+  - term: Ticket
+    definition: 'Object declared by the contract with fields: uuid, externalId, barcode, externalBarcode, orderId, issuedAt, timeSlotMomentAt,
+      expiresAt, ticketDetails, firstName, lastName, email. (12 more)'
     tags:
     - Object
-    source: openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Configuration_AccountConfigGetResponse
-  - term: Configuration_AccountConfigPostDto
-    definition: 'Object declared by the contract with fields: logicalAccount, technicalAccount, name, organization, suspended, suspendedReason,
-      cmCompany, isActive, planName, defaultRecipientCount, defaultAttachmentSizeInBytes, ipWhitelistEnabled.'
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/Ticket
+  - term: AnalyticsWidgetResponseDto
+    definition: 'Object declared by the contract with fields: currentVisitors, totalVisitors, totalCheckouts, showUpPercentage, totalTickets,
+      otherTickets.'
     tags:
     - Object
-    source: openapi/cm-com-email-gateway-api-v1-openapi.yml#/components/schemas/Configuration_AccountConfigPostDto
+    source: openapi/cm-com-analytics-api-openapi.yml#/components/schemas/AnalyticsWidgetResponseDto
+  - term: CreateFilterPresetDto
+    definition: 'Object declared by the contract with fields: name, scope, filterParams.'
+    tags:
+    - Object
+    source: openapi/cm-com-analytics-filter-presets-api-openapi.yml#/components/schemas/CreateFilterPresetDto
+  - term: UpdateFilterPresetDto
+    definition: 'Object declared by the contract with fields: name, scope, filterParams.'
+    tags:
+    - Object
+    source: openapi/cm-com-analytics-filter-presets-api-openapi.yml#/components/schemas/UpdateFilterPresetDto
+  - term: FilterPreset
+    definition: 'Object declared by the contract with fields: uuid, name, scope, filterParams.'
+    tags:
+    - Object
+    source: openapi/cm-com-analytics-filter-presets-api-openapi.yml#/components/schemas/FilterPreset
+  - term: CreateAnalyticsReportSubscriptionDto
+    definition: 'Object declared by the contract with fields: channel, emails, phoneNumbers, filterPresetUuids, dateRangeOption, intervalMinutes,
+      expiresAt.'
+    tags:
+    - Object
+    source: openapi/cm-com-analytics-report-subscriptions-api-openapi.yml#/components/schemas/CreateAnalyticsReportSubscriptionDto
+  - term: UpdateAnalyticsReportSubscriptionDto
+    definition: 'Object declared by the contract with fields: channel, emails, phoneNumbers, filterPresetUuids, dateRangeOption, intervalMinutes,
+      enabled, expiresAt.'
+    tags:
+    - Object
+    source: openapi/cm-com-analytics-report-subscriptions-api-openapi.yml#/components/schemas/UpdateAnalyticsReportSubscriptionDto
+  - term: AnalyticsReportSubscription
+    definition: 'Object declared by the contract with fields: uuid, emails, phoneNumbers, filterPresetUuids, dateRangeOption, intervalMinutes,
+      channel, enabled, startAt, expiresAt, lastRunAt, nextRunAt.'
+    tags:
+    - Object
+    source: openapi/cm-com-analytics-report-subscriptions-api-openapi.yml#/components/schemas/AnalyticsReportSubscription
+  - term: CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent
+    definition: 'Object declared by the contract with fields: id, entityId, entityType, ssoAccountId, eventType, eventSubType, eventMetaData,
+      createdOnUtc.'
+    tags:
+    - Object
+    source: openapi/cm-com-apisettings-api-openapi.yml#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent

@@ -26,6 +26,10 @@ maintainers:
   email: info@apis.io
 common:
 - type: SecurityTxt
+  url: well-known/cm-com-status-security.txt
+- type: IntegrationEdges
+  url: integrations/cm-com-integration-edges.yml
+- type: SecurityTxt
   url: well-known/cm-com-app-security.txt
 - type: AgenticAccess
   url: agentic-access/cm-com-agentic-access.yml
@@ -69128,7 +69132,7 @@ apis:
   - type: JSONSchema
     url: json-schema/cm-com-filtered-conversations-schema.json
 x-enrichment:
-  date: '2026-10-13'
   status: enriched
-  artifacts_added: 60
   pass: local-v5
+  date: '2026-10-13'
+  artifacts_added: 60

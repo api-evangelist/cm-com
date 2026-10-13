@@ -4,9 +4,9 @@ generator: harvest-well-known.py
 source: Live GET of the named /.well-known/ path list on every host the record knows; every row is a request that
   was issued.
 summary:
-  hosts_probed: 12
-  paths_probed: 132
-  documents_served: 9
+  hosts_probed: 9
+  paths_probed: 99
+  documents_served: 11
 hosts:
 - host: api.cm.com
   control:
@@ -18,272 +18,36 @@ hosts:
     status: 200
     standard: RFC 9116
     content_type: text/plain; charset=utf-8
-    file: cm-com-security.txt
-  - path: /.well-known/openid-configuration
-    status: 401
-    standard: OpenID Connect Discovery 1.0
-  - path: /.well-known/oauth-authorization-server
-    status: 401
-    standard: RFC 8414
-  - path: /.well-known/oauth-protected-resource
-    status: 401
-    standard: RFC 9728
-  - path: /.well-known/api-catalog
-    status: 401
-    standard: RFC 9727
-  - path: /.well-known/apis.json
-    status: 401
-    standard: APIs.json
-  - path: /.well-known/ai-plugin.json
-    status: 401
-    standard: OpenAI plugin manifest
-  - path: /.well-known/aauth-resource.json
-    status: 401
-    standard: AAuth
-  - path: /.well-known/ucp.json
-    status: 401
-    standard: UCP
-  - path: /.well-known/acp.json
-    status: 401
-    standard: ACP
-  - path: /.well-known/mcp/server-card.json
-    status: 401
-    standard: MCP server card
-- host: core-node-h3cjyx4jzq-ez.a.run.app
-  control:
-    path: /.well-known/apis-io-negative-control-7f3ab91c.json
-    status: 404
-    bytes: 0
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-    standard: RFC 9116
-  - path: /.well-known/openid-configuration
-    status: 404
-    standard: OpenID Connect Discovery 1.0
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-    standard: RFC 8414
-  - path: /.well-known/oauth-protected-resource
-    status: 404
-    standard: RFC 9728
-  - path: /.well-known/api-catalog
-    status: 404
-    standard: RFC 9727
-  - path: /.well-known/apis.json
-    status: 404
-    standard: APIs.json
-  - path: /.well-known/ai-plugin.json
-    status: 404
-    standard: OpenAI plugin manifest
-  - path: /.well-known/aauth-resource.json
-    status: 404
-    standard: AAuth
-  - path: /.well-known/ucp.json
-    status: 404
-    standard: UCP
-  - path: /.well-known/acp.json
-    status: 404
-    standard: ACP
-  - path: /.well-known/mcp/server-card.json
-    status: 404
-    standard: MCP server card
-- host: api.ticketing.cm.com
-  control:
-    path: /.well-known/apis-io-negative-control-7f3ab91c.json
-    status: 404
-    bytes: 0
-  documents:
-  - path: /.well-known/security.txt
-    status: 200
-    standard: RFC 9116
-    content_type: text/plain; charset=utf-8
     file: cm-com-api-security.txt
   - path: /.well-known/openid-configuration
-    status: 404
+    status: 401
     standard: OpenID Connect Discovery 1.0
   - path: /.well-known/oauth-authorization-server
-    status: 404
+    status: 401
     standard: RFC 8414
   - path: /.well-known/oauth-protected-resource
-    status: 404
+    status: 401
     standard: RFC 9728
   - path: /.well-known/api-catalog
-    status: 404
+    status: 401
     standard: RFC 9727
   - path: /.well-known/apis.json
-    status: 404
+    status: 401
     standard: APIs.json
   - path: /.well-known/ai-plugin.json
-    status: 404
+    status: 401
     standard: OpenAI plugin manifest
   - path: /.well-known/aauth-resource.json
-    status: 404
+    status: 401
     standard: AAuth
   - path: /.well-known/ucp.json
-    status: 404
+    status: 401
     standard: UCP
   - path: /.well-known/acp.json
-    status: 404
+    status: 401
     standard: ACP
   - path: /.well-known/mcp/server-card.json
-    status: 404
-    standard: MCP server card
-- host: globalreseller.nl
-  control:
-    path: /.well-known/apis-io-negative-control-7f3ab91c.json
-    status: 404
-    bytes: 0
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-    standard: RFC 9116
-  - path: /.well-known/openid-configuration
-    status: 404
-    standard: OpenID Connect Discovery 1.0
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-    standard: RFC 8414
-  - path: /.well-known/oauth-protected-resource
-    status: 404
-    standard: RFC 9728
-  - path: /.well-known/api-catalog
-    status: 404
-    standard: RFC 9727
-  - path: /.well-known/apis.json
-    status: 404
-    standard: APIs.json
-  - path: /.well-known/ai-plugin.json
-    status: 404
-    standard: OpenAI plugin manifest
-  - path: /.well-known/aauth-resource.json
-    status: 404
-    standard: AAuth
-  - path: /.well-known/ucp.json
-    status: 404
-    standard: UCP
-  - path: /.well-known/acp.json
-    status: 404
-    standard: ACP
-  - path: /.well-known/mcp/server-card.json
-    status: 404
-    standard: MCP server card
-- host: globalticket.com
-  control:
-    path: /.well-known/apis-io-negative-control-7f3ab91c.json
-    status: 404
-    bytes: 0
-  documents:
-  - path: /.well-known/security.txt
-    status: 404
-    standard: RFC 9116
-  - path: /.well-known/openid-configuration
-    status: 404
-    standard: OpenID Connect Discovery 1.0
-  - path: /.well-known/oauth-authorization-server
-    status: 404
-    standard: RFC 8414
-  - path: /.well-known/oauth-protected-resource
-    status: 404
-    standard: RFC 9728
-  - path: /.well-known/api-catalog
-    status: 404
-    standard: RFC 9727
-  - path: /.well-known/apis.json
-    status: 404
-    standard: APIs.json
-  - path: /.well-known/ai-plugin.json
-    status: 404
-    standard: OpenAI plugin manifest
-  - path: /.well-known/aauth-resource.json
-    status: 404
-    standard: AAuth
-  - path: /.well-known/ucp.json
-    status: 404
-    standard: UCP
-  - path: /.well-known/acp.json
-    status: 404
-    standard: ACP
-  - path: /.well-known/mcp/server-card.json
-    status: 404
-    standard: MCP server card
-- host: gw.cmtelecom.com
-  control:
-    path: /.well-known/apis-io-negative-control-7f3ab91c.json
-    status: 403
-    bytes: 0
-  documents:
-  - path: /.well-known/security.txt
-    status: 403
-    standard: RFC 9116
-  - path: /.well-known/openid-configuration
-    status: 403
-    standard: OpenID Connect Discovery 1.0
-  - path: /.well-known/oauth-authorization-server
-    status: 403
-    standard: RFC 8414
-  - path: /.well-known/oauth-protected-resource
-    status: 403
-    standard: RFC 9728
-  - path: /.well-known/api-catalog
-    status: 403
-    standard: RFC 9727
-  - path: /.well-known/apis.json
-    status: 403
-    standard: APIs.json
-  - path: /.well-known/ai-plugin.json
-    status: 403
-    standard: OpenAI plugin manifest
-  - path: /.well-known/aauth-resource.json
-    status: 403
-    standard: AAuth
-  - path: /.well-known/ucp.json
-    status: 403
-    standard: UCP
-  - path: /.well-known/acp.json
-    status: 403
-    standard: ACP
-  - path: /.well-known/mcp/server-card.json
-    status: 403
-    standard: MCP server card
-- host: api.cdp.cm.com
-  control:
-    path: /.well-known/apis-io-negative-control-7f3ab91c.json
-    status: 403
-    bytes: 0
-  documents:
-  - path: /.well-known/security.txt
-    status: 403
-    standard: RFC 9116
-  - path: /.well-known/openid-configuration
-    status: 403
-    standard: OpenID Connect Discovery 1.0
-  - path: /.well-known/oauth-authorization-server
-    status: 403
-    standard: RFC 8414
-  - path: /.well-known/oauth-protected-resource
-    status: 403
-    standard: RFC 9728
-  - path: /.well-known/api-catalog
-    status: 403
-    standard: RFC 9727
-  - path: /.well-known/apis.json
-    status: 403
-    standard: APIs.json
-  - path: /.well-known/ai-plugin.json
-    status: 403
-    standard: OpenAI plugin manifest
-  - path: /.well-known/aauth-resource.json
-    status: 403
-    standard: AAuth
-  - path: /.well-known/ucp.json
-    status: 403
-    standard: UCP
-  - path: /.well-known/acp.json
-    status: 403
-    standard: ACP
-  - path: /.well-known/mcp/server-card.json
-    status: 403
+    status: 401
     standard: MCP server card
 - host: docs.cm.com
   control:
@@ -428,7 +192,7 @@ hosts:
   - path: /.well-known/mcp/server-card.json
     status: 404
     standard: MCP server card
-- host: jobs.cm.com
+- host: www.cm.com
   control:
     path: /.well-known/apis-io-negative-control-7f3ab91c.json
     status: 404
@@ -438,7 +202,89 @@ hosts:
     status: 200
     standard: RFC 9116
     content_type: text/plain; charset=utf-8
-    file: cm-com-jobs-security.txt
+    file: cm-com-security.txt
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: releasenotes.cm.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    standard: RFC 9116
+    content_type: text/plain; charset=utf-8
+    file: cm-com-releasenotes-security.txt
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: status.cm.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    standard: RFC 9116
+    content_type: text/plain
+    file: cm-com-status-security.txt
   - path: /.well-known/openid-configuration
     status: 404
     standard: OpenID Connect Discovery 1.0
@@ -480,6 +326,47 @@ hosts:
     standard: RFC 9116
     content_type: text/plain; charset=utf-8
     file: cm-com-login-security.txt
+  - path: /.well-known/openid-configuration
+    status: 404
+    standard: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    standard: RFC 8414
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    standard: RFC 9728
+  - path: /.well-known/api-catalog
+    status: 404
+    standard: RFC 9727
+  - path: /.well-known/apis.json
+    status: 404
+    standard: APIs.json
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    standard: OpenAI plugin manifest
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    standard: AAuth
+  - path: /.well-known/ucp.json
+    status: 404
+    standard: UCP
+  - path: /.well-known/acp.json
+    status: 404
+    standard: ACP
+  - path: /.well-known/mcp/server-card.json
+    status: 404
+    standard: MCP server card
+- host: jobs.cm.com
+  control:
+    path: /.well-known/apis-io-negative-control-7f3ab91c.json
+    status: 404
+    bytes: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    standard: RFC 9116
+    content_type: text/plain; charset=utf-8
+    file: cm-com-jobs-security.txt
   - path: /.well-known/openid-configuration
     status: 404
     standard: OpenID Connect Discovery 1.0

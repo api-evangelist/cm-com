@@ -2,30 +2,30 @@ generated: '2026-10-13'
 method: derived
 generator: derive-problem-types.py
 source:
-- openapi/cm-com-conversational-ai-v1-openapi.yml
-- openapi/cm-com-conversational-router-v1-openapi.yml
-- openapi/cm-com-conversational-router-v2-openapi.yml
-- openapi/cm-com-customer-engagement-v1-openapi.yml
-- openapi/cm-com-email-gateway-api-v1-openapi.yml
-- openapi/cm-com-halo-analytics-v1-openapi.yml
-- openapi/cm-com-halo-core-v1-openapi.yml
-- openapi/cm-com-live-entrance-management-v1-openapi.yml
-- openapi/cm-com-live-entrance-management-v2-openapi.yml
-- openapi/cm-com-live-event-apps-v1-openapi.yml
-- openapi/cm-com-live-event-ticketing-v1-openapi.yml
-- openapi/cm-com-live-ga-partner-v1-openapi.yml
+- openapi/cm-com-addcontact-api-openapi.yml
+- openapi/cm-com-analytics-api-openapi.yml
+- openapi/cm-com-analytics-filter-presets-api-openapi.yml
+- openapi/cm-com-analytics-report-subscriptions-api-openapi.yml
+- openapi/cm-com-apisettings-api-openapi.yml
+- openapi/cm-com-apple-pay-api-openapi.yml
+- openapi/cm-com-applebusinesschat-api-openapi.yml
+- openapi/cm-com-archive-api-openapi.yml
+- openapi/cm-com-auth-api-openapi.yml
+- openapi/cm-com-authentication-api-openapi.yml
+- openapi/cm-com-authorization-api-openapi.yml
+- openapi/cm-com-bancontact-api-openapi.yml
 format: custom
 envelope:
   media_type: application/json
   schema: ErrorDto
 coverage:
-  operations: 1092
+  operations: 1078
   statuses_declared: 14
 problems:
 - status: 400
   title: Bad Request
   description: Bad Request
-  operations: 148
+  operations: 144
   media_types:
   - application/json
   - text/plain
@@ -90,14 +90,14 @@ problems:
 - status: 4XX
   title: null
   description: The request could not be processed. The body contains a standardized error object.
-  operations: 386
+  operations: 385
   media_types:
   - application/json
   schema: ErrorDto
 - status: 500
   title: Internal Server Error
   description: internal_server_error
-  operations: 61
+  operations: 60
   media_types:
   - application/json
   - text/plain
@@ -111,8 +111,8 @@ problems:
   schema: null
 - status: 503
   title: Service Unavailable
-  description: Service is unavailable
-  operations: 10
+  description: The Health Check is not successful
+  operations: 4
   media_types:
   - application/json
   schema: null
@@ -126,7 +126,7 @@ problems:
 - status: default
   title: null
   description: Any non-compliant request will return an error object
-  operations: 7
+  operations: 5
   media_types:
   - application/json
   schema: ErrorResponse

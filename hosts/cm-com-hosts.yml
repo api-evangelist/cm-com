@@ -3,9 +3,9 @@ method: derived
 source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
 generator: derive-hosts.py
 summary:
-  hosts: 16
-  own: 10
-  other_domain: 5
+  hosts: 10
+  own: 8
+  other_domain: 1
   platform: 1
   roles:
   - api
@@ -18,28 +18,10 @@ summary:
   - status
   - website
 hosts:
-- host: api.cdp.cm.com
-  found_by:
-  - apis[]
-  types: []
-  serves:
-  - api
-  registrable_domain: cm.com
-  role: api
-  relation: own
 - host: api.cm.com
   found_by:
   - apis[]
   - contract-discovery
-  types: []
-  serves:
-  - api
-  registrable_domain: cm.com
-  role: api
-  relation: own
-- host: api.ticketing.cm.com
-  found_by:
-  - apis[]
   types: []
   serves:
   - api
@@ -54,15 +36,6 @@ hosts:
   serves: []
   registrable_domain: intigriti.com
   role: security
-  relation: other-domain
-- host: core-node-h3cjyx4jzq-ez.a.run.app
-  found_by:
-  - apis[]
-  types: []
-  serves:
-  - api
-  registrable_domain: run.app
-  role: other
   relation: other-domain
 - host: developers.cm.com
   found_by:
@@ -107,33 +80,6 @@ hosts:
   registrable_domain: github.com
   role: source
   relation: platform
-- host: globalreseller.nl
-  found_by:
-  - apis[]
-  types: []
-  serves:
-  - api
-  registrable_domain: globalreseller.nl
-  role: other
-  relation: other-domain
-- host: globalticket.com
-  found_by:
-  - apis[]
-  types: []
-  serves:
-  - api
-  registrable_domain: globalticket.com
-  role: other
-  relation: other-domain
-- host: gw.cmtelecom.com
-  found_by:
-  - apis[]
-  types: []
-  serves:
-  - api
-  registrable_domain: cmtelecom.com
-  role: other
-  relation: other-domain
 - host: jobs.cm.com
   found_by:
   - probed
