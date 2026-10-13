@@ -298,3 +298,117 @@
   source: edge
   status: pending-generation
   arazzo: null
+- slug: cm-com-instagram
+  label: Instagram
+  partner: instagram
+  partner_name: Instagram
+  type: contract
+  channel: contract-enum
+  evidence: https://github.com/api-evangelist/cm-com/blob/main/openapi/cm-com-channels-api-openapi.yml
+  source: edge
+  relationship: messaging-channel
+  contract_reference:
+    repo: cm-com
+    spec_file: cm-com-channels-api-openapi.yml
+    value: INSTAGRAM
+    property: paths.post.parameters
+    matched_domain: instagram.com
+    detected_by: sweep-cpaas.py
+    detected: '2026-10-13'
+  status: not-a-workflow
+  arazzo: null
+- slug: cm-com-messenger
+  label: Messenger
+  partner: facebook
+  partner_name: Messenger
+  type: contract
+  channel: contract-enum
+  evidence: https://github.com/api-evangelist/cm-com/blob/main/openapi/cm-com-channels-api-openapi.yml
+  source: edge
+  relationship: messaging-channel
+  contract_reference:
+    repo: cm-com
+    spec_file: cm-com-channels-api-openapi.yml
+    value: FACEBOOK
+    property: paths.post.parameters
+    matched_domain: facebook.com
+    detected_by: sweep-cpaas.py
+    detected: '2026-10-13'
+  status: not-a-workflow
+  arazzo: null
+- slug: cm-com-microsoft-teams
+  label: Microsoft Teams
+  partner: microsoft-teams
+  partner_name: Microsoft Teams
+  type: contract
+  channel: contract-enum
+  evidence: https://github.com/api-evangelist/cm-com/blob/main/openapi/cm-com-runtime-api-openapi.yml
+  source: edge
+  relationship: messaging-channel
+  contract_reference:
+    repo: cm-com
+    spec_file: cm-com-runtime-api-openapi.yml
+    value: MICROSOFT_TEAMS
+    property: components.schemas.RequestOrigin
+    matched_domain: microsoft.com
+    detected_by: sweep-cpaas.py
+    detected: '2026-10-13'
+  status: not-a-workflow
+  arazzo: null
+- slug: cm-com-rcs
+  label: RCS
+  partner: google
+  partner_name: RCS
+  type: contract
+  channel: contract-enum
+  evidence: https://github.com/api-evangelist/cm-com/blob/main/openapi/cm-com-otp-api-openapi.yml
+  source: edge
+  relationship: messaging-channel
+  contract_reference:
+    repo: cm-com
+    spec_file: cm-com-otp-api-openapi.yml
+    value: rcs
+    property: schemas.OtpResponse.channel
+    matched_domain: google.com
+    detected_by: sweep-cpaas.py
+    detected: '2026-10-13'
+  status: not-a-workflow
+  arazzo: null
+- slug: cm-com-whatsapp
+  label: WhatsApp
+  partner: whatsapp
+  partner_name: WhatsApp
+  type: contract
+  channel: contract-enum
+  evidence: https://github.com/api-evangelist/cm-com/blob/main/openapi/cm-com-analytics-report-subscriptions-api-openapi.yml
+  source: edge
+  relationship: messaging-channel
+  contract_reference:
+    repo: cm-com
+    spec_file: cm-com-analytics-report-subscriptions-api-openapi.yml
+    value: WHATSAPP
+    property: schemas.CreateAnalyticsReportSubscriptionDto.channel
+    matched_domain: whatsapp.com
+    detected_by: sweep-cpaas.py
+    detected: '2026-10-13'
+  status: not-a-workflow
+  arazzo: null
+- slug: cm-com-novu
+  label: novu
+  partner: novu
+  partner_name: novu
+  type: contract
+  channel: contract-enum
+  evidence: https://github.com/api-evangelist/novu/blob/main/openapi/novu-channel-connections-api-openapi.yml
+  source: edge
+  relationship: delivery-provider
+  contract_reference:
+    repo: novu
+    spec_file: novu-channel-connections-api-openapi.yml
+    value: cm-telecom
+    property: schemas.GetChannelConnectionResponseDto.providerId
+    matched_domain: cm.com
+    detected_by: sweep-cpaas.py
+    detected: '2026-10-13'
+  status: not-a-workflow
+  arazzo: null
