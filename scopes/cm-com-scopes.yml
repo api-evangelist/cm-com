@@ -1,15 +1,127 @@
-generated: '2026-10-13'
+generated: '2026-10-14'
 method: none
-source: openapi/cm-com-live-ga-partner-v1-openapi.yml, openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
+source: openapi/cm-com-apple-pay-api-openapi.yml, openapi/cm-com-auth-api-openapi.yml, openapi/cm-com-authorization-api-openapi.yml,
+  openapi/cm-com-bancontact-api-openapi.yml, openapi/cm-com-banktransfer-api-openapi.yml, openapi/cm-com-barcodes-api-openapi.yml,
+  openapi/cm-com-belfiuspaybutton-api-openapi.yml, openapi/cm-com-cards-api-openapi.yml, openapi/cm-com-checkout-api-openapi.yml,
+  openapi/cm-com-customerdata-api-openapi.yml, openapi/cm-com-events-api-openapi.yml, openapi/cm-com-googlepay-api-openapi.yml,
+  openapi/cm-com-ideal-api-openapi.yml, openapi/cm-com-ideal-qr-api-openapi.yml, openapi/cm-com-in3-api-openapi.yml,
+  openapi/cm-com-klarna-api-openapi.yml, openapi/cm-com-pay-pal-api-openapi.yml, openapi/cm-com-payment-methods-api-openapi.yml,
+  openapi/cm-com-riverty-api-openapi.yml, openapi/cm-com-sepadirectdebit-api-openapi.yml, openapi/cm-com-utils-api-openapi.yml
 schemes:
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-apple-pay-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
 - name: sec0
-  source: openapi/cm-com-live-ga-partner-v1-openapi.yml
+  source: openapi/cm-com-auth-api-openapi.yml
   flows: []
 - name: oAuth2ClientCredentials
-  source: openapi/cm-com-payments-online-payments-v1-27-22-openapi.yml
+  source: openapi/cm-com-authorization-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-bancontact-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-banktransfer-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: sec0
+  source: openapi/cm-com-barcodes-api-openapi.yml
+  flows: []
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-belfiuspaybutton-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-cards-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-checkout-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: sec0
+  source: openapi/cm-com-customerdata-api-openapi.yml
+  flows: []
+- name: sec0
+  source: openapi/cm-com-events-api-openapi.yml
+  flows: []
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-googlepay-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-ideal-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-ideal-qr-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-in3-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-klarna-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-pay-pal-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-payment-methods-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-riverty-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-sepadirectdebit-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/authorization/oauth2/token
+  description: OAuth 2.0 Client Credentials Grant.
+- name: oAuth2ClientCredentials
+  source: openapi/cm-com-utils-api-openapi.yml
   flows:
   - flow: clientCredentials
     tokenUrl: /api/v1/authorization/oauth2/token
   description: OAuth 2.0 Client Credentials Grant.
 scopes: []
-note: OAuth2 clientCredentials declared in the Online Payments spec with no scopes; no other spec declares OAuth scopes.
+note: The OAuth2 security scheme(s) in the OpenAPI declare no scopes, and no security requirement
+  references one.
