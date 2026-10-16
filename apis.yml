@@ -25,6 +25,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: OAuthScopes
+  url: scopes/cm-com-scopes.yml
 - type: SecurityTxt
   url: well-known/cm-com-status-security.txt
 - type: IntegrationEdges
