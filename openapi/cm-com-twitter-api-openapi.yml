@@ -372,66 +372,7 @@ paths:
         '200':
           description: OK
 components:
-  requestBodies:
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-        text/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-        text/xml:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-        multipart/form-data:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-        application/x-www-form-urlencoded:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-      description: The form input.
-      required: true
   schemas:
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
-      type: object
-      properties:
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelCategoryRequestID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
     CM.Platform.Channels.Models.ChannelTypes.Twitter.ApiTwitterAccount:
       required:
       - id
@@ -509,6 +450,35 @@ components:
           type: string
         name:
           type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
     CM.Platform.Channels.Models.ChannelTypes.Twitter.ApiTwitterAccountBase:
       required:
       - id
@@ -567,6 +537,36 @@ components:
           - CANCELLED
           - DELETED
           type: string
+  requestBodies:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
   securitySchemes:
     ProductToken:
       type: apiKey

@@ -268,116 +268,80 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    CreateAnalyticsReportSubscriptionDto:
+    ErrorDto:
       type: object
       properties:
-        channel:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
           type: string
-          enum:
-          - EMAIL
-          - WHATSAPP
-          - SMS
-          default: EMAIL
-          description: Delivery channel. Defaults to EMAIL.
-        emails:
-          minItems: 1
-          maxItems: 20
-          description: Recipient email addresses. Required for the EMAIL channel.
-          example:
-          - ops@customer.com
-          - manager@customer.com
-          type: array
-          items:
-            type: string
-        phoneNumbers:
-          minItems: 1
-          maxItems: 20
-          description: Recipient phone numbers (E.164) for the phone channels. Required for the WHATSAPP and SMS channels.
-          example:
-          - '+31612345678'
-          type: array
-          items:
-            type: string
-        filterPresetUuids:
-          minItems: 1
-          maxItems: 10
-          description: UUIDs of the filter presets whose analytics should be sent.
-          type: array
-          items:
-            type: string
-        dateRangeOption:
-          type: string
-          enum:
-          - TODAY
-          - WEEK
-          - MONTH
-          - ABSOLUTE
-          default: TODAY
-          description: How the report window is resolved on each run. Defaults to TODAY.
-        intervalMinutes:
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
           type: number
           enum:
-          - 15
-          - 30
-          - 60
-          example: 60
-          description: How often to send the report, in minutes.
-        expiresAt:
-          type: string
-          description: When sending stops. Must be in the future and at most 7 days out. Defaults to the 7-day cap when omitted.
-          example: '2026-08-25T00:00:00.000Z'
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
       required:
-      - filterPresetUuids
-      - intervalMinutes
-    UpdateAnalyticsReportSubscriptionDto:
-      type: object
-      properties:
-        channel:
-          type: string
-          enum:
-          - EMAIL
-          - WHATSAPP
-          - SMS
-        emails:
-          maxItems: 20
-          example:
-          - ops@customer.com
-          type: array
-          items:
-            type: string
-        phoneNumbers:
-          maxItems: 20
-          example:
-          - '+31612345678'
-          type: array
-          items:
-            type: string
-        filterPresetUuids:
-          minItems: 1
-          maxItems: 10
-          type: array
-          items:
-            type: string
-        dateRangeOption:
-          type: string
-          enum:
-          - TODAY
-          - WEEK
-          - MONTH
-          - ABSOLUTE
-        intervalMinutes:
-          type: number
-          enum:
-          - 15
-          - 30
-          - 60
-        enabled:
-          type: boolean
-          description: Reactivate or pause the subscription without deleting it.
-        expiresAt:
-          type: string
-          description: New end date. Must be in the future and at most 7 days from now.
-          example: '2026-08-25T00:00:00.000Z'
+      - errorCode
+      - description
+      - httpStatus
     AnalyticsReportSubscription:
       type: object
       properties:
@@ -456,80 +420,116 @@ components:
       - startAt
       - expiresAt
       - nextRunAt
-    ErrorDto:
+    UpdateAnalyticsReportSubscriptionDto:
       type: object
       properties:
-        errorCode:
-          type: number
-          example: 400100
-          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
-        description:
+        channel:
           type: string
-          maxLength: 255
-          example: Description of the error.
-        httpStatus:
+          enum:
+          - EMAIL
+          - WHATSAPP
+          - SMS
+        emails:
+          maxItems: 20
+          example:
+          - ops@customer.com
+          type: array
+          items:
+            type: string
+        phoneNumbers:
+          maxItems: 20
+          example:
+          - '+31612345678'
+          type: array
+          items:
+            type: string
+        filterPresetUuids:
+          minItems: 1
+          maxItems: 10
+          type: array
+          items:
+            type: string
+        dateRangeOption:
+          type: string
+          enum:
+          - TODAY
+          - WEEK
+          - MONTH
+          - ABSOLUTE
+        intervalMinutes:
           type: number
           enum:
-          - 100
-          - 101
-          - 102
-          - 103
-          - 200
-          - 201
-          - 202
-          - 203
-          - 204
-          - 205
-          - 206
-          - 207
-          - 208
-          - 210
-          - 300
-          - 301
-          - 302
-          - 303
-          - 304
-          - 307
-          - 308
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          - 414
-          - 415
-          - 416
-          - 417
-          - 418
-          - 421
-          - 422
-          - 423
-          - 424
-          - 428
-          - 429
-          - 456
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
-          - 505
-          - 507
-          - 508
-          example: 400
+          - 15
+          - 30
+          - 60
+        enabled:
+          type: boolean
+          description: Reactivate or pause the subscription without deleting it.
+        expiresAt:
+          type: string
+          description: New end date. Must be in the future and at most 7 days from now.
+          example: '2026-08-25T00:00:00.000Z'
+    CreateAnalyticsReportSubscriptionDto:
+      type: object
+      properties:
+        channel:
+          type: string
+          enum:
+          - EMAIL
+          - WHATSAPP
+          - SMS
+          default: EMAIL
+          description: Delivery channel. Defaults to EMAIL.
+        emails:
+          minItems: 1
+          maxItems: 20
+          description: Recipient email addresses. Required for the EMAIL channel.
+          example:
+          - ops@customer.com
+          - manager@customer.com
+          type: array
+          items:
+            type: string
+        phoneNumbers:
+          minItems: 1
+          maxItems: 20
+          description: Recipient phone numbers (E.164) for the phone channels. Required for the WHATSAPP and SMS channels.
+          example:
+          - '+31612345678'
+          type: array
+          items:
+            type: string
+        filterPresetUuids:
+          minItems: 1
+          maxItems: 10
+          description: UUIDs of the filter presets whose analytics should be sent.
+          type: array
+          items:
+            type: string
+        dateRangeOption:
+          type: string
+          enum:
+          - TODAY
+          - WEEK
+          - MONTH
+          - ABSOLUTE
+          default: TODAY
+          description: How the report window is resolved on each run. Defaults to TODAY.
+        intervalMinutes:
+          type: number
+          enum:
+          - 15
+          - 30
+          - 60
+          example: 60
+          description: How often to send the report, in minutes.
+        expiresAt:
+          type: string
+          description: When sending stops. Must be in the future and at most 7 days out. Defaults to the 7-day cap when omitted.
+          example: '2026-08-25T00:00:00.000Z'
       required:
-      - errorCode
-      - description
-      - httpStatus
+      - filterPresetUuids
+      - intervalMinutes
   securitySchemes:
     cookie:
       type: apiKey

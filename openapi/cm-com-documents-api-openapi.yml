@@ -100,6 +100,53 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    ApiUploadedDocument:
+      title: Uploaded Document
+      type: object
+      properties:
+        fileName:
+          type:
+          - string
+          - 'null'
+          description: File name of the document.
+        documentGuid:
+          type: string
+          description: Unique identifier of the document.
+          format: uuid
+      additionalProperties: false
+      description: Response for a newly uploaded document.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     ApiDocumentMetadata:
       type: object
       properties:
@@ -119,53 +166,6 @@ components:
           format: date-time
       additionalProperties: false
       description: Metadata of a document containing information about the document, such as filename and content type.
-    ErrorCollection:
-      title: Error Collection
-      type: object
-      properties:
-        requestId:
-          type:
-          - string
-          - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Error'
-      additionalProperties: false
-    Error:
-      title: Error
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        source:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    ApiUploadedDocument:
-      title: Uploaded Document
-      type: object
-      properties:
-        fileName:
-          type:
-          - string
-          - 'null'
-          description: File name of the document.
-        documentGuid:
-          type: string
-          description: Unique identifier of the document.
-          format: uuid
-      additionalProperties: false
-      description: Response for a newly uploaded document.
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

@@ -135,140 +135,6 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    Organisation:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: CM.com NV
-        cmAccountGuid:
-          type: string
-          minLength: 36
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        cmTicketingTechnicalLinkUuid:
-          type: string
-          minLength: 36
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        cmCrmId:
-          type: number
-          example: 123456
-        email:
-          type: string
-          maxLength: 255
-          description: Should be valid e-mail address
-          example: jane.doe@example.com
-        upstreamPlatform:
-          type: string
-          enum:
-          - ENMA_SUBSCRIBER
-          - GENERAL_ADMISSION
-          - SEATED_TICKETING
-          - GLOBAL_TICKET
-          - INTERSOLVE
-          - PUBLIQ
-          - YOURTICKETPROVIDER
-          - PASS_TEST
-          - PASS_NATIONAAL_MILITAIR_MUSEUM
-          - PASS_WEC
-          - PASS_CENTRAAL_MUSEUM
-          - PHOENIX_DES_LUMIERES
-          - PORT_DES_LUMIERES
-          - SMOOTHR_DEMO_ACCOUNT
-          - ENTRANCE_MANAGEMENT
-          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
-          - ELECTRIC_IBIZA_ENTERTAINMENT
-          - MOMICE_KLM_OPEN
-          - CUSTOMER_DATA_PLATFORM
-          - GO_CITY
-          example: GLOBAL_TICKET
-      required:
-      - uuid
-      - name
-      - email
-      - upstreamPlatform
-    CreateOrganisationDto:
-      type: object
-      properties:
-        uuid:
-          type: string
-          minLength: 36
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: CM.com NV
-        cmAccountGuid:
-          type: string
-          minLength: 36
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        cmTicketingTechnicalLinkUuid:
-          type: string
-          minLength: 36
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        cmCrmId:
-          type: number
-          example: 123456
-        email:
-          type: string
-          maxLength: 255
-          description: Should be valid e-mail address
-          example: jane.doe@example.com
-        callbackUrl:
-          type: string
-          maxLength: 255
-          description: Should be valid url. Will be used to POST scan events towards
-          example: https://yourdomain.tld/scanning/callback
-        callbackConfiguration:
-          type: object
-          description: Generic JSON configuration for callbacks
-          example:
-            apiKey: your-api-key
-            apiSecret: your-api-secret
-        upstreamPlatform:
-          type: string
-          enum:
-          - ENMA_SUBSCRIBER
-          - GENERAL_ADMISSION
-          - SEATED_TICKETING
-          - GLOBAL_TICKET
-          - INTERSOLVE
-          - PUBLIQ
-          - YOURTICKETPROVIDER
-          - PASS_TEST
-          - PASS_NATIONAAL_MILITAIR_MUSEUM
-          - PASS_WEC
-          - PASS_CENTRAAL_MUSEUM
-          - PHOENIX_DES_LUMIERES
-          - PORT_DES_LUMIERES
-          - SMOOTHR_DEMO_ACCOUNT
-          - ENTRANCE_MANAGEMENT
-          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
-          - ELECTRIC_IBIZA_ENTERTAINMENT
-          - MOMICE_KLM_OPEN
-          - CUSTOMER_DATA_PLATFORM
-          - GO_CITY
-          example: GLOBAL_TICKET
-      required:
-      - name
-      - email
-      - upstreamPlatform
-    OnboardingDto:
-      type: object
-      properties:
-        organisation:
-          description: Object of the organisation to be onboarded
-          allOf:
-          - $ref: '#/components/schemas/CreateOrganisationDto'
     ErrorDto:
       type: object
       properties:
@@ -343,6 +209,140 @@ components:
       - errorCode
       - description
       - httpStatus
+    CreateOrganisationDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com NV
+        cmAccountGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmCrmId:
+          type: number
+          example: 123456
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        callbackUrl:
+          type: string
+          maxLength: 255
+          description: Should be valid url. Will be used to POST scan events towards
+          example: https://yourdomain.tld/scanning/callback
+        callbackConfiguration:
+          type: object
+          description: Generic JSON configuration for callbacks
+          example:
+            apiKey: your-api-key
+            apiSecret: your-api-secret
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+      required:
+      - name
+      - email
+      - upstreamPlatform
+    Organisation:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com NV
+        cmAccountGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmCrmId:
+          type: number
+          example: 123456
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+      required:
+      - uuid
+      - name
+      - email
+      - upstreamPlatform
+    OnboardingDto:
+      type: object
+      properties:
+        organisation:
+          description: Object of the organisation to be onboarded
+          allOf:
+          - $ref: '#/components/schemas/CreateOrganisationDto'
   securitySchemes:
     cookie:
       type: apiKey

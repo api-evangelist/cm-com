@@ -269,44 +269,6 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    CreateFilterPresetDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 40
-          example: Morning filters
-        scope:
-          type: string
-          enum:
-          - USER
-          - ORGANISATION
-          example: USER
-        filterParams:
-          type: object
-          description: The analytics filter configuration to save as a preset
-      required:
-      - name
-      - scope
-      - filterParams
-    UpdateFilterPresetDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 40
-          example: Updated preset name
-        scope:
-          type: string
-          enum:
-          - USER
-          - ORGANISATION
-          example: USER
-        filterParams:
-          type: object
-          description: Updated analytics filter configuration
     FilterPreset:
       type: object
       properties:
@@ -331,6 +293,23 @@ components:
       - name
       - scope
       - filterParams
+    UpdateFilterPresetDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 40
+          example: Updated preset name
+        scope:
+          type: string
+          enum:
+          - USER
+          - ORGANISATION
+          example: USER
+        filterParams:
+          type: object
+          description: Updated analytics filter configuration
     ErrorDto:
       type: object
       properties:
@@ -405,6 +384,27 @@ components:
       - errorCode
       - description
       - httpStatus
+    CreateFilterPresetDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 40
+          example: Morning filters
+        scope:
+          type: string
+          enum:
+          - USER
+          - ORGANISATION
+          example: USER
+        filterParams:
+          type: object
+          description: The analytics filter configuration to save as a preset
+      required:
+      - name
+      - scope
+      - filterParams
   securitySchemes:
     cookie:
       type: apiKey

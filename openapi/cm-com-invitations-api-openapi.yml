@@ -215,38 +215,6 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    InvitationsService:
-      type: object
-      properties: {}
-    UpdateUserDto:
-      type: object
-      properties:
-        firstName:
-          type: string
-          maxLength: 255
-          example: Jane
-        lastName:
-          type: string
-          maxLength: 255
-          example: Doe
-        username:
-          type: string
-          description: Either one of username or e-mail is mandatory
-          minLength: 6
-          maxLength: 255
-          example: myUserName
-        email:
-          type: string
-          description: Either one of username or e-mail is mandatory. Should be a valid e-mail.
-          maxLength: 255
-          example: jane.doe@example.com
-        password:
-          type: string
-          minLength: 6
-          description: Password must contain a minimum of 6 characters
-          example: MyStrong3x4mpl3P4ssword!
-      required:
-      - password
     ErrorDto:
       type: object
       properties:
@@ -321,6 +289,38 @@ components:
       - errorCode
       - description
       - httpStatus
+    InvitationsService:
+      type: object
+      properties: {}
+    UpdateUserDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 255
+          example: Jane
+        lastName:
+          type: string
+          maxLength: 255
+          example: Doe
+        username:
+          type: string
+          description: Either one of username or e-mail is mandatory
+          minLength: 6
+          maxLength: 255
+          example: myUserName
+        email:
+          type: string
+          description: Either one of username or e-mail is mandatory. Should be a valid e-mail.
+          maxLength: 255
+          example: jane.doe@example.com
+        password:
+          type: string
+          minLength: 6
+          description: Password must contain a minimum of 6 characters
+          example: MyStrong3x4mpl3P4ssword!
+      required:
+      - password
   securitySchemes:
     cookie:
       type: apiKey

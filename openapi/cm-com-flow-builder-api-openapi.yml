@@ -46,52 +46,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CallQueuedEvent:
-      title: Call Queued Event
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          description: The Type of event.
-          readOnly: true
-        call-id:
-          type: string
-          description: The ID of the call this event belongs to.
-          format: uuid
-        instruction-id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the instruction the event is a result of.
-        queue-id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the queue.
-        caller:
-          type:
-          - string
-          - 'null'
-          description: The id (e.g. number) of the caller.
-        callee:
-          type:
-          - string
-          - 'null'
-          description: The id (e.g. number) of the callee.
-        success:
-          type: boolean
-          description: True if the PlaceCallInstruction was accepted.
-        error:
-          type:
-          - string
-          - 'null'
-          description: True if the PlaceCallInstruction was accepted.
-      additionalProperties: false
-      description: 'Event that is a result (basically a direct response) to the PlaceCallInstruction.
-
-        This one is generally used in the async versions of the calls.'
     ExceptionEvent:
       title: Exception Event
       type: object
@@ -131,6 +85,15 @@ components:
           description: Some explanatory text on the exception.
       additionalProperties: false
       description: And event containing an exception.
+    VoicemailResponse:
+      title: Voicemail Response
+      enum:
+      - Ignore
+      - Restart
+      - Stop
+      - Disconnect
+      type: string
+      description: The type that determines the flow of Voicemail detection.
     FlowBuilderInstruction:
       title: Flow Builder Instruction
       required:
@@ -220,15 +183,6 @@ components:
           $ref: '#/components/schemas/VoicemailResponse'
       additionalProperties: false
       description: This sends the instruction to make and outbound call and start a FlowBuilder flow.
-    VoicemailResponse:
-      title: Voicemail Response
-      enum:
-      - Ignore
-      - Restart
-      - Stop
-      - Disconnect
-      type: string
-      description: The type that determines the flow of Voicemail detection.
     ExceptionEventCode:
       title: Exception Event Code
       enum:
@@ -243,6 +197,52 @@ components:
       - TooManyNumbers
       type: string
       description: Enum of the different codes of exceptions.
+    CallQueuedEvent:
+      title: Call Queued Event
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: The Type of event.
+          readOnly: true
+        call-id:
+          type: string
+          description: The ID of the call this event belongs to.
+          format: uuid
+        instruction-id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the instruction the event is a result of.
+        queue-id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the queue.
+        caller:
+          type:
+          - string
+          - 'null'
+          description: The id (e.g. number) of the caller.
+        callee:
+          type:
+          - string
+          - 'null'
+          description: The id (e.g. number) of the callee.
+        success:
+          type: boolean
+          description: True if the PlaceCallInstruction was accepted.
+        error:
+          type:
+          - string
+          - 'null'
+          description: True if the PlaceCallInstruction was accepted.
+      additionalProperties: false
+      description: 'Event that is a result (basically a direct response) to the PlaceCallInstruction.
+
+        This one is generally used in the async versions of the calls.'
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

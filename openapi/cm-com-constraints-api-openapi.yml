@@ -401,6 +401,17 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
+    UpdateConstraintDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Special access group
     ErrorDto:
       type: object
       properties:
@@ -475,7 +486,7 @@ components:
       - errorCode
       - description
       - httpStatus
-    UpdateConstraintDto:
+    CreateConstraintDto:
       type: object
       properties:
         externalId:
@@ -486,6 +497,9 @@ components:
           type: string
           maxLength: 255
           example: Special access group
+      required:
+      - externalId
+      - name
     PageDto:
       type: object
       properties:
@@ -522,20 +536,6 @@ components:
       - pageCount
       - hasPreviousPage
       - hasNextPage
-    CreateConstraintDto:
-      type: object
-      properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Special access group
-      required:
-      - externalId
-      - name
     Constraint:
       type: object
       properties:

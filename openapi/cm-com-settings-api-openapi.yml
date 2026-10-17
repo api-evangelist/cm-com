@@ -87,40 +87,6 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    GenericResponseDto:
-      type: object
-      properties:
-        message:
-          type: string
-          readOnly: true
-          example: Successfully uploaded file.
-        details:
-          type: array
-          items:
-            type: object
-          example:
-          - file: filename.csv
-      required:
-      - message
-      - details
-    SyncCdpDataDto:
-      type: object
-      properties:
-        entrancePlanIds:
-          type: string
-          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
-          description: Comma separated values for entrance plan uuids
-        syncFromDate:
-          format: date-time
-          type: string
-          description: Start date of sync
-        syncUntilDate:
-          format: date-time
-          type: string
-          description: End date of sync
-      required:
-      - syncFromDate
-      - syncUntilDate
     ErrorDto:
       type: object
       properties:
@@ -195,6 +161,40 @@ components:
       - errorCode
       - description
       - httpStatus
+    SyncCdpDataDto:
+      type: object
+      properties:
+        entrancePlanIds:
+          type: string
+          example: 00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000000
+          description: Comma separated values for entrance plan uuids
+        syncFromDate:
+          format: date-time
+          type: string
+          description: Start date of sync
+        syncUntilDate:
+          format: date-time
+          type: string
+          description: End date of sync
+      required:
+      - syncFromDate
+      - syncUntilDate
+    GenericResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          readOnly: true
+          example: Successfully uploaded file.
+        details:
+          type: array
+          items:
+            type: object
+          example:
+          - file: filename.csv
+      required:
+      - message
+      - details
   securitySchemes:
     cookie:
       type: apiKey

@@ -424,47 +424,70 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ApiStreetNumberAndPostalCodeValidationRequest:
-      title: Street Number And Postal Code Validation Request
+    ApiCompanyProfileStatus:
+      title: Company Profile Status
       type: object
       properties:
-        streetNumber:
-          maxLength: 10
+        key:
           type:
           - string
           - 'null'
-          description: Street number of the company address
-        streetNumberExt:
-          maxLength: 255
+          description: Status key
+        displayValue:
           type:
           - string
           - 'null'
-          description: Extra information about the street number. E.g. apartment or suite
-        postalCode:
-          maxLength: 12
-          type:
-          - string
-          - 'null'
-          description: Postal code of the company address
+          description: The English value of the status
       additionalProperties: false
-      description: API request model for validating street number and postal code combination
-    Error:
-      title: Error
+      description: Approval status of a company profile
+    ApiRequiredFieldValidationResult:
+      title: Required Field Validation Result
       type: object
       properties:
-        code:
+        field:
           type:
           - string
           - 'null'
-        message:
+          description: The key of the required field to which this validation result applies.
+        isValid:
+          type: boolean
+          description: Whether or not the given value is valid.
+        invalidReason:
           type:
           - string
           - 'null'
-        source:
-          type:
-          - string
-          - 'null'
+          description: When the given value is invalid, this field gives an explanation on why its validation failed.
       additionalProperties: false
+      description: Validation information for required fields.
+    ApiDocument:
+      title: Document
+      type: object
+      properties:
+        requirementKey:
+          type:
+          - string
+          - 'null'
+          description: The key of the requirement which this document represents.
+        documentGuid:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the document in the Voice Documents API.
+          format: uuid
+        approved:
+          type: boolean
+          description: Whether or not the document was approved by CM.com.
+        approvalComment:
+          type:
+          - string
+          - 'null'
+          description: 'Additional information on the documents approval status, should only be filled in when the document has been
+
+            denied.'
+      additionalProperties: false
+      description: 'A document that''s required by rules and regulations of a specific country for requesting and operating phone
+
+        numbers.'
     ApiCompanyProfile:
       title: Company Profile
       required:
@@ -646,22 +669,30 @@ components:
       description: 'A company profile that represents a company with a physical address that can be used for requesting new phone
 
         numbers within the CM.com Voice platform.'
-    ApiCompanyProfileStatus:
-      title: Company Profile Status
+    ApiStreetNumberAndPostalCodeValidationRequest:
+      title: Street Number And Postal Code Validation Request
       type: object
       properties:
-        key:
+        streetNumber:
+          maxLength: 10
           type:
           - string
           - 'null'
-          description: Status key
-        displayValue:
+          description: Street number of the company address
+        streetNumberExt:
+          maxLength: 255
           type:
           - string
           - 'null'
-          description: The English value of the status
+          description: Extra information about the street number. E.g. apartment or suite
+        postalCode:
+          maxLength: 12
+          type:
+          - string
+          - 'null'
+          description: Postal code of the company address
       additionalProperties: false
-      description: Approval status of a company profile
+      description: API request model for validating street number and postal code combination
     ApiStreetNumberAndPostalCodeValidationResult:
       title: Street Number And Postal Code Validation Result
       type: object
@@ -671,6 +702,38 @@ components:
           description: Whether or not the given value is valid.
       additionalProperties: false
       description: Validation information for Street number and Postal Code
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     ApiUpdateCompanyProfile:
       title: Update Company Profile
       type: object
@@ -771,69 +834,6 @@ components:
           description: List of documents that are legaly required for us to be able to request phone numbers.
       additionalProperties: false
       description: Update model for a company profile.
-    ApiRequiredFieldValidationResult:
-      title: Required Field Validation Result
-      type: object
-      properties:
-        field:
-          type:
-          - string
-          - 'null'
-          description: The key of the required field to which this validation result applies.
-        isValid:
-          type: boolean
-          description: Whether or not the given value is valid.
-        invalidReason:
-          type:
-          - string
-          - 'null'
-          description: When the given value is invalid, this field gives an explanation on why its validation failed.
-      additionalProperties: false
-      description: Validation information for required fields.
-    ErrorCollection:
-      title: Error Collection
-      type: object
-      properties:
-        requestId:
-          type:
-          - string
-          - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Error'
-      additionalProperties: false
-    ApiDocument:
-      title: Document
-      type: object
-      properties:
-        requirementKey:
-          type:
-          - string
-          - 'null'
-          description: The key of the requirement which this document represents.
-        documentGuid:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier of the document in the Voice Documents API.
-          format: uuid
-        approved:
-          type: boolean
-          description: Whether or not the document was approved by CM.com.
-        approvalComment:
-          type:
-          - string
-          - 'null'
-          description: 'Additional information on the documents approval status, should only be filled in when the document has been
-
-            denied.'
-      additionalProperties: false
-      description: 'A document that''s required by rules and regulations of a specific country for requesting and operating phone
-
-        numbers.'
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

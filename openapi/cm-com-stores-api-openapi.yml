@@ -73,28 +73,6 @@ paths:
           description: Internal server error.
 components:
   schemas:
-    Store:
-      title: Store
-      description: Information about Store where merchant can do transactions.
-      required:
-      - uuid
-      - name
-      - address
-      type: object
-      properties:
-        uuid:
-          allOf:
-          - $ref: '#/components/schemas/UUID'
-          - description: Identifier of the store
-        name:
-          description: Name of the store
-          maxLength: 255
-          minLength: 1
-          type: string
-        address:
-          allOf:
-          - $ref: '#/components/schemas/Address'
-          - description: The address of the store
     Address:
       required:
       - address
@@ -130,6 +108,28 @@ components:
           maxLength: 2
           minLength: 2
           type: string
+    Store:
+      title: Store
+      description: Information about Store where merchant can do transactions.
+      required:
+      - uuid
+      - name
+      - address
+      type: object
+      properties:
+        uuid:
+          allOf:
+          - $ref: '#/components/schemas/UUID'
+          - description: Identifier of the store
+        name:
+          description: Name of the store
+          maxLength: 255
+          minLength: 1
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          - description: The address of the store
     UUID:
       format: uuid
       pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'

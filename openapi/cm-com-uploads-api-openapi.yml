@@ -77,22 +77,6 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    GenericResponseDto:
-      type: object
-      properties:
-        message:
-          type: string
-          readOnly: true
-          example: Successfully uploaded file.
-        details:
-          type: array
-          items:
-            type: object
-          example:
-          - file: filename.csv
-      required:
-      - message
-      - details
     CreateUploadDto:
       type: object
       properties:
@@ -114,6 +98,22 @@ components:
       - name
       - notificationType
       - isVisible
+    GenericResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          readOnly: true
+          example: Successfully uploaded file.
+        details:
+          type: array
+          items:
+            type: object
+          example:
+          - file: filename.csv
+      required:
+      - message
+      - details
   securitySchemes:
     cookie:
       type: apiKey

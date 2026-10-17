@@ -391,108 +391,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ApiRequirement:
-      title: Requirement
-      type: object
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-          description: The key of the requirement.
-          example: proof_of_company_address
-        type:
-          $ref: '#/components/schemas/ApiRequirementType'
-        downloadLink:
-          type:
-          - string
-          - 'null'
-          description: URL where the requirement can be downloaded if it's a document that needs to be signed (Type = 4).
-          example: https://api.cm.com/resources/v2/public/00000000-0000-0000-0000-000000000000/content
-        isForReseller:
-          type: boolean
-          description: Determines whether the requirement is specifically for resellers
-      additionalProperties: false
-      description: A country specific rule or regulation that a request must meet. This can for example be a certain document that must be provided.
-    ApiNumberType:
-      title: Number Type
-      enum:
-      - Local
-      - National
-      - TollFree
-      type: string
-      description: Phone number type
-    Error:
-      title: Error
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        source:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    ApiAvailableNumbers:
-      title: Available Numbers
-      type: object
-      properties:
-        quantity:
-          type: integer
-          description: The amount of number blocks.
-          format: int32
-          example: 25
-        rangeSize:
-          type: integer
-          description: The size of the number blocks.
-          format: int32
-          example: 10
-        countryCode:
-          type:
-          - string
-          - 'null'
-          description: The country code in ISO 3166-1 alpha-2 format.
-          example: NL
-        numberType:
-          type:
-          - string
-          - 'null'
-          description: The phone number type (Local, National, TollFree).
-          example: Local
-        areaCode:
-          type:
-          - string
-          - 'null'
-          description: The area code.
-          example: '76'
-        city:
-          type:
-          - string
-          - 'null'
-          description: The city or town.
-          example: Amsterdam
-        region:
-          type:
-          - string
-          - 'null'
-          description: The region or state, only for NANPA.
-          example: Alabama
-        hasAvailableNumbers:
-          type: boolean
-          description: If true, the phone numbers to request are available
-          example: true
-        immediatelyAvailable:
-          type: boolean
-          description: If true, the numbers are available for immediate provisioning, otherwise there may be a delay
-          example: false
-      additionalProperties: false
-      description: Result of checking for number availability
     ApiLocaleOptions:
       title: Locale Options
       type: object
@@ -531,224 +429,6 @@ components:
           description: List of regions to choose from for requesting a number, only for NANPA
       additionalProperties: false
       description: Locale options when requesting numbers for a specific country and number type
-    ApiNumberRequestOrderStatus:
-      title: Number Request Order Status
-      type: object
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-          description: Status key
-          example: InProgress
-        displayValue:
-          type:
-          - string
-          - 'null'
-          description: The value to display
-          example: In Progress
-      additionalProperties: false
-      description: The status of a phone numbers request order
-    ApiCreateNumberRequest:
-      title: Create Number Request
-      type: object
-      properties:
-        companyProfileGuid:
-          type: string
-          description: Unique identifier of the company profile that will be operating the requested numbers.
-          format: uuid
-          example: 11111111-1111-1111-1111-111111111111
-        quantity:
-          maximum: 1000
-          minimum: 1
-          type: integer
-          description: The quantity of numbers to be requested.
-          format: int32
-          example: 25
-        rangeSize:
-          type: integer
-          description: 'The size of the range to be requested. **Only required if a range of numbers is requested.
-
-            Requires number ranges to be supported. See the order restrictions endpoint for the allowed ranges**'
-          format: int32
-          example: 10
-        numberType:
-          $ref: '#/components/schemas/ApiNumberType'
-        areaCode:
-          type:
-          - string
-          - 'null'
-          description: 'The area code to request numbers for. Required when city is not provided.
-
-            If the city is also provided, this will be used in combination with city.'
-          example: '76'
-        city:
-          type:
-          - string
-          - 'null'
-          description: 'City to request numbers for. Required when area code is not provided.
-
-            If the area code is also provided, this will be used in combination with area code.'
-          example: Amsterdam
-        region:
-          type:
-          - string
-          - 'null'
-          description: Region to request numbers for. Only required for NANPA.
-          example: Alabama
-        comment:
-          maxLength: 500
-          type:
-          - string
-          - 'null'
-          description: Additional comment for customers to for example add a distribution group or IP address.
-          example: Room for extra comments or requests regarding this phone number request
-        callbackUrl:
-          type:
-          - string
-          - 'null'
-          description: URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire number request order including the updated status.
-          example: https://www.example.com
-      additionalProperties: false
-      description: Request model for requesting new phone numbers.
-    ApiPhoneNumberRange:
-      title: Phone Number Range
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier of the phone number range.
-          example: 11111111-1111-1111-1111-111111111111
-        start:
-          type:
-          - integer
-          - 'null'
-          description: The starting phone number in a range.
-          format: int64
-          example: 311234567890
-        size:
-          type: integer
-          description: The size of the range.
-          format: int32
-          example: 10
-        countryCode:
-          type:
-          - string
-          - 'null'
-          description: The country code in ISO 3166-1 alpha-2 format.
-          example: NL
-        voiceAccountGuid:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier of the Voice Account.
-          example: 11111111-1111-1111-1111-111111111111
-        validFrom:
-          type:
-          - string
-          - 'null'
-          description: Date and time the range is assigned to, and in use by the Voice Account.
-          format: date-time
-          example: '2025-01-01T00:00:00'
-        validTo:
-          type:
-          - string
-          - 'null'
-          description: Date and time the range is no longer assigned to, nor in use by the Voice Account.
-          format: date-time
-          example: '2025-01-01T00:00:00'
-        orderId:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier of the order in which the range was requested.
-          example: '250101001'
-      additionalProperties: false
-      description: Details of a phone number range.
-    ApiNumberRequestOrder:
-      title: Number Request Order
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier
-          format: uuid
-          example: 11111111-1111-1111-1111-111111111111
-        orderId:
-          type: integer
-          description: The order id
-          format: int32
-          example: 250101001
-        createdOn:
-          type: string
-          description: Date and time of creation
-          format: date-time
-          example: '2025-01-01T00:00:00'
-        requestData:
-          $ref: '#/components/schemas/ApiNumberRequest'
-        status:
-          type:
-          - string
-          - 'null'
-          description: The status key of the phone number request
-          example: InProgress
-        comment:
-          type:
-          - string
-          - 'null'
-          description: Optional comment describing the reason for the current status of the phone number request
-          example: Your request is currently in progress.
-      additionalProperties: false
-      description: Request model for a phone number request order
-    ApiRequirementType:
-      title: Requirement Type
-      enum:
-      - Document
-      - CompanyRule
-      - NumberRule
-      - SignedDocument
-      type: string
-      description: The type of the requirement where `1` = document, `2` = requirement for a company, `3` = requirement for a number request and `4` = signed document..
-    ApiRequestRestrictions:
-      title: Request Restrictions
-      type: object
-      properties:
-        countryCode:
-          type:
-          - string
-          - 'null'
-          description: The country code in ISO 3166-1 alpha-2 format.
-          example: NL
-        numberType:
-          type:
-          - string
-          - 'null'
-          description: The phone number type (Local, National, TollFree).
-          example: Local
-        supportedRangeSizes:
-          type:
-          - array
-          - 'null'
-          items:
-            type: integer
-            format: int32
-          description: Supported range sizes for number requests
-          example:
-          - 1
-          - 10
-          - 100
-          - 1000
-        maxNumbersPerRequest:
-          type:
-          - integer
-          - 'null'
-          description: The maximum amount of numbers that can be requested in a single request, can be null if there is no limit
-          format: int32
-          example: 1000
-      additionalProperties: false
-      description: Restrictions for number requests
     ApiNumberRequest:
       title: Number Request
       type: object
@@ -813,6 +493,127 @@ components:
           example: https://www.example.com
       additionalProperties: false
       description: Request model for requesting new phone numbers.
+    ApiAvailableNumbers:
+      title: Available Numbers
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: The amount of number blocks.
+          format: int32
+          example: 25
+        rangeSize:
+          type: integer
+          description: The size of the number blocks.
+          format: int32
+          example: 10
+        countryCode:
+          type:
+          - string
+          - 'null'
+          description: The country code in ISO 3166-1 alpha-2 format.
+          example: NL
+        numberType:
+          type:
+          - string
+          - 'null'
+          description: The phone number type (Local, National, TollFree).
+          example: Local
+        areaCode:
+          type:
+          - string
+          - 'null'
+          description: The area code.
+          example: '76'
+        city:
+          type:
+          - string
+          - 'null'
+          description: The city or town.
+          example: Amsterdam
+        region:
+          type:
+          - string
+          - 'null'
+          description: The region or state, only for NANPA.
+          example: Alabama
+        hasAvailableNumbers:
+          type: boolean
+          description: If true, the phone numbers to request are available
+          example: true
+        immediatelyAvailable:
+          type: boolean
+          description: If true, the numbers are available for immediate provisioning, otherwise there may be a delay
+          example: false
+      additionalProperties: false
+      description: Result of checking for number availability
+    ApiRequirement:
+      title: Requirement
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: The key of the requirement.
+          example: proof_of_company_address
+        type:
+          $ref: '#/components/schemas/ApiRequirementType'
+        downloadLink:
+          type:
+          - string
+          - 'null'
+          description: URL where the requirement can be downloaded if it's a document that needs to be signed (Type = 4).
+          example: https://api.cm.com/resources/v2/public/00000000-0000-0000-0000-000000000000/content
+        isForReseller:
+          type: boolean
+          description: Determines whether the requirement is specifically for resellers
+      additionalProperties: false
+      description: A country specific rule or regulation that a request must meet. This can for example be a certain document that must be provided.
+    ApiNumberRequestOrder:
+      title: Number Request Order
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          format: uuid
+          example: 11111111-1111-1111-1111-111111111111
+        orderId:
+          type: integer
+          description: The order id
+          format: int32
+          example: 250101001
+        createdOn:
+          type: string
+          description: Date and time of creation
+          format: date-time
+          example: '2025-01-01T00:00:00'
+        requestData:
+          $ref: '#/components/schemas/ApiNumberRequest'
+        status:
+          type:
+          - string
+          - 'null'
+          description: The status key of the phone number request
+          example: InProgress
+        comment:
+          type:
+          - string
+          - 'null'
+          description: Optional comment describing the reason for the current status of the phone number request
+          example: Your request is currently in progress.
+      additionalProperties: false
+      description: Request model for a phone number request order
+    ApiRequirementType:
+      title: Requirement Type
+      enum:
+      - Document
+      - CompanyRule
+      - NumberRule
+      - SignedDocument
+      type: string
+      description: The type of the requirement where `1` = document, `2` = requirement for a company, `3` = requirement for a number request and `4` = signed document..
     ErrorCollection:
       title: Error Collection
       type: object
@@ -828,6 +629,205 @@ components:
           items:
             $ref: '#/components/schemas/Error'
       additionalProperties: false
+    ApiNumberRequestOrderStatus:
+      title: Number Request Order Status
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: Status key
+          example: InProgress
+        displayValue:
+          type:
+          - string
+          - 'null'
+          description: The value to display
+          example: In Progress
+      additionalProperties: false
+      description: The status of a phone numbers request order
+    ApiPhoneNumberRange:
+      title: Phone Number Range
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the phone number range.
+          example: 11111111-1111-1111-1111-111111111111
+        start:
+          type:
+          - integer
+          - 'null'
+          description: The starting phone number in a range.
+          format: int64
+          example: 311234567890
+        size:
+          type: integer
+          description: The size of the range.
+          format: int32
+          example: 10
+        countryCode:
+          type:
+          - string
+          - 'null'
+          description: The country code in ISO 3166-1 alpha-2 format.
+          example: NL
+        voiceAccountGuid:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the Voice Account.
+          example: 11111111-1111-1111-1111-111111111111
+        validFrom:
+          type:
+          - string
+          - 'null'
+          description: Date and time the range is assigned to, and in use by the Voice Account.
+          format: date-time
+          example: '2025-01-01T00:00:00'
+        validTo:
+          type:
+          - string
+          - 'null'
+          description: Date and time the range is no longer assigned to, nor in use by the Voice Account.
+          format: date-time
+          example: '2025-01-01T00:00:00'
+        orderId:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the order in which the range was requested.
+          example: '250101001'
+      additionalProperties: false
+      description: Details of a phone number range.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ApiRequestRestrictions:
+      title: Request Restrictions
+      type: object
+      properties:
+        countryCode:
+          type:
+          - string
+          - 'null'
+          description: The country code in ISO 3166-1 alpha-2 format.
+          example: NL
+        numberType:
+          type:
+          - string
+          - 'null'
+          description: The phone number type (Local, National, TollFree).
+          example: Local
+        supportedRangeSizes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: integer
+            format: int32
+          description: Supported range sizes for number requests
+          example:
+          - 1
+          - 10
+          - 100
+          - 1000
+        maxNumbersPerRequest:
+          type:
+          - integer
+          - 'null'
+          description: The maximum amount of numbers that can be requested in a single request, can be null if there is no limit
+          format: int32
+          example: 1000
+      additionalProperties: false
+      description: Restrictions for number requests
+    ApiCreateNumberRequest:
+      title: Create Number Request
+      type: object
+      properties:
+        companyProfileGuid:
+          type: string
+          description: Unique identifier of the company profile that will be operating the requested numbers.
+          format: uuid
+          example: 11111111-1111-1111-1111-111111111111
+        quantity:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          description: The quantity of numbers to be requested.
+          format: int32
+          example: 25
+        rangeSize:
+          type: integer
+          description: 'The size of the range to be requested. **Only required if a range of numbers is requested.
+
+            Requires number ranges to be supported. See the order restrictions endpoint for the allowed ranges**'
+          format: int32
+          example: 10
+        numberType:
+          $ref: '#/components/schemas/ApiNumberType'
+        areaCode:
+          type:
+          - string
+          - 'null'
+          description: 'The area code to request numbers for. Required when city is not provided.
+
+            If the city is also provided, this will be used in combination with city.'
+          example: '76'
+        city:
+          type:
+          - string
+          - 'null'
+          description: 'City to request numbers for. Required when area code is not provided.
+
+            If the area code is also provided, this will be used in combination with area code.'
+          example: Amsterdam
+        region:
+          type:
+          - string
+          - 'null'
+          description: Region to request numbers for. Only required for NANPA.
+          example: Alabama
+        comment:
+          maxLength: 500
+          type:
+          - string
+          - 'null'
+          description: Additional comment for customers to for example add a distribution group or IP address.
+          example: Room for extra comments or requests regarding this phone number request
+        callbackUrl:
+          type:
+          - string
+          - 'null'
+          description: URL that we'll send a POST request to when the status of the request has been updated. The body of this post request will contain the entire number request order including the updated status.
+          example: https://www.example.com
+      additionalProperties: false
+      description: Request model for requesting new phone numbers.
+    ApiNumberType:
+      title: Number Type
+      enum:
+      - Local
+      - National
+      - TollFree
+      type: string
+      description: Phone number type
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

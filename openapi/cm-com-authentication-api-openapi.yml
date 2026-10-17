@@ -349,6 +349,14 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
+    UserUsernameDto:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username or e-mail address used to sign in
+      required:
+      - username
     ErrorDto:
       type: object
       properties:
@@ -457,14 +465,6 @@ components:
       required:
       - username
       - password
-    UserUsernameDto:
-      type: object
-      properties:
-        username:
-          type: string
-          description: Username or e-mail address used to sign in
-      required:
-      - username
     UserDto:
       type: object
       properties:

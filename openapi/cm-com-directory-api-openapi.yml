@@ -36,6 +36,36 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    Issuer:
+      type: object
+      properties:
+        issuer_id:
+          $ref: '#/components/schemas/IssuerID'
+        issuer_name:
+          maxLength: 35
+          minLength: 1
+          type: string
+          description: 'The name of the issuing bank intended for display purposes. Used as the content of the <option> in HTML dropdowns.
+
+            '
+          examples:
+          - Rabobank
+    MerchantToken:
+      type: string
+      description: a UUID string that is unique and private to you as a merchant. Do not share this key, keep it safe. Example 3c01abeb-b031-4fea-9f2d-c55c283cd78e
+      format: uuid
+      examples:
+      - 3c01abeb-b031-4fea-9f2d-c55c283cd78e
+    DirectoryRequest:
+      $ref: '#/components/schemas/TokenizedRequest'
+    TokenizedRequest:
+      title: TokenRequestParameters
+      required:
+      - merchant_token
+      type: object
+      properties:
+        merchant_token:
+          $ref: '#/components/schemas/MerchantToken'
     IssuerID:
       pattern: ^[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}$
       type: string
@@ -44,12 +74,23 @@ components:
         '
       examples:
       - RABONL2U
-    MerchantToken:
-      type: string
-      description: a UUID string that is unique and private to you as a merchant. Do not share this key, keep it safe. Example 3c01abeb-b031-4fea-9f2d-c55c283cd78e
-      format: uuid
-      examples:
-      - 3c01abeb-b031-4fea-9f2d-c55c283cd78e
+    DirectoryResponse:
+      title: ArrayOfCountries
+      type: array
+      items:
+        title: Country
+        type: object
+        properties:
+          country:
+            maxLength: 128
+            minLength: 1
+            type: string
+            description: The readable name of the country
+          issuers:
+            title: ArrayOfIssuers
+            type: array
+            items:
+              $ref: '#/components/schemas/Issuer'
     ErrorResponse:
       title: Error Response
       type: object
@@ -72,44 +113,3 @@ components:
         but a common reason is because the issuer the user chose is temporarily not available.
 
         '
-    DirectoryResponse:
-      title: ArrayOfCountries
-      type: array
-      items:
-        title: Country
-        type: object
-        properties:
-          country:
-            maxLength: 128
-            minLength: 1
-            type: string
-            description: The readable name of the country
-          issuers:
-            title: ArrayOfIssuers
-            type: array
-            items:
-              $ref: '#/components/schemas/Issuer'
-    DirectoryRequest:
-      $ref: '#/components/schemas/TokenizedRequest'
-    Issuer:
-      type: object
-      properties:
-        issuer_id:
-          $ref: '#/components/schemas/IssuerID'
-        issuer_name:
-          maxLength: 35
-          minLength: 1
-          type: string
-          description: 'The name of the issuing bank intended for display purposes. Used as the content of the <option> in HTML dropdowns.
-
-            '
-          examples:
-          - Rabobank
-    TokenizedRequest:
-      title: TokenRequestParameters
-      required:
-      - merchant_token
-      type: object
-      properties:
-        merchant_token:
-          $ref: '#/components/schemas/MerchantToken'

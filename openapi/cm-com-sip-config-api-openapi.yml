@@ -178,6 +178,21 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
     Error:
       title: Error
       type: object
@@ -195,24 +210,6 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    ApiPlatformDomain:
-      title: Platform Domain
-      type: object
-      properties:
-        domain:
-          type:
-          - string
-          - 'null'
-          description: URL of the given Platform Domain.
-        platforms:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ApiTrunk'
-          description: List of SIP Trunks in this Platform Domain.
-      additionalProperties: false
-      description: CM.com Platform Domain containing SIP Trunks.
     ApiSipConfig:
       title: Sip Config
       type: object
@@ -269,6 +266,24 @@ components:
           example: false
       additionalProperties: false
       description: SIP configuration containing settings that define how a SIP Account can be used.
+    ApiPlatformDomain:
+      title: Platform Domain
+      type: object
+      properties:
+        domain:
+          type:
+          - string
+          - 'null'
+          description: URL of the given Platform Domain.
+        platforms:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiTrunk'
+          description: List of SIP Trunks in this Platform Domain.
+      additionalProperties: false
+      description: CM.com Platform Domain containing SIP Trunks.
     ApiTrunk:
       title: Trunk
       type: object
@@ -302,21 +317,6 @@ components:
           description: IP Addresses of the SIP Trunk.
       additionalProperties: false
       description: CM.com SIP Trunk.
-    ErrorCollection:
-      title: Error Collection
-      type: object
-      properties:
-        requestId:
-          type:
-          - string
-          - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Error'
-      additionalProperties: false
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

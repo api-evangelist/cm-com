@@ -189,39 +189,6 @@ paths:
                 $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomain'
 components:
   schemas:
-    CM.Tooling.BulkEmail.Api.Models.ApiFromAddress:
-      type: object
-      properties:
-        ID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        AccountID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        Name:
-          type: string
-        EmailAddress:
-          type: string
-        CreatedOn:
-          format: date-time
-          type: string
-        CreatedOnUtc:
-          format: date-time
-          type: string
-        ModifiedOn:
-          format: date-time
-          type: string
-        ModifiedOnUtc:
-          format: date-time
-          type: string
-        DeletedOn:
-          format: date-time
-          type: string
-        DeletedOnUtc:
-          format: date-time
-          type: string
     CM.Tooling.BulkEmail.Api.Models.ApiFromDomain:
       type: object
       properties:
@@ -241,6 +208,39 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiFromDomainDnsEntry'
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiFromAddress:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Name:
+          type: string
+        EmailAddress:
+          type: string
         CreatedOn:
           format: date-time
           type: string

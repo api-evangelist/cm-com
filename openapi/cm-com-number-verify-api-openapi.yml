@@ -75,24 +75,48 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    NotFound:
+      description: Errors related to the request URL
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 404
+            message: Not found
+            code: 1000
+    Unauthorized:
+      description: Errors related to the authorization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+            code: 1000
+    InternalServerError:
+      description: Errors related to the transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: Transaction could not be started
+            code: 1002
+    BadRequest:
+      description: Errors related to the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: The phone number field is required
+            code: 2001
   schemas:
-    NumberVerifyRequest:
-      type: object
-      properties:
-        phoneNumber:
-          type: string
-          description: The phone number to verify. Must be in E.164 format.
-          examples:
-          - '+31612345678'
-        callbackUrl:
-          type: string
-          description: Updates regarding the number verify transaction will be sent to the callback URL. It must begin with `https://`. See the [Number verify state](#tag/Callbacks/operation/callback_number_verify_state) callback for the payload that is sent.
-          format: url
-          examples:
-          - https://example.com
-      required:
-      - phoneNumber
-      - callbackUrl
     NumberVerifyResponse:
       type: object
       properties:
@@ -114,6 +138,46 @@ components:
           description: Is the number verified. If state is pending, match is null.
           examples:
           - true
+    NumberVerifyRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          description: The phone number to verify. Must be in E.164 format.
+          examples:
+          - '+31612345678'
+        callbackUrl:
+          type: string
+          description: Updates regarding the number verify transaction will be sent to the callback URL. It must begin with `https://`. See the [Number verify state](#tag/Callbacks/operation/callback_number_verify_state) callback for the payload that is sent.
+          format: url
+          examples:
+          - https://example.com
+      required:
+      - phoneNumber
+      - callbackUrl
+    State:
+      type: string
+      enum:
+      - pending
+      - completed
+      - unavailable
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
+        message:
+          type: string
+          description: Description of the error that occurred.
+          examples:
+          - The phone number field is required
+        code:
+          $ref: '#/components/schemas/ErrorCode'
     ErrorCode:
       type: integer
       description: "Error code description:\n\n * 1000 - Unknown error\n * 1001 - Invalid request\n * 1002 - Supplier error\n * 1003 - Unsupported configuration\n * 2000 - Validation error\n * 2001 - Invalid `phoneNumber` field\n * 2002 - Invalid `serviceType` field\n * 2003 - Invalid `firstName` field\n * 2004 - Invalid `lastName` field\n * 2005 - Invalid `address` field\n * 2006 - Invalid `postalCode` field\n * 2007 - Invalid `dateOfBirth` field\n * 2008 - Invalid `callbackUrl` field\n * 3000 - Feature not enabled\n * 3001 - Phone number is not active\n"
@@ -135,70 +199,6 @@ components:
       - 3001
       examples:
       - 2001
-    ErrorResponse:
-      title: Error Response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code.
-          examples:
-          - 400
-        message:
-          type: string
-          description: Description of the error that occurred.
-          examples:
-          - The phone number field is required
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-    State:
-      type: string
-      enum:
-      - pending
-      - completed
-      - unavailable
-  responses:
-    InternalServerError:
-      description: Errors related to the transaction.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 500
-            message: Transaction could not be started
-            code: 1002
-    Unauthorized:
-      description: Errors related to the authorization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 401
-            message: Unauthorized
-            code: 1000
-    BadRequest:
-      description: Errors related to the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 400
-            message: The phone number field is required
-            code: 2001
-    NotFound:
-      description: Errors related to the request URL
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 404
-            message: Not found
-            code: 1000
   parameters:
     TransactionId:
       name: transactionId

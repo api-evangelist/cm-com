@@ -118,26 +118,6 @@ paths:
       - ProductToken: []
 components:
   schemas:
-    Gateway_EmailAttachment:
-      type: object
-      properties:
-        fileName:
-          type:
-          - string
-          - 'null'
-        content:
-          type:
-          - string
-          - 'null'
-        contentType:
-          type:
-          - string
-          - 'null'
-        contentId:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     Gateway_ProblemDetails:
       type: object
       properties:
@@ -163,6 +143,26 @@ components:
           - string
           - 'null'
       additionalProperties: {}
+    Gateway_EmailAttachment:
+      type: object
+      properties:
+        fileName:
+          type:
+          - string
+          - 'null'
+        content:
+          type:
+          - string
+          - 'null'
+        contentType:
+          type:
+          - string
+          - 'null'
+        contentId:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     Gateway_EmailResponseDto:
       type: object
       properties:

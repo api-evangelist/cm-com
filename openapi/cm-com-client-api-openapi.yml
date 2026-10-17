@@ -156,17 +156,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
 components:
   schemas:
-    ClientCreate:
-      allOf:
-      - $ref: '#/components/schemas/Client'
-      - type: object
-        properties:
-          key:
-            type: string
-            description: JWT Key. This field is only present in the client create request
-            examples:
-            - fPm3MpxBBN5AKmvBQSrLxXCbE1pF6T07JjNXZwsJpUobknaqJA
-            readOnly: true
     Client:
       title: Client
       type: object
@@ -219,6 +208,36 @@ components:
         message:
           type: string
           description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    ClientCreate:
+      allOf:
+      - $ref: '#/components/schemas/Client'
+      - type: object
+        properties:
+          key:
+            type: string
+            description: JWT Key. This field is only present in the client create request
+            examples:
+            - fPm3MpxBBN5AKmvBQSrLxXCbE1pF6T07JjNXZwsJpUobknaqJA
+            readOnly: true
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access to the specified resource was denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   parameters:
     KeyId:
       name: kid
@@ -231,25 +250,6 @@ components:
 
         '
       example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
-  responses:
-    Forbidden:
-      description: Access to the specified resource was denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     JWT:
       type: http

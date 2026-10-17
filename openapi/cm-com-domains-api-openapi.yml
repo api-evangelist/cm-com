@@ -271,117 +271,19 @@ paths:
       - ProductToken: []
 components:
   schemas:
-    Configuration_DomainConfigResponse:
-      required:
-      - message
-      - status
-      type: object
-      properties:
-        domainConfig:
-          $ref: '#/components/schemas/Configuration_DomainConfig'
-        status:
-          $ref: '#/components/schemas/Configuration_StatusCode'
-        message:
-          type:
-          - string
-          - 'null'
-        success:
-          type: boolean
-      additionalProperties: false
-    Configuration_ConfigResponse:
-      required:
-      - message
-      - status
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Configuration_StatusCode'
-        message:
-          type:
-          - string
-          - 'null'
-        success:
-          type: boolean
-      additionalProperties: false
-    Configuration_DomainConfigPostDto:
-      type: object
-      properties:
-        accountId:
-          type: string
-          format: uuid
-        domain:
-          type:
-          - string
-          - 'null'
-        clickTracking:
-          type: boolean
-        openTracking:
-          type: boolean
-      additionalProperties: false
-    Configuration_DomainConfigIEnumerableControllerResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        status:
-          $ref: '#/components/schemas/Configuration_StatusCode'
-        message:
-          type:
-          - string
-          - 'null'
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Configuration_DomainConfig'
-      additionalProperties: false
-    Configuration_MultiDomainConfigResponse:
-      required:
-      - message
-      - status
-      type: object
-      properties:
-        domains:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Configuration_DomainConfig'
-        status:
-          $ref: '#/components/schemas/Configuration_StatusCode'
-        message:
-          type:
-          - string
-          - 'null'
-        success:
-          type: boolean
-      additionalProperties: false
-    Configuration_ProblemDetails:
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        detail:
-          type:
-          - string
-          - 'null'
-        instance:
-          type:
-          - string
-          - 'null'
-      additionalProperties: {}
+    Configuration_StatusCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 429
+      - 500
+      - 999
+      type: integer
+      format: int32
     Configuration_DnsRecord:
       required:
       - host
@@ -471,27 +373,6 @@ components:
           format: int32
           description: 1 not verified yet, 2 verified, 3 verification ran and failed.
       additionalProperties: false
-    Configuration_DnsRecordGetResponse:
-      required:
-      - message
-      - status
-      type: object
-      properties:
-        dnsRecords:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Configuration_DnsRecordGetDto'
-        status:
-          $ref: '#/components/schemas/Configuration_StatusCode'
-        message:
-          type:
-          - string
-          - 'null'
-        success:
-          type: boolean
-      additionalProperties: false
     Configuration_DnsRecordGetDto:
       type: object
       properties:
@@ -531,19 +412,138 @@ components:
           format: int32
           description: 1 not verified yet, 2 verified, 3 verification ran and failed.
       additionalProperties: false
-    Configuration_StatusCode:
-      enum:
-      - 200
-      - 400
-      - 401
-      - 403
-      - 404
-      - 409
-      - 429
-      - 500
-      - 999
-      type: integer
-      format: int32
+    Configuration_MultiDomainConfigResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        domains:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_DomainConfig'
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_DomainConfigPostDto:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        domain:
+          type:
+          - string
+          - 'null'
+        clickTracking:
+          type: boolean
+        openTracking:
+          type: boolean
+      additionalProperties: false
+    Configuration_DomainConfigIEnumerableControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_DomainConfig'
+      additionalProperties: false
+    Configuration_DnsRecordGetResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        dnsRecords:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Configuration_DnsRecordGetDto'
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    Configuration_ConfigResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
+    Configuration_DomainConfigResponse:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        domainConfig:
+          $ref: '#/components/schemas/Configuration_DomainConfig'
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
   securitySchemes:
     ProductToken:
       type: apiKey

@@ -1389,6 +1389,88 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
+    CreateOrganisationDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com NV
+        cmAccountGuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmTicketingTechnicalLinkUuid:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        cmCrmId:
+          type: number
+          example: 123456
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        callbackUrl:
+          type: string
+          maxLength: 255
+          description: Should be valid url. Will be used to POST scan events towards
+          example: https://yourdomain.tld/scanning/callback
+        callbackConfiguration:
+          type: object
+          description: Generic JSON configuration for callbacks
+          example:
+            apiKey: your-api-key
+            apiSecret: your-api-secret
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: GLOBAL_TICKET
+      required:
+      - name
+      - email
+      - upstreamPlatform
+    GoCityOfferDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ac7c9cec-3f8d-42a7-86cc-446fed191e3a
+          description: Go City offer id
+        name:
+          type: string
+          example: Heineken Experience
+      required:
+      - id
+      - name
     OrganisationWithConfigDto:
       type: object
       properties:
@@ -1491,76 +1573,43 @@ components:
             type: string
       required:
       - configurations
-    UserDto:
+    FeatureStateDto:
       type: object
       properties:
-        uuid:
+        key:
           type: string
-          readOnly: true
-        cmPersonGuid:
+          enum:
+          - INTERSOLVE
+          - PUBLIQ
+          - GLOBAL_TICKET
+          - CHECK_IN_ENTIRE_ORDER
+          - TIMESLOTS
+          - ANALYTICS_REPORT
+          - OFFLINE_SYNC_TODAYS_TIMESLOTS
+          - VENUE_LINKING
+          - TICKET_IMPORT
+          - GO_CITY
+          example: GLOBAL_TICKET
+        category:
           type: string
-          readOnly: true
-        firstName:
-          type: string
-          readOnly: true
-        lastName:
-          type: string
-          readOnly: true
-        username:
-          type: string
-          readOnly: true
-        email:
-          type: string
-          readOnly: true
-        entrancePlanClaims:
-          type: array
-          items:
-            type: string
-            enum:
-            - OBSERVER
-            - EDITOR
-            - OWNER
-            - ADMIN
-            - SCAN_USER
-            - SCAN_CHECKIN
-            - SCAN_CHECKOUT
-            - SCAN_CLICKER_CHECKIN
-            - SCAN_CLICKER_CHECKOUT
-            - SCAN_SEARCH
-            - SCAN_VALIDATE
-            - SCAN_ANALYTICS
+          enum:
+          - FEATURE
+          - SETTING
+          example: FEATURE
+        enabled:
+          type: boolean
+          example: false
+          description: Whether the feature is enabled for the organisation.
+        config:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Free-form configuration for the feature. Shape depends on the feature key; null when unset.
       required:
-      - uuid
-      - cmPersonGuid
-      - firstName
-      - lastName
-      - username
-      - email
-      - entrancePlanClaims
-    UpstreamPlatformEnum:
-      type: string
-      enum:
-      - ENMA_SUBSCRIBER
-      - GENERAL_ADMISSION
-      - SEATED_TICKETING
-      - GLOBAL_TICKET
-      - INTERSOLVE
-      - PUBLIQ
-      - YOURTICKETPROVIDER
-      - PASS_TEST
-      - PASS_NATIONAAL_MILITAIR_MUSEUM
-      - PASS_WEC
-      - PASS_CENTRAAL_MUSEUM
-      - PHOENIX_DES_LUMIERES
-      - PORT_DES_LUMIERES
-      - SMOOTHR_DEMO_ACCOUNT
-      - ENTRANCE_MANAGEMENT
-      - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
-      - ELECTRIC_IBIZA_ENTERTAINMENT
-      - MOMICE_KLM_OPEN
-      - CUSTOMER_DATA_PLATFORM
-      - GO_CITY
-      description: The upstream platform for which this configuration is intended
+      - key
+      - category
+      - enabled
     ErrorDto:
       type: object
       properties:
@@ -1648,28 +1697,6 @@ components:
           description: Free-form configuration for the feature. When omitted, any existing config is preserved.
       required:
       - enabled
-    GoCityTerminalProfileDto:
-      type: object
-      properties:
-        terminalId:
-          type: string
-          example: apicmtest
-          description: Go City terminal id (the integration username)
-        displayName:
-          type: string
-          example: Heineken International B.V
-        status:
-          type: string
-          example: ENABLED
-          description: Terminal status as reported by Go City
-        offers:
-          type: array
-          items:
-            $ref: '#/components/schemas/GoCityOfferDto'
-      required:
-      - terminalId
-      - displayName
-      - offers
     Organisation:
       type: object
       properties:
@@ -1728,112 +1755,94 @@ components:
       - name
       - email
       - upstreamPlatform
-    GoCityOfferDto:
+    UpstreamPlatformEnum:
+      type: string
+      enum:
+      - ENMA_SUBSCRIBER
+      - GENERAL_ADMISSION
+      - SEATED_TICKETING
+      - GLOBAL_TICKET
+      - INTERSOLVE
+      - PUBLIQ
+      - YOURTICKETPROVIDER
+      - PASS_TEST
+      - PASS_NATIONAAL_MILITAIR_MUSEUM
+      - PASS_WEC
+      - PASS_CENTRAAL_MUSEUM
+      - PHOENIX_DES_LUMIERES
+      - PORT_DES_LUMIERES
+      - SMOOTHR_DEMO_ACCOUNT
+      - ENTRANCE_MANAGEMENT
+      - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+      - ELECTRIC_IBIZA_ENTERTAINMENT
+      - MOMICE_KLM_OPEN
+      - CUSTOMER_DATA_PLATFORM
+      - GO_CITY
+      description: The upstream platform for which this configuration is intended
+    OrganisationSettingDto:
       type: object
       properties:
-        id:
+        key:
           type: string
-          example: ac7c9cec-3f8d-42a7-86cc-446fed191e3a
-          description: Go City offer id
-        name:
-          type: string
-          example: Heineken Experience
-      required:
-      - id
-      - name
-    UpdateSettingDto:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          example: true
-          description: Enable or disable the setting for the organisation.
+          enum:
+          - SWA_ANALYTICS_PRESET
+          - CREATE_DEFAULT_ENTRANCE_PLAN
+          - TIMEZONE
+          - ALWAYS_DISPLAY_ALL_PRODUCTS_IN_ANALYTICS
+          example: SWA_ANALYTICS_PRESET
         config:
           type: object
           additionalProperties: true
-          description: Free-form configuration for the setting. When omitted, any existing config is preserved.
+          description: Free-form configuration for the setting. Shape depends on the setting key.
       required:
-      - enabled
-    CreateOrganisationDto:
+      - key
+    GoCityTerminalProfileDto:
       type: object
       properties:
-        uuid:
+        terminalId:
           type: string
-          minLength: 36
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        name:
+          example: apicmtest
+          description: Go City terminal id (the integration username)
+        displayName:
           type: string
-          maxLength: 255
-          example: CM.com NV
-        cmAccountGuid:
+          example: Heineken International B.V
+        status:
           type: string
-          minLength: 36
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        cmTicketingTechnicalLinkUuid:
-          type: string
-          minLength: 36
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        cmCrmId:
-          type: number
-          example: 123456
-        email:
-          type: string
-          maxLength: 255
-          description: Should be valid e-mail address
-          example: jane.doe@example.com
-        callbackUrl:
-          type: string
-          maxLength: 255
-          description: Should be valid url. Will be used to POST scan events towards
-          example: https://yourdomain.tld/scanning/callback
-        callbackConfiguration:
-          type: object
-          description: Generic JSON configuration for callbacks
-          example:
-            apiKey: your-api-key
-            apiSecret: your-api-secret
-        upstreamPlatform:
-          type: string
-          enum:
-          - ENMA_SUBSCRIBER
-          - GENERAL_ADMISSION
-          - SEATED_TICKETING
-          - GLOBAL_TICKET
-          - INTERSOLVE
-          - PUBLIQ
-          - YOURTICKETPROVIDER
-          - PASS_TEST
-          - PASS_NATIONAAL_MILITAIR_MUSEUM
-          - PASS_WEC
-          - PASS_CENTRAAL_MUSEUM
-          - PHOENIX_DES_LUMIERES
-          - PORT_DES_LUMIERES
-          - SMOOTHR_DEMO_ACCOUNT
-          - ENTRANCE_MANAGEMENT
-          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
-          - ELECTRIC_IBIZA_ENTERTAINMENT
-          - MOMICE_KLM_OPEN
-          - CUSTOMER_DATA_PLATFORM
-          - GO_CITY
-          example: GLOBAL_TICKET
-      required:
-      - name
-      - email
-      - upstreamPlatform
-    PageDto:
-      type: object
-      properties:
-        data:
+          example: ENABLED
+          description: Terminal status as reported by Go City
+        offers:
           type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
+          items:
+            $ref: '#/components/schemas/GoCityOfferDto'
       required:
-      - data
-      - meta
+      - terminalId
+      - displayName
+      - offers
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
     OrganisationConfigurationResponseDto:
       type: object
       properties:
@@ -1864,42 +1873,51 @@ components:
           description: The name of the upstream of the configuration
       required:
       - upstreamPlatform
-    FeatureStateDto:
+    CreateOrganisationConfigurationDto:
       type: object
       properties:
-        key:
+        upstreamPlatform:
+          description: The upstream platform for which this configuration is intended
+          example: INTERSOLVE
+          allOf:
+          - $ref: '#/components/schemas/UpstreamPlatformEnum'
+        configuration:
+          type: object
+          description: Configuration object specific to the upstream platform
+          example:
+            apiKey: your-api-key
+            apiSecret: your-api-secret
+            propertyX: 1234
+        callbackUrl:
           type: string
-          enum:
-          - INTERSOLVE
-          - PUBLIQ
-          - GLOBAL_TICKET
-          - CHECK_IN_ENTIRE_ORDER
-          - TIMESLOTS
-          - ANALYTICS_REPORT
-          - OFFLINE_SYNC_TODAYS_TIMESLOTS
-          - VENUE_LINKING
-          - TICKET_IMPORT
-          - GO_CITY
-          example: GLOBAL_TICKET
-        category:
-          type: string
-          enum:
-          - FEATURE
-          - SETTING
-          example: FEATURE
+          maxLength: 255
+          description: Should be valid url. Will be used to POST scan events towards
+          example: https://yourdomain.tld/scanning/callback
+      required:
+      - upstreamPlatform
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    UpdateSettingDto:
+      type: object
+      properties:
         enabled:
           type: boolean
-          example: false
-          description: Whether the feature is enabled for the organisation.
+          example: true
+          description: Enable or disable the setting for the organisation.
         config:
-          type:
-          - object
-          - 'null'
+          type: object
           additionalProperties: true
-          description: Free-form configuration for the feature. Shape depends on the feature key; null when unset.
+          description: Free-form configuration for the setting. When omitted, any existing config is preserved.
       required:
-      - key
-      - category
       - enabled
     UpdateOrganisationDto:
       type: object
@@ -1961,70 +1979,52 @@ components:
           - CUSTOMER_DATA_PLATFORM
           - GO_CITY
           example: GLOBAL_TICKET
-    PageMetaDto:
+    UserDto:
       type: object
       properties:
-        page:
-          type: number
-        take:
-          type: number
-        skip:
-          type: number
-        itemCount:
-          type: number
-        pageCount:
-          type: number
-        hasPreviousPage:
-          type: boolean
-        hasNextPage:
-          type: boolean
-      required:
-      - page
-      - take
-      - skip
-      - itemCount
-      - pageCount
-      - hasPreviousPage
-      - hasNextPage
-    OrganisationSettingDto:
-      type: object
-      properties:
-        key:
+        uuid:
           type: string
-          enum:
-          - SWA_ANALYTICS_PRESET
-          - CREATE_DEFAULT_ENTRANCE_PLAN
-          - TIMEZONE
-          - ALWAYS_DISPLAY_ALL_PRODUCTS_IN_ANALYTICS
-          example: SWA_ANALYTICS_PRESET
-        config:
-          type: object
-          additionalProperties: true
-          description: Free-form configuration for the setting. Shape depends on the setting key.
-      required:
-      - key
-    CreateOrganisationConfigurationDto:
-      type: object
-      properties:
-        upstreamPlatform:
-          description: The upstream platform for which this configuration is intended
-          example: INTERSOLVE
-          allOf:
-          - $ref: '#/components/schemas/UpstreamPlatformEnum'
-        configuration:
-          type: object
-          description: Configuration object specific to the upstream platform
-          example:
-            apiKey: your-api-key
-            apiSecret: your-api-secret
-            propertyX: 1234
-        callbackUrl:
+          readOnly: true
+        cmPersonGuid:
           type: string
-          maxLength: 255
-          description: Should be valid url. Will be used to POST scan events towards
-          example: https://yourdomain.tld/scanning/callback
+          readOnly: true
+        firstName:
+          type: string
+          readOnly: true
+        lastName:
+          type: string
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          readOnly: true
+        entrancePlanClaims:
+          type: array
+          items:
+            type: string
+            enum:
+            - OBSERVER
+            - EDITOR
+            - OWNER
+            - ADMIN
+            - SCAN_USER
+            - SCAN_CHECKIN
+            - SCAN_CHECKOUT
+            - SCAN_CLICKER_CHECKIN
+            - SCAN_CLICKER_CHECKOUT
+            - SCAN_SEARCH
+            - SCAN_VALIDATE
+            - SCAN_ANALYTICS
       required:
-      - upstreamPlatform
+      - uuid
+      - cmPersonGuid
+      - firstName
+      - lastName
+      - username
+      - email
+      - entrancePlanClaims
     SettingStateDto:
       type: object
       properties:

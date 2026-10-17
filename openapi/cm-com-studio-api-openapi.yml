@@ -147,6 +147,14 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    WorkspaceType:
+      type: string
+      description: 'Workspace kind of a profile, stored as varchar and constrained by a CHECK
+
+        (`''conversational'' | ''automation''`). `Conversational` is the DB default.'
+      enum:
+      - conversational
+      - automation
     CultureView:
       type: object
       required:
@@ -157,14 +165,6 @@ components:
           type: string
         name:
           type: string
-    WorkspaceType:
-      type: string
-      description: 'Workspace kind of a profile, stored as varchar and constrained by a CHECK
-
-        (`''conversational'' | ''automation''`). `Conversational` is the DB default.'
-      enum:
-      - conversational
-      - automation
     ProfileView:
       type: object
       required:

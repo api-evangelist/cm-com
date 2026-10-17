@@ -62,6 +62,38 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     ApiRequiredField:
       title: Required Field
       type: object
@@ -101,38 +133,6 @@ components:
           description: The reason why the country is blocked. Can be null.
       additionalProperties: false
       description: Country that is blocked for number requests and porting requests.
-    ErrorCollection:
-      title: Error Collection
-      type: object
-      properties:
-        requestId:
-          type:
-          - string
-          - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Error'
-      additionalProperties: false
-    Error:
-      title: Error
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        source:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

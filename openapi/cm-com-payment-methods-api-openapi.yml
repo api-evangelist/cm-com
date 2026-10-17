@@ -86,6 +86,13 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
     handler.paymentMethodResponse:
       properties:
         currency_id:
@@ -95,13 +102,6 @@ components:
         name:
           type: string
         uuid:
-          type: string
-      type: object
-    rest.HttpError:
-      properties:
-        error_code:
-          type: string
-        error_msg:
           type: string
       type: object
     Uuid:
@@ -124,22 +124,13 @@ components:
         clientCredentials:
           tokenUrl: /api/v1/authorization/oauth2/token
           scopes: {}
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
   responses:
-    InternalError:
-      description: Internal server error. This can be caused by an unresponsive backend
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - id
-            - message
-            properties:
-              id:
-                $ref: '#/components/schemas/Uuid'
-              message:
-                type: string
-                example: Service Unavailable
     UserError:
       description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
       content:
@@ -155,12 +146,21 @@ components:
               message:
                 type: string
                 example: no authorization methods provided
-  headers:
-    Digest:
-      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
-      schema:
-        type: string
-        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
 externalDocs:
   description: ''
   url: ''

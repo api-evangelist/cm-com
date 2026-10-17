@@ -295,6 +295,37 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    CM.Data.Core.Workflows.Api.Models.ApiGoal:
+      type: object
+      properties:
+        eventTypeId:
+          type: string
+          format: uuid
+        propertyName:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        stopWorkflowWhenGoalIsMet:
+          type: boolean
+      additionalProperties: false
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSortOrder:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
     CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchFilter:
       type: object
       properties:
@@ -313,18 +344,12 @@ components:
         favorites:
           $ref: '#/components/schemas/CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter'
       additionalProperties: false
-    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSortOrder:
+    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchEnabledStatus:
       enum:
       - 0
       - 1
       - 2
-      type: integer
-      format: int32
-    CM.Data.Core.Workflows.Api.Models.ApiWorkflowFavoriteFilter:
-      enum:
-      - 0
-      - 1
-      - 2
+      - 3
       type: integer
       format: int32
     CM.Data.Core.Workflows.Api.Models.Steps.ApiStep:
@@ -405,28 +430,3 @@ components:
           - boolean
           - 'null'
       additionalProperties: false
-    CM.Data.Core.Workflows.Api.Models.ApiGoal:
-      type: object
-      properties:
-        eventTypeId:
-          type: string
-          format: uuid
-        propertyName:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        stopWorkflowWhenGoalIsMet:
-          type: boolean
-      additionalProperties: false
-    CM.Data.Core.Workflows.Api.Models.ApiWorkflowSearchEnabledStatus:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      type: integer
-      format: int32

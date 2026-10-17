@@ -479,16 +479,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CM.Data.Core.Profiles.Api.Models.ApiProfileCount:
-      type: object
-      properties:
-        capped:
-          type: integer
-          format: int64
-        uncapped:
-          type: integer
-          format: int64
-      additionalProperties: false
     CM.Data.Core.Profiles.Api.Models.ApiProfile:
       type: object
       properties:
@@ -519,15 +509,25 @@ components:
           additionalProperties:
             $ref: '#/components/schemas/CM.Data.Core.Profiles.Shared.BoxedValue'
       additionalProperties: false
-    CM.Data.QueryLanguage.Nodes.Node:
-      type: object
-      additionalProperties: false
-    CM.Data.Core.Profiles.Shared.BoxedValue:
-      type: object
-      additionalProperties: false
     CM.Data.QueryLanguage.Tree:
       type: object
       properties:
         root:
           $ref: '#/components/schemas/CM.Data.QueryLanguage.Nodes.Node'
+      additionalProperties: false
+    CM.Data.Core.Profiles.Shared.BoxedValue:
+      type: object
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileCount:
+      type: object
+      properties:
+        capped:
+          type: integer
+          format: int64
+        uncapped:
+          type: integer
+          format: int64
+      additionalProperties: false
+    CM.Data.QueryLanguage.Nodes.Node:
+      type: object
       additionalProperties: false

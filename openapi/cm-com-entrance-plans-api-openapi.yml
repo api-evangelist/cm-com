@@ -1087,164 +1087,6 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    ErrorDto:
-      type: object
-      properties:
-        errorCode:
-          type: number
-          example: 400100
-          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
-        description:
-          type: string
-          maxLength: 255
-          example: Description of the error.
-        httpStatus:
-          type: number
-          enum:
-          - 100
-          - 101
-          - 102
-          - 103
-          - 200
-          - 201
-          - 202
-          - 203
-          - 204
-          - 205
-          - 206
-          - 207
-          - 208
-          - 210
-          - 300
-          - 301
-          - 302
-          - 303
-          - 304
-          - 307
-          - 308
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          - 414
-          - 415
-          - 416
-          - 417
-          - 418
-          - 421
-          - 422
-          - 423
-          - 424
-          - 428
-          - 429
-          - 456
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
-          - 505
-          - 507
-          - 508
-          example: 400
-      required:
-      - errorCode
-      - description
-      - httpStatus
-    Venue:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: CM.com Arena
-        venueSections:
-          type: array
-          items:
-            $ref: '#/components/schemas/VenueSection'
-      required:
-      - uuid
-      - externalId
-      - name
-      - venueSections
-    UpdateEntrancePlanDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 80
-          example: Main Entrance
-        description:
-          type: string
-          maxLength: 255
-          example: Entrance plan for main entrance
-        isDefault:
-          type: boolean
-          description: Mark an entrance plan as default (fallback) plan.
-        isActive:
-          type: boolean
-          description: Sets an entranceplan active/inactive.
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
-        scanMode:
-          type: string
-          enum:
-          - OFFLINE_SYNC
-          - ONLINE
-          example: OFFLINE_SYNC
-        parentId:
-          type: string
-          description: Make entrance plan a child of a parent plan (sub group)
-          example: 00000000-0000-0000-0000-000000000000
-    Event:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: CM.com Festival 2024
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
-      required:
-      - uuid
-      - externalId
-      - name
-      - startAt
-      - endAt
     CreateEntrancePlanDto:
       type: object
       properties:
@@ -1284,85 +1126,6 @@ components:
       - isActive
       - scanMode
       - parentId
-    PageDto:
-      type: object
-      properties:
-        data:
-          type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-      required:
-      - data
-      - meta
-    EntrancePlan:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Main Entrance
-        description:
-          type: string
-          maxLength: 255
-          example: Entrance plan for main entrance
-        isDefault:
-          type: boolean
-          description: Marks an entrancePlan as default plan.
-        isActive:
-          type: boolean
-          description: Sets an entrancePlan as active/inactive.
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
-        scanMode:
-          type: string
-          enum:
-          - OFFLINE_SYNC
-          - ONLINE
-          example: OFFLINE_SYNC
-        status:
-          type: string
-          enum:
-          - ACTIVE
-          - INACTIVE
-          - NO_RULES
-          example: ACTIVE
-        children:
-          type: array
-          items:
-            type: object
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/Event'
-        venues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Venue'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/Rule'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-        organisation:
-          type: object
-      required:
-      - uuid
-      - name
-      - isDefault
-      - isActive
-      - scanMode
     Condition:
       type: object
       properties:
@@ -1421,31 +1184,6 @@ components:
       - subject
       - operator
       - value
-    PageMetaDto:
-      type: object
-      properties:
-        page:
-          type: number
-        take:
-          type: number
-        skip:
-          type: number
-        itemCount:
-          type: number
-        pageCount:
-          type: number
-        hasPreviousPage:
-          type: boolean
-        hasNextPage:
-          type: boolean
-      required:
-      - page
-      - take
-      - skip
-      - itemCount
-      - pageCount
-      - hasPreviousPage
-      - hasNextPage
     Rule:
       type: object
       properties:
@@ -1555,17 +1293,182 @@ components:
       - shouldValidateOnParent
       - requiresPhotoVerification
       - requiresConfirmationQuestion
-    DuplicateEntrancePlansDto:
+    UpdateEntrancePlanDto:
       type: object
       properties:
-        entrancePlanUuids:
-          description: 'Array of entrance plan uuids to duplicate. Up to 50 per call. Only the listed uuids are cloned: to duplicate a collection together with its children, include the children''s uuids explicitly. A collection uuid passed without any of its children is cloned as an empty collection.'
+        name:
+          type: string
+          maxLength: 80
+          example: Main Entrance
+        description:
+          type: string
+          maxLength: 255
+          example: Entrance plan for main entrance
+        isDefault:
+          type: boolean
+          description: Mark an entrance plan as default (fallback) plan.
+        isActive:
+          type: boolean
+          description: Sets an entranceplan active/inactive.
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+        scanMode:
+          type: string
+          enum:
+          - OFFLINE_SYNC
+          - ONLINE
+          example: OFFLINE_SYNC
+        parentId:
+          type: string
+          description: Make entrance plan a child of a parent plan (sub group)
+          example: 00000000-0000-0000-0000-000000000000
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    EntrancePlan:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Main Entrance
+        description:
+          type: string
+          maxLength: 255
+          example: Entrance plan for main entrance
+        isDefault:
+          type: boolean
+          description: Marks an entrancePlan as default plan.
+        isActive:
+          type: boolean
+          description: Sets an entrancePlan as active/inactive.
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+        scanMode:
+          type: string
+          enum:
+          - OFFLINE_SYNC
+          - ONLINE
+          example: OFFLINE_SYNC
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - NO_RULES
+          example: ACTIVE
+        children:
           type: array
           items:
-            type: array
+            type: object
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        venues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Venue'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        organisation:
+          type: object
       required:
-      - entrancePlanUuids
-    VenueSection:
+      - uuid
+      - name
+      - isDefault
+      - isActive
+      - scanMode
+    Event:
       type: object
       properties:
         uuid:
@@ -1579,11 +1482,55 @@ components:
         name:
           type: string
           maxLength: 255
-          example: Northside Stand
+          example: CM.com Festival 2024
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
       required:
       - uuid
       - externalId
       - name
+      - startAt
+      - endAt
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
     UserDto:
       type: object
       properties:
@@ -1630,6 +1577,59 @@ components:
       - username
       - email
       - entrancePlanClaims
+    Venue:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueSection'
+      required:
+      - uuid
+      - externalId
+      - name
+      - venueSections
+    VenueSection:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Northside Stand
+      required:
+      - uuid
+      - externalId
+      - name
+    DuplicateEntrancePlansDto:
+      type: object
+      properties:
+        entrancePlanUuids:
+          description: 'Array of entrance plan uuids to duplicate. Up to 50 per call. Only the listed uuids are cloned: to duplicate a collection together with its children, include the children''s uuids explicitly. A collection uuid passed without any of its children is cloned as an empty collection.'
+          type: array
+          items:
+            type: array
+      required:
+      - entrancePlanUuids
   securitySchemes:
     cookie:
       type: apiKey

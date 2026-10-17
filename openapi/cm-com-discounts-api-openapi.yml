@@ -136,24 +136,6 @@ paths:
       - Discounts
 components:
   schemas:
-    handler.updateDiscountRequest:
-      properties:
-        max_usage:
-          type: integer
-        name:
-          type: string
-        online_from:
-          type: string
-        online_till:
-          type: string
-      type: object
-    rest.HttpError:
-      properties:
-        error_code:
-          type: string
-        error_msg:
-          type: string
-      type: object
     handler.createDiscountResponseProduct:
       properties:
         currency_id:
@@ -198,17 +180,11 @@ components:
         rate_type:
           type: string
       type: object
-    handler.createDiscountRequestProduct:
+    rest.HttpError:
       properties:
-        currency_id:
+        error_code:
           type: string
-        max_usage:
-          type: integer
-        product_uuid:
-          type: string
-        rate:
-          type: number
-        rate_type:
+        error_msg:
           type: string
       type: object
     handler.createDiscountResponse:
@@ -240,6 +216,30 @@ components:
           type: string
         rate:
           description: Only present for ORDER campaigns.
+          type: number
+        rate_type:
+          type: string
+      type: object
+    handler.updateDiscountRequest:
+      properties:
+        max_usage:
+          type: integer
+        name:
+          type: string
+        online_from:
+          type: string
+        online_till:
+          type: string
+      type: object
+    handler.createDiscountRequestProduct:
+      properties:
+        currency_id:
+          type: string
+        max_usage:
+          type: integer
+        product_uuid:
+          type: string
+        rate:
           type: number
         rate_type:
           type: string

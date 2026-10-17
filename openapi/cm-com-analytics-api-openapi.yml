@@ -1674,48 +1674,15 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    CreateFeedbackScoreRequest:
-      type: object
-      description: "Request to create a feedback score for a conversation interaction.\n\nExample:\n```json\n{\n    \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"interaction_id\": \"987fcdeb-51a2-3c4d-e5f6-789012345678\",\n    \"score\": 4,\n    \"comment\": \"The assistant was very helpful and resolved my issue quickly.\",\n    \"product_source\": \"HALO_WEB_WIDGET\"\n}\n```"
-      required:
-      - account_id
-      - conversation_id
-      - score
-      properties:
-        account_id:
-          type: string
-          format: uuid
-          description: The account ID this feedback belongs to
-        comment:
-          type:
-          - string
-          - 'null'
-          description: Optional comment from the user explaining their score
-        conversation_id:
-          type: string
-          format: uuid
-          description: The conversation ID for this feedback score
-        interaction_id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          description: The specific interaction ID within the conversation (optional)
-        product_source:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/ProductSource'
-            description: The product source where the feedback was submitted
-        profile_id:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: The profile ID associated with this feedback (optional)
-        score:
-          type: integer
-          format: int32
-          description: The feedback score (0-4 range, will be normalized to 1-5 for storage)
+    ProductSource:
+      type: string
+      description: Product source enum for feedback scores
+      enum:
+      - CAIC
+      - MSC
+      - HALO_TEST_CENTER
+      - WEB_CONVERSATIONS
+      - CPAAS
     FeedbackScoreResponse:
       type: object
       description: Response returned after creating or updating a feedback score.
@@ -1762,6 +1729,31 @@ components:
           type: integer
           format: int32
           description: The feedback score (e.g., 1-5 rating)
+    ProductMetrics:
+      type: object
+      description: Per-product metrics data.
+      required:
+      - product
+      - conversations_count
+      - average_conversation_duration_seconds
+      - average_interactions_per_conversation
+      properties:
+        average_conversation_duration_seconds:
+          type: integer
+          format: int64
+        average_interactions_per_conversation:
+          type: number
+          format: double
+        average_recognition_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+        conversations_count:
+          type: integer
+          format: int64
+        product:
+          type: string
     MetricsData:
       type: object
       description: Aggregated metrics data.
@@ -1790,276 +1782,48 @@ components:
         total_conversations_count:
           type: integer
           format: int64
-    ProductMetrics:
+    CreateFeedbackScoreRequest:
       type: object
-      description: Per-product metrics data.
+      description: "Request to create a feedback score for a conversation interaction.\n\nExample:\n```json\n{\n    \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"interaction_id\": \"987fcdeb-51a2-3c4d-e5f6-789012345678\",\n    \"score\": 4,\n    \"comment\": \"The assistant was very helpful and resolved my issue quickly.\",\n    \"product_source\": \"HALO_WEB_WIDGET\"\n}\n```"
       required:
-      - product
-      - conversations_count
-      - average_conversation_duration_seconds
-      - average_interactions_per_conversation
+      - account_id
+      - conversation_id
+      - score
       properties:
-        average_conversation_duration_seconds:
-          type: integer
-          format: int64
-        average_interactions_per_conversation:
-          type: number
-          format: double
-        average_recognition_rate:
+        account_id:
+          type: string
+          format: uuid
+          description: The account ID this feedback belongs to
+        comment:
           type:
-          - number
+          - string
           - 'null'
-          format: double
-        conversations_count:
+          description: Optional comment from the user explaining their score
+        conversation_id:
+          type: string
+          format: uuid
+          description: The conversation ID for this feedback score
+        interaction_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The specific interaction ID within the conversation (optional)
+        product_source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/ProductSource'
+            description: The product source where the feedback was submitted
+        profile_id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: The profile ID associated with this feedback (optional)
+        score:
           type: integer
-          format: int64
-        product:
-          type: string
-    ProductSource:
-      type: string
-      description: Product source enum for feedback scores
-      enum:
-      - CAIC
-      - MSC
-      - HALO_TEST_CENTER
-      - WEB_CONVERSATIONS
-      - CPAAS
-    ScanLog:
-      type: object
-      properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        scannedValue:
-          type: string
-          maxLength: 255
-          example: CMLQLGRPA
-        scannedAt:
-          format: date-time
-          type: string
-        scanStatusCode:
-          type: number
-          description: Result of the scan
-          enum:
-          - 100
-          - 200
-          - 201
-          - 300
-          - 301
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          example: 200
-        errorDetails:
-          type: string
-          readOnly: true
-        deviceId:
-          type: string
-          readOnly: true
-          example: 9UY8G
-        deviceLabel:
-          type: string
-          readOnly: true
-          example: Scanner Entrance 1
-        mdmDeviceInfo:
-          type: object
-          readOnly: true
-        ticket:
-          $ref: '#/components/schemas/Ticket'
-      required:
-      - externalId
-      - scannedValue
-      - scannedAt
-      - scanStatusCode
-      - errorDetails
-      - deviceId
-      - deviceLabel
-      - mdmDeviceInfo
-      - ticket
-    ClickerScansItemDto:
-      type: object
-      properties:
-        entrancePlanId:
-          type: string
-          description: Entrance plan uuid
-        name:
-          type: string
-        arrivals:
-          type: number
-          description: Clicker arrivals (ARRIVAL, 201)
-        departures:
-          type: number
-          description: Clicker departures (ticketless DEPARTURE, 301)
-        net:
-          type: number
-          description: Arrivals minus departures; can be negative when departures were tapped more often
-      required:
-      - entrancePlanId
-      - arrivals
-      - departures
-      - net
-    ErrorDto:
-      type: object
-      properties:
-        errorCode:
-          type: number
-          example: 400100
-          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
-        description:
-          type: string
-          maxLength: 255
-          example: Description of the error.
-        httpStatus:
-          type: number
-          enum:
-          - 100
-          - 101
-          - 102
-          - 103
-          - 200
-          - 201
-          - 202
-          - 203
-          - 204
-          - 205
-          - 206
-          - 207
-          - 208
-          - 210
-          - 300
-          - 301
-          - 302
-          - 303
-          - 304
-          - 307
-          - 308
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          - 414
-          - 415
-          - 416
-          - 417
-          - 418
-          - 421
-          - 422
-          - 423
-          - 424
-          - 428
-          - 429
-          - 456
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
-          - 505
-          - 507
-          - 508
-          example: 400
-      required:
-      - errorCode
-      - description
-      - httpStatus
-    ScansByVenueItemDto:
-      type: object
-      properties: {}
-    ScanProgressResponseDto:
-      type: object
-      properties:
-        checkins:
-          readOnly: true
-          type: array
-          items:
-            type: string
-        errors:
-          readOnly: true
-          type: array
-          items:
-            type: string
-        checkouts:
-          readOnly: true
-          type: array
-          items:
-            type: string
-        groupIntervalMs:
-          type: number
-          readOnly: true
-        effectiveEndAt:
-          format: date-time
-          type: string
-          readOnly: true
-      required:
-      - checkins
-      - errors
-      - checkouts
-      - groupIntervalMs
-      - effectiveEndAt
-    ScansByEntrancePlanItemDto:
-      type: object
-      properties: {}
-    PageMetaDto:
-      type: object
-      properties:
-        page:
-          type: number
-        take:
-          type: number
-        skip:
-          type: number
-        itemCount:
-          type: number
-        pageCount:
-          type: number
-        hasPreviousPage:
-          type: boolean
-        hasNextPage:
-          type: boolean
-      required:
-      - page
-      - take
-      - skip
-      - itemCount
-      - pageCount
-      - hasPreviousPage
-      - hasNextPage
-    PageDto:
-      type: object
-      properties:
-        data:
-          type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-      required:
-      - data
-      - meta
-    ScansByProductItemDto:
-      type: object
-      properties: {}
+          format: int32
+          description: The feedback score (0-4 range, will be normalized to 1-5 for storage)
     Ticket:
       type: object
       properties:
@@ -2229,6 +1993,242 @@ components:
       - showUpPercentage
       - totalTickets
       - otherTickets
+    ScansByEntrancePlanItemDto:
+      type: object
+      properties: {}
+    ScanProgressResponseDto:
+      type: object
+      properties:
+        checkins:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        errors:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        checkouts:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        groupIntervalMs:
+          type: number
+          readOnly: true
+        effectiveEndAt:
+          format: date-time
+          type: string
+          readOnly: true
+      required:
+      - checkins
+      - errors
+      - checkouts
+      - groupIntervalMs
+      - effectiveEndAt
+    ScansByVenueItemDto:
+      type: object
+      properties: {}
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    ScansByProductItemDto:
+      type: object
+      properties: {}
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    ScanLog:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        scannedValue:
+          type: string
+          maxLength: 255
+          example: CMLQLGRPA
+        scannedAt:
+          format: date-time
+          type: string
+        scanStatusCode:
+          type: number
+          description: Result of the scan
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        errorDetails:
+          type: string
+          readOnly: true
+        deviceId:
+          type: string
+          readOnly: true
+          example: 9UY8G
+        deviceLabel:
+          type: string
+          readOnly: true
+          example: Scanner Entrance 1
+        mdmDeviceInfo:
+          type: object
+          readOnly: true
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+      required:
+      - externalId
+      - scannedValue
+      - scannedAt
+      - scanStatusCode
+      - errorDetails
+      - deviceId
+      - deviceLabel
+      - mdmDeviceInfo
+      - ticket
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    ClickerScansItemDto:
+      type: object
+      properties:
+        entrancePlanId:
+          type: string
+          description: Entrance plan uuid
+        name:
+          type: string
+        arrivals:
+          type: number
+          description: Clicker arrivals (ARRIVAL, 201)
+        departures:
+          type: number
+          description: Clicker departures (ticketless DEPARTURE, 301)
+        net:
+          type: number
+          description: Arrivals minus departures; can be negative when departures were tapped more often
+      required:
+      - entrancePlanId
+      - arrivals
+      - departures
+      - net
   securitySchemes:
     X-CM-SSO-ACCOUNTGUID:
       type: apiKey

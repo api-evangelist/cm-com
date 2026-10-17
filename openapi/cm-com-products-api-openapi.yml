@@ -548,76 +548,6 @@ paths:
     - url: /ticketing/v1
 components:
   schemas:
-    Product:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Entrance Ticket
-        productType:
-          type: string
-          enum:
-          - REGULAR
-          - BOX_OFFICE
-          - GUEST_LIST
-          - NON_ENTRY_PRODUCT
-          example: REGULAR
-      required:
-      - uuid
-      - externalId
-      - name
-      - productType
-    UpdateProductDto:
-      type: object
-      properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Entrance Ticket
-        productType:
-          type: string
-          enum:
-          - REGULAR
-          - BOX_OFFICE
-          - GUEST_LIST
-          - NON_ENTRY_PRODUCT
-          example: REGULAR
-    CreateProductDto:
-      type: object
-      properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Entrance Ticket
-        productType:
-          type: string
-          enum:
-          - REGULAR
-          - BOX_OFFICE
-          - GUEST_LIST
-          - NON_ENTRY_PRODUCT
-          example: REGULAR
-      required:
-      - externalId
-      - name
-      - productType
     ErrorDto:
       type: object
       properties:
@@ -692,6 +622,57 @@ components:
       - errorCode
       - description
       - httpStatus
+    Product:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
+      required:
+      - uuid
+      - externalId
+      - name
+      - productType
+    CreateProductDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
+      required:
+      - externalId
+      - name
+      - productType
     PageDto:
       type: object
       properties:
@@ -728,6 +709,25 @@ components:
       - pageCount
       - hasPreviousPage
       - hasNextPage
+    UpdateProductDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
     handler.productResponse:
       properties:
         additional_information:
@@ -779,6 +779,13 @@ components:
         valid_until:
           type: string
       type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
     handler.productListItem:
       properties:
         name:
@@ -814,13 +821,6 @@ components:
           type: integer
         total_items:
           type: integer
-      type: object
-    rest.HttpError:
-      properties:
-        error_code:
-          type: string
-        error_msg:
-          type: string
       type: object
   securitySchemes:
     cookie:

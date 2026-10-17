@@ -1279,95 +1279,6 @@ paths:
       deprecated: true
 components:
   schemas:
-    CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent:
-      required:
-      - id
-      - eventType
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        entityId:
-          type: string
-        entityType:
-          enum:
-          - MT_RECIPIENT_COUNTRY_FILTER
-          - SR_CONFIGURATION
-          - IP_RESTRICTION_CONFIGURATION
-          - RATE_LIMITING_CONFIGURATION
-          type: string
-        ssoAccountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        eventType:
-          type: string
-        eventSubType:
-          type: string
-        eventMetaData:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData'
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry:
-      required:
-      - iso3166
-      - name
-      type: object
-      properties:
-        iso3166:
-          type: string
-        name:
-          type: string
-    CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest:
-      required:
-      - countries
-      - type
-      type: object
-      properties:
-        countries:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry'
-        type:
-          enum:
-          - None
-          - Allow
-          - Deny
-          type: string
-    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionSuggestionsResponse:
-      type: object
-      properties:
-        ipv4Addresses:
-          type: array
-          items:
-            type: string
-    CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilter:
-      type: object
-      properties:
-        type:
-          type: string
-        countries:
-          type: array
-          items:
-            type: string
-    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse:
-      type: object
-      properties:
-        limit:
-          format: int32
-          type: integer
-        timeUnit:
-          enum:
-          - MINUTE
-          - HOUR
-          - DAY
-          - WEEK
-          - MONTH
-          type: string
     CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest:
       required:
       - method
@@ -1406,26 +1317,79 @@ components:
           type: array
           items:
             type: string
-    System.Void:
-      type: object
-      properties: {}
-    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest:
-      type: object
-      properties:
-        accountLimit:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitRequest'
-        recipientLimit:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitRequest'
-    CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData:
+    CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry:
       required:
-      - from
-      - to
+      - iso3166
+      - name
       type: object
       properties:
-        from:
-          type: object
-        to:
-          type: object
+        iso3166:
+          type: string
+        name:
+          type: string
+    CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilter:
+      type: object
+      properties:
+        type:
+          type: string
+        countries:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse:
+      type: object
+      properties:
+        ipv4Addresses:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.EventLogging.ApiBusinessMessagingEntityEvent:
+      required:
+      - id
+      - eventType
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        entityId:
+          type: string
+        entityType:
+          enum:
+          - MT_RECIPIENT_COUNTRY_FILTER
+          - SR_CONFIGURATION
+          - IP_RESTRICTION_CONFIGURATION
+          - RATE_LIMITING_CONFIGURATION
+          type: string
+        ssoAccountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        eventType:
+          type: string
+        eventSubType:
+          type: string
+        eventMetaData:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData'
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiKey:
+      required:
+      - apiKey
+      - createdOn
+      - isActive
+      type: object
+      properties:
+        apiKey:
+          type: string
+        createdOn:
+          format: date-time
+          type: string
+        isActive:
+          type: boolean
     CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationResponse:
       required:
       - id
@@ -1445,20 +1409,94 @@ components:
           - Allow
           - Deny
           type: string
-    CM.Platform.Channels.Models.ApiSettings.ApiKey:
-      required:
-      - apiKey
-      - createdOn
-      - isActive
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationRequest:
       type: object
       properties:
-        apiKey:
+        accountLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitRequest'
+        recipientLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitRequest'
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse:
+      type: object
+      properties:
+        accountLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse'
+        recipientLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse'
+    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionSuggestionsResponse:
+      type: object
+      properties:
+        ipv4Addresses:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData:
+      required:
+      - from
+      - to
+      type: object
+      properties:
+        from:
+          type: object
+        to:
+          type: object
+    CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse:
+      required:
+      - method
+      - encodingReplaceValue
+      - url
+      - data
+      type: object
+      properties:
+        method:
           type: string
-        createdOn:
-          format: date-time
+        encodingReplaceValue:
           type: string
-        isActive:
-          type: boolean
+        url:
+          type: string
+        data:
+          type: string
+        httpHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        amountOfRetries:
+          format: int32
+          type: integer
+        retryIntervalInSeconds:
+          format: int32
+          type: integer
+        outOfRetriesProcedure:
+          type: string
+        oauthSettingId:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitAcceptedTimeUnits:
+      type: object
+      properties:
+        type:
+          enum:
+          - MESSAGING_ACCOUNT
+          - RECIPIENT
+          type: string
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitValidTimeUnitOption'
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitValidTimeUnitOption:
+      type: object
+      properties:
+        timeUnit:
+          enum:
+          - MINUTE
+          - HOUR
+          - DAY
+          - WEEK
+          - MONTH
+          type: string
+        minimumLimit:
+          format: int32
+          type: integer
     CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmpp:
       required:
       - systemId
@@ -1536,51 +1574,19 @@ components:
           type: integer
         serviceConfig:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmppService'
-    CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilterResponse:
+    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse:
       type: object
       properties:
-        id:
-          type: string
-        errors:
-          type: array
-          items:
-            type: string
-        data:
-          $ref: '#/components/schemas/CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilter'
-    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingConfigurationResponse:
-      type: object
-      properties:
-        accountLimit:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse'
-        recipientLimit:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitResponse'
-    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationResponse:
-      type: object
-      properties:
-        ipv4Addresses:
-          type: array
-          items:
-            type: string
-    CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmppService:
-      required:
-      - id
-      - platformLocation
-      - platformName
-      - serviceName
-      - endpointUrl
-      type: object
-      properties:
-        id:
+        limit:
           format: int32
           type: integer
-        platformLocation:
-          format: int32
-          type: integer
-        platformName:
-          type: string
-        serviceName:
-          type: string
-        endpointUrl:
+        timeUnit:
+          enum:
+          - MINUTE
+          - HOUR
+          - DAY
+          - WEEK
+          - MONTH
           type: string
     CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountHttp:
       required:
@@ -1623,63 +1629,46 @@ components:
         priority:
           format: int32
           type: integer
-    CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationResponse:
+    CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest:
       required:
-      - method
-      - encodingReplaceValue
-      - url
-      - data
+      - countries
+      - type
       type: object
       properties:
-        method:
-          type: string
-        encodingReplaceValue:
-          type: string
-        url:
-          type: string
-        data:
-          type: string
-        httpHeaders:
-          type: object
-          additionalProperties:
-            type: string
-        amountOfRetries:
-          format: int32
-          type: integer
-        retryIntervalInSeconds:
-          format: int32
-          type: integer
-        outOfRetriesProcedure:
-          type: string
-        oauthSettingId:
-          format: int32
-          type: integer
-    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitValidTimeUnitOption:
-      type: object
-      properties:
-        timeUnit:
-          enum:
-          - MINUTE
-          - HOUR
-          - DAY
-          - WEEK
-          - MONTH
-          type: string
-        minimumLimit:
-          format: int32
-          type: integer
-    CM.Platform.Channels.Models.ApiSettings.ApiRateLimitAcceptedTimeUnits:
-      type: object
-      properties:
-        type:
-          enum:
-          - MESSAGING_ACCOUNT
-          - RECIPIENT
-          type: string
-        options:
+        countries:
           type: array
           items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiRateLimitValidTimeUnitOption'
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountry'
+        type:
+          enum:
+          - None
+          - Allow
+          - Deny
+          type: string
+    CM.Platform.Channels.Models.ApiSettings.ApiSmssAccountSmppService:
+      required:
+      - id
+      - platformLocation
+      - platformName
+      - serviceName
+      - endpointUrl
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        platformLocation:
+          format: int32
+          type: integer
+        platformName:
+          type: string
+        serviceName:
+          type: string
+        endpointUrl:
+          type: string
+    System.Void:
+      type: object
+      properties: {}
     CM.Platform.Channels.Models.ApiSettings.ApiRateLimitingMTSendingLimitRequest:
       type: object
       properties:
@@ -1694,26 +1683,18 @@ components:
           - WEEK
           - MONTH
           type: string
+    CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilterResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+        data:
+          $ref: '#/components/schemas/CM.Platform.Channels.Library.Core.ApiClients.TextCore.MessagingConfiguration.ApiMTRecipientCountryFilter'
   requestBodies:
-    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
-        text/json:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
-        text/xml:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
-        multipart/form-data:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
-        application/x-www-form-urlencoded:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
-      description: The requested configuration.
-      required: true
     CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest2:
       content:
         application/json:
@@ -1750,6 +1731,25 @@ components:
         application/x-www-form-urlencoded:
           schema:
             $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiStatusReportsConfigurationRequest'
+      required: true
+    CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ApiSettings.ApiIPRestrictionConfigurationRequest'
+      description: The requested configuration.
       required: true
     CM.Platform.Channels.Models.ApiSettings.ApiMTRecipientCountryFilterConfigurationRequest:
       content:

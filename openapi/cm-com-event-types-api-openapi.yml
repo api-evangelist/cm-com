@@ -312,6 +312,18 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    CM.Data.Domain.Enums.PropertyType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 100
+      - 101
+      - 102
+      - 103
+      - 104
+      type: integer
+      format: int32
     CM.Data.Core.Profiles.Api.Models.ApiEventType:
       type: object
       properties:
@@ -349,15 +361,3 @@ components:
         isNotIndexed:
           type: boolean
       additionalProperties: false
-    CM.Data.Domain.Enums.PropertyType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 100
-      - 101
-      - 102
-      - 103
-      - 104
-      type: integer
-      format: int32

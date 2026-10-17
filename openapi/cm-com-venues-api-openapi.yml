@@ -768,144 +768,7 @@ paths:
       description: Production Server
 components:
   schemas:
-    UpdateVenueSectionDto:
-      type: object
-      properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          minLength: 1
-          maxLength: 255
-          example: Northside Stand
-    ErrorDto:
-      type: object
-      properties:
-        errorCode:
-          type: number
-          example: 400100
-          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
-        description:
-          type: string
-          maxLength: 255
-          example: Description of the error.
-        httpStatus:
-          type: number
-          enum:
-          - 100
-          - 101
-          - 102
-          - 103
-          - 200
-          - 201
-          - 202
-          - 203
-          - 204
-          - 205
-          - 206
-          - 207
-          - 208
-          - 210
-          - 300
-          - 301
-          - 302
-          - 303
-          - 304
-          - 307
-          - 308
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          - 414
-          - 415
-          - 416
-          - 417
-          - 418
-          - 421
-          - 422
-          - 423
-          - 424
-          - 428
-          - 429
-          - 456
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
-          - 505
-          - 507
-          - 508
-          example: 400
-      required:
-      - errorCode
-      - description
-      - httpStatus
-    Venue:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: CM.com Arena
-        venueSections:
-          type: array
-          items:
-            $ref: '#/components/schemas/VenueSection'
-      required:
-      - uuid
-      - externalId
-      - name
-      - venueSections
-    Event:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: CM.com Festival 2024
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
-      required:
-      - uuid
-      - externalId
-      - name
-      - startAt
-      - endAt
-    UpdateVenueDto:
+    CreateVenueDto:
       type: object
       properties:
         externalId:
@@ -921,85 +784,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreateVenueSectionDto'
-    PageDto:
-      type: object
-      properties:
-        data:
-          type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
       required:
-      - data
-      - meta
-    EntrancePlan:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Main Entrance
-        description:
-          type: string
-          maxLength: 255
-          example: Entrance plan for main entrance
-        isDefault:
-          type: boolean
-          description: Marks an entrancePlan as default plan.
-        isActive:
-          type: boolean
-          description: Sets an entrancePlan as active/inactive.
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
-        scanMode:
-          type: string
-          enum:
-          - OFFLINE_SYNC
-          - ONLINE
-          example: OFFLINE_SYNC
-        status:
-          type: string
-          enum:
-          - ACTIVE
-          - INACTIVE
-          - NO_RULES
-          example: ACTIVE
-        children:
-          type: array
-          items:
-            type: object
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/Event'
-        venues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Venue'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/Rule'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-        organisation:
-          type: object
-      required:
-      - uuid
+      - externalId
       - name
-      - isDefault
-      - isActive
-      - scanMode
+      - venueSections
     Condition:
       type: object
       properties:
@@ -1058,31 +846,6 @@ components:
       - subject
       - operator
       - value
-    PageMetaDto:
-      type: object
-      properties:
-        page:
-          type: number
-        take:
-          type: number
-        skip:
-          type: number
-        itemCount:
-          type: number
-        pageCount:
-          type: number
-        hasPreviousPage:
-          type: boolean
-        hasNextPage:
-          type: boolean
-      required:
-      - page
-      - take
-      - skip
-      - itemCount
-      - pageCount
-      - hasPreviousPage
-      - hasNextPage
     Rule:
       type: object
       properties:
@@ -1192,6 +955,278 @@ components:
       - shouldValidateOnParent
       - requiresPhotoVerification
       - requiresConfirmationQuestion
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    EntrancePlan:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Main Entrance
+        description:
+          type: string
+          maxLength: 255
+          example: Entrance plan for main entrance
+        isDefault:
+          type: boolean
+          description: Marks an entrancePlan as default plan.
+        isActive:
+          type: boolean
+          description: Sets an entrancePlan as active/inactive.
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+        scanMode:
+          type: string
+          enum:
+          - OFFLINE_SYNC
+          - ONLINE
+          example: OFFLINE_SYNC
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - NO_RULES
+          example: ACTIVE
+        children:
+          type: array
+          items:
+            type: object
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        venues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Venue'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        organisation:
+          type: object
+      required:
+      - uuid
+      - name
+      - isDefault
+      - isActive
+      - scanMode
+    UpdateVenueDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateVenueSectionDto'
+    Event:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Festival 2024
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+      required:
+      - uuid
+      - externalId
+      - name
+      - startAt
+      - endAt
+    CreateVenueSectionDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: Northside Stand
+      required:
+      - externalId
+      - name
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    UpdateVenueSectionDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: Northside Stand
+    Venue:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueSection'
+      required:
+      - uuid
+      - externalId
+      - name
+      - venueSections
     VenueSection:
       type: object
       properties:
@@ -1211,63 +1246,6 @@ components:
       - uuid
       - externalId
       - name
-    CreateVenueSectionDto:
-      type: object
-      properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          minLength: 1
-          maxLength: 255
-          example: Northside Stand
-      required:
-      - externalId
-      - name
-    CreateVenueDto:
-      type: object
-      properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          minLength: 1
-          maxLength: 255
-          example: CM.com Arena
-        venueSections:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateVenueSectionDto'
-      required:
-      - externalId
-      - name
-      - venueSections
-    PartnerApiVenue:
-      title: Venue
-      description: Venue resource representation
-      required:
-      - uuid
-      - name
-      - timezone_id
-      properties:
-        uuid:
-          description: Unique identifier of the venue
-          type: string
-          format: uuid
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          description: Name of the venue
-          type: string
-          example: Grand Concert Hall
-        timezone_id:
-          description: Timezone identifier of the venue
-          type: string
-          example: Europe/Amsterdam
-      type: object
     PartnerApiErrorResponse:
       title: Error Response
       description: Standard error response structure for CM.com Tables API
@@ -1290,7 +1268,48 @@ components:
           - 'null'
           example: null
       type: object
+    PartnerApiVenue:
+      title: Venue
+      description: Venue resource representation
+      required:
+      - uuid
+      - name
+      - timezone_id
+      properties:
+        uuid:
+          description: Unique identifier of the venue
+          type: string
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          description: Name of the venue
+          type: string
+          example: Grand Concert Hall
+        timezone_id:
+          description: Timezone identifier of the venue
+          type: string
+          example: Europe/Amsterdam
+      type: object
   responses:
+    UnauthorizedResponse:
+      description: Unauthorized - API token not found or not in active state.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PartnerApiErrorResponse'
+          examples:
+            TokenNotFound:
+              summary: API token not found
+              value:
+                message: Api token not found.
+                error_code: 401100
+                error_details: null
+            TokenNotActive:
+              summary: API token not in active state
+              value:
+                message: Api token is not in an active state.
+                error_code: 401101
+                error_details: null
     ForbiddenResponse:
       description: Forbidden - API token does not have the required ability for this endpoint.
       content:
@@ -1326,25 +1345,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PartnerApiErrorResponse'
-    UnauthorizedResponse:
-      description: Unauthorized - API token not found or not in active state.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PartnerApiErrorResponse'
-          examples:
-            TokenNotFound:
-              summary: API token not found
-              value:
-                message: Api token not found.
-                error_code: 401100
-                error_details: null
-            TokenNotActive:
-              summary: API token not in active state
-              value:
-                message: Api token is not in an active state.
-                error_code: 401101
-                error_details: null
   securitySchemes:
     cookie:
       type: apiKey

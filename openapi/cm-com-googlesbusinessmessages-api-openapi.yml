@@ -1802,6 +1802,114 @@ paths:
                   $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessLocation'
 components:
   schemas:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1OpenUrlAction:
+      type: object
+      properties:
+        url:
+          type: string
+        ETag:
+          type: string
+    ? Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentAuthorizationConfig
+    : type: object
+      properties:
+        endpointUrl:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1RichCard:
+      type: object
+      properties:
+        carouselCard:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CarouselCard'
+        standaloneCard:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1StandaloneCard'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1DialAction:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1LiveAgentRequest:
+      type: object
+      properties:
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        accountName:
+          type: string
+        accountType:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        locationName:
+          type: string
+        placeId:
+          type: string
+        address:
+          type: string
+        googleMapsUrl:
+          type: string
+        verificationState:
+          enum:
+          - VERIFICATION_STATE_UNSPECIFIED
+          - VERIFICATION_STATE_UNVERIFIED
+          - VERIFICATION_STATE_PENDING
+          - VERIFICATION_STATE_VERIFIED
+          - VERIFICATION_STATE_SUSPENDED_IN_GMB
+          type: string
+        launchState:
+          enum:
+          - LAUNCH_STATE_UNSPECIFIED
+          - LAUNCH_STATE_UNLAUNCHED
+          - LAUNCH_STATE_PENDING
+          - LAUNCH_STATE_LAUNCHED
+          - LAUNCH_STATE_REJECTED
+          - LAUNCH_STATE_SUSPENDED
+          - LAUNCH_STATE_PENDING_UNLAUNCH
+          - LAUNCH_STATE_INVALID_IN_GMB
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleTypeTimeOfDay:
+      type: object
+      properties:
+        minutes:
+          format: int32
+          type: integer
+        hours:
+          format: int32
+          type: integer
+        nanos:
+          format: int32
+          type: integer
+        seconds:
+          format: int32
+          type: integer
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo:
+      type: object
+      properties:
+        thumbnailUrl:
+          type: string
+        altText:
+          type: string
+        fileUrl:
+          type: string
+        forceRefresh:
+          type: boolean
+        ETag:
+          type: string
     Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Suggestion:
       type: object
       properties:
@@ -1811,30 +1919,64 @@ components:
           $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedReply'
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationalSetting:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgent:
       type: object
       properties:
-        conversationStarters:
+        customAgentId:
+          type: string
+        additionalAgentInteractions:
           type: array
           items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationStarters'
-        welcomeMessage:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1WelcomeMessage'
-        privacyPolicy:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1PrivacyPolicy'
-        offlineMessage:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OfflineMessage'
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction'
+        authorizationConfig:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentAuthorizationConfig'
+        nonLocalConfig:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfig'
+        surveyConfig:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyConfig'
+        agentTestUrl:
+          type: string
+        phone:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
+        entryPointConfigs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesEntryPointConfig'
+        logoUrl:
+          type: string
+        testUrls:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1TestUrl'
+        conversationalSettings:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationalSetting'
+        defaultLocale:
+          type: string
+        primaryAgentInteraction:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction'
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfig:
       type: object
       properties:
-        humanRepresentative:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1HumanRepresentative'
-        interactionType:
-          type: string
-        botRepresentative:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BotRepresentative'
+        callDeflectionPhoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
+        enabledDomains:
+          type: array
+          items:
+            type: string
+        phoneNumber:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
+        contactOption:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfigContactOption'
+        regionCodes:
+          type: array
+          items:
+            type: string
         ETag:
           type: string
     Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyConfig:
@@ -1850,73 +1992,61 @@ components:
             $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1CustomSurveyConfig'
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequestOauth:
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsRequest:
       type: object
       properties:
-        codeChallenge:
+        launched:
+          type: boolean
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent:
+      type: object
+      properties:
+        description:
           type: string
-        codeChallengeMethod:
+        media:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Media'
+        title:
           type: string
-        clientId:
-          type: string
-        scopes:
+        suggestions:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Suggestion'
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CarouselCard:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Image:
       type: object
       properties:
-        cardWidth:
-          type: string
-        cardContents:
-          type: array
-          items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent'
+        contentInfo:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo'
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1LiveAgentRequest:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
       type: object
       properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequest:
+      type: object
+      properties:
+        oauth:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequestOauth'
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyQuestion:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BotRepresentative:
       type: object
       properties:
-        questionContent:
-          type: string
-        questionType:
-          type: string
-        name:
-          type: string
-        responseOptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyResponse'
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1StandaloneCard:
-      type: object
-      properties:
-        cardContent:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent'
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedReply:
-      type: object
-      properties:
-        postbackData:
-          type: string
-        text:
-          type: string
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1HumanRepresentative:
-      type: object
-      properties:
-        humanMessagingAvailability:
+        botMessagingAvailability:
           $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailability'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesEntryPointConfig:
+      type: object
+      properties:
+        allowedEntryPoint:
+          type: string
         ETag:
           type: string
     Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1VerifiedSmsAgent:
@@ -1929,6 +2059,17 @@ components:
         logoUrl:
           type: string
         description:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedAction:
+      type: object
+      properties:
+        postbackData:
+          type: string
+        openUrlAction:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OpenUrlAction'
+        text:
           type: string
         ETag:
           type: string
@@ -1996,22 +2137,109 @@ components:
         createdOnUtc:
           format: date-time
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Image:
-      type: object
+    ? Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfigContactOption
+    : type: object
       properties:
-        contentInfo:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo'
+        url:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedAction:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailability:
       type: object
       properties:
-        postbackData:
+        hours:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailabilityHours'
+        ETag:
           type: string
-        openUrlAction:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OpenUrlAction'
-        text:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CarouselCard:
+      type: object
+      properties:
+        cardWidth:
           type: string
+        cardContents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyQuestion:
+      type: object
+      properties:
+        questionContent:
+          type: string
+        questionType:
+          type: string
+        name:
+          type: string
+        responseOptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyResponse'
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentLaunchStatus:
+      type: object
+      properties:
+        entryPoint:
+          enum:
+          - NON_LOCAL
+          - LOCATION
+          type: string
+        launchState:
+          enum:
+          - LAUNCH_STATE_UNSPECIFIED
+          - LAUNCH_STATE_UNLAUNCHED
+          - LAUNCH_STATE_PENDING
+          - LAUNCH_STATE_LAUNCHED
+          - LAUNCH_STATE_REJECTED
+          - LAUNCH_STATE_SUSPENDED
+          - LAUNCH_STATE_PENDING_UNLAUNCH
+          - LAUNCH_STATE_INVALID_IN_GMB
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleOAuthAccessToken:
+      required:
+      - accessToken
+      - sessionId
+      - issuedAtUtc
+      - expiresAtUtc
+      type: object
+      properties:
+        accessToken:
+          type: string
+        sessionId:
+          type: string
+        issuedAtUtc:
+          format: date-time
+          type: string
+        expiresAtUtc:
+          format: date-time
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequestOauth:
+      type: object
+      properties:
+        codeChallenge:
+          type: string
+        codeChallengeMethod:
+          type: string
+        clientId:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1StandaloneCard:
+      type: object
+      properties:
+        cardContent:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent'
         ETag:
           type: string
     CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials:
@@ -2019,6 +2247,19 @@ components:
       properties:
         credentials:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleOAuthAccessToken'
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedAction:
+      type: object
+      properties:
+        postbackData:
+          type: string
+        text:
+          type: string
+        openUrlAction:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1OpenUrlAction'
+        dialAction:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1DialAction'
+        ETag:
+          type: string
     ? CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentConfiguration
     : type: object
       properties:
@@ -2032,139 +2273,33 @@ components:
           type: string
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgent:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone:
       type: object
       properties:
-        customAgentId:
-          type: string
-        additionalAgentInteractions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction'
-        authorizationConfig:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentAuthorizationConfig'
-        nonLocalConfig:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfig'
-        surveyConfig:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyConfig'
-        agentTestUrl:
-          type: string
-        phone:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
-        entryPointConfigs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesEntryPointConfig'
-        logoUrl:
-          type: string
-        testUrls:
-          type: array
-          items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1TestUrl'
-        conversationalSettings:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationalSetting'
-        defaultLocale:
-          type: string
-        primaryAgentInteraction:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction'
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1OpenUrlAction:
-      type: object
-      properties:
-        url:
+        number:
           type: string
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1CustomSurveyConfig:
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
       type: object
       properties:
-        customQuestions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyQuestion'
-        ETag:
+        id:
+          format: uuid
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesEntryPointConfig:
-      type: object
-      properties:
-        allowedEntryPoint:
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
           type: string
-        ETag:
-          type: string
-    ? Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentAuthorizationConfig
-    : type: object
-      properties:
-        endpointUrl:
-          type: string
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfig:
-      type: object
-      properties:
-        callDeflectionPhoneNumbers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
-        enabledDomains:
-          type: array
-          items:
-            type: string
-        phoneNumber:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone'
-        contactOption:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfigContactOption'
-        regionCodes:
-          type: array
-          items:
-            type: string
-        ETag:
-          type: string
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
-      type: object
-      properties:
+          example: 00000000-0000-0000-0000-000000000000
         formElementId:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
         inputValue:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CardContent:
-      type: object
-      properties:
-        description:
+        createdOnUtc:
+          format: date-time
           type: string
-        media:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Media'
-        title:
-          type: string
-        suggestions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Suggestion'
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1RichCard:
-      type: object
-      properties:
-        carouselCard:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1CarouselCard'
-        standaloneCard:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1StandaloneCard'
-        ETag:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsRequest:
-      type: object
-      properties:
-        entryPoint:
-          enum:
-          - NON_LOCAL
-          - LOCATION
-          type: string
-        launched:
-          type: boolean
     Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OfflineMessage:
       type: object
       properties:
@@ -2172,38 +2307,68 @@ components:
           type: string
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationStarters:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1TestUrl:
       type: object
       properties:
-        suggestion:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Suggestion'
-        ETag:
+        surface:
           type: string
-    ? Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BusinessMessagesAgentNonLocalConfigContactOption
-    : type: object
-      properties:
-        url:
-          type: string
-        options:
-          type: array
-          items:
-            type: string
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1PrivacyPolicy:
-      type: object
-      properties:
         url:
           type: string
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailability:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationalSetting:
       type: object
       properties:
-        hours:
+        conversationStarters:
           type: array
           items:
-            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailabilityHours'
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationStarters'
+        welcomeMessage:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1WelcomeMessage'
+        privacyPolicy:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1PrivacyPolicy'
+        offlineMessage:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OfflineMessage'
+        ETag:
+          type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentTestUrl:
+      type: object
+      properties:
+        surface:
+          type: string
+        url:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Suggestion:
+      type: object
+      properties:
+        liveAgentRequest:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1LiveAgentRequest'
+        reply:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedReply'
+        authenticationRequest:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequest'
+        action:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedAction'
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OpenUrlAction:
+      type: object
+      properties:
+        url:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SupportedAgentInteraction:
+      type: object
+      properties:
+        humanRepresentative:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1HumanRepresentative'
+        interactionType:
+          type: string
+        botRepresentative:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BotRepresentative'
         ETag:
           type: string
     CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsResponse:
@@ -2227,73 +2392,25 @@ components:
           type: string
         launched:
           type: boolean
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Phone:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1PrivacyPolicy:
       type: object
       properties:
-        number:
-          type: string
-        ETag:
-          type: string
-    CM.Platform.Channels.ExternalModels.ApiClients.Google.GoogleBusinessCommunications.ApiGooglesBusinessMessagesAgentTestUrl:
-      type: object
-      properties:
-        surface:
-          type: string
         url:
           type: string
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleTypeTimeOfDay:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1HumanRepresentative:
       type: object
       properties:
-        minutes:
-          format: int32
-          type: integer
-        hours:
-          format: int32
-          type: integer
-        nanos:
-          format: int32
-          type: integer
-        seconds:
-          format: int32
-          type: integer
+        humanMessagingAvailability:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailability'
         ETag:
           type: string
-    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelCategoryRequestID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequest:
-      type: object
-      properties:
-        oauth:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequestOauth'
-        ETag:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentBase:
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount:
       required:
       - id
       - accountId
-      - name
       - isPending
-      - isActive
       - createdOnUtc
       type: object
       properties:
@@ -2305,13 +2422,9 @@ components:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
         isPending:
           type: boolean
-        isActive:
-          type: boolean
-        gbmBrandId:
+        channelRequestId:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
@@ -2330,48 +2443,49 @@ components:
         cancelledOnUtc:
           format: date-time
           type: string
-        deletedOnUtc:
-          format: date-time
-          type: string
-        rejectedOnUtc:
-          format: date-time
-          type: string
-        updatedOnUtc:
-          format: date-time
-          type: string
         fulfilledOnUtc:
           format: date-time
           type: string
         createdOnUtc:
           format: date-time
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLocationLaunchSettingsRequest:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyResponse:
       type: object
       properties:
+        postbackData:
+          type: string
+        content:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1VerifiedSmsAgentSender:
+      type: object
+      properties:
+        senderId:
+          type: string
+        countryCode:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Media:
+      type: object
+      properties:
+        contentInfo:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo'
+        height:
+          type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiAgentLaunchSettingsRequest:
+      type: object
+      properties:
+        entryPoint:
+          enum:
+          - NON_LOCAL
+          - LOCATION
+          type: string
         launched:
           type: boolean
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedReply:
-      type: object
-      properties:
-        text:
-          type: string
-        postbackData:
-          type: string
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedAction:
-      type: object
-      properties:
-        postbackData:
-          type: string
-        text:
-          type: string
-        openUrlAction:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1OpenUrlAction'
-        dialAction:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1DialAction'
-        ETag:
-          type: string
     CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgent:
       required:
       - id
@@ -2461,48 +2575,6 @@ components:
         createdOnUtc:
           format: date-time
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1VerifiedSmsAgentSender:
-      type: object
-      properties:
-        senderId:
-          type: string
-        countryCode:
-          type: string
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Suggestion:
-      type: object
-      properties:
-        liveAgentRequest:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1LiveAgentRequest'
-        reply:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedReply'
-        authenticationRequest:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1AuthenticationRequest'
-        action:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedAction'
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo:
-      type: object
-      properties:
-        thumbnailUrl:
-          type: string
-        altText:
-          type: string
-        fileUrl:
-          type: string
-        forceRefresh:
-          type: boolean
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1BotRepresentative:
-      type: object
-      properties:
-        botMessagingAvailability:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1MessagingAvailability'
-        ETag:
-          type: string
     CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesBrandBase:
       required:
       - id
@@ -2527,6 +2599,116 @@ components:
           type: boolean
         isActive:
           type: boolean
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1WelcomeMessage:
+      type: object
+      properties:
+        richText:
+          type: string
+        richCard:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1RichCard'
+        image:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Image'
+        text:
+          type: string
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessLocation:
+      type: object
+      properties:
+        id:
+          type: string
+        locationName:
+          type: string
+        locationPlaceId:
+          type: string
+        addressLines:
+          type: array
+          items:
+            type: string
+        postalCode:
+          type: string
+        locality:
+          type: string
+        regionCode:
+          type: string
+        canBeAdded:
+          type: boolean
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SuggestedReply:
+      type: object
+      properties:
+        postbackData:
+          type: string
+        text:
+          type: string
+        ETag:
+          type: string
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1CustomSurveyConfig:
+      type: object
+      properties:
+        customQuestions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyQuestion'
+        ETag:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentBase:
+      required:
+      - id
+      - accountId
+      - name
+      - isPending
+      - isActive
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        gbmBrandId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
         entityStatus:
           enum:
           - ACTIVE
@@ -2592,205 +2774,42 @@ components:
           type: string
         launched:
           type: boolean
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1SurveyResponse:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1ConversationStarters:
       type: object
       properties:
-        postbackData:
-          type: string
-        content:
-          type: string
+        suggestion:
+          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1Suggestion'
         ETag:
           type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1OpenUrlAction:
+    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1SuggestedReply:
       type: object
       properties:
-        url:
-          type: string
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Media:
-      type: object
-      properties:
-        contentInfo:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1ContentInfo'
-        height:
-          type: string
-        ETag:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAgentLaunchStatus:
-      type: object
-      properties:
-        entryPoint:
-          enum:
-          - NON_LOCAL
-          - LOCATION
-          type: string
-        launchState:
-          enum:
-          - LAUNCH_STATE_UNSPECIFIED
-          - LAUNCH_STATE_UNLAUNCHED
-          - LAUNCH_STATE_PENDING
-          - LAUNCH_STATE_LAUNCHED
-          - LAUNCH_STATE_REJECTED
-          - LAUNCH_STATE_SUSPENDED
-          - LAUNCH_STATE_PENDING_UNLAUNCH
-          - LAUNCH_STATE_INVALID_IN_GMB
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessLocation:
-      type: object
-      properties:
-        id:
-          type: string
-        locationName:
-          type: string
-        locationPlaceId:
-          type: string
-        addressLines:
-          type: array
-          items:
-            type: string
-        postalCode:
-          type: string
-        locality:
-          type: string
-        regionCode:
-          type: string
-        canBeAdded:
-          type: boolean
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleMyBusinessAccount:
-      type: object
-      properties:
-        id:
-          type: string
-        accountName:
-          type: string
-        accountType:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesLocation:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        locationName:
-          type: string
-        placeId:
-          type: string
-        address:
-          type: string
-        googleMapsUrl:
-          type: string
-        verificationState:
-          enum:
-          - VERIFICATION_STATE_UNSPECIFIED
-          - VERIFICATION_STATE_UNVERIFIED
-          - VERIFICATION_STATE_PENDING
-          - VERIFICATION_STATE_VERIFIED
-          - VERIFICATION_STATE_SUSPENDED_IN_GMB
-          type: string
-        launchState:
-          enum:
-          - LAUNCH_STATE_UNSPECIFIED
-          - LAUNCH_STATE_UNLAUNCHED
-          - LAUNCH_STATE_PENDING
-          - LAUNCH_STATE_LAUNCHED
-          - LAUNCH_STATE_REJECTED
-          - LAUNCH_STATE_SUSPENDED
-          - LAUNCH_STATE_PENDING_UNLAUNCH
-          - LAUNCH_STATE_INVALID_IN_GMB
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1DialAction:
-      type: object
-      properties:
-        phoneNumber:
-          type: string
-        ETag:
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1WelcomeMessage:
-      type: object
-      properties:
-        richText:
-          type: string
-        richCard:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1RichCard'
-        image:
-          $ref: '#/components/schemas/Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinessmessagesV1Image'
         text:
           type: string
-        ETag:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.ApiGooglesBusinessMessagesAccount:
-      required:
-      - id
-      - accountId
-      - isPending
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        isPending:
-          type: boolean
-        channelRequestId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        entityStatus:
-          enum:
-          - ACTIVE
-          - PENDING
-          - ELIGIBLE
-          - NOT_VALIDATED
-          - CUSTOMER_ACTION_REQUIRED
-          - EXPIRED
-          - REJECTED
-          - CANCELLED
-          - DELETED
-          type: string
-        cancelledOnUtc:
-          format: date-time
-          type: string
-        fulfilledOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    Google.Apis.BusinessCommunications.v1.Data.GoogleCommunicationsBusinesscommunicationsV1TestUrl:
-      type: object
-      properties:
-        surface:
-          type: string
-        url:
+        postbackData:
           type: string
         ETag:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGoogleOAuthAccessToken:
-      required:
-      - accessToken
-      - sessionId
-      - issuedAtUtc
-      - expiresAtUtc
-      type: object
-      properties:
-        accessToken:
-          type: string
-        sessionId:
-          type: string
-        issuedAtUtc:
-          format: date-time
-          type: string
-        expiresAtUtc:
-          format: date-time
           type: string
   requestBodies:
+    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
+      description: The o authentication credentials.
+      required: true
     CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
       content:
         application/json:
@@ -2819,25 +2838,6 @@ components:
             items:
               $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
       description: The form input.
-      required: true
-    CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
-        text/json:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
-        text/xml:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
-        multipart/form-data:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
-        application/x-www-form-urlencoded:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.GooglesBusinessMessages.LaunchFlow.ApiGooglesBusinessMessagesOAuthUserCredentials'
-      description: The o authentication credentials.
       required: true
   securitySchemes:
     ProductToken:

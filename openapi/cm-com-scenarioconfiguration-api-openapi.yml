@@ -719,13 +719,75 @@ paths:
                   $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2PlatformLocation'
 components:
   schemas:
-    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplatePropertyMetadata:
+    CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData:
+      required:
+      - from
+      - to
       type: object
       properties:
-        value:
+        from:
+          type: object
+        to:
+          type: object
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfigMtReplyConfig:
+      type: object
+      properties:
+        from:
           type: string
-        type:
+        message:
           type: string
+        tariff:
+          format: int32
+          type: integer
+        customGrouping:
+          type: string
+        customGrouping2:
+          type: string
+        customGrouping3:
+          type: string
+        allowedChannels:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base:
+      type: object
+      properties:
+        customer:
+          format: int32
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        destination:
+          type: string
+        platformlocation:
+          format: int32
+          type: integer
+        protocol:
+          enum:
+          - HTTP
+          - SMPP
+          type: string
+        configuration:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfig'
+        customConfiguration:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig'
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig:
+      type: object
+      properties:
+        url:
+          type: string
+        method:
+          type: string
+        data:
+          type: string
+        encoding:
+          type: string
+        httpHeaders:
+          type: object
+          additionalProperties:
+            type: string
     CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfig:
       type: object
       properties:
@@ -755,68 +817,12 @@ components:
           type: integer
         mtreplyconfig:
           $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfigMtReplyConfig'
-    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfigMtReplyConfig:
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplatePropertyMetadata:
       type: object
       properties:
-        from:
+        value:
           type: string
-        message:
-          type: string
-        tariff:
-          format: int32
-          type: integer
-        customGrouping:
-          type: string
-        customGrouping2:
-          type: string
-        customGrouping3:
-          type: string
-        allowedChannels:
-          type: array
-          items:
-            type: string
-    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2PlatformLocation:
-      type: object
-      properties:
-        id:
-          format: int32
-          type: integer
-        name:
-          type: string
-    CM.Platform.Channels.Models.EventLogging.ApiChannelsMoHandlerEventAdmin:
-      required:
-      - id
-      - moHandlerId
-      - eventType
-      - entityState
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        moHandlerId:
-          format: int32
-          type: integer
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        ssoAccountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        eventType:
-          type: string
-        eventSubType:
-          type: string
-        entityState:
-          type: object
-        eventMetaData:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData'
-        createdOnUtc:
-          format: date-time
+        type:
           type: string
     CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.Country:
       type: object
@@ -832,73 +838,9 @@ components:
           type: string
         prefix:
           type: string
-    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2Base:
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base:
       type: object
       properties:
-        customer:
-          format: int32
-          type: integer
-        name:
-          type: string
-        description:
-          type: string
-        destination:
-          type: string
-        platformlocation:
-          format: int32
-          type: integer
-        protocol:
-          enum:
-          - HTTP
-          - SMPP
-          type: string
-        configuration:
-          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfig'
-        customConfiguration:
-          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig'
-    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2:
-      type: object
-      properties:
-        id:
-          format: int32
-          type: integer
-        created:
-          format: date-time
-          type: string
-        generatedbyapi:
-          type: boolean
-        customer:
-          format: int32
-          type: integer
-        name:
-          type: string
-        description:
-          type: string
-        destination:
-          type: string
-        platformlocation:
-          format: int32
-          type: integer
-        protocol:
-          enum:
-          - HTTP
-          - SMPP
-          type: string
-        configuration:
-          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfig'
-        customConfiguration:
-          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig'
-    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2:
-      type: object
-      properties:
-        id:
-          format: int32
-          type: integer
-        created:
-          format: date-time
-          type: string
-        generatedbyapi:
-          type: boolean
         country:
           type: string
         shortcode:
@@ -949,6 +891,81 @@ components:
           type: array
           items:
             type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        created:
+          format: date-time
+          type: string
+        generatedbyapi:
+          type: boolean
+        customer:
+          format: int32
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        destination:
+          type: string
+        platformlocation:
+          format: int32
+          type: integer
+        protocol:
+          enum:
+          - HTTP
+          - SMPP
+          type: string
+        configuration:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2TemplatedConfig'
+        customConfiguration:
+          $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig'
+    CM.Platform.Channels.Models.EventLogging.ApiChannelsMoHandlerEventAdmin:
+      required:
+      - id
+      - moHandlerId
+      - eventType
+      - entityState
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        moHandlerId:
+          format: int32
+          type: integer
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        ssoAccountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        eventType:
+          type: string
+        eventSubType:
+          type: string
+        entityState:
+          type: object
+        eventMetaData:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData'
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2PlatformLocation:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
     CM.Platform.Channels.Models.EventLogging.ApiChannelsScenarioEventAdmin:
       required:
       - id
@@ -984,31 +1001,6 @@ components:
         createdOnUtc:
           format: date-time
           type: string
-    CM.Platform.Channels.Models.EventLogging.ApiChannelsEventMetaData:
-      required:
-      - from
-      - to
-      type: object
-      properties:
-        from:
-          type: object
-        to:
-          type: object
-    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerCustomConfig:
-      type: object
-      properties:
-        url:
-          type: string
-        method:
-          type: string
-        data:
-          type: string
-        encoding:
-          type: string
-        httpHeaders:
-          type: object
-          additionalProperties:
-            type: string
     CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplate:
       type: object
       properties:
@@ -1029,9 +1021,17 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.MoHandlerV2MoTemplatePropertyMetadata'
-    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2Base:
+    CM.Platform.Channels.ExternalModels.ApiClients.TextCore.WebhookConfiguration.ScenarioV2:
       type: object
       properties:
+        id:
+          format: int32
+          type: integer
+        created:
+          format: date-time
+          type: string
+        generatedbyapi:
+          type: boolean
         country:
           type: string
         shortcode:

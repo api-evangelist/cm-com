@@ -157,6 +157,35 @@ paths:
                   $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolutionBusinessAccount'
 components:
   schemas:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolutionBusinessAccount:
+      required:
+      - id
+      - businessAccountId
+      - ownerBusinessAccountId
+      - solutionId
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        businessAccountId:
+          type: string
+        businessAccountName:
+          type: string
+        ownerBusinessAccountId:
+          type: string
+        ownerBusinessAccountName:
+          type: string
+        solutionId:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
     CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolution:
       required:
       - id
@@ -203,35 +232,6 @@ components:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
-    CM.Platform.Channels.Models.ChannelTypes.WhatsAppPartnerSolution.ApiWhatsAppPartnerSolutionBusinessAccount:
-      required:
-      - id
-      - businessAccountId
-      - ownerBusinessAccountId
-      - solutionId
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        businessAccountId:
-          type: string
-        businessAccountName:
-          type: string
-        ownerBusinessAccountId:
-          type: string
-        ownerBusinessAccountName:
-          type: string
-        solutionId:
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-        updatedOnUtc:
-          format: date-time
-          type: string
   securitySchemes:
     ProductToken:
       type: apiKey

@@ -307,6 +307,135 @@ paths:
       - Orders
 components:
   schemas:
+    handler.createOrderRequest:
+      properties:
+        complete:
+          type: boolean
+        customer_data:
+          $ref: '#/components/schemas/handler.createOrderCustomerData'
+        delivery_method:
+          enum:
+          - NONE
+          - EMAIL
+          type: string
+        external_batch_id:
+          type: string
+        payment_method:
+          enum:
+          - FREE
+          - EXTERNAL_PAYMENT
+          type: string
+        tickets:
+          items:
+            $ref: '#/components/schemas/handler.createOrderTicket'
+          type: array
+          uniqueItems: false
+      type: object
+    handler.viewOrderTicket:
+      properties:
+        amount:
+          type: integer
+        cancellations:
+          type: integer
+        name:
+          additionalProperties:
+            type: string
+          type: object
+        product_price_incl_vat:
+          type: number
+        product_type:
+          type: string
+        uuid:
+          type: string
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+    handler.viewOrderCustomerData:
+      properties:
+        address_line_1:
+          type: string
+        address_line_1_building_number:
+          type: string
+        city:
+          type: string
+        country_code:
+          type: string
+        date_of_birth:
+          description: YYYY-MM-DD
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        gender:
+          type: string
+        last_name:
+          type: string
+        mobile:
+          type: string
+        organisation_name:
+          type: string
+        position_name:
+          type: string
+        uuid:
+          type: string
+        zipcode:
+          type: string
+      type: object
+    handler.completeOrderRequest:
+      properties:
+        delivery_method:
+          enum:
+          - NONE
+          - EMAIL
+          type: string
+        mark_as_scanned:
+          type: boolean
+        payment_method:
+          enum:
+          - FREE
+          - EXTERNAL_PAYMENT
+          type: string
+      type: object
+    handler.viewOrderConsent:
+      properties:
+        is_accepted:
+          type: boolean
+        name:
+          type: string
+        uuid:
+          type: string
+      type: object
+    handler.orderListItem:
+      properties:
+        batch_id:
+          type: string
+        external_batch_id:
+          type: string
+        status:
+          type: string
+        uuid:
+          type: string
+      type: object
+    handler.createOrderCustomerData:
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        language:
+          description: Language the customer prefers to be addressed in, as an ISO 639-1 code (for example EN or NL)
+          type: string
+        last_name:
+          type: string
+        mobile:
+          type: string
+      type: object
     handler.listResponse-handler_orderListItem:
       properties:
         items:
@@ -373,135 +502,6 @@ components:
         total_balance:
           type: number
         uuid:
-          type: string
-      type: object
-    handler.viewOrderTicket:
-      properties:
-        amount:
-          type: integer
-        cancellations:
-          type: integer
-        name:
-          additionalProperties:
-            type: string
-          type: object
-        product_price_incl_vat:
-          type: number
-        product_type:
-          type: string
-        uuid:
-          type: string
-      type: object
-    handler.orderListItem:
-      properties:
-        batch_id:
-          type: string
-        external_batch_id:
-          type: string
-        status:
-          type: string
-        uuid:
-          type: string
-      type: object
-    rest.HttpError:
-      properties:
-        error_code:
-          type: string
-        error_msg:
-          type: string
-      type: object
-    handler.viewOrderCustomerData:
-      properties:
-        address_line_1:
-          type: string
-        address_line_1_building_number:
-          type: string
-        city:
-          type: string
-        country_code:
-          type: string
-        date_of_birth:
-          description: YYYY-MM-DD
-          type: string
-        email:
-          type: string
-        first_name:
-          type: string
-        gender:
-          type: string
-        last_name:
-          type: string
-        mobile:
-          type: string
-        organisation_name:
-          type: string
-        position_name:
-          type: string
-        uuid:
-          type: string
-        zipcode:
-          type: string
-      type: object
-    handler.createOrderRequest:
-      properties:
-        complete:
-          type: boolean
-        customer_data:
-          $ref: '#/components/schemas/handler.createOrderCustomerData'
-        delivery_method:
-          enum:
-          - NONE
-          - EMAIL
-          type: string
-        external_batch_id:
-          type: string
-        payment_method:
-          enum:
-          - FREE
-          - EXTERNAL_PAYMENT
-          type: string
-        tickets:
-          items:
-            $ref: '#/components/schemas/handler.createOrderTicket'
-          type: array
-          uniqueItems: false
-      type: object
-    handler.createOrderCustomerData:
-      properties:
-        email:
-          type: string
-        first_name:
-          type: string
-        language:
-          description: Language the customer prefers to be addressed in, as an ISO 639-1 code (for example EN or NL)
-          type: string
-        last_name:
-          type: string
-        mobile:
-          type: string
-      type: object
-    handler.viewOrderConsent:
-      properties:
-        is_accepted:
-          type: boolean
-        name:
-          type: string
-        uuid:
-          type: string
-      type: object
-    handler.completeOrderRequest:
-      properties:
-        delivery_method:
-          enum:
-          - NONE
-          - EMAIL
-          type: string
-        mark_as_scanned:
-          type: boolean
-        payment_method:
-          enum:
-          - FREE
-          - EXTERNAL_PAYMENT
           type: string
       type: object
     handler.createOrderTicket:

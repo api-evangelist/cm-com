@@ -69,21 +69,14 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PrepaidInfo:
-      title: Prepaid Info
-      type: object
-      properties:
-        amount:
-          type: number
-          description: The amount of prepaid credit currently in the wallet.
-          format: double
-        currency:
-          type:
-          - string
-          - 'null'
-          description: The currency of the credit.
-      additionalProperties: false
-      description: The prepaid credit of the Voice Account. Only returned if the the given Voice Account billing type is set to prepaid.
+    BillingTypeId:
+      title: Billing Type Id
+      enum:
+      - Prepaid
+      - Postpaid
+      - Demo
+      type: string
+      description: Billing type, can be either Postpaid or Prepaid.
     ApiVoiceAccount:
       title: Voice Account
       type: object
@@ -126,6 +119,20 @@ components:
           description: Whether or not the Voice Account is set to Active.
       additionalProperties: false
       description: A Voice Account is the central account for all things Voice related. Among others, phone numbers and SIP trunks will be linked to a certain Voice Account. **Please note** that a Voice Account is different from a Logical Account. You will be able to create multiple Voice Accounts with one Logical Account.
+    ErrorCollection:
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
     Error:
       title: Error
       type: object
@@ -143,14 +150,6 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    BillingTypeId:
-      title: Billing Type Id
-      enum:
-      - Prepaid
-      - Postpaid
-      - Demo
-      type: string
-      description: Billing type, can be either Postpaid or Prepaid.
     ApiLogicalAccount:
       title: Logical Account
       required:
@@ -167,20 +166,21 @@ components:
           $ref: '#/components/schemas/BillingTypeId'
       additionalProperties: false
       description: Logical Account that's used for requesting new Voice Accounts.
-    ErrorCollection:
+    PrepaidInfo:
+      title: Prepaid Info
       type: object
       properties:
-        requestId:
+        amount:
+          type: number
+          description: The amount of prepaid credit currently in the wallet.
+          format: double
+        currency:
           type:
           - string
           - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Error'
+          description: The currency of the credit.
       additionalProperties: false
+      description: The prepaid credit of the Voice Account. Only returned if the the given Voice Account billing type is set to prepaid.
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

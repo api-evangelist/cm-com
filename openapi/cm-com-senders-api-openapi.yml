@@ -125,6 +125,33 @@ paths:
         '204':
           description: NoContent
 components:
+  schemas:
+    CM.Platform.Messages.Models.ApiSenderPresetResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isFavorite:
+          type: boolean
+        name:
+          type: string
+        senders:
+          type: object
+          additionalProperties:
+            type: string
+    CM.Platform.Messages.Models.ApiSenderPresetRequest:
+      type: object
+      properties:
+        isFavorite:
+          type: boolean
+        name:
+          type: string
+        senders:
+          type: object
+          additionalProperties:
+            type: string
   requestBodies:
     CM.Platform.Messages.Models.ApiSenderPresetRequest:
       content:
@@ -142,30 +169,3 @@ components:
             $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSenderPresetRequest'
       description: The sender.
       required: true
-  schemas:
-    CM.Platform.Messages.Models.ApiSenderPresetRequest:
-      type: object
-      properties:
-        isFavorite:
-          type: boolean
-        name:
-          type: string
-        senders:
-          type: object
-          additionalProperties:
-            type: string
-    CM.Platform.Messages.Models.ApiSenderPresetResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        isFavorite:
-          type: boolean
-        name:
-          type: string
-        senders:
-          type: object
-          additionalProperties:
-            type: string

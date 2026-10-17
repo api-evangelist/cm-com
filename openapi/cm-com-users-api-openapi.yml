@@ -366,6 +366,22 @@ components:
       required:
       - organisationId
       - claims
+    GenericResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          readOnly: true
+          example: Successfully uploaded file.
+        details:
+          type: array
+          items:
+            type: object
+          example:
+          - file: filename.csv
+      required:
+      - message
+      - details
     UpdateUserDto:
       type: object
       properties:
@@ -480,22 +496,6 @@ components:
           description: Optional object which allows to give a user claims on a certain entrance plan
           allOf:
           - $ref: '#/components/schemas/UserEntrancePlanClaimDto'
-    GenericResponseDto:
-      type: object
-      properties:
-        message:
-          type: string
-          readOnly: true
-          example: Successfully uploaded file.
-        details:
-          type: array
-          items:
-            type: object
-          example:
-          - file: filename.csv
-      required:
-      - message
-      - details
     UserEntrancePlanClaimDto:
       type: object
       properties:

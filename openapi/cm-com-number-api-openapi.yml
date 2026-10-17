@@ -46,25 +46,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    ConnectionType:
-      type: string
-      description: "Connection type description:\n\n * `hlr` - Home Location Register lookup. Returns real-time network status including whether the number is active, along with static data derived from the phone number.\n * `mnp` - Mobile Number Portability lookup. Returns ported status including data about the ported-to operator, along with static data derived from the phone number.\n * `static` - No lookup conducted. Returns static data derived from the phone number itself.\n"
-      enum:
-      - hlr
-      - mnp
-      - static
-    Source:
-      type: string
-      description: "Source description:\n\n * `hlr` - Home Location Register\n * `mnp` - Supplier's Mobile Number Portability database\n * `prefix` - Phone number prefix lookup, same as static\n * `external` - External source (HLR or MNP, unknown by supplier)\n * `mnp_database` - CM.com's internal MNP database\n * `static` - Static lookup using phone number prefix\n"
-      enum:
-      - hlr
-      - mnp
-      - prefix
-      - external
-      - mnp_database
-      - static
-      examples:
-      - hlr
     NumberCheckRequest:
       type: object
       properties:
@@ -83,21 +64,18 @@ components:
           - hlr
       required:
       - phoneNumber
-    ErrorResponse:
-      title: Error Response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code.
-          examples:
-          - 400
-        message:
-          type: string
-          description: Description of the error that occurred.
-          examples:
-          - The phone number field is required
+    Source:
+      type: string
+      description: "Source description:\n\n * `hlr` - Home Location Register\n * `mnp` - Supplier's Mobile Number Portability database\n * `prefix` - Phone number prefix lookup, same as static\n * `external` - External source (HLR or MNP, unknown by supplier)\n * `mnp_database` - CM.com's internal MNP database\n * `static` - Static lookup using phone number prefix\n"
+      enum:
+      - hlr
+      - mnp
+      - prefix
+      - external
+      - mnp_database
+      - static
+      examples:
+      - hlr
     NumberCheckResponse:
       type: object
       properties:
@@ -274,16 +252,29 @@ components:
       - unknown
       examples:
       - mobile
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
+        message:
+          type: string
+          description: Description of the error that occurred.
+          examples:
+          - The phone number field is required
+    ConnectionType:
+      type: string
+      description: "Connection type description:\n\n * `hlr` - Home Location Register lookup. Returns real-time network status including whether the number is active, along with static data derived from the phone number.\n * `mnp` - Mobile Number Portability lookup. Returns ported status including data about the ported-to operator, along with static data derived from the phone number.\n * `static` - No lookup conducted. Returns static data derived from the phone number itself.\n"
+      enum:
+      - hlr
+      - mnp
+      - static
   responses:
-    InternalServerError:
-      description: Errors related to the server.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 500
-            message: Internal Server Error
     Unauthorized:
       description: Errors related to the authorization.
       content:
@@ -293,6 +284,15 @@ components:
           example:
             status: 401
             message: Unauthorized
+    InternalServerError:
+      description: Errors related to the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: Internal Server Error
     BadRequest:
       description: Errors related to the request.
       content:

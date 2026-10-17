@@ -168,27 +168,16 @@ paths:
       - Service tokens
 components:
   schemas:
-    UpdateServiceTokenDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 255
-      required:
-      - name
-    ServiceTokenResponseDto:
+    ListServiceTokenResponseDto:
       type: object
       properties:
         ulid:
           type: string
         name:
           type: string
-        token:
-          type: string
       required:
       - ulid
       - name
-      - token
     ErrorDto:
       type: object
       properties:
@@ -271,16 +260,27 @@ components:
           maxLength: 255
       required:
       - name
-    ListServiceTokenResponseDto:
+    UpdateServiceTokenDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - name
+    ServiceTokenResponseDto:
       type: object
       properties:
         ulid:
           type: string
         name:
           type: string
+        token:
+          type: string
       required:
       - ulid
       - name
+      - token
   securitySchemes:
     cookie:
       type: apiKey

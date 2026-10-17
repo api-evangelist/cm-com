@@ -340,20 +340,28 @@ webhooks:
     - url: https://api.cm.com/id-scan/v1
 components:
   schemas:
-    DossierReference:
+    InviteWebhook:
+      description: Basic unprivileged information of the Invite referred to by a webhook event
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/InviteReference'
+      required:
+      - id
+    InviteeReference:
+      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
       type: string
       format: uuid
-      description: Id of the dossier
       examples:
-      - 22470767-904e-4553-9586-d7ed4f2b330e
-    DossierInviteCreatedEvent:
+      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
+    DossierInviteExpiredEvent:
       allOf:
       - $ref: '#/components/schemas/WebhookEventBase'
       - type: object
         properties:
           type:
             type: string
-            const: dossier.invite.created
+            const: dossier.invite.expired
             description: The type of the event
           dossier:
             $ref: '#/components/schemas/DossierWebhook'
@@ -363,45 +371,23 @@ components:
         - type
         - dossier
         - invite
-    DossierPreparedEvent:
-      allOf:
-      - $ref: '#/components/schemas/WebhookEventBase'
-      - type: object
-        properties:
-          type:
-            type: string
-            const: dossier.prepared
-            description: The type of the event
-          dossier:
-            $ref: '#/components/schemas/DossierWebhook'
-        required:
-        - type
-        - dossier
-    DossierWebhook:
-      description: Basic unprivileged information of the Dossier referred to by a webhook event
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/DossierReference'
-        state:
-          $ref: '#/components/schemas/DossierState'
-      required:
-      - id
-      - state
-    DossierStateUpdatedEvent:
-      allOf:
-      - $ref: '#/components/schemas/WebhookEventBase'
-      - type: object
-        properties:
-          type:
-            type: string
-            const: dossier.state.updated
-            description: The type of the event
-          dossier:
-            $ref: '#/components/schemas/DossierWebhook'
-        required:
-        - type
-        - dossier
+    InviteReference:
+      description: Id of the invite
+      type: string
+      format: uuid
+      examples:
+      - 7b842910-41ef-4ca7-8b4a-4eeb9172c54b
+    InviteeState:
+      type:
+      - string
+      - 'null'
+      enum:
+      - approved
+      - declined
+      - reassigned
+      examples:
+      - approved
+      description: Indicates if the dossier has been approved or declined by the user.
     DossierState:
       type: string
       enum:
@@ -433,37 +419,20 @@ components:
       required:
       - id
       - created
-    DossierInviteViewedEvent:
+    DossierStateUpdatedEvent:
       allOf:
       - $ref: '#/components/schemas/WebhookEventBase'
       - type: object
         properties:
           type:
             type: string
-            const: dossier.invite.viewed
+            const: dossier.state.updated
             description: The type of the event
           dossier:
             $ref: '#/components/schemas/DossierWebhook'
-          invite:
-            $ref: '#/components/schemas/InviteWebhook'
-          invitee:
-            $ref: '#/components/schemas/InviteeWebhook'
         required:
         - type
         - dossier
-        - invite
-        - invitee
-    InviteeState:
-      type:
-      - string
-      - 'null'
-      enum:
-      - approved
-      - declined
-      - reassigned
-      examples:
-      - approved
-      description: Indicates if the dossier has been approved or declined by the user.
     ReassignRequestWebhook:
       description: Basic unprivileged information of the Reassign Request referred to by a webhook event
       type: object
@@ -506,76 +475,31 @@ components:
         - type
         - dossier
         - reassignRequest
-    ReassignRequestState:
-      type: string
-      enum:
-      - approved
-      - declined
-      - pending
-    InviteeWebhook:
-      description: Basic unprivileged information of the Invitee referred to by a webhook event. The `state` is only present when the invitee state was updated.
+    DossierWebhook:
+      description: Basic unprivileged information of the Dossier referred to by a webhook event
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/InviteeReference'
+          $ref: '#/components/schemas/DossierReference'
         state:
-          $ref: '#/components/schemas/InviteeState'
+          $ref: '#/components/schemas/DossierState'
       required:
       - id
-    InviteReference:
-      description: Id of the invite
-      type: string
-      format: uuid
-      examples:
-      - 7b842910-41ef-4ca7-8b4a-4eeb9172c54b
-    DossierInviteeStateUpdatedEvent:
+      - state
+    DossierPreparedEvent:
       allOf:
       - $ref: '#/components/schemas/WebhookEventBase'
       - type: object
         properties:
           type:
             type: string
-            const: dossier.invitee.state.updated
+            const: dossier.prepared
             description: The type of the event
           dossier:
             $ref: '#/components/schemas/DossierWebhook'
-          invitee:
-            $ref: '#/components/schemas/InviteeWebhook'
         required:
         - type
         - dossier
-        - invitee
-    DossierInviteExpiredEvent:
-      allOf:
-      - $ref: '#/components/schemas/WebhookEventBase'
-      - type: object
-        properties:
-          type:
-            type: string
-            const: dossier.invite.expired
-            description: The type of the event
-          dossier:
-            $ref: '#/components/schemas/DossierWebhook'
-          invite:
-            $ref: '#/components/schemas/InviteWebhook'
-        required:
-        - type
-        - dossier
-        - invite
-    InviteeReference:
-      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
-      type: string
-      format: uuid
-      examples:
-      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
-    InviteWebhook:
-      description: Basic unprivileged information of the Invite referred to by a webhook event
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/InviteReference'
-      required:
-      - id
     DossierInviteUndeliveredEvent:
       allOf:
       - $ref: '#/components/schemas/WebhookEventBase'
@@ -593,19 +517,82 @@ components:
         - type
         - dossier
         - invite
-    TransactionState:
+    DossierInviteCreatedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invite.created
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          invite:
+            $ref: '#/components/schemas/InviteWebhook'
+        required:
+        - type
+        - dossier
+        - invite
+    InviteeWebhook:
+      description: Basic unprivileged information of the Invitee referred to by a webhook event. The `state` is only present when the invitee state was updated.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/InviteeReference'
+        state:
+          $ref: '#/components/schemas/InviteeState'
+      required:
+      - id
+    DossierInviteeStateUpdatedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invitee.state.updated
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          invitee:
+            $ref: '#/components/schemas/InviteeWebhook'
+        required:
+        - type
+        - dossier
+        - invitee
+    DossierReference:
       type: string
-      description: Current state of the transaction
+      format: uuid
+      description: Id of the dossier
+      examples:
+      - 22470767-904e-4553-9586-d7ed4f2b330e
+    DossierInviteViewedEvent:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEventBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            const: dossier.invite.viewed
+            description: The type of the event
+          dossier:
+            $ref: '#/components/schemas/DossierWebhook'
+          invite:
+            $ref: '#/components/schemas/InviteWebhook'
+          invitee:
+            $ref: '#/components/schemas/InviteeWebhook'
+        required:
+        - type
+        - dossier
+        - invite
+        - invitee
+    ReassignRequestState:
+      type: string
       enum:
+      - approved
+      - declined
       - pending
-      - completed
-      - failed
-    TaskType:
-      type: string
-      enum:
-      - document_scan
-      - face_liveness
-      - face_match
     TaskState:
       type: string
       enum:
@@ -613,6 +600,16 @@ components:
       - completed
       - aborted
       - maximum_attempts_exceeded
+    TaskType:
+      type: string
+      enum:
+      - document_scan
+      - face_liveness
+      - face_match
+    WebhookResultId:
+      type: string
+      format: uuid
+      description: A unique identifier to retrieve the transaction results. This field is only present when the transaction state is completed.
     TransactionStateUpdatedEvent:
       allOf:
       - $ref: '#/components/schemas/WebhookEventBase_2'
@@ -639,25 +636,6 @@ components:
         required:
         - type
         - transaction
-    WebhookEventBase_2:
-      description: Properties shared by all webhook events. More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: A unique identifier for the event.
-        created:
-          type: string
-          format: date-time
-          description: The date the event was created.
-      required:
-      - id
-      - created
-    WebhookResultId:
-      type: string
-      format: uuid
-      description: A unique identifier to retrieve the transaction results. This field is only present when the transaction state is completed.
     TaskStateUpdatedEvent:
       allOf:
       - $ref: '#/components/schemas/WebhookEventBase_2'
@@ -693,6 +671,28 @@ components:
         - type
         - transaction
         - task
+    WebhookEventBase_2:
+      description: Properties shared by all webhook events. More event types might be added in the future, so implementations should strictly vary their behavior on the `type` attribute.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: A unique identifier for the event.
+        created:
+          type: string
+          format: date-time
+          description: The date the event was created.
+      required:
+      - id
+      - created
+    TransactionState:
+      type: string
+      description: Current state of the transaction
+      enum:
+      - pending
+      - completed
+      - failed
   responses:
     WebhookReceived:
       description: 'The event was received successfully. Any 2xx HTTP status code is accepted and the response body is ignored.

@@ -284,6 +284,21 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
     ApiEndpoint:
       title: Endpoint
       type: object
@@ -334,21 +349,6 @@ components:
           description: "Key/Value Pairs of attributes configured to an Endpoint.\nAttributes are extra settings that can be configured to an Endpoint, for example: media encryption.\n            \nExample:\n{\n    \"medianenc\": \"SRTP\"\n}"
       additionalProperties: false
       description: Endpoint of a Distribution Group where calls can be routed to.
-    ErrorCollection:
-      title: Error Collection
-      type: object
-      properties:
-        requestId:
-          type:
-          - string
-          - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Error'
-      additionalProperties: false
     ApiDistributionGroup:
       title: Distribution Group
       type: object

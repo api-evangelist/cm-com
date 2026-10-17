@@ -174,23 +174,178 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    CreateTransaction:
+    TaskResultDocumentScanFileRawImage:
       allOf:
-      - $ref: '#/components/schemas/Transaction'
+      - $ref: '#/components/schemas/TaskResultFile'
       properties:
-        expiresIn:
-          type: integer
-          minimum: 3600
-          maximum: 86400
-          description: The time in seconds after which a transaction should expire.
-          default: 3600
-    SourceType:
+        category:
+          type: string
+          description: The file category
+          example: document
+        type:
+          type: string
+          description: The type of image
+          example: raw_document_image
+    CaptureSource:
       type: string
       enum:
-      - visual
-      - mrz
-      - barcode
-      description: The data is read from the visual inspection zone, barcode or from the machine readable zone (MRZ).
+      - camera
+      - file
+      example: camera
+      default: camera
+    TaskState:
+      type: string
+      enum:
+      - pending
+      - completed
+      - aborted
+      - maximum_attempts_exceeded
+    Attempts:
+      type: number
+      description: The number of attempts made for this task.
+      readOnly: true
+      minimum: 1
+      example: 1
+    ValidityStatus:
+      type: string
+      enum:
+      - valid
+      - invalid
+      - not_checked
+      example: valid
+      description: The status indicates the validity of the field.
+    TaskFaceLivenessDetail:
+      allOf:
+      - $ref: '#/components/schemas/TaskDetail'
+      properties:
+        type:
+          type: string
+          enum:
+          - face_liveness
+          example: face_liveness
+    Locale:
+      type: string
+      enum:
+      - en-US
+      - nl-NL
+      - fr-FR
+      - it-IT
+      default: en-US
+      description: The language of the ID Scan process. Currently supports English, Dutch, French, and Italian.
+    TransactionPage:
+      type: object
+      properties:
+        nextCursor:
+          type: string
+          description: The cursor pointing to the next page.
+          example: 0ETuixXmBflbB8voRanDsw
+        nextUrl:
+          type: string
+          description: The URL to get the next page of transactions. The URL includes all previously provided parameters and the cursor for the next page.
+          example: https://api.cm.com/id-scan/v1/transactions?from=2026-01-01T00:00:00Z&until=2026-02-01T00:00:00Z&pageSize=50&cursor=0ETuixXmBflbB8voRanDsw
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionPageDetail'
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          example: 400
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          example: The request is invalid
+    AuthenticityScore:
+      type: number
+      description: Authenticity score for image pattern checks. Returns -1 if no authenticity checkmarks are found.
+      format: float
+      minimum: 0
+      maximum: 1
+      example: 0.99
+    ComparisonStatus:
+      type: string
+      description: The result of comparing MRZ, barcode and visual field values. If only one field value is available, the status will be `not_performed`.
+      enum:
+      - match
+      - no_match
+      - not_performed
+      example: match
+    TaskDetail:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/TaskState'
+          example: pending
+        attempts:
+          type: number
+          description: The number of attempts made for this task.
+          minimum: 0
+          example: 3
+        attemptsInvoiced:
+          type: number
+          description: The number of attempts that have been invoiced.
+          minimum: 0
+          example: 1
+    TransactionDetailBase:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the transaction
+          format: uuid
+        state:
+          $ref: '#/components/schemas/TransactionState'
+        created:
+          type: string
+          format: date-time
+          description: The date the transaction was created.
+        expires:
+          type: string
+          format: date-time
+          description: The date the transaction expires.
+        completed:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date the transaction was completed.
+    TaskDocumentScanDetail:
+      allOf:
+      - $ref: '#/components/schemas/TaskDetail'
+      properties:
+        type:
+          type: string
+          enum:
+          - document_scan
+          example: document_scan
+    TaskResultFile:
+      type: object
+      properties:
+        url:
+          type:
+          - string
+          - 'null'
+          description: The url to download the image. This url also requires a valid JWT header.
+          example: https://example.com/ZUQqP3v0Uq
+    TransactionPageDetail:
+      allOf:
+      - $ref: '#/components/schemas/TransactionDetailBase'
+      - type: object
+        properties:
+          tasks:
+            type: array
+            items:
+              oneOf:
+              - $ref: '#/components/schemas/TaskDocumentScanDetail'
+              - $ref: '#/components/schemas/TaskFaceLivenessDetail'
+              - $ref: '#/components/schemas/TaskFaceMatchDetail'
+              discriminator:
+                propertyName: type
     TransactionDetail:
       allOf:
       - $ref: '#/components/schemas/TransactionDetailBase'
@@ -205,104 +360,46 @@ components:
               - $ref: '#/components/schemas/TaskFaceMatchDetail'
               discriminator:
                 propertyName: type
-    ErrorResponse:
-      title: Error Response
+    TransactionResult:
       type: object
       properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code.
-          example: 400
-        message:
+        id:
           type: string
-          description: High level description of the error that occurred.
-          example: The request is invalid
-    TaskType:
-      type: string
-      enum:
-      - document_scan
-      - face_liveness
-      - face_match
-    CaptureSource:
-      type: string
-      enum:
-      - camera
-      - file
-      example: camera
-      default: camera
-    GraphicField:
-      type: string
-      enum:
-      - bar_code
-      - color_dynamic
-      - contact_chip
-      - document_image
-      - document_rear
-      - eye
-      - finger_left_four_fingers
-      - finger_left_index
-      - finger_left_little
-      - finger_left_middle
-      - finger_left_ring
-      - finger_left_thumb
-      - finger_right_four_fingers
-      - finger_right_index
-      - finger_right_little
-      - finger_right_middle
-      - finger_right_ring
-      - finger_right_thumb
-      - finger_two_thumbs
-      - fingerprint
-      - ghost_portrait
-      - other
-      - portrait
-      - portrait_of_child
-      - proof_of_citizenship
-      - signature
-      - stamp
-      example: portrait
-    DocumentScanDetail:
-      type: object
-      description: Details of a document scan attempt
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The date the document scan was executed.
-        code:
-          oneOf:
-          - $ref: '#/components/schemas/DocumentScanErrorCode'
-          - type:
-            - 'null'
-          description: The task error code. The value `null` means that there was no error.
-          default: null
-        score:
-          $ref: '#/components/schemas/AuthenticityScore'
-        source:
-          $ref: '#/components/schemas/CaptureSource'
-        linked:
-          type: boolean
-          description: Whether the document scan is linked to a previous document scan.
-          example: true
-        files:
+          format: uuid
+          readOnly: true
+        state:
+          $ref: '#/components/schemas/TransactionState'
+          readOnly: true
+          example: completed
+        tasks:
           type: array
-          description: Array with stored files. Files are not provided if the transaction has expired.
           items:
             oneOf:
-            - $ref: '#/components/schemas/TaskResultDocumentScanFileRawImage'
-            - $ref: '#/components/schemas/TaskResultDocumentScanFileDocument'
-            - $ref: '#/components/schemas/TaskResultDocumentScanFileImage'
+            - $ref: '#/components/schemas/TaskResultDocumentScan'
+            - $ref: '#/components/schemas/TaskResultFaceLiveness'
+            - $ref: '#/components/schemas/TaskResultFaceMatch'
             discriminator:
-              propertyName: category
-    ValidityStatus:
+              propertyName: type
+    TransactionState:
       type: string
+      description: Current state of the transaction
       enum:
-      - valid
-      - invalid
-      - not_checked
-      example: valid
-      description: The status indicates the validity of the field.
+      - pending
+      - completed
+      - failed
+    TaskDocumentScanDetailExtended:
+      allOf:
+      - $ref: '#/components/schemas/TaskDetail'
+      properties:
+        type:
+          type: string
+          enum:
+          - document_scan
+          example: document_scan
+        documentScans:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentScanDetail'
     TaskResultDocumentScan:
       allOf:
       - $ref: '#/components/schemas/TaskResult'
@@ -347,22 +444,139 @@ components:
             - $ref: '#/components/schemas/TaskResultDocumentScanFileImage'
             discriminator:
               propertyName: category
-    TaskDetail:
+    DocumentScanErrorCode:
+      type: string
+      enum:
+      - age_criteria_not_met
+      - back_side_provided_front_side_required
+      - expiration_criteria_not_met
+      - field_validation_failed
+      - front_side_provided_back_side_required
+      - image_quality_requirements_not_met
+      - processing
+      - text_fields_analysis_failed
+      - unable_to_determine_age
+      - unable_to_determine_date_of_expiry
+      - unknown_type_back
+      - unknown_type_front
+    CreateTransaction:
+      allOf:
+      - $ref: '#/components/schemas/Transaction'
+      properties:
+        expiresIn:
+          type: integer
+          minimum: 3600
+          maximum: 86400
+          description: The time in seconds after which a transaction should expire.
+          default: 3600
+    Transaction:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        state:
+          $ref: '#/components/schemas/TransactionState'
+          readOnly: true
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskType'
+          description: The tasks to be performed by the user. The `face_liveness` task can only be performed when the `document_scan` task is added. For the `face_match` task both the `document_scan` task and `face_liveness` task must be added.
+        settings:
+          $ref: '#/components/schemas/Settings'
+        locale:
+          $ref: '#/components/schemas/Locale'
+          description: The language of the ID Scan process. Currently supports English, Dutch, French.
+          default: en-US
+        url:
+          type: string
+          description: The URL to start the transaction.
+          example: https://example.com/en-us/Dtiu9rE2GE
+          readOnly: true
+        mobileOnly:
+          type: boolean
+          description: When this is set to true, the user must complete the transaction on their mobile device.
+          default: false
+        returnUrl:
+          type: string
+          description: The URL to redirect the user to after the transaction is completed. The `trxid`, `state` and `resultid` will be added as a query parameter. If the URL is not set a default page is shown.
+          default: null
+        scanReturnUrl:
+          type: string
+          description: The URL to redirect the user to in case the transaction is transferred to a mobile device (by scanning the QR code) and the transaction is completed. The `trxid` and `state` will be added as a query parameter. If the URL is not set a default page is shown.
+          default: null
+        expires:
+          type: string
+          format: date-time
+          description: The date the transaction expires.
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          description: The date the transaction was created.
+          readOnly: true
+      required:
+      - tasks
+    TaskResultDocumentScanFileDocument:
+      allOf:
+      - $ref: '#/components/schemas/TaskResultFile'
+      properties:
+        category:
+          type: string
+          description: The file category
+          example: document
+        type:
+          $ref: '#/components/schemas/DocumentType'
+        name:
+          type: string
+          description: The name of the document.
+          example: Netherlands - Driving License (2022)
+        score:
+          $ref: '#/components/schemas/AuthenticityScore'
+    TaskResultFaceLiveness:
+      properties:
+        type:
+          type: string
+          enum:
+          - face_liveness
+          example: face_liveness
         state:
           $ref: '#/components/schemas/TaskState'
-          example: pending
+          example: completed
         attempts:
-          type: number
-          description: The number of attempts made for this task.
-          minimum: 0
-          example: 3
-        attemptsInvoiced:
-          type: number
-          description: The number of attempts that have been invoiced.
-          minimum: 0
-          example: 1
+          $ref: '#/components/schemas/Attempts'
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskResultFaceLivenessFile'
+    TaskResultFaceMatch:
+      allOf:
+      - $ref: '#/components/schemas/TaskResult'
+      properties:
+        type:
+          type: string
+          enum:
+          - face_match
+          example: face_match
+    TaskResultFaceLivenessFile:
+      allOf:
+      - $ref: '#/components/schemas/TaskResultFile'
+      properties:
+        category:
+          type: string
+          enum:
+          - image
+          - video
+          description: The file category
+          example: image
+    TaskType:
+      type: string
+      enum:
+      - document_scan
+      - face_liveness
+      - face_match
     Settings:
       type: object
       properties:
@@ -431,85 +645,6 @@ components:
               - date_of_birth
               - document_image
               - portrait
-    Attempts:
-      type: number
-      description: The number of attempts made for this task.
-      readOnly: true
-      minimum: 1
-      example: 1
-    TaskFaceMatchDetail:
-      allOf:
-      - $ref: '#/components/schemas/TaskDetail'
-      properties:
-        type:
-          type: string
-          enum:
-          - face_match
-          example: face_match
-        score:
-          type: number
-          description: Similarity score
-          format: float
-          minimum: 0
-          maximum: 1
-          example: 0.99
-    TransactionState:
-      type: string
-      description: Current state of the transaction
-      enum:
-      - pending
-      - completed
-      - failed
-    TaskResultDocumentScanFileDocument:
-      allOf:
-      - $ref: '#/components/schemas/TaskResultFile'
-      properties:
-        category:
-          type: string
-          description: The file category
-          example: document
-        type:
-          $ref: '#/components/schemas/DocumentType'
-        name:
-          type: string
-          description: The name of the document.
-          example: Netherlands - Driving License (2022)
-        score:
-          $ref: '#/components/schemas/AuthenticityScore'
-    TaskResultFaceLivenessFile:
-      allOf:
-      - $ref: '#/components/schemas/TaskResultFile'
-      properties:
-        category:
-          type: string
-          enum:
-          - image
-          - video
-          description: The file category
-          example: image
-    TransactionDetailBase:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the transaction
-          format: uuid
-        state:
-          $ref: '#/components/schemas/TransactionState'
-        created:
-          type: string
-          format: date-time
-          description: The date the transaction was created.
-        expires:
-          type: string
-          format: date-time
-          description: The date the transaction expires.
-        completed:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The date the transaction was completed.
     AuditReportType:
       type: string
       enum:
@@ -517,70 +652,6 @@ components:
       - extended
       default: simple
       description: The type of audit report to be retrieved of a completed ID Scan transaction.
-    Locale:
-      type: string
-      enum:
-      - en-US
-      - nl-NL
-      - fr-FR
-      - it-IT
-      default: en-US
-      description: The language of the ID Scan process. Currently supports English, Dutch, French, and Italian.
-    TaskState:
-      type: string
-      enum:
-      - pending
-      - completed
-      - aborted
-      - maximum_attempts_exceeded
-    TransactionResult:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-        state:
-          $ref: '#/components/schemas/TransactionState'
-          readOnly: true
-          example: completed
-        tasks:
-          type: array
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/TaskResultDocumentScan'
-            - $ref: '#/components/schemas/TaskResultFaceLiveness'
-            - $ref: '#/components/schemas/TaskResultFaceMatch'
-            discriminator:
-              propertyName: type
-    TaskResultFaceLiveness:
-      properties:
-        type:
-          type: string
-          enum:
-          - face_liveness
-          example: face_liveness
-        state:
-          $ref: '#/components/schemas/TaskState'
-          example: completed
-        attempts:
-          $ref: '#/components/schemas/Attempts'
-        files:
-          type: array
-          items:
-            $ref: '#/components/schemas/TaskResultFaceLivenessFile'
-    TaskResultDocumentScanFileImage:
-      allOf:
-      - $ref: '#/components/schemas/TaskResultFile'
-      properties:
-        category:
-          type: string
-          description: The file category
-          example: image
-        type:
-          type: string
-          description: The type of image
-          example: portrait
     DocumentType:
       type: string
       description: The document type.
@@ -814,56 +885,6 @@ components:
       - trade_license
       - passport_page
       example: passport
-    Transaction:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-        state:
-          $ref: '#/components/schemas/TransactionState'
-          readOnly: true
-        tasks:
-          type: array
-          items:
-            $ref: '#/components/schemas/TaskType'
-          description: The tasks to be performed by the user. The `face_liveness` task can only be performed when the `document_scan` task is added. For the `face_match` task both the `document_scan` task and `face_liveness` task must be added.
-        settings:
-          $ref: '#/components/schemas/Settings'
-        locale:
-          $ref: '#/components/schemas/Locale'
-          description: The language of the ID Scan process. Currently supports English, Dutch, French.
-          default: en-US
-        url:
-          type: string
-          description: The URL to start the transaction.
-          example: https://example.com/en-us/Dtiu9rE2GE
-          readOnly: true
-        mobileOnly:
-          type: boolean
-          description: When this is set to true, the user must complete the transaction on their mobile device.
-          default: false
-        returnUrl:
-          type: string
-          description: The URL to redirect the user to after the transaction is completed. The `trxid`, `state` and `resultid` will be added as a query parameter. If the URL is not set a default page is shown.
-          default: null
-        scanReturnUrl:
-          type: string
-          description: The URL to redirect the user to in case the transaction is transferred to a mobile device (by scanning the QR code) and the transaction is completed. The `trxid` and `state` will be added as a query parameter. If the URL is not set a default page is shown.
-          default: null
-        expires:
-          type: string
-          format: date-time
-          description: The date the transaction expires.
-          readOnly: true
-        created:
-          type: string
-          format: date-time
-          description: The date the transaction was created.
-          readOnly: true
-      required:
-      - tasks
     TextField:
       type: string
       enum:
@@ -1523,86 +1544,72 @@ components:
       - year_of_expiry
       - years_since_issue
       example: personal_number
-    AuthenticityScore:
-      type: number
-      description: Authenticity score for image pattern checks. Returns -1 if no authenticity checkmarks are found.
-      format: float
-      minimum: 0
-      maximum: 1
-      example: 0.99
-    TransactionPage:
-      type: object
-      properties:
-        nextCursor:
-          type: string
-          description: The cursor pointing to the next page.
-          example: 0ETuixXmBflbB8voRanDsw
-        nextUrl:
-          type: string
-          description: The URL to get the next page of transactions. The URL includes all previously provided parameters and the cursor for the next page.
-          example: https://api.cm.com/id-scan/v1/transactions?from=2026-01-01T00:00:00Z&until=2026-02-01T00:00:00Z&pageSize=50&cursor=0ETuixXmBflbB8voRanDsw
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionPageDetail'
-    ComparisonStatus:
+    SourceType:
       type: string
-      description: The result of comparing MRZ, barcode and visual field values. If only one field value is available, the status will be `not_performed`.
       enum:
-      - match
-      - no_match
-      - not_performed
-      example: match
-    TaskFaceLivenessDetail:
+      - visual
+      - mrz
+      - barcode
+      description: The data is read from the visual inspection zone, barcode or from the machine readable zone (MRZ).
+    TaskResultDocumentScanFileImage:
       allOf:
-      - $ref: '#/components/schemas/TaskDetail'
+      - $ref: '#/components/schemas/TaskResultFile'
       properties:
+        category:
+          type: string
+          description: The file category
+          example: image
         type:
           type: string
-          enum:
-          - face_liveness
-          example: face_liveness
-    TaskResultFile:
-      type: object
-      properties:
-        url:
-          type:
-          - string
-          - 'null'
-          description: The url to download the image. This url also requires a valid JWT header.
-          example: https://example.com/ZUQqP3v0Uq
-    TaskDocumentScanDetail:
+          description: The type of image
+          example: portrait
+    GraphicField:
+      type: string
+      enum:
+      - bar_code
+      - color_dynamic
+      - contact_chip
+      - document_image
+      - document_rear
+      - eye
+      - finger_left_four_fingers
+      - finger_left_index
+      - finger_left_little
+      - finger_left_middle
+      - finger_left_ring
+      - finger_left_thumb
+      - finger_right_four_fingers
+      - finger_right_index
+      - finger_right_little
+      - finger_right_middle
+      - finger_right_ring
+      - finger_right_thumb
+      - finger_two_thumbs
+      - fingerprint
+      - ghost_portrait
+      - other
+      - portrait
+      - portrait_of_child
+      - proof_of_citizenship
+      - signature
+      - stamp
+      example: portrait
+    TaskFaceMatchDetail:
       allOf:
       - $ref: '#/components/schemas/TaskDetail'
-      properties:
-        type:
-          type: string
-          enum:
-          - document_scan
-          example: document_scan
-    TransactionPageDetail:
-      allOf:
-      - $ref: '#/components/schemas/TransactionDetailBase'
-      - type: object
-        properties:
-          tasks:
-            type: array
-            items:
-              oneOf:
-              - $ref: '#/components/schemas/TaskDocumentScanDetail'
-              - $ref: '#/components/schemas/TaskFaceLivenessDetail'
-              - $ref: '#/components/schemas/TaskFaceMatchDetail'
-              discriminator:
-                propertyName: type
-    TaskResultFaceMatch:
-      allOf:
-      - $ref: '#/components/schemas/TaskResult'
       properties:
         type:
           type: string
           enum:
           - face_match
           example: face_match
+        score:
+          type: number
+          description: Similarity score
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.99
     TaskResult:
       type: object
       properties:
@@ -1621,63 +1628,40 @@ components:
           minimum: 0
           maximum: 1
           example: 0.99
-    TaskResultDocumentScanFileRawImage:
-      allOf:
-      - $ref: '#/components/schemas/TaskResultFile'
+    DocumentScanDetail:
+      type: object
+      description: Details of a document scan attempt
       properties:
-        category:
+        created:
           type: string
-          description: The file category
-          example: document
-        type:
-          type: string
-          description: The type of image
-          example: raw_document_image
-    TaskDocumentScanDetailExtended:
-      allOf:
-      - $ref: '#/components/schemas/TaskDetail'
-      properties:
-        type:
-          type: string
-          enum:
-          - document_scan
-          example: document_scan
-        documentScans:
+          format: date-time
+          description: The date the document scan was executed.
+        code:
+          oneOf:
+          - $ref: '#/components/schemas/DocumentScanErrorCode'
+          - type:
+            - 'null'
+          description: The task error code. The value `null` means that there was no error.
+          default: null
+        score:
+          $ref: '#/components/schemas/AuthenticityScore'
+        source:
+          $ref: '#/components/schemas/CaptureSource'
+        linked:
+          type: boolean
+          description: Whether the document scan is linked to a previous document scan.
+          example: true
+        files:
           type: array
+          description: Array with stored files. Files are not provided if the transaction has expired.
           items:
-            $ref: '#/components/schemas/DocumentScanDetail'
-    DocumentScanErrorCode:
-      type: string
-      enum:
-      - age_criteria_not_met
-      - back_side_provided_front_side_required
-      - expiration_criteria_not_met
-      - field_validation_failed
-      - front_side_provided_back_side_required
-      - image_quality_requirements_not_met
-      - processing
-      - text_fields_analysis_failed
-      - unable_to_determine_age
-      - unable_to_determine_date_of_expiry
-      - unknown_type_back
-      - unknown_type_front
+            oneOf:
+            - $ref: '#/components/schemas/TaskResultDocumentScanFileRawImage'
+            - $ref: '#/components/schemas/TaskResultDocumentScanFileDocument'
+            - $ref: '#/components/schemas/TaskResultDocumentScanFileImage'
+            discriminator:
+              propertyName: category
   parameters:
-    ResultId:
-      name: resultId
-      in: path
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: This result ID can be obtained from the `resultId` parameter in the iframe event or query parameter `resultid` in the return url after the user completes the transaction.
-    TransactionId:
-      name: transactionId
-      in: path
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: A unique identifier for the transaction.
     AuditReportType:
       name: type
       in: query
@@ -1693,16 +1677,23 @@ components:
         Extended audit report can be requested within the ID Scan transaction validity.
 
         '
+    TransactionId:
+      name: transactionId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: A unique identifier for the transaction.
+    ResultId:
+      name: resultId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: This result ID can be obtained from the `resultId` parameter in the iframe event or query parameter `resultid` in the return url after the user completes the transaction.
   responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 401
-            message: Unauthorized
     NotFound:
       description: The specified resource was not found.
       content:
@@ -1712,6 +1703,15 @@ components:
           example:
             status: 404
             message: Not found
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
   securitySchemes:
     JWT:
       type: http

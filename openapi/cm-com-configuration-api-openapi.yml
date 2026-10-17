@@ -48,32 +48,17 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
   schemas:
-    ErrorResponse:
-      title: Error Response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code.
-          example: 400
-        message:
-          type: string
-          description: High level description of the error that occurred.
-          example: The request is invalid
-    Config:
-      type: object
-      description: The configuration.
-      properties:
-        documentScan:
-          $ref: '#/components/schemas/DocumentScanConfig'
-    DocumentScanConfig:
-      type: object
-      description: Configuration applied to document scan tasks.
-      properties:
-        imageQualityChecks:
-          $ref: '#/components/schemas/ImageQualityChecks'
     ImageQualityChecks:
       type: object
       description: The individual image quality checks. A check is only enforced when set to `true`; all checks are disabled by default.
@@ -122,16 +107,31 @@ components:
           type: boolean
           description: Checks whether part of the document is occluded in the image.
           default: false
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 401
-            message: Unauthorized
+    DocumentScanConfig:
+      type: object
+      description: Configuration applied to document scan tasks.
+      properties:
+        imageQualityChecks:
+          $ref: '#/components/schemas/ImageQualityChecks'
+    Config:
+      type: object
+      description: The configuration.
+      properties:
+        documentScan:
+          $ref: '#/components/schemas/DocumentScanConfig'
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          example: 400
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          example: The request is invalid
   securitySchemes:
     JWT:
       type: http

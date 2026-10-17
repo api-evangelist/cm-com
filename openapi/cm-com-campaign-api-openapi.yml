@@ -267,37 +267,6 @@ components:
           type: string
         Campaign:
           type: string
-    CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag:
-      type: object
-      properties:
-        ID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        AccountID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        Tag:
-          type: string
-        CreatedOn:
-          format: date-time
-          type: string
-        CreatedOnUtc:
-          format: date-time
-          type: string
-        ModifiedOn:
-          format: date-time
-          type: string
-        ModifiedOnUtc:
-          format: date-time
-          type: string
-        DeletedOn:
-          format: date-time
-          type: string
-        DeletedOnUtc:
-          format: date-time
-          type: string
     CM.Tooling.BulkEmail.Api.Models.ApiCampaign:
       type: object
       properties:
@@ -376,6 +345,37 @@ components:
             $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag'
         GoogleAnalyticsTracking:
           $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiGoogleAnalyticsTracking'
+        CreatedOn:
+          format: date-time
+          type: string
+        CreatedOnUtc:
+          format: date-time
+          type: string
+        ModifiedOn:
+          format: date-time
+          type: string
+        ModifiedOnUtc:
+          format: date-time
+          type: string
+        DeletedOn:
+          format: date-time
+          type: string
+        DeletedOnUtc:
+          format: date-time
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiCampaignTag:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        Tag:
+          type: string
         CreatedOn:
           format: date-time
           type: string

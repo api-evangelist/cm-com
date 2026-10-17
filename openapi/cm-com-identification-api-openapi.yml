@@ -42,6 +42,42 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    DossierId:
+      name: dossierId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a dossier
+
+        '
+      example: 22470767-904e-4553-9586-d7ed4f2b330e
+    InviteeId:
+      name: inviteeId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a single invitee
+
+        '
+      example: c4b5020f-a092-4516-b890-81a635ebe470
   schemas:
     IdentificationMethod:
       type: string
@@ -56,6 +92,17 @@ components:
       examples:
       - idin
       description: Additional user identification is required. When you select `qualified` it cannot be used with other identification methods. Please note that this is only available when configured for your account.
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
     IdentificationResult:
       title: Identification
       type: object
@@ -92,53 +139,6 @@ components:
             age:
               dateOfBirth: '1974-01-31'
               18yOrOlder: true
-    ErrorResponse:
-      title: Error Response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code
-        message:
-          type: string
-          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
-  parameters:
-    DossierId:
-      name: dossierId
-      in: path
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: 'a uuid string that identifies a dossier
-
-        '
-      example: 22470767-904e-4553-9586-d7ed4f2b330e
-    InviteeId:
-      name: inviteeId
-      in: path
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: 'a uuid string that identifies a single invitee
-
-        '
-      example: c4b5020f-a092-4516-b890-81a635ebe470
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     JWT:
       type: http

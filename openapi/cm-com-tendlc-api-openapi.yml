@@ -790,11 +790,10 @@ paths:
                 $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase'
 components:
   schemas:
-    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign:
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase:
       required:
       - id
       - accountId
-      - channelId
       - brandId
       - description
       - isPending
@@ -807,10 +806,6 @@ components:
           type: string
           example: 00000000-0000-0000-0000-000000000000
         accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelId:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
@@ -834,8 +829,6 @@ components:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
-        rejectionReason:
-          type: string
         isPending:
           type: boolean
         isActive:
@@ -940,6 +933,28 @@ components:
           - CANCELLED
           - DELETED
           type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandVettingStatus:
+      type: object
+      properties:
+        vettingScore:
+          format: int32
+          maximum: 100
+          minimum: 0
+          type: integer
+        vettingClass:
+          type: string
+        vettingStatus:
+          type: string
+        reasons:
+          type: array
+          items:
+            type: string
+        vettedDateUtc:
+          format: date-time
+          type: string
+        createDateUtc:
+          format: date-time
+          type: string
     CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
       type: object
       properties:
@@ -948,6 +963,26 @@ components:
           type: string
           example: 00000000-0000-0000-0000-000000000000
         inputValue:
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
           type: string
     CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrand:
       required:
@@ -1025,10 +1060,11 @@ components:
           - CANCELLED
           - DELETED
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaignBase:
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcCampaign:
       required:
       - id
       - accountId
+      - channelId
       - brandId
       - description
       - isPending
@@ -1041,6 +1077,10 @@ components:
           type: string
           example: 00000000-0000-0000-0000-000000000000
         accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
@@ -1064,6 +1104,8 @@ components:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
+        rejectionReason:
+          type: string
         isPending:
           type: boolean
         isActive:
@@ -1100,48 +1142,6 @@ components:
           - REJECTED
           - CANCELLED
           - DELETED
-          type: string
-    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelCategoryRequestID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiTenDlcBrandVettingStatus:
-      type: object
-      properties:
-        vettingScore:
-          format: int32
-          maximum: 100
-          minimum: 0
-          type: integer
-        vettingClass:
-          type: string
-        vettingStatus:
-          type: string
-        reasons:
-          type: array
-          items:
-            type: string
-        vettedDateUtc:
-          format: date-time
-          type: string
-        createDateUtc:
-          format: date-time
           type: string
     CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputResponse:
       type: object

@@ -435,6 +435,117 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
+    CreateConditionDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Should be scanned once on plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Valid inputs are string, number, boolean, object or date
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        conditionEntrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
+      - name
+      - subject
+      - operator
+      - value
+    Condition:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Must be scanned once on entrance plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Value to compare the condition operator to.
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        entrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
+      - uuid
+      - name
+      - subject
+      - operator
+      - value
     ErrorDto:
       type: object
       properties:
@@ -509,206 +620,6 @@ components:
       - errorCode
       - description
       - httpStatus
-    UpdateConditionDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          example: 'Scan Condition: Should be scanned once on plan X'
-        subject:
-          type: string
-          enum:
-          - SUCCESS_SCANS_AMOUNT
-          - TODAY_SUCCESS_SCANS_AMOUNT
-          - IS_CHECKED_IN
-          example: SUCCESS_SCANS_AMOUNT
-        operator:
-          type: string
-          enum:
-          - EQUALS
-          - NOT_EQUALS
-          - CONTAINS
-          - NOT_CONTAINS
-          - GREATER_THAN
-          - GREATER_THAN_OR_EQUAL_TO
-          - LOWER_THAN
-          - LOWER_THAN_OR_EQUAL_TO
-          - STARTS_WITH
-          - ENDS_WITH
-          - IS_BEFORE
-          - IS_AFTER
-          example: GREATER_THAN
-        value:
-          description: Valid inputs are string, number, boolean, object or date
-          oneOf:
-          - type: string
-          - type: number
-          - type: boolean
-          - type: object
-          example: 1
-        conditionEntrancePlanId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-          description: uuid of entrance plan the condition applies to
-        ruleId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-          description: uuid of rule the condition applies to
-      required:
-      - name
-      - subject
-      - operator
-      - value
-    CreateConditionDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          example: 'Scan Condition: Should be scanned once on plan X'
-        subject:
-          type: string
-          enum:
-          - SUCCESS_SCANS_AMOUNT
-          - TODAY_SUCCESS_SCANS_AMOUNT
-          - IS_CHECKED_IN
-          example: SUCCESS_SCANS_AMOUNT
-        operator:
-          type: string
-          enum:
-          - EQUALS
-          - NOT_EQUALS
-          - CONTAINS
-          - NOT_CONTAINS
-          - GREATER_THAN
-          - GREATER_THAN_OR_EQUAL_TO
-          - LOWER_THAN
-          - LOWER_THAN_OR_EQUAL_TO
-          - STARTS_WITH
-          - ENDS_WITH
-          - IS_BEFORE
-          - IS_AFTER
-          example: GREATER_THAN
-        value:
-          description: Valid inputs are string, number, boolean, object or date
-          oneOf:
-          - type: string
-          - type: number
-          - type: boolean
-          - type: object
-          example: 1
-        conditionEntrancePlanId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-          description: uuid of entrance plan the condition applies to
-        ruleId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-          description: uuid of rule the condition applies to
-      required:
-      - name
-      - subject
-      - operator
-      - value
-    PageMetaDto:
-      type: object
-      properties:
-        page:
-          type: number
-        take:
-          type: number
-        skip:
-          type: number
-        itemCount:
-          type: number
-        pageCount:
-          type: number
-        hasPreviousPage:
-          type: boolean
-        hasNextPage:
-          type: boolean
-      required:
-      - page
-      - take
-      - skip
-      - itemCount
-      - pageCount
-      - hasPreviousPage
-      - hasNextPage
-    PageDto:
-      type: object
-      properties:
-        data:
-          type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-      required:
-      - data
-      - meta
-    Condition:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: 'Scan Condition: Must be scanned once on entrance plan X'
-        subject:
-          type: string
-          enum:
-          - SUCCESS_SCANS_AMOUNT
-          - TODAY_SUCCESS_SCANS_AMOUNT
-          - IS_CHECKED_IN
-          example: SUCCESS_SCANS_AMOUNT
-        operator:
-          type: string
-          enum:
-          - EQUALS
-          - NOT_EQUALS
-          - CONTAINS
-          - NOT_CONTAINS
-          - GREATER_THAN
-          - GREATER_THAN_OR_EQUAL_TO
-          - LOWER_THAN
-          - LOWER_THAN_OR_EQUAL_TO
-          - STARTS_WITH
-          - ENDS_WITH
-          - IS_BEFORE
-          - IS_AFTER
-          example: GREATER_THAN
-        value:
-          description: Value to compare the condition operator to.
-          oneOf:
-          - type: string
-          - type: number
-          - type: boolean
-          - type: object
-          example: 1
-        entrancePlanId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-          description: uuid of entrance plan the condition applies to
-        ruleId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-          description: uuid of rule the condition applies to
-      required:
-      - uuid
-      - name
-      - subject
-      - operator
-      - value
     ConditionDto:
       type: object
       properties:
@@ -763,6 +674,95 @@ components:
           description: uuid of rule the condition applies to
       required:
       - uuid
+      - name
+      - subject
+      - operator
+      - value
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    UpdateConditionDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: 'Scan Condition: Should be scanned once on plan X'
+        subject:
+          type: string
+          enum:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Valid inputs are string, number, boolean, object or date
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        conditionEntrancePlanId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of entrance plan the condition applies to
+        ruleId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
+      required:
       - name
       - subject
       - operator

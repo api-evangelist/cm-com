@@ -485,6 +485,89 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ApiSipAccountCredentials:
+      title: Sip Account Credentials
+      type: object
+      properties:
+        username:
+          type:
+          - string
+          - 'null'
+          description: Username of the SIP Account.
+        password:
+          type:
+          - string
+          - 'null'
+          description: Password of the SIP Account.
+      additionalProperties: false
+      description: The login credentials for a SIP Account.
+    ErrorCollection:
+      title: Error Collection
+      type: object
+      properties:
+        requestId:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    ApiSipAccount:
+      title: Sip Account
+      type: object
+      properties:
+        guid:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the SIP Account.
+        createdOn:
+          type: string
+          description: Date and time on which the SIP Account was created.
+          format: date-time
+        customerAccountGuid:
+          type:
+          - string
+          - 'null'
+          description: The unique identifier of the Voice Account which this SIP Account is part of.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Display name of the SIP Account.
+        username:
+          type:
+          - string
+          - 'null'
+          description: Username of the SIP Account. The username is generated automatically by CM.com and cannot be changed.
+        isActive:
+          type: boolean
+          description: Whether or not the SIP Account is set to active.
+        inPrison:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the account has a temporary ban after entering the wrong password too many times.
+        config:
+          $ref: '#/components/schemas/ApiSipConfig'
+      additionalProperties: false
+      description: A SIP Account that can be used to make calls via the CM.com Platform.
+    ApiUpdateDisplayNameRequest:
+      title: Update Display Name Request
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: New display name for the SIP Account.
+          example: My new display name
+      additionalProperties: false
+      description: Api sip Account model
     Error:
       title: Error
       type: object
@@ -558,89 +641,6 @@ components:
           example: false
       additionalProperties: false
       description: SIP configuration containing settings that define how a SIP Account can be used.
-    ApiUpdateDisplayNameRequest:
-      title: Update Display Name Request
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: New display name for the SIP Account.
-          example: My new display name
-      additionalProperties: false
-      description: Api sip Account model
-    ApiSipAccountCredentials:
-      title: Sip Account Credentials
-      type: object
-      properties:
-        username:
-          type:
-          - string
-          - 'null'
-          description: Username of the SIP Account.
-        password:
-          type:
-          - string
-          - 'null'
-          description: Password of the SIP Account.
-      additionalProperties: false
-      description: The login credentials for a SIP Account.
-    ErrorCollection:
-      title: Error Collection
-      type: object
-      properties:
-        requestId:
-          type:
-          - string
-          - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Error'
-      additionalProperties: false
-    ApiSipAccount:
-      title: Sip Account
-      type: object
-      properties:
-        guid:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier of the SIP Account.
-        createdOn:
-          type: string
-          description: Date and time on which the SIP Account was created.
-          format: date-time
-        customerAccountGuid:
-          type:
-          - string
-          - 'null'
-          description: The unique identifier of the Voice Account which this SIP Account is part of.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Display name of the SIP Account.
-        username:
-          type:
-          - string
-          - 'null'
-          description: Username of the SIP Account. The username is generated automatically by CM.com and cannot be changed.
-        isActive:
-          type: boolean
-          description: Whether or not the SIP Account is set to active.
-        inPrison:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the account has a temporary ban after entering the wrong password too many times.
-        config:
-          $ref: '#/components/schemas/ApiSipConfig'
-      additionalProperties: false
-      description: A SIP Account that can be used to make calls via the CM.com Platform.
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

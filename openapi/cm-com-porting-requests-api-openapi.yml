@@ -399,88 +399,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Error:
-      title: Error
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        source:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    ApiPortingRequestOrderStatus:
-      title: Porting Request Order Status
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier
-          format: int32
-        key:
-          type:
-          - string
-          - 'null'
-          description: Status key
-        displayValue:
-          type:
-          - string
-          - 'null'
-          description: The value to display
-      additionalProperties: false
-      description: The status of a porting request
-    ApiPortingRequestDocument:
-      title: Porting Request Document
-      type: object
-      properties:
-        documentType:
-          type:
-          - string
-          - 'null'
-          description: Type of document (LoA, TelcoInvoice, Other)
-          example: LoA
-        documentGuid:
-          type: string
-          description: Unique identifier of the document
-          format: uuid
-          example: 00000000-0000-0000-0000-000000000000
-        uploadedAt:
-          type: string
-          description: Date and time when the document was uploaded
-          format: date-time
-        status:
-          type:
-          - string
-          - 'null'
-          description: Current status of the document (Pending, Approved, Rejected)
-          example: Pending
-        approvedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time when the document was approved (if applicable)
-          format: date-time
-        rejectionReason:
-          type:
-          - string
-          - 'null'
-          description: Reason for rejection if the document was rejected
-          example: Document is not legible
-        fileName:
-          type:
-          - string
-          - 'null'
-          description: Original filename of the document
-          example: letter_of_authorization.pdf
-      additionalProperties: false
-      description: Represents a document associated with a porting request
     ApiUploadPortingRequestDocument:
       title: Upload Porting Request Document
       required:
@@ -501,25 +419,6 @@ components:
           example: 00000000-0000-0000-0000-000000000000
       additionalProperties: false
       description: Document upload information for porting requests
-    ApiPortingPhoneNumber:
-      title: Porting Phone Number
-      type: object
-      properties:
-        phoneNumber:
-          type: integer
-          description: The (first) phone number to be ported.
-          format: int64
-          example: 31765727000
-          exclusiveMinimum: 0
-        lastPhoneNumber:
-          type:
-          - integer
-          - 'null'
-          description: When a range of phone numbers are being ported, this number should be the last number in the range. If you are porting a single number, this value can be left empty.
-          format: int64
-          example: 31765727009
-      additionalProperties: false
-      description: Phone number to be ported
     ApiPortingRequest:
       title: Porting Request
       type: object
@@ -561,52 +460,21 @@ components:
           example: https://www.example.com
       additionalProperties: false
       description: A porting requests that allows you to port you phone numbers from your current provider to the CM.com platform.
-    ApiPortingRequestOrder:
-      title: Porting Request Order
+    ErrorCollection:
+      title: Error Collection
       type: object
       properties:
-        id:
-          type: string
-          description: Unique identifier
-          format: uuid
-        orderId:
+        requestId:
           type:
           - string
           - 'null'
-          description: The order id
-        createdOn:
-          type: string
-          description: Date and time of creation
-          format: date-time
-        portingData:
-          $ref: '#/components/schemas/ApiPortingRequest'
-        firstPossibleDate:
-          type:
-          - string
-          - 'null'
-          description: Date and time of the first possible date on which the porting can be performed
-          format: date-time
-        status:
-          $ref: '#/components/schemas/ApiPortingRequestOrderStatus'
-        statusReason:
-          type:
-          - string
-          - 'null'
-          description: Optional comment describing the reason for the current status of the porting request
-        errorDetails:
-          type:
-          - string
-          - 'null'
-          description: Optional error details showing the details of why a porting request has been blocked automatically
-        documents:
+        errors:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/ApiPortingRequestDocument'
-          description: Documents associated with this porting request (LoA, Telco Invoice, etc.)
+            $ref: '#/components/schemas/Error'
       additionalProperties: false
-      description: Order for porting request retrieved from administration api
     ApiCreatePortingRequest:
       title: Create Porting Request
       required:
@@ -657,21 +525,153 @@ components:
           description: Optional documents to upload with the porting request (LoA, Telco Invoice, etc.)
       additionalProperties: false
       description: A porting requests that allows you to port you phone numbers from your current provider to the CM.com platform.
-    ErrorCollection:
-      title: Error Collection
+    Error:
+      title: Error
       type: object
       properties:
-        requestId:
+        code:
           type:
           - string
           - 'null'
-        errors:
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ApiPortingRequestOrder:
+      title: Porting Request Order
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+          format: uuid
+        orderId:
+          type:
+          - string
+          - 'null'
+          description: The order id
+        createdOn:
+          type: string
+          description: Date and time of creation
+          format: date-time
+        portingData:
+          $ref: '#/components/schemas/ApiPortingRequest'
+        firstPossibleDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time of the first possible date on which the porting can be performed
+          format: date-time
+        status:
+          $ref: '#/components/schemas/ApiPortingRequestOrderStatus'
+        statusReason:
+          type:
+          - string
+          - 'null'
+          description: Optional comment describing the reason for the current status of the porting request
+        errorDetails:
+          type:
+          - string
+          - 'null'
+          description: Optional error details showing the details of why a porting request has been blocked automatically
+        documents:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/ApiPortingRequestDocument'
+          description: Documents associated with this porting request (LoA, Telco Invoice, etc.)
       additionalProperties: false
+      description: Order for porting request retrieved from administration api
+    ApiPortingRequestDocument:
+      title: Porting Request Document
+      type: object
+      properties:
+        documentType:
+          type:
+          - string
+          - 'null'
+          description: Type of document (LoA, TelcoInvoice, Other)
+          example: LoA
+        documentGuid:
+          type: string
+          description: Unique identifier of the document
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        uploadedAt:
+          type: string
+          description: Date and time when the document was uploaded
+          format: date-time
+        status:
+          type:
+          - string
+          - 'null'
+          description: Current status of the document (Pending, Approved, Rejected)
+          example: Pending
+        approvedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time when the document was approved (if applicable)
+          format: date-time
+        rejectionReason:
+          type:
+          - string
+          - 'null'
+          description: Reason for rejection if the document was rejected
+          example: Document is not legible
+        fileName:
+          type:
+          - string
+          - 'null'
+          description: Original filename of the document
+          example: letter_of_authorization.pdf
+      additionalProperties: false
+      description: Represents a document associated with a porting request
+    ApiPortingPhoneNumber:
+      title: Porting Phone Number
+      type: object
+      properties:
+        phoneNumber:
+          type: integer
+          description: The (first) phone number to be ported.
+          format: int64
+          example: 31765727000
+          exclusiveMinimum: 0
+        lastPhoneNumber:
+          type:
+          - integer
+          - 'null'
+          description: When a range of phone numbers are being ported, this number should be the last number in the range. If you are porting a single number, this value can be left empty.
+          format: int64
+          example: 31765727009
+      additionalProperties: false
+      description: Phone number to be ported
+    ApiPortingRequestOrderStatus:
+      title: Porting Request Order Status
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier
+          format: int32
+        key:
+          type:
+          - string
+          - 'null'
+          description: Status key
+        displayValue:
+          type:
+          - string
+          - 'null'
+          description: The value to display
+      additionalProperties: false
+      description: The status of a porting request
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

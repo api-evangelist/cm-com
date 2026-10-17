@@ -2,23 +2,11 @@ openapi: 3.2.0
 info:
   title: Cm Com Health API
   version: '1.0'
-  description: 'Operations tagged Health across 12 of this provider''s published API definitions: cm-com-conversational-ai-v1-openapi.yml, cm-com-customer-engagement-v1-openapi.yml, cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml, cm-com-live-event-apps-v1-openapi.yml, cm-com-marketplace-cdp-integration-v1-openapi.yml, cm-com-marketplace-cms-integrations-v1-openapi.yml, cm-com-marketplace-crm-integrations-v1-openapi.yml…'
+  description: 'Operations tagged Health across 6 of this provider''s published API definitions: cm-com-conversational-ai-v1-openapi.yml, cm-com-customer-engagement-v1-openapi.yml, cm-com-live-entrance-management-v1-openapi.yml, cm-com-live-entrance-management-v2-openapi.yml, cm-com-live-event-apps-v1-openapi.yml, cm-com-messaging-business-messaging-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.cm.com
   description: Production Server
 - url: https://api.cm.com/ticketing/v1
-  description: Production
-- url: https://api.cm.com/marketplace/cdp-integration/v1
-  description: Production
-- url: https://api.cm.com/marketplace/cms-integrations/v1
-  description: Production
-- url: https://api.cm.com/marketplace/crm-integrations/v1
-  description: Production
-- url: https://api.cm.com/marketplace/internal-comms-integrations/v1
-  description: Production
-- url: https://api.cm.com/marketplace/live-chat-integrations/v1
-  description: Production
-- url: https://api.cm.com/marketplace/product-feed-integrations/v1
   description: Production
 - url: https://gw.cmtelecom.com
   description: Production Server
@@ -353,7 +341,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HealthResponse_10'
+                $ref: '#/components/schemas/HealthResponse_4'
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
       security:
@@ -363,17 +351,6 @@ paths:
       description: Production Server
 components:
   schemas:
-    ErrorResponse:
-      title: Error Response
-      description: Standard error response
-      required:
-      - message
-      properties:
-        message:
-          description: Human-readable error message
-          type: string
-          example: Unauthorized
-      type: object
     HealthResponse:
       title: Health Response
       description: Standard health check response
@@ -394,6 +371,17 @@ components:
           description: API version
           type: string
           example: v1
+      type: object
+    ErrorResponse:
+      title: Error Response
+      description: Standard error response
+      required:
+      - message
+      properties:
+        message:
+          description: Human-readable error message
+          type: string
+          example: Unauthorized
       type: object
     HealthResponse_2:
       title: Health Response
@@ -505,90 +493,6 @@ components:
           type: string
           example: 1.0.0
     HealthResponse_4:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - healthy
-          example: healthy
-        service:
-          type: string
-          example: cdp-integration
-        version:
-          type: string
-          example: 1.0.0
-    HealthResponse_5:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - healthy
-          example: healthy
-        service:
-          type: string
-          example: cms-integrations
-        version:
-          type: string
-          example: 1.0.0
-    HealthResponse_6:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - healthy
-          example: healthy
-        service:
-          type: string
-          example: crm-integrations
-        version:
-          type: string
-          example: 1.0.0
-    HealthResponse_7:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - healthy
-          example: healthy
-        service:
-          type: string
-          example: internal-comms-integrations
-        version:
-          type: string
-          example: 1.0.0
-    HealthResponse_8:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - healthy
-          example: healthy
-        service:
-          type: string
-          example: live-chat-integrations
-        version:
-          type: string
-          example: 1.0.0
-    HealthResponse_9:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - healthy
-          example: healthy
-        service:
-          type: string
-          example: product-feed-integrations
-        version:
-          type: string
-          example: 1.0.0
-    HealthResponse_10:
       title: Health Response
       description: Standard health check response
       required:
@@ -637,10 +541,4 @@ x-refined-from:
 - cm-com-live-entrance-management-v1-openapi.yml
 - cm-com-live-entrance-management-v2-openapi.yml
 - cm-com-live-event-apps-v1-openapi.yml
-- cm-com-marketplace-cdp-integration-v1-openapi.yml
-- cm-com-marketplace-cms-integrations-v1-openapi.yml
-- cm-com-marketplace-crm-integrations-v1-openapi.yml
-- cm-com-marketplace-internal-comms-integrations-v1-openapi.yml
-- cm-com-marketplace-live-chat-integrations-v1-openapi.yml
-- cm-com-marketplace-product-feed-integrations-v1-openapi.yml
 - cm-com-messaging-business-messaging-v1-openapi.yml

@@ -276,32 +276,20 @@ components:
           type: boolean
         PermanentBounced:
           type: boolean
-    WebhookUpdate:
-      type: object
-      properties:
-        url:
-          type: string
-          format: url
-          description: The URL must begin with https://
-          examples:
-          - https://example.com
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/WebhookType'
-          description: The subscribed webhook events
-        headers:
-          type: object
-          additionalProperties:
-            type: string
-          examples:
-          - My-Custom-Header: Example
-          description: The request HTTP headers
-        disabled:
-          type: boolean
-          description: Provide with value false to re-enable automatically disabled webhooks.
-          examples:
-          - false
+    WebhookType:
+      type: string
+      description: 'Webhook event types that can be subscribed to. By default, dossier.state.updated, dossier.prepared, and dossier.invite.undelivered events are sent.
+
+        '
+      enum:
+      - dossier.invite.created
+      - dossier.invite.expired
+      - dossier.invite.undelivered
+      - dossier.invite.viewed
+      - dossier.invitee.state.updated
+      - dossier.prepared
+      - dossier.state.updated
+      - dossier.invitee.reassignRequest.state.updated
     Webhook:
       title: Webhook
       allOf:
@@ -333,20 +321,32 @@ components:
             readOnly: true
         required:
         - url
-    WebhookType:
-      type: string
-      description: 'Webhook event types that can be subscribed to. By default, dossier.state.updated, dossier.prepared, and dossier.invite.undelivered events are sent.
-
-        '
-      enum:
-      - dossier.invite.created
-      - dossier.invite.expired
-      - dossier.invite.undelivered
-      - dossier.invite.viewed
-      - dossier.invitee.state.updated
-      - dossier.prepared
-      - dossier.state.updated
-      - dossier.invitee.reassignRequest.state.updated
+    WebhookUpdate:
+      type: object
+      properties:
+        url:
+          type: string
+          format: url
+          description: The URL must begin with https://
+          examples:
+          - https://example.com
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookType'
+          description: The subscribed webhook events
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          examples:
+          - My-Custom-Header: Example
+          description: The request HTTP headers
+        disabled:
+          type: boolean
+          description: Provide with value false to re-enable automatically disabled webhooks.
+          examples:
+          - false
     ErrorResponse:
       title: Error Response
       type: object
@@ -358,18 +358,26 @@ components:
         message:
           type: string
           description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access to the specified resource was denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   parameters:
-    KeyId:
-      name: kid
-      in: path
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: 'a uuid string that identifies the client
-
-        '
-      example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
     WebhookId:
       name: webhookId
       in: path
@@ -381,25 +389,17 @@ components:
 
         '
       example: b411f416-bec1-4714-91c1-a97daad86b01
-  responses:
-    Forbidden:
-      description: Access to the specified resource was denied
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+    KeyId:
+      name: kid
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies the client
+
+        '
+      example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
   securitySchemes:
     JWT:
       type: http

@@ -201,6 +201,65 @@ paths:
       - ProductToken: []
 components:
   schemas:
+    Configuration_Int64ControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type: integer
+          format: int64
+          description: Number of rows deleted.
+      additionalProperties: false
+    Configuration_StatusCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 429
+      - 500
+      - 999
+      type: integer
+      format: int32
+    Configuration_EmailInboundWebhookUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Must be greater than 0.
+        resetPresignedUrlExpiryHours:
+          type: boolean
+          description: Sets the expiry back to 24. Wins over presignedUrlExpiryHours.
+        webhookUrl:
+          type:
+          - string
+          - 'null'
+        domain:
+          type:
+          - string
+          - 'null'
+        usePresignedAttachments:
+          type:
+          - boolean
+          - 'null'
+          description: Send attachments as download links instead of inline base64. Default false.
+        presignedUrlExpiryHours:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: Lifetime of download links in hours. Default 24, effective maximum 168.
+      additionalProperties: false
     Configuration_EmailInboundWebhookControllerResponse:
       required:
       - message
@@ -280,50 +339,6 @@ components:
           type: integer
           format: int32
       additionalProperties: false
-    Configuration_EmailInboundWebhookResponseControllerResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        status:
-          $ref: '#/components/schemas/Configuration_StatusCode'
-        message:
-          type:
-          - string
-          - 'null'
-        data:
-          $ref: '#/components/schemas/Configuration_EmailInboundWebhookResponse'
-      additionalProperties: false
-    Configuration_EmailInboundWebhookUpdateRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Must be greater than 0.
-        resetPresignedUrlExpiryHours:
-          type: boolean
-          description: Sets the expiry back to 24. Wins over presignedUrlExpiryHours.
-        webhookUrl:
-          type:
-          - string
-          - 'null'
-        domain:
-          type:
-          - string
-          - 'null'
-        usePresignedAttachments:
-          type:
-          - boolean
-          - 'null'
-          description: Send attachments as download links instead of inline base64. Default false.
-        presignedUrlExpiryHours:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: Lifetime of download links in hours. Default 24, effective maximum 168.
-      additionalProperties: false
     Configuration_ProblemDetails:
       type: object
       properties:
@@ -349,7 +364,7 @@ components:
           - string
           - 'null'
       additionalProperties: {}
-    Configuration_Int64ControllerResponse:
+    Configuration_EmailInboundWebhookResponseControllerResponse:
       type: object
       properties:
         success:
@@ -361,23 +376,8 @@ components:
           - string
           - 'null'
         data:
-          type: integer
-          format: int64
-          description: Number of rows deleted.
+          $ref: '#/components/schemas/Configuration_EmailInboundWebhookResponse'
       additionalProperties: false
-    Configuration_StatusCode:
-      enum:
-      - 200
-      - 400
-      - 401
-      - 403
-      - 404
-      - 409
-      - 429
-      - 500
-      - 999
-      type: integer
-      format: int32
   securitySchemes:
     ProductToken:
       type: apiKey

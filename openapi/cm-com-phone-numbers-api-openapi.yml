@@ -419,6 +419,62 @@ components:
           type: string
         descriptionKey:
           type: string
+    CM.Platform.Channels.Models.Pricing.ApiProductPricing:
+      required:
+      - currencyIsoCode
+      - supportsMonthlySubscription
+      - monthlyPricePlanId
+      - supportsYearlySubscription
+      - yearlyPricePlanId
+      - isCountryFallback
+      type: object
+      properties:
+        currencyIsoCode:
+          type: string
+        supportsMonthlySubscription:
+          type: boolean
+        monthlyPrice:
+          format: double
+          type: number
+        monthlySetupFee:
+          format: double
+          type: number
+        monthlyPricePlanId:
+          format: int32
+          type: integer
+        monthlyPricingActiveSinceUtc:
+          format: date-time
+          type: string
+        supportsYearlySubscription:
+          type: boolean
+        yearlyPrice:
+          format: double
+          type: number
+        yearlySetupFee:
+          format: double
+          type: number
+        yearlyPricePlanId:
+          format: int32
+          type: integer
+        yearlyPricingActiveSinceUtc:
+          format: date-time
+          type: string
+        isOverride:
+          type: boolean
+        isCountryFallback:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ApiChannelState:
+      required:
+      - isPending
+      - requestState
+      type: object
+      properties:
+        customRequestFormIsPending:
+          type: boolean
+        isPending:
+          type: boolean
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
     CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestResponse:
       required:
       - id
@@ -486,44 +542,14 @@ components:
           type: string
         channelState:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelState'
-    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse:
-      required:
-      - id
-      - purpose
-      - country
-      - category
-      - noticePeriodDays
-      - keywordNoticePeriodDays
-      - numberRequestProcessingDays
-      - requiredCapability
+    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
       type: object
       properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        purpose:
+        stages:
           type: array
           items:
             type: string
-        country:
-          type: string
-        category:
-          type: string
-        description:
-          type: string
-        productPricing:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Pricing.ApiProductPricing'
-        noticePeriodDays:
-          format: int32
-          type: integer
-        keywordNoticePeriodDays:
-          format: int32
-          type: integer
-        numberRequestProcessingDays:
-          format: int32
-          type: integer
-        requiredCapability:
+        current:
           type: string
     CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberRequestBase:
       required:
@@ -587,6 +613,84 @@ components:
           type: string
         channelState:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelState'
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse:
+      required:
+      - id
+      - purpose
+      - country
+      - category
+      - noticePeriodDays
+      - keywordNoticePeriodDays
+      - numberRequestProcessingDays
+      - requiredCapability
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        purpose:
+          type: array
+          items:
+            type: string
+        country:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        productPricing:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Pricing.ApiProductPricing'
+        noticePeriodDays:
+          format: int32
+          type: integer
+        keywordNoticePeriodDays:
+          format: int32
+          type: integer
+        numberRequestProcessingDays:
+          format: int32
+          type: integer
+        requiredCapability:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse:
+      required:
+      - id
+      - numberType
+      - number
+      - isShared
+      type: object
+      properties:
+        id:
+          type: string
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        numberType:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse'
+        number:
+          type: string
+        isShared:
+          type: boolean
+        ownedSinceUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiRequestState:
+      type: object
+      properties:
+        completeness:
+          format: int32
+          type: integer
+        nextStage:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
+        progression:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
+        hasPendingOrder:
+          type: boolean
+        hasEligibleOrder:
+          type: boolean
+        hasMissingOrder:
+          type: boolean
     CM.Platform.Channels.Models.Pricing.ApiSubscriptionPrice:
       required:
       - currency
@@ -618,110 +722,6 @@ components:
           - YEARLY
           - NONE
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiPhoneNumberResponse:
-      required:
-      - id
-      - numberType
-      - number
-      - isShared
-      type: object
-      properties:
-        id:
-          type: string
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        numberType:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Sms.ApiNumberTypeResponse'
-        number:
-          type: string
-        isShared:
-          type: boolean
-        ownedSinceUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.Pricing.ApiProductPricing:
-      required:
-      - currencyIsoCode
-      - supportsMonthlySubscription
-      - monthlyPricePlanId
-      - supportsYearlySubscription
-      - yearlyPricePlanId
-      - isCountryFallback
-      type: object
-      properties:
-        currencyIsoCode:
-          type: string
-        supportsMonthlySubscription:
-          type: boolean
-        monthlyPrice:
-          format: double
-          type: number
-        monthlySetupFee:
-          format: double
-          type: number
-        monthlyPricePlanId:
-          format: int32
-          type: integer
-        monthlyPricingActiveSinceUtc:
-          format: date-time
-          type: string
-        supportsYearlySubscription:
-          type: boolean
-        yearlyPrice:
-          format: double
-          type: number
-        yearlySetupFee:
-          format: double
-          type: number
-        yearlyPricePlanId:
-          format: int32
-          type: integer
-        yearlyPricingActiveSinceUtc:
-          format: date-time
-          type: string
-        isOverride:
-          type: boolean
-        isCountryFallback:
-          type: boolean
-    CM.Platform.Channels.Models.Channels.ApiChannelState:
-      required:
-      - isPending
-      - requestState
-      type: object
-      properties:
-        customRequestFormIsPending:
-          type: boolean
-        isPending:
-          type: boolean
-        requestState:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
-    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
-      type: object
-      properties:
-        stages:
-          type: array
-          items:
-            type: string
-        current:
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiRequestState:
-      type: object
-      properties:
-        completeness:
-          format: int32
-          type: integer
-        nextStage:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
-        progression:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
-        hasPendingOrder:
-          type: boolean
-        hasEligibleOrder:
-          type: boolean
-        hasMissingOrder:
-          type: boolean
   securitySchemes:
     ProductToken:
       type: apiKey

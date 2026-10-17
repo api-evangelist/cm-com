@@ -44,6 +44,55 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
+    ResponseState:
+      type: string
+      description: State that indicates whether the request was successful or the data could not be retrieved due to unavailability.
+      enum:
+      - success
+      - unavailable
+    SimSwap24hResponse:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/ResponseState'
+        24h:
+          type: boolean
+          description: Boolean if the phone number has been SIM swapped in the last 24 hours
+          examples:
+          - false
+    SimSwapTimestampResponse:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/ResponseState'
+        timestamp:
+          type: string
+          description: Last SIM Swap for that phone number in ISO 8601 format
+          format: date-time
+          examples:
+          - '2026-01-01T00:00:00Z'
+    SimSwapType:
+      type: string
+      enum:
+      - timestamp
+      - 24h
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
+        message:
+          type: string
+          description: Description of the error that occurred.
+          examples:
+          - The phone number field is required
+        code:
+          $ref: '#/components/schemas/ErrorCode'
     SimSwapRequest:
       type: object
       properties:
@@ -60,27 +109,6 @@ components:
       required:
       - phoneNumber
       - serviceType
-    SimSwapTimestampResponse:
-      type: object
-      properties:
-        state:
-          $ref: '#/components/schemas/ResponseState'
-        timestamp:
-          type: string
-          description: Last SIM Swap for that phone number in ISO 8601 format
-          format: date-time
-          examples:
-          - '2026-01-01T00:00:00Z'
-    SimSwap24hResponse:
-      type: object
-      properties:
-        state:
-          $ref: '#/components/schemas/ResponseState'
-        24h:
-          type: boolean
-          description: Boolean if the phone number has been SIM swapped in the last 24 hours
-          examples:
-          - false
     ErrorCode:
       type: integer
       description: "Error code description:\n\n * 1000 - Unknown error\n * 1001 - Invalid request\n * 1002 - Supplier error\n * 1003 - Unsupported configuration\n * 2000 - Validation error\n * 2001 - Invalid `phoneNumber` field\n * 2002 - Invalid `serviceType` field\n * 2003 - Invalid `firstName` field\n * 2004 - Invalid `lastName` field\n * 2005 - Invalid `address` field\n * 2006 - Invalid `postalCode` field\n * 2007 - Invalid `dateOfBirth` field\n * 2008 - Invalid `callbackUrl` field\n * 3000 - Feature not enabled\n * 3001 - Phone number is not active\n"
@@ -102,65 +130,7 @@ components:
       - 3001
       examples:
       - 2001
-    ErrorResponse:
-      title: Error Response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code.
-          examples:
-          - 400
-        message:
-          type: string
-          description: Description of the error that occurred.
-          examples:
-          - The phone number field is required
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-    ResponseState:
-      type: string
-      description: State that indicates whether the request was successful or the data could not be retrieved due to unavailability.
-      enum:
-      - success
-      - unavailable
-    SimSwapType:
-      type: string
-      enum:
-      - timestamp
-      - 24h
   responses:
-    InternalServerError:
-      description: Errors related to the transaction.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 500
-            message: Transaction could not be started
-            code: 1002
-    Unauthorized:
-      description: Errors related to the authorization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 401
-            message: Unauthorized
-            code: 1000
-    BadRequest:
-      description: Errors related to the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 400
-            message: The phone number field is required
-            code: 2001
     NotFound:
       description: Errors related to the request URL
       content:
@@ -171,6 +141,36 @@ components:
             status: 404
             message: Not found
             code: 1000
+    Unauthorized:
+      description: Errors related to the authorization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+            code: 1000
+    InternalServerError:
+      description: Errors related to the transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: Transaction could not be started
+            code: 1002
+    BadRequest:
+      description: Errors related to the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: The phone number field is required
+            code: 2001
   securitySchemes:
     JWT:
       type: http

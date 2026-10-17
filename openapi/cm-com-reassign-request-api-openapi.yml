@@ -83,171 +83,24 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    InviteeId:
-      $ref: '#/components/schemas/InviteeReference'
-      readOnly: true
-    ErrorResponse:
-      title: Error Response
+    Payment:
+      title: Payment
       type: object
       properties:
-        status:
+        amount:
           type: integer
-          format: int32
-          description: Response status code, should match HTTP error code
-        message:
-          type: string
-          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
-    Invitee:
-      allOf:
-      - type: object
-        properties:
-          id:
-            $ref: '#/components/schemas/InviteeId'
-        required:
-        - id
-      - $ref: '#/components/schemas/InviteeBase'
-    ModifyReassignRequest:
-      type: object
-      properties:
-        state:
-          type: string
-          description: State of the reassign request. Only 'approved' and 'declined' are allowed values when updating the reassign request.
-          $ref: '#/components/schemas/ReassignRequestState'
+          description: The payment amount in cents
+          minimum: 1
           examples:
-          - approved
-        declineReason:
-          type:
-          - string
-          - 'null'
-          description: The reason for declining the reassign request. Required when declining the reassign request.
-          examples:
-          - We need you to personally sign this dossier
-        newInvitee:
-          type: object
-          properties:
-            message:
-              type:
-              - string
-              - 'null'
-              maxLength: 1000
-              description: The custom message to be sent to the new invitee if approving the reassign request.
-              examples:
-              - Please sign John
+          - 100
+        currency:
+          type: string
+          enum:
+          - EUR
+          description: The payment currency
       required:
-      - state
-    ReassignRequest:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID of the reassign request
-          examples:
-          - 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
-        url:
-          type: string
-          format: url
-          description: Url to open the reassign request.
-          examples:
-          - https://www.cm.com/app/sign/reassign/review/cFoU7JAiY3xZAAGdd43j64K6eNtLTmn8W89iwdew09qsQnaiZF6UzAFriB8ZaUfE0CtVr7UZXCcIjVRqZl7yBWIyUNAnX1NpAqgD
-        state:
-          type: string
-          description: State of the reassign request
-          $ref: '#/components/schemas/ReassignRequestState'
-          examples:
-          - pending
-        dossier:
-          type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: ID of the dossier
-              examples:
-              - 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
-            name:
-              type: string
-              description: Name of the dossier
-              examples:
-              - Employment contract
-            owner:
-              type: string
-              description: Name of the team, if the dossier was sent on behalf of a team, or the dossier owner
-              examples:
-              - Human Resources
-        originalInvitee:
-          $ref: '#/components/schemas/Invitee'
-        newInvitee:
-          type: object
-          properties:
-            name:
-              type: string
-              description: Name of the new invitee
-              examples:
-              - John Doe
-            email:
-              type:
-              - string
-              - 'null'
-              format: email
-              description: Email of the new invitee.
-              examples:
-              - example@email.com
-            phoneNumber:
-              type:
-              - string
-              - 'null'
-              description: The phone number of the new invitee in E.164 format.
-              examples:
-              - '+31612345678'
-            message:
-              type:
-              - string
-              - 'null'
-              maxLength: 1000
-              description: The custom message to be sent to the new invitee.
-              examples:
-              - Please sign John
-        reason:
-          type: string
-          description: The reason for requesting reassignment.
-          examples:
-          - Reassigning to my secretary to sign in my place
-        declineReason:
-          type:
-          - string
-          - 'null'
-          description: The reason for declining the reassign request. Required when declining the reassign request.
-          examples:
-          - We need you to personally sign this dossier
-        createdAt:
-          type: string
-          format: date-time
-          description: The date the reassignment was requested in ISO 8601 format.
-          examples:
-          - '2026-01-01T00:00:00+00:00'
-    Locale:
-      type: string
-      enum:
-      - de-DE
-      - en-US
-      - es-ES
-      - fr-FR
-      - hu-HU
-      - it-IT
-      - ja-JP
-      - nl-NL
-      - pl-PL
-      - pt-PT
-      - ro-RO
-      - sk-SK
-      default: en-US
-    FieldReference:
-      type: string
-      format: uuid
-      description: Unique Id of a field
-      examples:
-      - 50ee1534-6172-4228-84e8-653c6f65eaf0
+      - amount
+      - currency
     InviteeBase:
       title: Invitee
       description: An invitee is someone who has been invited to review and/or sign the dossier.
@@ -361,22 +214,50 @@ components:
             $ref: '#/components/schemas/Field'
       required:
       - name
-    IdentificationMethod:
+    ModifyReassignRequest:
+      type: object
+      properties:
+        state:
+          type: string
+          description: State of the reassign request. Only 'approved' and 'declined' are allowed values when updating the reassign request.
+          $ref: '#/components/schemas/ReassignRequestState'
+          examples:
+          - approved
+        declineReason:
+          type:
+          - string
+          - 'null'
+          description: The reason for declining the reassign request. Required when declining the reassign request.
+          examples:
+          - We need you to personally sign this dossier
+        newInvitee:
+          type: object
+          properties:
+            message:
+              type:
+              - string
+              - 'null'
+              maxLength: 1000
+              description: The custom message to be sent to the new invitee if approving the reassign request.
+              examples:
+              - Please sign John
+      required:
+      - state
+    InviteeReference:
+      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
       type: string
-      enum:
-      - idin
-      - iban
-      - otp_sms
-      - otp_email
-      - otp_whatsapp
-      - otp_voice
-      - qualified
+      format: uuid
       examples:
-      - idin
-      description: Additional user identification is required. When you select `qualified` it cannot be used with other identification methods. Please note that this is only available when configured for your account.
-    FieldId:
-      $ref: '#/components/schemas/FieldReference'
+      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
+    InviteeId:
+      $ref: '#/components/schemas/InviteeReference'
       readOnly: true
+    FileReference:
+      type: string
+      format: uuid
+      description: A unique reference number for this file.
+      examples:
+      - 8d817359-7eb8-4b6e-9030-17ac286b7dc0
     FieldLocation:
       type: object
       properties:
@@ -403,45 +284,12 @@ components:
           type: number
           format: float
           description: Height of the field in points.
-    Payment:
-      title: Payment
-      type: object
-      properties:
-        amount:
-          type: integer
-          description: The payment amount in cents
-          minimum: 1
-          examples:
-          - 100
-        currency:
-          type: string
-          enum:
-          - EUR
-          description: The payment currency
-      required:
-      - amount
-      - currency
-    FileReference:
+    FieldReference:
       type: string
       format: uuid
-      description: A unique reference number for this file.
+      description: Unique Id of a field
       examples:
-      - 8d817359-7eb8-4b6e-9030-17ac286b7dc0
-    ReassignRequestState:
-      type: string
-      enum:
-      - approved
-      - declined
-      - pending
-    Field:
-      allOf:
-      - type: object
-        properties:
-          id:
-            $ref: '#/components/schemas/FieldId'
-        required:
-        - id
-      - $ref: '#/components/schemas/FieldBase'
+      - 50ee1534-6172-4228-84e8-653c6f65eaf0
     FieldType:
       type: string
       description: The type of field for the invitee.
@@ -457,12 +305,122 @@ components:
       - stamp
       examples:
       - signature
-    InviteeReference:
-      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
+    ReassignRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the reassign request
+          examples:
+          - 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
+        url:
+          type: string
+          format: url
+          description: Url to open the reassign request.
+          examples:
+          - https://www.cm.com/app/sign/reassign/review/cFoU7JAiY3xZAAGdd43j64K6eNtLTmn8W89iwdew09qsQnaiZF6UzAFriB8ZaUfE0CtVr7UZXCcIjVRqZl7yBWIyUNAnX1NpAqgD
+        state:
+          type: string
+          description: State of the reassign request
+          $ref: '#/components/schemas/ReassignRequestState'
+          examples:
+          - pending
+        dossier:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: ID of the dossier
+              examples:
+              - 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
+            name:
+              type: string
+              description: Name of the dossier
+              examples:
+              - Employment contract
+            owner:
+              type: string
+              description: Name of the team, if the dossier was sent on behalf of a team, or the dossier owner
+              examples:
+              - Human Resources
+        originalInvitee:
+          $ref: '#/components/schemas/Invitee'
+        newInvitee:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the new invitee
+              examples:
+              - John Doe
+            email:
+              type:
+              - string
+              - 'null'
+              format: email
+              description: Email of the new invitee.
+              examples:
+              - example@email.com
+            phoneNumber:
+              type:
+              - string
+              - 'null'
+              description: The phone number of the new invitee in E.164 format.
+              examples:
+              - '+31612345678'
+            message:
+              type:
+              - string
+              - 'null'
+              maxLength: 1000
+              description: The custom message to be sent to the new invitee.
+              examples:
+              - Please sign John
+        reason:
+          type: string
+          description: The reason for requesting reassignment.
+          examples:
+          - Reassigning to my secretary to sign in my place
+        declineReason:
+          type:
+          - string
+          - 'null'
+          description: The reason for declining the reassign request. Required when declining the reassign request.
+          examples:
+          - We need you to personally sign this dossier
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the reassignment was requested in ISO 8601 format.
+          examples:
+          - '2026-01-01T00:00:00+00:00'
+    IdentificationMethod:
       type: string
-      format: uuid
+      enum:
+      - idin
+      - iban
+      - otp_sms
+      - otp_email
+      - otp_whatsapp
+      - otp_voice
+      - qualified
       examples:
-      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
+      - idin
+      description: Additional user identification is required. When you select `qualified` it cannot be used with other identification methods. Please note that this is only available when configured for your account.
+    FieldId:
+      $ref: '#/components/schemas/FieldReference'
+      readOnly: true
+    Invitee:
+      allOf:
+      - type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/InviteeId'
+        required:
+        - id
+      - $ref: '#/components/schemas/InviteeBase'
     FieldBase:
       title: Field
       type: object
@@ -499,15 +457,48 @@ components:
       required:
       - type
       - file
-  parameters:
-    ReassignRequestId:
-      name: id
-      in: path
-      schema:
-        type: string
-      required: true
-      description: A unique uuid string that identifies a reassign request.
-      example: 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
+    Field:
+      allOf:
+      - type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/FieldId'
+        required:
+        - id
+      - $ref: '#/components/schemas/FieldBase'
+    Locale:
+      type: string
+      enum:
+      - de-DE
+      - en-US
+      - es-ES
+      - fr-FR
+      - hu-HU
+      - it-IT
+      - ja-JP
+      - nl-NL
+      - pl-PL
+      - pt-PT
+      - ro-RO
+      - sk-SK
+      default: en-US
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    ReassignRequestState:
+      type: string
+      enum:
+      - approved
+      - declined
+      - pending
   responses:
     Unauthorized:
       description: Unauthorized
@@ -521,6 +512,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    ReassignRequestId:
+      name: id
+      in: path
+      schema:
+        type: string
+      required: true
+      description: A unique uuid string that identifies a reassign request.
+      example: 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
   securitySchemes:
     JWT:
       type: http

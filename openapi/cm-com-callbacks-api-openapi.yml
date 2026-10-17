@@ -74,29 +74,17 @@ webhooks:
     - url: https://api.cm.com/mobile-identity/v1
     - url: https://api.cm.com/mobile-identity-sandbox/v1
 components:
-  examples:
-    transaction-state-event:
-      summary: Transaction state changed to success
-      value:
-        id: 58128784-9e8d-4424-a89d-08bfe273381c
-        type: transaction.state
-        created: '2026-01-01T00:00:00+00:00'
-        transaction:
-          id: b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
-          state: success
-          method: idin
-          methodType: full
-    number-verify-state-event:
-      summary: Number verify completed
-      value:
-        id: 58128784-9e8d-4424-a89d-08bfe273381c
-        type: numberVerify.state
-        created: '2026-01-01T00:00:00+00:00'
-        numberVerify:
-          id: 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
-          state: completed
-          match: true
   schemas:
+    TransactionState:
+      type: string
+      description: "Possible transaction states:\n\n * `created` - The transaction has been created but the end-user has not started the flow yet.\n * `started` - The end-user has selected a method and started the transaction.\n * `success` - The transaction has been completed successfully.\n * `failed` - The transaction could not be completed.\n"
+      enum:
+      - created
+      - started
+      - success
+      - failed
+      examples:
+      - success
     EventType:
       type: string
       description: "Supported event types:\n\n * `transaction.state` - The state of the transaction has been updated.\n"
@@ -157,29 +145,6 @@ components:
       - type
       - created
       - transaction
-    TransactionState:
-      type: string
-      description: "Possible transaction states:\n\n * `created` - The transaction has been created but the end-user has not started the flow yet.\n * `started` - The end-user has selected a method and started the transaction.\n * `success` - The transaction has been completed successfully.\n * `failed` - The transaction could not be completed.\n"
-      enum:
-      - created
-      - started
-      - success
-      - failed
-      examples:
-      - success
-    EventType_2:
-      type: string
-      description: "Supported event types:\n\n * `numberVerify.state` - The number verify transaction has been updated.\n"
-      enum:
-      - numberVerify.state
-      examples:
-      - numberVerify.state
-    State:
-      type: string
-      enum:
-      - pending
-      - completed
-      - unavailable
     NumberVerifyStateEvent:
       title: Number Verify State Event
       type: object
@@ -228,6 +193,41 @@ components:
       - type
       - created
       - numberVerify
+    EventType_2:
+      type: string
+      description: "Supported event types:\n\n * `numberVerify.state` - The number verify transaction has been updated.\n"
+      enum:
+      - numberVerify.state
+      examples:
+      - numberVerify.state
+    State:
+      type: string
+      enum:
+      - pending
+      - completed
+      - unavailable
+  examples:
+    transaction-state-event:
+      summary: Transaction state changed to success
+      value:
+        id: 58128784-9e8d-4424-a89d-08bfe273381c
+        type: transaction.state
+        created: '2026-01-01T00:00:00+00:00'
+        transaction:
+          id: b3e1c8f2-3a9d-4f4f-8b1a-1c2d3e4f5a6b
+          state: success
+          method: idin
+          methodType: full
+    number-verify-state-event:
+      summary: Number verify completed
+      value:
+        id: 58128784-9e8d-4424-a89d-08bfe273381c
+        type: numberVerify.state
+        created: '2026-01-01T00:00:00+00:00'
+        numberVerify:
+          id: 6f8d0a9d-b85c-4c3f-9e69-5699f1e00f49
+          state: completed
+          match: true
   securitySchemes:
     JWT:
       type: http

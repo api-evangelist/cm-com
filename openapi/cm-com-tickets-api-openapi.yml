@@ -838,240 +838,6 @@ components:
       - orderId
       - status
       - productId
-    ErrorDto:
-      type: object
-      properties:
-        errorCode:
-          type: number
-          example: 400100
-          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
-        description:
-          type: string
-          maxLength: 255
-          example: Description of the error.
-        httpStatus:
-          type: number
-          enum:
-          - 100
-          - 101
-          - 102
-          - 103
-          - 200
-          - 201
-          - 202
-          - 203
-          - 204
-          - 205
-          - 206
-          - 207
-          - 208
-          - 210
-          - 300
-          - 301
-          - 302
-          - 303
-          - 304
-          - 307
-          - 308
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          - 414
-          - 415
-          - 416
-          - 417
-          - 418
-          - 421
-          - 422
-          - 423
-          - 424
-          - 428
-          - 429
-          - 456
-          - 500
-          - 501
-          - 502
-          - 503
-          - 504
-          - 505
-          - 507
-          - 508
-          example: 400
-      required:
-      - errorCode
-      - description
-      - httpStatus
-    UpdateTicketDto:
-      type: object
-      properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        barcode:
-          type: string
-          maxLength: 255
-          example: CMLQFLGRPA
-        externalBarcode:
-          type: string
-          maxLength: 255
-          example: CMLQFLGRPA
-        orderId:
-          type: string
-          maxLength: 255
-          example: BP28857934
-        issuedAt:
-          type: object
-        timeSlotMomentAt:
-          format: date-time
-          type: string
-        expiresAt:
-          format: date-time
-          type: string
-        ticketDetails:
-          type: string
-          maxLength: 255
-          description: Used to provide additional ticket details displayed on the scanners
-          example: Row 8, seat 15
-        firstName:
-          type: string
-          maxLength: 255
-          example: Jane
-        lastName:
-          type: string
-          maxLength: 255
-          example: Doe
-        email:
-          type: string
-          maxLength: 255
-          description: Should be valid e-mail address
-          example: jane.doe@example.com
-        phoneNumber:
-          type: string
-          maxLength: 20
-          example: '+31612345678'
-        paymentReference:
-          type: string
-          maxLength: 255
-          description: Reference to an external payment
-          example: N270570809-DZ8HSB
-        status:
-          type: string
-          enum:
-          - VALID
-          - INVALID
-          example: INVALID
-        statusDetails:
-          type: string
-          maxLength: 255
-          description: Additional details as to why a status is invalid
-          example: Ticket is refunded by user
-        productId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        venueSectionId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        eventId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        primaryConstraintId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        secondaryConstraintId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        tertiaryConstraintId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        upstreamPlatform:
-          type: string
-          enum:
-          - ENMA_SUBSCRIBER
-          - GENERAL_ADMISSION
-          - SEATED_TICKETING
-          - GLOBAL_TICKET
-          - INTERSOLVE
-          - PUBLIQ
-          - YOURTICKETPROVIDER
-          - PASS_TEST
-          - PASS_NATIONAAL_MILITAIR_MUSEUM
-          - PASS_WEC
-          - PASS_CENTRAAL_MUSEUM
-          - PHOENIX_DES_LUMIERES
-          - PORT_DES_LUMIERES
-          - SMOOTHR_DEMO_ACCOUNT
-          - ENTRANCE_MANAGEMENT
-          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
-          - ELECTRIC_IBIZA_ENTERTAINMENT
-          - MOMICE_KLM_OPEN
-          - CUSTOMER_DATA_PLATFORM
-          - GO_CITY
-          example: ENTRANCE_MANAGEMENT
-        saleOrigin:
-          type: string
-          enum:
-          - GUEST_LIST
-          - PARTNER_API
-          - SHOP
-          - BACKOFFICE_ORDER
-          - CM_POS
-          - SECONDARY_TICKETING_CM
-          - SECONDARY_TICKETING_TICKET_SWAP
-          example: SHOP
-    PageDto:
-      type: object
-      properties:
-        data:
-          type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-      required:
-      - data
-      - meta
-    PageMetaDto:
-      type: object
-      properties:
-        page:
-          type: number
-        take:
-          type: number
-        skip:
-          type: number
-        itemCount:
-          type: number
-        pageCount:
-          type: number
-        hasPreviousPage:
-          type: boolean
-        hasNextPage:
-          type: boolean
-      required:
-      - page
-      - take
-      - skip
-      - itemCount
-      - pageCount
-      - hasPreviousPage
-      - hasNextPage
     Ticket:
       type: object
       properties:
@@ -1213,6 +979,240 @@ components:
       - status
       - productId
       - upstreamPlatform
+    ErrorDto:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          example: 400100
+          description: Error code specific to the error, consisting of a three digit http status code and a digit application specific code.
+        description:
+          type: string
+          maxLength: 255
+          example: Description of the error.
+        httpStatus:
+          type: number
+          enum:
+          - 100
+          - 101
+          - 102
+          - 103
+          - 200
+          - 201
+          - 202
+          - 203
+          - 204
+          - 205
+          - 206
+          - 207
+          - 208
+          - 210
+          - 300
+          - 301
+          - 302
+          - 303
+          - 304
+          - 307
+          - 308
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          - 414
+          - 415
+          - 416
+          - 417
+          - 418
+          - 421
+          - 422
+          - 423
+          - 424
+          - 428
+          - 429
+          - 456
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          - 505
+          - 507
+          - 508
+          example: 400
+      required:
+      - errorCode
+      - description
+      - httpStatus
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    PageMetaDto:
+      type: object
+      properties:
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
+      required:
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    UpdateTicketDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        barcode:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+        externalBarcode:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+        orderId:
+          type: string
+          maxLength: 255
+          example: BP28857934
+        issuedAt:
+          type: object
+        timeSlotMomentAt:
+          format: date-time
+          type: string
+        expiresAt:
+          format: date-time
+          type: string
+        ticketDetails:
+          type: string
+          maxLength: 255
+          description: Used to provide additional ticket details displayed on the scanners
+          example: Row 8, seat 15
+        firstName:
+          type: string
+          maxLength: 255
+          example: Jane
+        lastName:
+          type: string
+          maxLength: 255
+          example: Doe
+        email:
+          type: string
+          maxLength: 255
+          description: Should be valid e-mail address
+          example: jane.doe@example.com
+        phoneNumber:
+          type: string
+          maxLength: 20
+          example: '+31612345678'
+        paymentReference:
+          type: string
+          maxLength: 255
+          description: Reference to an external payment
+          example: N270570809-DZ8HSB
+        status:
+          type: string
+          enum:
+          - VALID
+          - INVALID
+          example: INVALID
+        statusDetails:
+          type: string
+          maxLength: 255
+          description: Additional details as to why a status is invalid
+          example: Ticket is refunded by user
+        productId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        venueSectionId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        eventId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        primaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        secondaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        tertiaryConstraintId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        upstreamPlatform:
+          type: string
+          enum:
+          - ENMA_SUBSCRIBER
+          - GENERAL_ADMISSION
+          - SEATED_TICKETING
+          - GLOBAL_TICKET
+          - INTERSOLVE
+          - PUBLIQ
+          - YOURTICKETPROVIDER
+          - PASS_TEST
+          - PASS_NATIONAAL_MILITAIR_MUSEUM
+          - PASS_WEC
+          - PASS_CENTRAAL_MUSEUM
+          - PHOENIX_DES_LUMIERES
+          - PORT_DES_LUMIERES
+          - SMOOTHR_DEMO_ACCOUNT
+          - ENTRANCE_MANAGEMENT
+          - STICHTING_KONINKLIJKE_DEFENSIEMUSEA
+          - ELECTRIC_IBIZA_ENTERTAINMENT
+          - MOMICE_KLM_OPEN
+          - CUSTOMER_DATA_PLATFORM
+          - GO_CITY
+          example: ENTRANCE_MANAGEMENT
+        saleOrigin:
+          type: string
+          enum:
+          - GUEST_LIST
+          - PARTNER_API
+          - SHOP
+          - BACKOFFICE_ORDER
+          - CM_POS
+          - SECONDARY_TICKETING_CM
+          - SECONDARY_TICKETING_TICKET_SWAP
+          example: SHOP
   securitySchemes:
     cookie:
       type: apiKey

@@ -275,286 +275,36 @@ paths:
         5XX:
           $ref: '#/components/responses/InternalError'
 components:
-  headers:
-    Digest:
-      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
-      schema:
-        type: string
-        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
-  examples:
-    successCard:
-      summary: Successful transaction (also applicable for FAILED, EXPIRED or CANCELLED)
-      value:
-        id: 0264f864-c815-47cb-9e1f-fe7ba4326565
-        orderId: 6c166afa-ae48-467d-8eed-fdbbf2f30198
-        reference: b63fcd00-6643-4387-a47a-1d0044bb989e
-        amount: 89999
-        currency: EUR
-        cardProvider: visa
-        description: Your order at My Web Shop.
-        expiresAt: '2025-05-21T13:53:31Z'
-        language: nl
-        country: NL
-        status: SUCCESS
-        action: null
-        createdAt: '2025-05-20T13:53:36Z'
-        returnUrl: https://cm.com
-    openCardV2:
-      summary: Open transaction (v2)
-      value:
-        id: 4f7a8b2c-9e3d-4a1f-b6c5-8d2e3a7f9b1c
-        orderId: 2e8a4f1b-7c3d-4b9e-a5f2-9d1c6b8e3a7f
-        reference: c89fbd11-7754-4498-b58b-2e1155cc090f
-        amount: 12500
-        currency: EUR
-        description: Your order at My Web Shop.
-        expiresAt: '2025-05-21T13:53:31Z'
-        language: nl
-        country: NL
-        status: OPEN
-        action:
-          redirect:
-            url: https://checkout.gateway.acceptance.cmpayments.nl/3ds/creditcard/v2/4f7a8b2c-9e3d-4a1f-b6c5-8d2e3a7f9b1c
-        createdAt: '2025-05-20T13:53:36Z'
-        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
-    standard:
-      summary: Standard transaction
-      value:
-        reference: 5e6baea7-607c-438a-aaba-b06ce0ae7776
-        amount: 89999
-        description: Your order at My Web Shop.
-        expiresAt: '2025-05-21T14:17:44.491Z'
-        language: nl
-        consumer:
-          address:
-            countryCode: NL
-          email: john.doe@email.tld
-        cardDetails:
-          cardProvider: visa
-          browserInformation:
-            shopperIp: 1.1.1.1
-            accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-            userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363
-          encryptedCardDetails:
-            data: VFg2yfiuguitrE4CoGC8IkAlwhDEJKqLLyuW6OnXwh/wtnndR9RDrhTwskv0EdpTnps1X/VMe2Y0vA3duPdKXLAWCzJMlFf8Mfx58OKXcVsTly/odz49t42Z/LP1Ym2Y2qhj8GY7AQBVlM1Un7EQCQFZk4W5rS7lFZmuIKm/VaI9EWpgfwu9QNfqzs8Asy2sLvFJUwVwjXdosCcZuP5sTLx2Qo3REj/lqgbsDssfg9vmH2JJd0fhhUKeUxnQpvbJhZVAxH6ZrOcQsXVPLRJm7Xk32iVqnvEDuZiUai+2T6SEeBiH+h7+7LYcL6OX8+BZ5X53JLN3FxqcjvaP094l0w==|Y2xpZW50c2lkZS0z
-        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
-    refundCard:
-      summary: Partially pending refunded creditcard transaction
-      value:
-        id: 0264f864-c815-47cb-9e1f-fe7ba4326565
-        orderId: 6c166afa-ae48-467d-8eed-fdbbf2f30198
-        reference: b63fcd00-6643-4387-a47a-1d0044bb989e
-        amount: 89999
-        currency: EUR
-        cardProvider: visa
-        description: Your order at My Web Shop.
-        expiresAt: '2025-05-21T13:53:31Z'
-        language: nl
-        country: NL
-        status: SUCCESS
-        action: null
-        createdAt: '2025-05-20T13:53:36Z'
-        returnUrl: https://cm.com
-        refunds:
-          refundedAmount: 0
-          refundedPendingAmount: 600
-    openCard:
-      summary: Open transaction
-      value:
-        id: 0264f864-c815-47cb-9e1f-fe7ba4326565
-        orderId: 6c166afa-ae48-467d-8eed-fdbbf2f30198
-        reference: b63fcd00-6643-4387-a47a-1d0044bb989e
-        amount: 89999
-        currency: EUR
-        cardProvider: visa
-        description: Your order at My Web Shop.
-        expiresAt: '2025-05-21T13:53:31Z'
-        language: nl
-        country: NL
-        status: OPEN
-        action:
-          redirect:
-            url: https://checkout.gateway.acceptance.cmpayments.nl/3ds/creditcard/0264f864-c815-47cb-9e1f-fe7ba4326565
-        createdAt: '2025-05-20T13:53:36Z'
-        returnUrl: https://cm.com
-    initializedCardV2:
-      summary: Initialized transaction for 3DS v2
-      value:
-        id: 6a9c2e4f-8d1b-4c3e-a7f5-3b8d1e6a9c2f
-        orderId: 1d5b8e3a-4f2c-4a9e-b6f7-8c3d5b1e9a4f
-        reference: d90gce22-8865-5509-c69c-3f2266dd101g
-        amount: 15000
-        currency: EUR
-        description: Your order at My Web Shop.
-        expiresAt: '2025-05-21T13:53:31Z'
-        language: nl
-        country: NL
-        status: OPEN
-        action:
-          redirect:
-            url: https://checkout.gateway.acceptance.cmpayments.nl/3ds/creditcard/v2/initialize/6a9c2e4f-8d1b-4c3e-a7f5-3b8d1e6a9c2f
-        createdAt: '2025-05-20T13:53:36Z'
-        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
-    successCardV2:
-      summary: Successful transaction v2
-      value:
-        id: 4f7a8b2c-9e3d-4a1f-b6c5-8d2e3a7f9b1c
-        orderId: 2e8a4f1b-7c3d-4b9e-a5f2-9d1c6b8e3a7f
-        reference: c89fbd11-7754-4498-b58b-2e1155cc090f
-        amount: 12500
-        currency: EUR
-        description: Your order at My Web Shop.
-        expiresAt: '2025-05-21T13:53:31Z'
-        language: nl
-        country: NL
-        status: SUCCESS
-        action: null
-        createdAt: '2025-05-20T13:53:36Z'
-        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
   schemas:
-    CardPaymentV2:
+    TransactionWithoutOrderIdLanguageRefundsAndExpiresAt:
       allOf:
-      - $ref: '#/components/schemas/Payment'
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt'
       - type: object
         required:
-        - clientSideEncryptedCard
-        - consumer
+        - createdAt
         properties:
-          clientSideEncryptedCard:
-            type: string
-            description: Encrypted cardholder credit card details using the provided CSE javascript library.
-            example: 7cJG1p/j5Dl8FrvMN5rSGVq9IqXVZE3herLkQfpoNbZL1r6sUHXkJLPYH+IbG0tYwvNO2hZZeDdNhOWMHV0tT3sSYVeN5uelgV2RLRkPC3b5XRolW3URk80i8kHoOO2tQoBbIkXc47le0xbTDFl4UNAsIa/SnBWwZbJAFpMYyMHIP1faey9OD5qQ2L+KTQ07ipFHtlDyRvJWG8xDn2Mnz9We7tE0wn6oUilTcGs3fwMX+/14VBhQPRoZCM15OHuTrdK6lwqMJN0xxpfPFBMk9kHcq8VZ2hvLkbRkbvMYBfxkt9f6lxwCF8PdrVvDwHAOsfgIWXZVefCnIFdSHoX8ToMVD/GKWqJzF0nJgl6hLNo7OFBGmbMgXQZbQQKMl9eFx2m1QXYNHN7wpsAJhy+O1pF1aqQa0bnM6C2NTE6Glcik0GmgG4epFIvQnZXrJrRAtKKqYGh8Bs8MNvramaFfRiY+h9ZCHtA+alxKWVyGgES6YeqQZ2iiJCU0aOrdJBSyjpox6DRlnZsnWO/lyKD3OkKh+5XtXqOWhubQQiWL2+hGWy35dzYYhTXSdPot48emzSBtqtgNRREKZ9dtNd6O4d0/y+ruO1dsIpCMLByOr7yO7pMVcGBo1WRbohCEn52QYmo/Zbz8GF919G8uzD1wGaBRAx7vOb6otnhxKyRLLtjw6sV+wmI+eIplpaeaIIitZzIjy6II+TaY1uosBTWZqusdH21VQKo5A7OpHbTzqUJYuX5cXK978WCuA0lGlBJMnXZDJcBFlJLJZ6zNuKpbDZjSoaX7EkJhJznCX8OC6iYKR0Jyf/opDPAc+YlB13DFd5kCcSsEC3g4l/VcqrdQypbMWyTGkGVXKuwuF6Dk1+2VYCBvx9WqcPK3OuhVyCOXm+Y5DDYqsjh4hrszSxkOkjB7C+rMScKaqRxEdigNdKkqnHB/JNkfVKm1zc5HGXaEToVXEGg9sD1Ng/PIz3cn4zG9qQ6gmd0Nyn7w/0Ok8OfEi4pm0ohP1jxQ0c3VMT1Lblfzz+aW18R/+bgERr+Jeo17sxA6LK7u+LmGa4ZjwknaJ1lXKNkpawVlW9/mlm5dRZZqaI5LW4Opqa3gtguyZ8qM5ufQPPN5XkTQZ7m4WPFWhnySzhCZfRKlcjGtu8bi7EHVcdlpo5x/qX6BRrRyvA99S35v8HPISEBvZotsa0y+DVRJyL4HPna08EMdqUc0fXvz2zm57WDfquHzSTcBGEbNx/3K+E86T0esFNcFsU4dQgYg/YWKFfIoiUhvsaC9sA8kNnC5DvDTCbmVWFY/U33QINd7qgpCwfUDISVaqSjXkiF2N9ne/t59gW3EKEkncuzIJn1s3ncsUxHb7iVZHySnvb7fJblMfhp0CQei5WIZPTQaUYMgP8FK4VGSiE4FP27nTH6Ltyk0aiGLvObCDoc9jRi5rqsPSRf2sGlYclz5k3nLBL4e4H9VrpJAfZo/dqbepcShRjAuEECPuhlFKCLmHydRNNWQ4EwT7nqMZHlU2lQjibM3t6Mipn8Fono6z7HlhsUbIad5sX/QKWxbk8PoPmM80qWLjuSTxit0GPuTZZk9MEwVNNmbkomfZyc4YtebWvAPoOM7PkD89gFB/tISG1hgbr0M6Hc6Sax3gPPJA7WTgJhLJdcuAkC7kYReTutomzZ07ZIgt+0f3oJCTvQ9PCYvdKD3E3S280jl1AdtAaylnLQBP0O0ZAfBJKPfqEf5j4e+/8Dm7ALdwB9cFnAy9nfm6lFDk3wSmjdXisuY6s33k1PSYg528LzidEk9UGIJV378DhX2NftktsXjC3y6x7YtLno8m0vmdvCT+5Nb1xv9GiUtUUCjNNB8fdjT0nz299STedUVMYKkH84fpDbYpSJieOr1KxA9T6HoH2a4v6i4Gx3tHVvJtjSKV7OzyvaL7buMa2nNppMAPaZ2gLADLBMGF6YQghES5qBSTt5dBzPttPe1PwJ96yZIO8137b2Ry4iJcqc3fBdSIs4D8k6Ju0xwu+4IA4IH4I2ne715bfs8yEpudE22A1w3iOr+rcYtEzzV+qb53uik/GgQRp1Dx260wXyebbS+YpM5jBxmp9MnXu5rRvkmZGi0/1s7J2hx3d0Rdq1GyAP109dV8SQlTrLMOn3zjxb4lLo7PqZOpn+efPkn2oOMwHHz9VTJ0bII5wh9YwdPNNfp0w9Pfe70VIkEh7mMhVjXYJyaD+3hM3M+5iEi7GYywECvEw==
-          consumer:
-            $ref: '#/components/schemas/CreditCardConsumerV2'
-    EncryptedCardDetails:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: string
-          description: 'The card data that need to be encrypted (cardHolderName, cardNumber, expiryMonth, expiryYear, securityCode).
-
-
-            Use the library from `/paymentmethods/library/cse`. This contains a JS library with an exported function called `cseEncrypt`.
-
-            `let encrypted = cseEncrypt(cardHolderName, cardNumber, expiryMonth, expiryYear, securityCode);`
-
-            '
-    RefundsList:
-      description: Details of all refunds belonging to a transaction.
-      type: object
-      required:
-      - refunds
-      properties:
-        refunds:
-          type: array
-          items:
-            $ref: '#/components/schemas/RefundDetails'
-    Refund:
-      description: Refund an already successfully processed payment.
-      type: object
-      properties:
-        amount:
-          $ref: '#/components/schemas/Amount'
-          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
-
-            '
-        reason:
-          $ref: '#/components/schemas/RefundReason'
-    RefundStatus:
-      description: '* `SUCCESS`    - Refund has succeeded.
-
-        * `PENDING`    - Refund is waiting to be processed.
-
-        * `FAILURE`    - Refund has failed.
-
-        * `CANCELLED`  - Refund has been cancelled.
-
-        '
-      type: string
-      enum:
-      - SUCCESS
-      - PENDING
-      - FAILURE
-      - CANCELLED
-      example: SUCCESS
-    TransactionWebhooks:
-      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
-
-        '
-      type: array
-      items:
-        $ref: '#/components/schemas/TransactionWebhook'
-      example:
-      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
-        events:
-        - STATUS_CHANGE
-    RefundReason:
-      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
-
-        '
-      type: string
-      example: Refund required by consumer.
-      maxLength: 255
-    PaymentWithoutDescriptionAndExpiresAt:
+          createdAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time when the transaction was created.
+    TransactionWebhook:
       allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - $ref: '#/components/schemas/BaseWebhook'
       - type: object
         properties:
-          webhooks:
-            $ref: '#/components/schemas/TransactionWebhooks'
-    CreditCardTransaction:
-      allOf:
-      - $ref: '#/components/schemas/Transaction'
-      - type: object
-        required:
-        - country
-        - status
-        - action
-        - cardProvider
-        properties:
-          status:
-            description: The status of the transaction.
-            oneOf:
-            - $ref: '#/components/schemas/StatusOpen'
-            - $ref: '#/components/schemas/StatusSuccess'
-            - $ref: '#/components/schemas/StatusCancelled'
-            - $ref: '#/components/schemas/StatusExpired'
-            - $ref: '#/components/schemas/StatusFailure'
-            - $ref: '#/components/schemas/StatusAuthorized'
-          action:
-            type: object
-            description: Next action to be performed by merchant (or consumer) to complete the payment.
-            properties:
-              redirect:
-                $ref: '#/components/schemas/RedirectAction'
-          country:
-            $ref: '#/components/schemas/Country'
-          cardProvider:
-            $ref: '#/components/schemas/CardProvider'
-    Gender:
-      description: The consumers gender.
-      type: string
-      format: enum
-      enum:
-      - m
-      - f
-      - 'null'
-      default: null
-    Language:
-      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
-      type: string
-      default: nl
-      example: nl
-      minLength: 2
-      maxLength: 2
-    Datetime:
-      type: string
-      format: date-time
-      minLength: 20
-      example: '2006-01-02T15:04:05Z'
-      description: ISO 8601 date and time.
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
     CreditCardConsumerV2:
       type: object
       required:
@@ -597,6 +347,28 @@ components:
           description: Cardholder shipping address.
           allOf:
           - $ref: '#/components/schemas/Address'
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    Country:
+      description: Country of the consumer (ISO-3166)
+      type: string
+      example: NL
+      minLength: 2
+      maxLength: 2
+    ChargebacksList:
+      description: Details of all chargebacks belonging to a transaction.
+      type: object
+      required:
+      - chargebacks
+      properties:
+        chargebacks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargebackDetails'
     GenderlessConsumer:
       type: object
       properties:
@@ -610,91 +382,21 @@ components:
           pattern: ^\d{4}-\d{2}-\d{2}$
           example: '1990-05-23'
           description: Date of birth in ISO 8601 format (YYYY-MM-DD).
-    TransactionWebhookWithChargeback:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                * `CHARGEBACK_STATUS` - Triggered when a transaction receives an update on one of its chargebacks.
-
-                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              - $ref: '#/components/schemas/ChargebackStatusEvent'
-              - $ref: '#/components/schemas/FinalStatusEvent'
-              example: STATUS_CHANGE
-    Amount:
-      description: Denomination in the smallest currency subunit, as for example euro cents.
-      type: integer
-      minimum: 1
-      maximum: 99999999
-      example: 1200
-    Refunds:
-      description: Details of refunds for a transaction
-      type: object
-      required:
-      - refundedAmount
-      - refundedPendingAmount
-      properties:
-        refundedAmount:
-          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
-          type: integer
-          minimum: 0
-          maximum: 99999999
-          example: 300
-        refundedPendingAmount:
-          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
-          type: integer
-          minimum: 1
-          maximum: 99999999
-          example: 100
-    Name:
-      description: Consumer's name.
-      type: object
-      required:
-      - firstName
-      - lastName
-      properties:
-        firstName:
-          description: Consumer's first name.
-          type: string
-          maxLength: 35
-          example: John
-        lastName:
-          $ref: '#/components/schemas/LastName'
-        middleName:
-          description: Consumer's middle name.
-          type: string
-          maxLength: 35
-          example: A
-    FinalStatusEvent:
-      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+    ChargebackStatus:
+      description: '* `CHARGED` - The transaction has been charged back by the issuing bank.
 
         '
       type: string
       enum:
-      - FINALSTATUS
-      example: FINALSTATUS
-    RedirectAction:
-      description: URL where consumer should be redirected to by the merchant to perform the payment.
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          description: URL where consumer should be redirected to by the merchant to perform the payment.
-          type: string
-          format: url
-          example: https://issuer.tld/ideal/start?trxid=213981209381209390821&random=wreq0dq90vgq0ew923123
+      - CHARGED
+      example: CHARGED
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
     ReturnUrls:
       type: object
       description: 'URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
@@ -727,35 +429,24 @@ components:
           format: url
           maxLength: 2000
           example: https://yourdomain.tld/order/payment-failed.html
-    BaseWebhook:
+    StatusFailure:
+      description: The transaction has failed.
+      type: string
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
+    Refund:
+      description: Refund an already successfully processed payment.
       type: object
-      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
-      required:
-      - url
-      - events
       properties:
-        url:
-          description: The URL the request must be send to.
-          type: string
-          format: url
-          example: https://yourdomain.tld/webhooks?purchaseId=order123
-        events:
-          description: Type of events that will trigger a webhook.
-          type: array
-          minItems: 1
-          items:
-            type: string
-    TransactionWebhooksWithChargeback:
-      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+        amount:
+          $ref: '#/components/schemas/Amount'
+          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
 
-        '
-      type: array
-      items:
-        $ref: '#/components/schemas/TransactionWebhookWithChargeback'
-      example:
-      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
-        events:
-        - STATUS_CHANGE
+            '
+        reason:
+          $ref: '#/components/schemas/RefundReason'
     PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
       allOf:
       - $ref: '#/components/schemas/ReturnURLOneOf'
@@ -770,20 +461,119 @@ components:
             $ref: '#/components/schemas/Amount'
           currency:
             $ref: '#/components/schemas/Currency'
-    Reference:
-      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
-      type: string
-      minLength: 1
-      maxLength: 255
-      example: '20210623130413'
-    StatusChangeEvent:
-      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+    RefundStatusEvent:
+      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
 
         '
       type: string
       enum:
-      - STATUS_CHANGE
-      example: STATUS_CHANGE
+      - REFUND_STATUS
+      example: REFUND_STATUS
+    TransactionWithoutOrderId:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
+      - type: object
+        required:
+        - language
+        - expiresAt
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+          refunds:
+            $ref: '#/components/schemas/Refunds'
+    ReturnURLOneOf:
+      oneOf:
+      - type: object
+        required:
+        - returnUrls
+        properties:
+          returnUrls:
+            $ref: '#/components/schemas/ReturnUrls'
+      - type: object
+        required:
+        - returnUrl
+        properties:
+          returnUrl:
+            $ref: '#/components/schemas/ReturnUrl'
+    Phone:
+      description: The phonenumber of the consumer (E.164 format).
+      type: string
+      maxLength: 16
+      example: '+31695613259'
+    LastName:
+      description: Consumer's last name.
+      type: string
+      maxLength: 35
+      example: Doe
+    Transaction:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderId'
+      - type: object
+        required:
+        - orderId
+        properties:
+          orderId:
+            allOf:
+            - deprecated: true
+            - $ref: '#/components/schemas/Uuid'
+    BrowserInformation:
+      type: object
+      required:
+      - shopperIp
+      - accept
+      - userAgent
+      properties:
+        shopperIp:
+          $ref: '#/components/schemas/ShopperIP'
+        accept:
+          type: string
+          description: content-type accepted by the client browser
+          example: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        userAgent:
+          type: string
+          description: User-Agent of the consumers browser.
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363
+    RefundStatus:
+      description: '* `SUCCESS`    - Refund has succeeded.
+
+        * `PENDING`    - Refund is waiting to be processed.
+
+        * `FAILURE`    - Refund has failed.
+
+        * `CANCELLED`  - Refund has been cancelled.
+
+        '
+      type: string
+      enum:
+      - SUCCESS
+      - PENDING
+      - FAILURE
+      - CANCELLED
+      example: SUCCESS
+    CardDetails:
+      description: Card details like the cardholders name, PAN, CVC and expiry date.
+      type: object
+      required:
+      - cardProvider
+      - browserInformation
+      - encryptedCardDetails
+      properties:
+        cardProvider:
+          $ref: '#/components/schemas/CardProvider'
+        browserInformation:
+          $ref: '#/components/schemas/BrowserInformation'
+        encryptedCardDetails:
+          $ref: '#/components/schemas/EncryptedCardDetails'
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
+      type: string
+      format: enum
+      enum:
+      - CANCELLED
+      example: CANCELLED
     ChargebackDetails:
       description: Details of a chargeback.
       type: object
@@ -818,54 +608,134 @@ components:
           $ref: '#/components/schemas/Datetime'
         updated:
           $ref: '#/components/schemas/Datetime'
-    Currency:
-      description: ISO 4217 currency code.
-      type: string
-      minLength: 3
-      maxLength: 3
-      default: EUR
-      example: EUR
+    CardPaymentV2:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        required:
+        - clientSideEncryptedCard
+        - consumer
+        properties:
+          clientSideEncryptedCard:
+            type: string
+            description: Encrypted cardholder credit card details using the provided CSE javascript library.
+            example: 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
+          consumer:
+            $ref: '#/components/schemas/CreditCardConsumerV2'
     ShopperIP:
       type: string
       minLength: 1
       maxLength: 39
       description: IPv4 or IPv6 address for the consumer
       example: 1.1.1.1
-    StatusCancelled:
-      description: The transaction has been cancelled by the consumer.
+    TransactionWebhookWithChargeback:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `CHARGEBACK_STATUS` - Triggered when a transaction receives an update on one of its chargebacks.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/ChargebackStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    AddressWithStateAndAdditionalData:
+      allOf:
+      - $ref: '#/components/schemas/AddressWithoutMandatoryCountry'
+      - type: object
+        properties:
+          state:
+            description: The state or province of the consumer's billing address associated with the card used for this purchase. The value must be the country subdivision code (e.g., 'NH') or the official state/province name (e.g., 'Noord Holland') as defined in ISO 3166-2.
+            type: string
+            maxLength: 40
+            example: Noord-Holland
+          additionalData:
+            description: The consumers house number addition.
+            type: string
+            maxLength: 35
+            example: Right-hand portal
+    CardProvider:
       type: string
       format: enum
       enum:
-      - CANCELLED
-      example: CANCELLED
-    TransactionId:
-      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    Address:
+      - mastercard
+      - visa
+      - amex
+      - maestro
+      description: The card scheme the card belongs to.
+      example: mastercard
+    Payment:
       allOf:
-      - $ref: '#/components/schemas/AddressWithStateAndAdditionalData'
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
       - type: object
         required:
-        - countryCode
+        - description
+        properties:
+          description:
+            $ref: '#/components/schemas/Description'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+      type: string
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
+    ChargebackStatusEvent:
+      description: '* `CHARGEBACK_STATUS` - Triggered when a transaction receives an update on one of its chargebacks.
+
+        '
+      type: string
+      enum:
+      - CHARGEBACK_STATUS
+      example: CHARGEBACK_STATUS
     Description:
       description: Description of the underlying value or reason of the payment.
       type: string
       maxLength: 255
       example: Order at yourdomain.tld
-    ChargebacksList:
-      description: Details of all chargebacks belonging to a transaction.
-      type: object
-      required:
-      - chargebacks
-      properties:
-        chargebacks:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChargebackDetails'
+    StatusExpired:
+      description: The transaction has expired.
+      type: string
+      format: enum
+      enum:
+      - EXPIRED
+      example: EXPIRED
+    PaymentWithoutDescriptionAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - type: object
+        properties:
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
     AddressWithoutMandatoryCountry:
       type: object
       description: The consumers address.
@@ -892,21 +762,314 @@ components:
           example: Haarlem
         countryCode:
           $ref: '#/components/schemas/Country'
-    Consumer:
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
+    ConsumerBase:
       allOf:
-      - $ref: '#/components/schemas/GenderlessConsumer'
+      - $ref: '#/components/schemas/Consumer'
       - type: object
         properties:
-          gender:
-            $ref: '#/components/schemas/Gender'
-    ChargebackStatusEvent:
-      description: '* `CHARGEBACK_STATUS` - Triggered when a transaction receives an update on one of its chargebacks.
+          name:
+            $ref: '#/components/schemas/Name'
+          address:
+            $ref: '#/components/schemas/Address'
+          businessName:
+            description: The consumers company name.
+            type: string
+            maxLength: 35
+            example: CM
+    TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - id
+        - reference
+        - amount
+        - currency
+        - status
+        - description
+        properties:
+          id:
+            $ref: '#/components/schemas/TransactionId'
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
+          description:
+            $ref: '#/components/schemas/Description'
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
+
+        '
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    RefundsList:
+      description: Details of all refunds belonging to a transaction.
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundDetails'
+    Address:
+      allOf:
+      - $ref: '#/components/schemas/AddressWithStateAndAdditionalData'
+      - type: object
+        required:
+        - countryCode
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    StatusPending:
+      description: The transaction is pending, meaning it could not be completed yet; waiting for something.
+      type: string
+      format: enum
+      enum:
+      - PENDING
+      example: PENDING
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
 
         '
       type: string
       enum:
-      - CHARGEBACK_STATUS
-      example: CHARGEBACK_STATUS
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
+    RefundDetails:
+      description: Details of a refund.
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - reason
+      - status
+      - created
+      - updated
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/Uuid'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+        created:
+          $ref: '#/components/schemas/Datetime'
+        updated:
+          $ref: '#/components/schemas/Datetime'
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    PaymentWithoutDescriptionExpiresAtAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
+      - type: object
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+    FinalStatusEvent:
+      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - FINALSTATUS
+      example: FINALSTATUS
+    Gender:
+      description: The consumers gender.
+      type: string
+      format: enum
+      enum:
+      - m
+      - f
+      - 'null'
+      default: null
+    TransactionWebhooksWithChargeback:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhookWithChargeback'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    CreditCardTransactionV2:
+      allOf:
+      - $ref: '#/components/schemas/Transaction'
+      - type: object
+        required:
+        - country
+        - status
+        - action
+        properties:
+          status:
+            description: The status of the transaction.
+            oneOf:
+            - $ref: '#/components/schemas/StatusOpen'
+            - $ref: '#/components/schemas/StatusSuccess'
+            - $ref: '#/components/schemas/StatusCancelled'
+            - $ref: '#/components/schemas/StatusExpired'
+            - $ref: '#/components/schemas/StatusFailure'
+            - $ref: '#/components/schemas/StatusPending'
+          action:
+            anyOf:
+            - type: object
+              description: Next action to be performed by merchant (or consumer) to complete the payment.
+              properties:
+                redirect:
+                  $ref: '#/components/schemas/RedirectAction'
+            - type: 'null'
+          country:
+            $ref: '#/components/schemas/Country'
+    CardPaymentInitializeV2:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        required:
+        - consumer
+        properties:
+          consumer:
+            $ref: '#/components/schemas/CreditCardConsumerV2'
+    RedirectAction:
+      description: URL where consumer should be redirected to by the merchant to perform the payment.
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          description: URL where consumer should be redirected to by the merchant to perform the payment.
+          type: string
+          format: url
+          example: https://issuer.tld/ideal/start?trxid=213981209381209390821&random=wreq0dq90vgq0ew923123
+    StatusOpen:
+      description: The transaction is open and can be paid.
+      type: string
+      format: enum
+      enum:
+      - OPEN
+      example: OPEN
+    StatusAuthorized:
+      description: The transaction has been authorized.
+      type: string
+      format: enum
+      enum:
+      - AUTHORIZED
+      example: AUTHORIZED
+    CreditCardTransaction:
+      allOf:
+      - $ref: '#/components/schemas/Transaction'
+      - type: object
+        required:
+        - country
+        - status
+        - action
+        - cardProvider
+        properties:
+          status:
+            description: The status of the transaction.
+            oneOf:
+            - $ref: '#/components/schemas/StatusOpen'
+            - $ref: '#/components/schemas/StatusSuccess'
+            - $ref: '#/components/schemas/StatusCancelled'
+            - $ref: '#/components/schemas/StatusExpired'
+            - $ref: '#/components/schemas/StatusFailure'
+            - $ref: '#/components/schemas/StatusAuthorized'
+          action:
+            type: object
+            description: Next action to be performed by merchant (or consumer) to complete the payment.
+            properties:
+              redirect:
+                $ref: '#/components/schemas/RedirectAction'
+          country:
+            $ref: '#/components/schemas/Country'
+          cardProvider:
+            $ref: '#/components/schemas/CardProvider'
+    Name:
+      description: Consumer's name.
+      type: object
+      required:
+      - firstName
+      - lastName
+      properties:
+        firstName:
+          description: Consumer's first name.
+          type: string
+          maxLength: 35
+          example: John
+        lastName:
+          $ref: '#/components/schemas/LastName'
+        middleName:
+          description: Consumer's middle name.
+          type: string
+          maxLength: 35
+          example: A
+    Currency:
+      description: ISO 4217 currency code.
+      type: string
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    TransactionWebhooks:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhook'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    Email:
+      description: The email address of the consumer.
+      type: string
+      format: email
+      example: john.doe@email.tld
     CardPayment:
       allOf:
       - $ref: '#/components/schemas/Payment'
@@ -939,361 +1102,63 @@ components:
                     - countryCode
           cardDetails:
             $ref: '#/components/schemas/CardDetails'
-    StatusExpired:
-      description: The transaction has expired.
-      type: string
-      format: enum
-      enum:
-      - EXPIRED
-      example: EXPIRED
-    CardDetails:
-      description: Card details like the cardholders name, PAN, CVC and expiry date.
+    EncryptedCardDetails:
       type: object
       required:
-      - cardProvider
-      - browserInformation
-      - encryptedCardDetails
+      - data
       properties:
-        cardProvider:
-          $ref: '#/components/schemas/CardProvider'
-        browserInformation:
-          $ref: '#/components/schemas/BrowserInformation'
-        encryptedCardDetails:
-          $ref: '#/components/schemas/EncryptedCardDetails'
-    CardPaymentInitializeV2:
-      allOf:
-      - $ref: '#/components/schemas/Payment'
-      - type: object
-        required:
-        - consumer
-        properties:
-          consumer:
-            $ref: '#/components/schemas/CreditCardConsumerV2'
-    CreditCardTransactionV2:
-      allOf:
-      - $ref: '#/components/schemas/Transaction'
-      - type: object
-        required:
-        - country
-        - status
-        - action
-        properties:
-          status:
-            description: The status of the transaction.
-            oneOf:
-            - $ref: '#/components/schemas/StatusOpen'
-            - $ref: '#/components/schemas/StatusSuccess'
-            - $ref: '#/components/schemas/StatusCancelled'
-            - $ref: '#/components/schemas/StatusExpired'
-            - $ref: '#/components/schemas/StatusFailure'
-            - $ref: '#/components/schemas/StatusPending'
-          action:
-            anyOf:
-            - type: object
-              description: Next action to be performed by merchant (or consumer) to complete the payment.
-              properties:
-                redirect:
-                  $ref: '#/components/schemas/RedirectAction'
-            - type: 'null'
-          country:
-            $ref: '#/components/schemas/Country'
-    Payment:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
-      - type: object
-        required:
-        - description
-        properties:
-          description:
-            $ref: '#/components/schemas/Description'
-          expiresAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
-    StatusOpen:
-      description: The transaction is open and can be paid.
-      type: string
-      format: enum
-      enum:
-      - OPEN
-      example: OPEN
-    TransactionWebhook:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              - $ref: '#/components/schemas/FinalStatusEvent'
-              example: STATUS_CHANGE
-    PaymentWithoutDescriptionExpiresAtAndWebhooks:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
-      - type: object
-        properties:
-          language:
-            $ref: '#/components/schemas/Language'
-    StatusPending:
-      description: The transaction is pending, meaning it could not be completed yet; waiting for something.
-      type: string
-      format: enum
-      enum:
-      - PENDING
-      example: PENDING
-    AddressWithStateAndAdditionalData:
-      allOf:
-      - $ref: '#/components/schemas/AddressWithoutMandatoryCountry'
-      - type: object
-        properties:
-          state:
-            description: The state or province of the consumer's billing address associated with the card used for this purchase. The value must be the country subdivision code (e.g., 'NH') or the official state/province name (e.g., 'Noord Holland') as defined in ISO 3166-2.
-            type: string
-            maxLength: 40
-            example: Noord-Holland
-          additionalData:
-            description: The consumers house number addition.
-            type: string
-            maxLength: 35
-            example: Right-hand portal
-    Phone:
-      description: The phonenumber of the consumer (E.164 format).
-      type: string
-      maxLength: 16
-      example: '+31695613259'
-    Email:
-      description: The email address of the consumer.
-      type: string
-      format: email
-      example: john.doe@email.tld
-    ConsumerBase:
-      allOf:
-      - $ref: '#/components/schemas/Consumer'
-      - type: object
-        properties:
-          name:
-            $ref: '#/components/schemas/Name'
-          address:
-            $ref: '#/components/schemas/Address'
-          businessName:
-            description: The consumers company name.
-            type: string
-            maxLength: 35
-            example: CM
-    StatusAuthorized:
-      description: The transaction has been authorized.
-      type: string
-      format: enum
-      enum:
-      - AUTHORIZED
-      example: AUTHORIZED
-    TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt:
-      allOf:
-      - $ref: '#/components/schemas/ReturnURLOneOf'
-      - type: object
-        required:
-        - id
-        - reference
-        - amount
-        - currency
-        - status
-        - description
-        properties:
-          id:
-            $ref: '#/components/schemas/TransactionId'
-          reference:
-            $ref: '#/components/schemas/Reference'
-          amount:
-            $ref: '#/components/schemas/Amount'
-          currency:
-            $ref: '#/components/schemas/Currency'
-          webhooks:
-            $ref: '#/components/schemas/TransactionWebhooks'
-          description:
-            $ref: '#/components/schemas/Description'
-    ReturnURLOneOf:
-      oneOf:
-      - type: object
-        required:
-        - returnUrls
-        properties:
-          returnUrls:
-            $ref: '#/components/schemas/ReturnUrls'
-      - type: object
-        required:
-        - returnUrl
-        properties:
-          returnUrl:
-            $ref: '#/components/schemas/ReturnUrl'
-    StatusFailure:
-      description: The transaction has failed.
-      type: string
-      format: enum
-      enum:
-      - FAILURE
-      example: FAILURE
-    Country:
-      description: Country of the consumer (ISO-3166)
-      type: string
-      example: NL
-      minLength: 2
-      maxLength: 2
-    TransactionWithoutOrderIdLanguageRefundsAndExpiresAt:
-      allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt'
-      - type: object
-        required:
-        - createdAt
-        properties:
-          createdAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time when the transaction was created.
-    Uuid:
-      description: Unique identifier
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    RefundStatusEvent:
-      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-        '
-      type: string
-      enum:
-      - REFUND_STATUS
-      example: REFUND_STATUS
-    LastName:
-      description: Consumer's last name.
-      type: string
-      maxLength: 35
-      example: Doe
-    StatusSuccess:
-      description: The transaction has been successfully paid.
-      type: string
-      format: enum
-      enum:
-      - SUCCESS
-      example: SUCCESS
-    BrowserInformation:
-      type: object
-      required:
-      - shopperIp
-      - accept
-      - userAgent
-      properties:
-        shopperIp:
-          $ref: '#/components/schemas/ShopperIP'
-        accept:
+        data:
           type: string
-          description: content-type accepted by the client browser
-          example: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-        userAgent:
-          type: string
-          description: User-Agent of the consumers browser.
-          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363
-    ChargebackStatus:
-      description: '* `CHARGED` - The transaction has been charged back by the issuing bank.
+          description: 'The card data that need to be encrypted (cardHolderName, cardNumber, expiryMonth, expiryYear, securityCode).
 
-        '
-      type: string
-      enum:
-      - CHARGED
-      example: CHARGED
-    TransactionWithoutOrderId:
+
+            Use the library from `/paymentmethods/library/cse`. This contains a JS library with an exported function called `cseEncrypt`.
+
+            `let encrypted = cseEncrypt(cardHolderName, cardNumber, expiryMonth, expiryYear, securityCode);`
+
+            '
+    Consumer:
       allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
+      - $ref: '#/components/schemas/GenderlessConsumer'
       - type: object
-        required:
-        - language
-        - expiresAt
         properties:
-          language:
-            $ref: '#/components/schemas/Language'
-          expiresAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
-          refunds:
-            $ref: '#/components/schemas/Refunds'
-    Transaction:
-      allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderId'
-      - type: object
-        required:
-        - orderId
-        properties:
-          orderId:
-            allOf:
-            - deprecated: true
-            - $ref: '#/components/schemas/Uuid'
-    RefundDetails:
-      description: Details of a refund.
+          gender:
+            $ref: '#/components/schemas/Gender'
+    Refunds:
+      description: Details of refunds for a transaction
       type: object
       required:
-      - id
-      - transactionId
-      - amount
-      - reason
-      - status
-      - created
-      - updated
+      - refundedAmount
+      - refundedPendingAmount
       properties:
-        id:
-          $ref: '#/components/schemas/Uuid'
-        transactionId:
-          $ref: '#/components/schemas/Uuid'
-        amount:
-          $ref: '#/components/schemas/Amount'
-        reason:
-          $ref: '#/components/schemas/RefundReason'
-        status:
-          $ref: '#/components/schemas/RefundStatus'
-        created:
-          $ref: '#/components/schemas/Datetime'
-        updated:
-          $ref: '#/components/schemas/Datetime'
-    CardProvider:
-      type: string
-      format: enum
-      enum:
-      - mastercard
-      - visa
-      - amex
-      - maestro
-      description: The card scheme the card belongs to.
-      example: mastercard
-    ReturnUrl:
-      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
-
-
-        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
-      type: string
-      format: url
-      maxLength: 2000
-      example: https://yourdomain.tld/order/return?orderID=order123
-  parameters:
-    TransactionId:
-      name: transactionId
-      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/TransactionId'
+        refundedAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
+          type: integer
+          minimum: 0
+          maximum: 99999999
+          example: 300
+        refundedPendingAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
+          type: integer
+          minimum: 1
+          maximum: 99999999
+          example: 100
   responses:
-    RefundsResponse:
-      description: Details of all refunds belonging to a transaction.
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/RefundsList'
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
     ChargebacksResponse:
       description: Details of all chargebacks belonging to a transaction.
       content:
@@ -1315,21 +1180,156 @@ components:
               message:
                 type: string
                 example: Service Unavailable
-    UserError:
-      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+    RefundsResponse:
+      description: Details of all refunds belonging to a transaction.
       content:
         application/json:
           schema:
-            type: object
-            required:
-            - id
-            - message
-            properties:
-              id:
-                $ref: '#/components/schemas/Uuid'
-              message:
-                type: string
-                example: no authorization methods provided
+            $ref: '#/components/schemas/RefundsList'
+  examples:
+    successCard:
+      summary: Successful transaction (also applicable for FAILED, EXPIRED or CANCELLED)
+      value:
+        id: 0264f864-c815-47cb-9e1f-fe7ba4326565
+        orderId: 6c166afa-ae48-467d-8eed-fdbbf2f30198
+        reference: b63fcd00-6643-4387-a47a-1d0044bb989e
+        amount: 89999
+        currency: EUR
+        cardProvider: visa
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-21T13:53:31Z'
+        language: nl
+        country: NL
+        status: SUCCESS
+        action: null
+        createdAt: '2025-05-20T13:53:36Z'
+        returnUrl: https://cm.com
+    initializedCardV2:
+      summary: Initialized transaction for 3DS v2
+      value:
+        id: 6a9c2e4f-8d1b-4c3e-a7f5-3b8d1e6a9c2f
+        orderId: 1d5b8e3a-4f2c-4a9e-b6f7-8c3d5b1e9a4f
+        reference: d90gce22-8865-5509-c69c-3f2266dd101g
+        amount: 15000
+        currency: EUR
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-21T13:53:31Z'
+        language: nl
+        country: NL
+        status: OPEN
+        action:
+          redirect:
+            url: https://checkout.gateway.acceptance.cmpayments.nl/3ds/creditcard/v2/initialize/6a9c2e4f-8d1b-4c3e-a7f5-3b8d1e6a9c2f
+        createdAt: '2025-05-20T13:53:36Z'
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+    standard:
+      summary: Standard transaction
+      value:
+        reference: 5e6baea7-607c-438a-aaba-b06ce0ae7776
+        amount: 89999
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-21T14:17:44.491Z'
+        language: nl
+        consumer:
+          address:
+            countryCode: NL
+          email: john.doe@email.tld
+        cardDetails:
+          cardProvider: visa
+          browserInformation:
+            shopperIp: 1.1.1.1
+            accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+            userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363
+          encryptedCardDetails:
+            data: VFg2yfiuguitrE4CoGC8IkAlwhDEJKqLLyuW6OnXwh/wtnndR9RDrhTwskv0EdpTnps1X/VMe2Y0vA3duPdKXLAWCzJMlFf8Mfx58OKXcVsTly/odz49t42Z/LP1Ym2Y2qhj8GY7AQBVlM1Un7EQCQFZk4W5rS7lFZmuIKm/VaI9EWpgfwu9QNfqzs8Asy2sLvFJUwVwjXdosCcZuP5sTLx2Qo3REj/lqgbsDssfg9vmH2JJd0fhhUKeUxnQpvbJhZVAxH6ZrOcQsXVPLRJm7Xk32iVqnvEDuZiUai+2T6SEeBiH+h7+7LYcL6OX8+BZ5X53JLN3FxqcjvaP094l0w==|Y2xpZW50c2lkZS0z
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+    openCard:
+      summary: Open transaction
+      value:
+        id: 0264f864-c815-47cb-9e1f-fe7ba4326565
+        orderId: 6c166afa-ae48-467d-8eed-fdbbf2f30198
+        reference: b63fcd00-6643-4387-a47a-1d0044bb989e
+        amount: 89999
+        currency: EUR
+        cardProvider: visa
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-21T13:53:31Z'
+        language: nl
+        country: NL
+        status: OPEN
+        action:
+          redirect:
+            url: https://checkout.gateway.acceptance.cmpayments.nl/3ds/creditcard/0264f864-c815-47cb-9e1f-fe7ba4326565
+        createdAt: '2025-05-20T13:53:36Z'
+        returnUrl: https://cm.com
+    refundCard:
+      summary: Partially pending refunded creditcard transaction
+      value:
+        id: 0264f864-c815-47cb-9e1f-fe7ba4326565
+        orderId: 6c166afa-ae48-467d-8eed-fdbbf2f30198
+        reference: b63fcd00-6643-4387-a47a-1d0044bb989e
+        amount: 89999
+        currency: EUR
+        cardProvider: visa
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-21T13:53:31Z'
+        language: nl
+        country: NL
+        status: SUCCESS
+        action: null
+        createdAt: '2025-05-20T13:53:36Z'
+        returnUrl: https://cm.com
+        refunds:
+          refundedAmount: 0
+          refundedPendingAmount: 600
+    openCardV2:
+      summary: Open transaction (v2)
+      value:
+        id: 4f7a8b2c-9e3d-4a1f-b6c5-8d2e3a7f9b1c
+        orderId: 2e8a4f1b-7c3d-4b9e-a5f2-9d1c6b8e3a7f
+        reference: c89fbd11-7754-4498-b58b-2e1155cc090f
+        amount: 12500
+        currency: EUR
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-21T13:53:31Z'
+        language: nl
+        country: NL
+        status: OPEN
+        action:
+          redirect:
+            url: https://checkout.gateway.acceptance.cmpayments.nl/3ds/creditcard/v2/4f7a8b2c-9e3d-4a1f-b6c5-8d2e3a7f9b1c
+        createdAt: '2025-05-20T13:53:36Z'
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+    successCardV2:
+      summary: Successful transaction v2
+      value:
+        id: 4f7a8b2c-9e3d-4a1f-b6c5-8d2e3a7f9b1c
+        orderId: 2e8a4f1b-7c3d-4b9e-a5f2-9d1c6b8e3a7f
+        reference: c89fbd11-7754-4498-b58b-2e1155cc090f
+        amount: 12500
+        currency: EUR
+        description: Your order at My Web Shop.
+        expiresAt: '2025-05-21T13:53:31Z'
+        language: nl
+        country: NL
+        status: SUCCESS
+        action: null
+        createdAt: '2025-05-20T13:53:36Z'
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+  parameters:
+    TransactionId:
+      name: transactionId
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/TransactionId'
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

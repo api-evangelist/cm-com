@@ -167,19 +167,58 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
-    FinalStatusEvent:
-      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    TransactionWebhook:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
 
-        '
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    Gender:
+      description: The consumers gender.
       type: string
+      format: enum
       enum:
-      - FINALSTATUS
-      example: FINALSTATUS
-    Email:
-      description: The email address of the consumer.
-      type: string
-      format: email
-      example: john.doe@email.tld
+      - m
+      - f
+      - 'null'
+      default: null
+    Refund:
+      description: Refund an already successfully processed payment.
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
+
+            '
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
     RefundDetailsWithSessionID:
       allOf:
       - $ref: '#/components/schemas/RefundDetails'
@@ -192,167 +231,21 @@ components:
             - $ref: '#/components/schemas/Uuid'
             description: Unique identifier for the session.
             example: bcbb3733-4d3e-4a4d-9254-1ddb90e6e082
-    BaseWebhook:
-      type: object
-      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
-      required:
-      - url
-      - events
-      properties:
-        url:
-          description: The URL the request must be send to.
-          type: string
-          format: url
-          example: https://yourdomain.tld/webhooks?purchaseId=order123
-        events:
-          description: Type of events that will trigger a webhook.
-          type: array
-          minItems: 1
-          items:
-            type: string
-    Refund:
-      description: Refund an already successfully processed payment.
-      type: object
-      properties:
-        amount:
-          $ref: '#/components/schemas/Amount'
-          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
 
-            '
-        reason:
-          $ref: '#/components/schemas/RefundReason'
-    TransactionWebhooks:
-      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
 
-        '
-      type: array
-      items:
-        $ref: '#/components/schemas/TransactionWebhook'
-      example:
-      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
-        events:
-        - STATUS_CHANGE
-    RefundStatus:
-      description: '* `SUCCESS`    - Refund has succeeded.
-
-        * `PENDING`    - Refund is waiting to be processed.
-
-        * `FAILURE`    - Refund has failed.
-
-        * `CANCELLED`  - Refund has been cancelled.
-
-        '
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
       type: string
-      enum:
-      - SUCCESS
-      - PENDING
-      - FAILURE
-      - CANCELLED
-      example: SUCCESS
-    Consumer:
-      allOf:
-      - $ref: '#/components/schemas/GenderlessConsumer'
-      - type: object
-        properties:
-          gender:
-            $ref: '#/components/schemas/Gender'
-    StatusAuthorized:
-      description: The transaction has been authorized.
-      type: string
-      format: enum
-      enum:
-      - AUTHORIZED
-      example: AUTHORIZED
-    RefundReason:
-      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
-
-        '
-      type: string
-      example: Refund required by consumer.
-      maxLength: 255
-    StatusFailure:
-      description: The transaction has failed.
-      type: string
-      format: enum
-      enum:
-      - FAILURE
-      example: FAILURE
-    AuthorizeGooglePayTransaction:
-      description: The paymentData.paymentMethodData returned by Google Pay that must be sent as-is to the Payment System
-      type: object
-      properties:
-        description:
-          description: Google Pay payment description
-          type: string
-          example: Visa •••• 1111
-        info:
-          type: object
-          properties:
-            cardDetails:
-              type: string
-              example: '1111'
-            cardNetwork:
-              type: string
-              example: VISA
-        tokenizationData:
-          type: object
-          properties:
-            token:
-              type: string
-              example: '{"signature":"MEUCIQDefdlz6PJ6ELqh58JUES8DmVAfCVChP/wd3fm7QfhLIgIgP+xZdKCoL8Wv+smlTHyrtxLmAw4jTZcCU+Oqjj7K0zs\u003d","intermediateSigningKey":{"signedKey":"{\"keyValue\":\"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEi6ylxFPyYnSNpkQNP11SdTvsf/muVEqEGxy7Zf30mUeh+BEmBzHbrBd4p+ECtOS6kPNnnW8UGWzb7dE8x+L5Fg\\u003d\\u003d\",\"keyExpiration\":\"1683363703676\"}","signatures":["MEUCIC6nmOCKBgprc0iwBumuYe1eEva1i5hPQ4jWIl+Mo2U9AiEAxSx1bEGER3atvKdts9cVlfnFP4jGLsXQnR1iRG4iWSI\u003d"]},"protocolVersion":"ECv2","signedMessage":"{\"encryptedMessage\":\"XlK/Qpht8bL2cX4RKz75B1izE/DFWZEFippx/rJhkLOa+II1uVp+djl1bg8jjly9n5ifHIff/awY2esu9MXiUAmFh5qI6Mkygcf0FDyApf+nbZGFGNJO5ycx+I5BnwvD0dDcD/cT0A0dEczSmlpvHQpbZJWyECADnwCQnaYdJxeGBFBQIZnjwvqg3m5XxDsEppYnlPEroCSOVtKW4n3nzxttzhyhNhfHDAB4O1fn2cLPg/C1QEPEJIpCAnYN5Qt1rG4G97g5LVANYKnZM09Wa1e7oJA8RNutAmQRgQaxAnhcPe1mnsiI6qBrParnmZjWFWSIFO79sm6WNNaDno0mv/ApUYGYNfIy/MrjkFo3AGjy01lyQsJ3jN7V5E5BFlQ88aF7D1Ha9monCKXfagDS4ly/Q4lP3B0PN0TfxfMD2IhdLsIZexA0Rq44tWkR7yqO3WegE1zSSZ7mCseVFXGwwG+JMT3hmoAYxYAZyXvpEq5nQVdz8n0+VEoVZFrmCi38/YcEq3ZCFd/Nu+CcDCFH51YVNyjrW8X7GuzfqJjNGfiPBob58bgsHwpSgAtInBgHt+NtGbk4Nhlous02AWwDs3Y8pvyPWkdRAPkfNitf1Up80qc\\u003d","ephemeralPublicKey":"BEL9y1u7hBWJ621PemcPJg5w+FFhijBKcD/BfGrOtk5W4ZMKzFgcgSQEoNgU1ytAD9iirXl0u4RjzMNPMCyehOo\\u003d","tag":"ohzjZ/wzmjeYcwvrGD1QYGd53jvbiHHXLdVKCy6MKHY\\u003d"}'
-            type:
-              type: string
-              example: PAYMENT_GATEWAY
-        type:
-          type: string
-          example: CARD
-    Uuid:
-      description: Unique identifier
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
     Reference:
       description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
       type: string
       minLength: 1
       maxLength: 255
       example: '20210623130413'
-    SessionTransactionWebhooks:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a session or a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                * `TRANSACTION_CREATED` - Triggered when a new transaction is created for a session.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              - $ref: '#/components/schemas/TransactionCreatedEvent'
-              example: STATUS_CHANGE
-    StatusChangeEvent:
-      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-        '
-      type: string
-      enum:
-      - STATUS_CHANGE
-      example: STATUS_CHANGE
-    StatusExpired:
-      description: The transaction has expired.
-      type: string
-      format: enum
-      enum:
-      - EXPIRED
-      example: EXPIRED
     RefundStatusEvent:
       description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
 
@@ -361,71 +254,6 @@ components:
       enum:
       - REFUND_STATUS
       example: REFUND_STATUS
-    GooglePayInitialize:
-      type: object
-      required:
-      - reference
-      - amount
-      - description
-      - language
-      properties:
-        reference:
-          $ref: '#/components/schemas/Reference'
-        description:
-          description: 'Description of the underlying value or reason of the session.
-
-            Ultimately appears on the confirmation (statement and confirmation screen).
-
-            '
-          type: string
-          maxLength: 255
-          example: Order at yourdomain.tld
-        amount:
-          $ref: '#/components/schemas/Amount'
-        currency:
-          $ref: '#/components/schemas/Currency'
-        expiresAt:
-          allOf:
-          - $ref: '#/components/schemas/Datetime'
-          - description: ISO 8601 date and time. If left empty, the value defaults to 10 mins.
-        language:
-          $ref: '#/components/schemas/Language'
-        consumer:
-          $ref: '#/components/schemas/Consumer'
-        webhooks:
-          $ref: '#/components/schemas/SessionTransactionWebhooks'
-        returnUrl:
-          $ref: '#/components/schemas/ReturnUrl'
-    Currency:
-      description: ISO 4217 currency code.
-      type: string
-      minLength: 3
-      maxLength: 3
-      default: EUR
-      example: EUR
-    Gender:
-      description: The consumers gender.
-      type: string
-      format: enum
-      enum:
-      - m
-      - f
-      - 'null'
-      default: null
-    StatusSuccess:
-      description: The transaction has been successfully paid.
-      type: string
-      format: enum
-      enum:
-      - SUCCESS
-      example: SUCCESS
-    Language:
-      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
-      type: string
-      default: nl
-      example: nl
-      minLength: 2
-      maxLength: 2
     GooglePaySessionObject:
       type: object
       required:
@@ -532,19 +360,14 @@ components:
           $ref: '#/components/schemas/Datetime'
         returnUrl:
           $ref: '#/components/schemas/ReturnUrl'
-    StatusCancelled:
-      description: The transaction has been cancelled by the consumer.
+    TransactionCreatedEvent:
+      description: '* `TRANSACTION_CREATED` - Triggered when a new transaction is created.
+
+        '
       type: string
-      format: enum
       enum:
-      - CANCELLED
-      example: CANCELLED
-    Datetime:
-      type: string
-      format: date-time
-      minLength: 20
-      example: '2006-01-02T15:04:05Z'
-      description: ISO 8601 date and time.
+      - TRANSACTION_CREATED
+      example: TRANSACTION_CREATED
     StatusOpen:
       description: The transaction is open and can be paid.
       type: string
@@ -552,32 +375,11 @@ components:
       enum:
       - OPEN
       example: OPEN
-    TransactionId:
-      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+    Phone:
+      description: The phonenumber of the consumer (E.164 format).
       type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    TransactionWebhook:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              - $ref: '#/components/schemas/FinalStatusEvent'
-              example: STATUS_CHANGE
+      maxLength: 16
+      example: '+31695613259'
     GenderlessConsumer:
       type: object
       properties:
@@ -591,14 +393,67 @@ components:
           pattern: ^\d{4}-\d{2}-\d{2}$
           example: '1990-05-23'
           description: Date of birth in ISO 8601 format (YYYY-MM-DD).
-    TransactionCreatedEvent:
-      description: '* `TRANSACTION_CREATED` - Triggered when a new transaction is created.
-
-        '
+    StatusAuthorized:
+      description: The transaction has been authorized.
       type: string
+      format: enum
       enum:
-      - TRANSACTION_CREATED
-      example: TRANSACTION_CREATED
+      - AUTHORIZED
+      example: AUTHORIZED
+    StatusExpired:
+      description: The transaction has expired.
+      type: string
+      format: enum
+      enum:
+      - EXPIRED
+      example: EXPIRED
+    AuthorizeGooglePayTransaction:
+      description: The paymentData.paymentMethodData returned by Google Pay that must be sent as-is to the Payment System
+      type: object
+      properties:
+        description:
+          description: Google Pay payment description
+          type: string
+          example: Visa •••• 1111
+        info:
+          type: object
+          properties:
+            cardDetails:
+              type: string
+              example: '1111'
+            cardNetwork:
+              type: string
+              example: VISA
+        tokenizationData:
+          type: object
+          properties:
+            token:
+              type: string
+              example: '{"signature":"MEUCIQDefdlz6PJ6ELqh58JUES8DmVAfCVChP/wd3fm7QfhLIgIgP+xZdKCoL8Wv+smlTHyrtxLmAw4jTZcCU+Oqjj7K0zs\u003d","intermediateSigningKey":{"signedKey":"{\"keyValue\":\"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEi6ylxFPyYnSNpkQNP11SdTvsf/muVEqEGxy7Zf30mUeh+BEmBzHbrBd4p+ECtOS6kPNnnW8UGWzb7dE8x+L5Fg\\u003d\\u003d\",\"keyExpiration\":\"1683363703676\"}","signatures":["MEUCIC6nmOCKBgprc0iwBumuYe1eEva1i5hPQ4jWIl+Mo2U9AiEAxSx1bEGER3atvKdts9cVlfnFP4jGLsXQnR1iRG4iWSI\u003d"]},"protocolVersion":"ECv2","signedMessage":"{\"encryptedMessage\":\"XlK/Qpht8bL2cX4RKz75B1izE/DFWZEFippx/rJhkLOa+II1uVp+djl1bg8jjly9n5ifHIff/awY2esu9MXiUAmFh5qI6Mkygcf0FDyApf+nbZGFGNJO5ycx+I5BnwvD0dDcD/cT0A0dEczSmlpvHQpbZJWyECADnwCQnaYdJxeGBFBQIZnjwvqg3m5XxDsEppYnlPEroCSOVtKW4n3nzxttzhyhNhfHDAB4O1fn2cLPg/C1QEPEJIpCAnYN5Qt1rG4G97g5LVANYKnZM09Wa1e7oJA8RNutAmQRgQaxAnhcPe1mnsiI6qBrParnmZjWFWSIFO79sm6WNNaDno0mv/ApUYGYNfIy/MrjkFo3AGjy01lyQsJ3jN7V5E5BFlQ88aF7D1Ha9monCKXfagDS4ly/Q4lP3B0PN0TfxfMD2IhdLsIZexA0Rq44tWkR7yqO3WegE1zSSZ7mCseVFXGwwG+JMT3hmoAYxYAZyXvpEq5nQVdz8n0+VEoVZFrmCi38/YcEq3ZCFd/Nu+CcDCFH51YVNyjrW8X7GuzfqJjNGfiPBob58bgsHwpSgAtInBgHt+NtGbk4Nhlous02AWwDs3Y8pvyPWkdRAPkfNitf1Up80qc\\u003d","ephemeralPublicKey":"BEL9y1u7hBWJ621PemcPJg5w+FFhijBKcD/BfGrOtk5W4ZMKzFgcgSQEoNgU1ytAD9iirXl0u4RjzMNPMCyehOo\\u003d","tag":"ohzjZ/wzmjeYcwvrGD1QYGd53jvbiHHXLdVKCy6MKHY\\u003d"}'
+            type:
+              type: string
+              example: PAYMENT_GATEWAY
+        type:
+          type: string
+          example: CARD
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
     PaymentMethod:
       description: The payment method used in the transaction.
       type: string
@@ -606,6 +461,192 @@ components:
       enum:
       - creditcard
       example: creditcard
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
+
+        '
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    RefundStatus:
+      description: '* `SUCCESS`    - Refund has succeeded.
+
+        * `PENDING`    - Refund is waiting to be processed.
+
+        * `FAILURE`    - Refund has failed.
+
+        * `CANCELLED`  - Refund has been cancelled.
+
+        '
+      type: string
+      enum:
+      - SUCCESS
+      - PENDING
+      - FAILURE
+      - CANCELLED
+      example: SUCCESS
+    Currency:
+      description: ISO 4217 currency code.
+      type: string
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
+      type: string
+      format: enum
+      enum:
+      - CANCELLED
+      example: CANCELLED
+    TransactionWebhooks:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhook'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    GooglePayInitialize:
+      type: object
+      required:
+      - reference
+      - amount
+      - description
+      - language
+      properties:
+        reference:
+          $ref: '#/components/schemas/Reference'
+        description:
+          description: 'Description of the underlying value or reason of the session.
+
+            Ultimately appears on the confirmation (statement and confirmation screen).
+
+            '
+          type: string
+          maxLength: 255
+          example: Order at yourdomain.tld
+        amount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        expiresAt:
+          allOf:
+          - $ref: '#/components/schemas/Datetime'
+          - description: ISO 8601 date and time. If left empty, the value defaults to 10 mins.
+        language:
+          $ref: '#/components/schemas/Language'
+        consumer:
+          $ref: '#/components/schemas/Consumer'
+        webhooks:
+          $ref: '#/components/schemas/SessionTransactionWebhooks'
+        returnUrl:
+          $ref: '#/components/schemas/ReturnUrl'
+    SessionTransactionWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a session or a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `TRANSACTION_CREATED` - Triggered when a new transaction is created for a session.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/TransactionCreatedEvent'
+              example: STATUS_CHANGE
+    Email:
+      description: The email address of the consumer.
+      type: string
+      format: email
+      example: john.doe@email.tld
+    RefundsListWithSessionID:
+      description: Details of all refunds belonging to a transaction of a session.
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundDetailsWithSessionID'
+    Consumer:
+      allOf:
+      - $ref: '#/components/schemas/GenderlessConsumer'
+      - type: object
+        properties:
+          gender:
+            $ref: '#/components/schemas/Gender'
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
+    RefundDetails:
+      description: Details of a refund.
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - reason
+      - status
+      - created
+      - updated
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/Uuid'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+        created:
+          $ref: '#/components/schemas/Datetime'
+        updated:
+          $ref: '#/components/schemas/Datetime'
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
     GooglePayTransactionObject:
       type: object
       required:
@@ -650,71 +691,24 @@ components:
           $ref: '#/components/schemas/Datetime'
         paymentMethod:
           $ref: '#/components/schemas/PaymentMethod'
-    Amount:
-      description: Denomination in the smallest currency subunit, as for example euro cents.
-      type: integer
-      minimum: 1
-      maximum: 99999999
-      example: 1200
-    RefundDetails:
-      description: Details of a refund.
-      type: object
-      required:
-      - id
-      - transactionId
-      - amount
-      - reason
-      - status
-      - created
-      - updated
-      properties:
-        id:
-          $ref: '#/components/schemas/Uuid'
-        transactionId:
-          $ref: '#/components/schemas/Uuid'
-        amount:
-          $ref: '#/components/schemas/Amount'
-        reason:
-          $ref: '#/components/schemas/RefundReason'
-        status:
-          $ref: '#/components/schemas/RefundStatus'
-        created:
-          $ref: '#/components/schemas/Datetime'
-        updated:
-          $ref: '#/components/schemas/Datetime'
-    RefundsListWithSessionID:
-      description: Details of all refunds belonging to a transaction of a session.
-      type: object
-      required:
-      - refunds
-      properties:
-        refunds:
-          type: array
-          items:
-            $ref: '#/components/schemas/RefundDetailsWithSessionID'
-    ReturnUrl:
-      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+    FinalStatusEvent:
+      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
 
-
-        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+        '
       type: string
-      format: url
-      maxLength: 2000
-      example: https://yourdomain.tld/order/return?orderID=order123
-    Phone:
-      description: The phonenumber of the consumer (E.164 format).
+      enum:
+      - FINALSTATUS
+      example: FINALSTATUS
+    StatusFailure:
+      description: The transaction has failed.
       type: string
-      maxLength: 16
-      example: '+31695613259'
-  headers:
-    Digest:
-      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
-      schema:
-        type: string
-        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
   responses:
-    InternalError:
-      description: Internal server error. This can be caused by an unresponsive backend
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
       content:
         application/json:
           schema:
@@ -727,34 +721,7 @@ components:
                 $ref: '#/components/schemas/Uuid'
               message:
                 type: string
-                example: Service Unavailable
-    GooglePaySessionTransactions:
-      description: Google Pay transactions for a session
-      headers:
-        Digest:
-          $ref: '#/components/headers/Digest'
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - transactions
-            properties:
-              transactions:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GooglePayTransactionObject'
-          examples:
-            googlePayTransactions:
-              summary: Google Pay transactions for a session
-              value:
-                transactions:
-                - id: 33333333-3333-3333-3333-333333333333
-                  sessionId: 11111111-1111-1111-1111-111111111111
-                  expiresAt: '2025-06-24T12:48:21Z'
-                  status: SUCCESS
-                  createdAt: '2025-06-23T12:48:24Z'
-                  paymentMethod: creditcard
+                example: no authorization methods provided
     GooglePaySession:
       description: Google Pay session details
       headers:
@@ -786,8 +753,17 @@ components:
                     environment: TEST
                 createdAt: '2025-06-23T12:48:24Z'
                 returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
-    UserError:
-      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+    RefundResponseWithSessionID:
+      description: Refund details
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundDetailsWithSessionID'
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
       content:
         application/json:
           schema:
@@ -800,22 +776,7 @@ components:
                 $ref: '#/components/schemas/Uuid'
               message:
                 type: string
-                example: no authorization methods provided
-    RefundResponseWithSessionID:
-      description: Refund details
-      headers:
-        Digest:
-          $ref: '#/components/headers/Digest'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RefundDetailsWithSessionID'
-    RefundsResponseWithSessionID:
-      description: Details of all refunds belonging to a transaction of a session.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RefundsListWithSessionID'
+                example: Service Unavailable
     GooglePaySessionTransaction:
       description: Google Pay session transaction
       headers:
@@ -846,18 +807,61 @@ components:
                 status: SUCCESS
                 createdAt: '2025-06-23T12:48:24Z'
                 paymentMethod: creditcard
+    RefundsResponseWithSessionID:
+      description: Details of all refunds belonging to a transaction of a session.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundsListWithSessionID'
+    GooglePaySessionTransactions:
+      description: Google Pay transactions for a session
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - transactions
+            properties:
+              transactions:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GooglePayTransactionObject'
+          examples:
+            googlePayTransactions:
+              summary: Google Pay transactions for a session
+              value:
+                transactions:
+                - id: 33333333-3333-3333-3333-333333333333
+                  sessionId: 11111111-1111-1111-1111-111111111111
+                  expiresAt: '2025-06-24T12:48:21Z'
+                  status: SUCCESS
+                  createdAt: '2025-06-23T12:48:24Z'
+                  paymentMethod: creditcard
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+  parameters:
+    TransactionId:
+      name: transactionId
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/TransactionId'
+    SessionId:
+      name: sessionId
+      description: ID received in the initialize session response, used to reference the session in subsequent calls.
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
   examples:
-    authorizeGooglePay:
-      summary: Authorize Google Pay payment
-      value:
-        description: Visa •••• 1111
-        info:
-          cardDetails: '1111'
-          cardNetwork: VISA
-        tokenizationData:
-          token: '{...GooglePaySignedToken...}'
-          type: PAYMENT_GATEWAY
-        type: CARD
     createGooglePaySession:
       summary: Create Google Pay session
       value:
@@ -878,21 +882,17 @@ components:
           - STATUS_CHANGE
           - TRANSACTION_CREATED
           - REFUND_STATUS
-  parameters:
-    SessionId:
-      name: sessionId
-      description: ID received in the initialize session response, used to reference the session in subsequent calls.
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/Uuid'
-    TransactionId:
-      name: transactionId
-      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/TransactionId'
+    authorizeGooglePay:
+      summary: Authorize Google Pay payment
+      value:
+        description: Visa •••• 1111
+        info:
+          cardDetails: '1111'
+          cardNetwork: VISA
+        tokenizationData:
+          token: '{...GooglePaySignedToken...}'
+          type: PAYMENT_GATEWAY
+        type: CARD
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

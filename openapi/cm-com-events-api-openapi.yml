@@ -4045,54 +4045,64 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Product:
+    Condition:
       type: object
       properties:
         uuid:
           type: string
           maxLength: 36
           example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
         name:
           type: string
           maxLength: 255
-          example: Entrance Ticket
-        productType:
+          example: 'Scan Condition: Must be scanned once on entrance plan X'
+        subject:
           type: string
           enum:
-          - REGULAR
-          - BOX_OFFICE
-          - GUEST_LIST
-          - NON_ENTRY_PRODUCT
-          example: REGULAR
-      required:
-      - uuid
-      - externalId
-      - name
-      - productType
-    CreateEventDto:
-      type: object
-      properties:
-        externalId:
+          - SUCCESS_SCANS_AMOUNT
+          - TODAY_SUCCESS_SCANS_AMOUNT
+          - IS_CHECKED_IN
+          example: SUCCESS_SCANS_AMOUNT
+        operator:
+          type: string
+          enum:
+          - EQUALS
+          - NOT_EQUALS
+          - CONTAINS
+          - NOT_CONTAINS
+          - GREATER_THAN
+          - GREATER_THAN_OR_EQUAL_TO
+          - LOWER_THAN
+          - LOWER_THAN_OR_EQUAL_TO
+          - STARTS_WITH
+          - ENDS_WITH
+          - IS_BEFORE
+          - IS_AFTER
+          example: GREATER_THAN
+        value:
+          description: Value to compare the condition operator to.
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+          example: 1
+        entrancePlanId:
           type: string
           maxLength: 255
           example: 00000000-0000-0000-0000-000000000000
-        name:
+          description: uuid of entrance plan the condition applies to
+        ruleId:
           type: string
           maxLength: 255
-          example: CM.com Festival 2024
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
+          example: 00000000-0000-0000-0000-000000000000
+          description: uuid of rule the condition applies to
       required:
-      - externalId
+      - uuid
       - name
+      - subject
+      - operator
+      - value
     ErrorDto:
       type: object
       properties:
@@ -4167,68 +4177,6 @@ components:
       - errorCode
       - description
       - httpStatus
-    Venue:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: CM.com Arena
-        venueSections:
-          type: array
-          items:
-            $ref: '#/components/schemas/VenueSection'
-      required:
-      - uuid
-      - externalId
-      - name
-      - venueSections
-    Event:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: CM.com Festival 2024
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
-      required:
-      - uuid
-      - externalId
-      - name
-      - startAt
-      - endAt
-    PageDto:
-      type: object
-      properties:
-        data:
-          type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
-      required:
-      - data
-      - meta
     EntrancePlan:
       type: object
       properties:
@@ -4297,64 +4245,109 @@ components:
       - isDefault
       - isActive
       - scanMode
-    Condition:
+    CreateEventDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Festival 2024
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+      required:
+      - externalId
+      - name
+    Event:
       type: object
       properties:
         uuid:
           type: string
           maxLength: 36
           example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
         name:
           type: string
           maxLength: 255
-          example: 'Scan Condition: Must be scanned once on entrance plan X'
-        subject:
+          example: CM.com Festival 2024
+        startAt:
+          format: date-time
           type: string
-          enum:
-          - SUCCESS_SCANS_AMOUNT
-          - TODAY_SUCCESS_SCANS_AMOUNT
-          - IS_CHECKED_IN
-          example: SUCCESS_SCANS_AMOUNT
-        operator:
+        endAt:
+          format: date-time
           type: string
-          enum:
-          - EQUALS
-          - NOT_EQUALS
-          - CONTAINS
-          - NOT_CONTAINS
-          - GREATER_THAN
-          - GREATER_THAN_OR_EQUAL_TO
-          - LOWER_THAN
-          - LOWER_THAN_OR_EQUAL_TO
-          - STARTS_WITH
-          - ENDS_WITH
-          - IS_BEFORE
-          - IS_AFTER
-          example: GREATER_THAN
-        value:
-          description: Value to compare the condition operator to.
-          oneOf:
-          - type: string
-          - type: number
-          - type: boolean
-          - type: object
-          example: 1
-        entrancePlanId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-          description: uuid of entrance plan the condition applies to
-        ruleId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-          description: uuid of rule the condition applies to
       required:
       - uuid
+      - externalId
       - name
-      - subject
-      - operator
-      - value
+      - startAt
+      - endAt
+    UpdateEventDto:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: CM.com Festival 2024
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+    Product:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
+      required:
+      - uuid
+      - externalId
+      - name
+      - productType
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
     PageMetaDto:
       type: object
       properties:
@@ -4489,9 +4482,13 @@ components:
       - shouldValidateOnParent
       - requiresPhotoVerification
       - requiresConfirmationQuestion
-    UpdateEventDto:
+    Venue:
       type: object
       properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
         externalId:
           type: string
           maxLength: 255
@@ -4499,13 +4496,16 @@ components:
         name:
           type: string
           maxLength: 255
-          example: CM.com Festival 2024
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueSection'
+      required:
+      - uuid
+      - externalId
+      - name
+      - venueSections
     VenueSection:
       type: object
       properties:
@@ -4550,31 +4550,48 @@ components:
         total_items:
           type: integer
       type: object
-    rest.HttpError:
+    handler.viewEventResponse:
       properties:
-        error_code:
+        created_at:
           type: string
-        error_msg:
-          type: string
-      type: object
-    handler.eventResponse:
-      properties:
+        description:
+          additionalProperties:
+            type: string
+          type: object
+        discount_label:
+          additionalProperties:
+            type: string
+          type: object
         downloadable_from:
           type: string
         end_at:
           type: string
         id:
           type: string
+        is_active:
+          type: boolean
         is_downloadable:
           type: boolean
         is_order_invoice_enabled:
+          type: boolean
+        is_personalization_enabled:
+          type: boolean
+        is_visible:
           type: boolean
         languages:
           items:
             $ref: '#/components/schemas/handler.eventLanguage'
           type: array
           uniqueItems: false
+        minutes_to_order:
+          type: integer
         name:
+          type: string
+        online_from:
+          type: string
+        online_till:
+          type: string
+        short_id:
           type: string
         start_at:
           type: string
@@ -4585,8 +4602,43 @@ components:
             name:
               type: string
           type: object
+        type:
+          type: string
+        updated_at:
+          type: string
         venue:
           $ref: '#/components/schemas/handler.eventVenue'
+      type: object
+    handler.eventLanguage:
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+    handler.eventVenue:
+      properties:
+        address:
+          type: string
+        city:
+          type: string
+        country_code:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        state:
+          type: string
+        zipcode:
+          type: string
       type: object
     event.CreateEventRequest:
       properties:
@@ -4650,48 +4702,24 @@ components:
               type: string
           type: object
       type: object
-    handler.viewEventResponse:
+    handler.eventResponse:
       properties:
-        created_at:
-          type: string
-        description:
-          additionalProperties:
-            type: string
-          type: object
-        discount_label:
-          additionalProperties:
-            type: string
-          type: object
         downloadable_from:
           type: string
         end_at:
           type: string
         id:
           type: string
-        is_active:
-          type: boolean
         is_downloadable:
           type: boolean
         is_order_invoice_enabled:
-          type: boolean
-        is_personalization_enabled:
-          type: boolean
-        is_visible:
           type: boolean
         languages:
           items:
             $ref: '#/components/schemas/handler.eventLanguage'
           type: array
           uniqueItems: false
-        minutes_to_order:
-          type: integer
         name:
-          type: string
-        online_from:
-          type: string
-        online_till:
-          type: string
-        short_id:
           type: string
         start_at:
           type: string
@@ -4702,37 +4730,13 @@ components:
             name:
               type: string
           type: object
-        type:
-          type: string
-        updated_at:
-          type: string
         venue:
           $ref: '#/components/schemas/handler.eventVenue'
       type: object
-    handler.eventVenue:
-      properties:
-        address:
-          type: string
-        city:
-          type: string
-        country_code:
-          type: string
-        id:
-          type: string
-        name:
-          type: string
-        state:
-          type: string
-        zipcode:
-          type: string
-      type: object
-    handler.eventLanguage:
-      properties:
-        code:
-          type: string
-        name:
-          type: string
-      type: object
+    Newtonsoft.Json.Linq.JToken:
+      type: array
+      items:
+        $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
     CM.Data.Events.Api.Web.Models.ApiEventPost:
       required:
       - event
@@ -4743,36 +4747,18 @@ components:
           format: uuid
           type: string
         event: {}
-    Newtonsoft.Json.Linq.JToken:
-      type: array
-      items:
-        $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
-    CM.Data.Core.Profiles.Api.Models.ApiProfileChild:
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        id:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        dateOfEvent:
-          type: string
-          format: date-time
-        object:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileChildProperty'
-      additionalProperties: false
+    CM.Data.Domain.Enums.PropertyType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 100
+      - 101
+      - 102
+      - 103
+      - 104
+      type: integer
+      format: int32
     CM.Data.Core.Profiles.Api.Models.ApiProfileEventsOverviewItem:
       type: object
       properties:
@@ -4786,38 +4772,6 @@ components:
         dateOfEvent:
           type: string
           format: date-time
-      additionalProperties: false
-    CM.Data.Domain.Enums.PropertyType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 100
-      - 101
-      - 102
-      - 103
-      - 104
-      type: integer
-      format: int32
-    CM.Data.Core.Profiles.Api.Models.ApiProfileEventsSummary:
-      type: object
-      properties:
-        oldestEventDate:
-          type: string
-          format: date-time
-        numberOfEvents:
-          type: integer
-          format: int64
-      additionalProperties: false
-    CM.Data.Core.Profiles.Api.Models.ApiProfileChildProperty:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/CM.Data.Domain.Enums.PropertyType'
-        value:
-          type:
-          - string
-          - 'null'
       additionalProperties: false
     CM.Data.Core.Profiles.Api.Models.ApiEvent:
       type: object
@@ -4855,6 +4809,52 @@ components:
           items:
             type: string
             format: uuid
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileEventsSummary:
+      type: object
+      properties:
+        oldestEventDate:
+          type: string
+          format: date-time
+        numberOfEvents:
+          type: integer
+          format: int64
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileChildProperty:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CM.Data.Domain.Enums.PropertyType'
+        value:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.ApiProfileChild:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        id:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        dateOfEvent:
+          type: string
+          format: date-time
+        object:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.ApiProfileChildProperty'
       additionalProperties: false
   requestBodies:
     Newtonsoft.Json.Linq.JToken:

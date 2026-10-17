@@ -502,56 +502,7 @@ paths:
     - url: https://api.cm.com/sign/v1
     - url: https://api.cm.com/sign-sandbox/v1
 components:
-  requestBodies:
-    CM.Tooling.BulkEmail.Api.Models.ApiTemplate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
-        text/json:
-          schema:
-            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
-        text/xml:
-          schema:
-            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
-        application/x-www-form-urlencoded:
-          schema:
-            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
-      required: true
   schemas:
-    CM.Tooling.BulkEmail.Api.Models.ApiMergeFields:
-      type: object
-      properties:
-        MergeTags:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMergeTag'
-        SpecialLinks:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSpecialLink'
-    CM.Tooling.BulkEmail.Api.Models.ApiSpecialLink:
-      type: object
-      properties:
-        Type:
-          type: string
-        Label:
-          type: string
-        Link:
-          type: string
-        Mapping:
-          type: string
-        Tag:
-          type: string
-    CM.Tooling.BulkEmail.Api.Models.ApiMergeTag:
-      type: object
-      properties:
-        Name:
-          type: string
-        Value:
-          type: string
-        Mapping:
-          type: string
     CM.Tooling.BulkEmail.Api.Models.ApiTemplate:
       type: object
       properties:
@@ -599,21 +550,45 @@ components:
         DeletedOnUtc:
           format: date-time
           type: string
-    FieldType:
+    CM.Tooling.BulkEmail.Api.Models.ApiMergeTag:
+      type: object
+      properties:
+        Name:
+          type: string
+        Value:
+          type: string
+        Mapping:
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiSpecialLink:
+      type: object
+      properties:
+        Type:
+          type: string
+        Label:
+          type: string
+        Link:
+          type: string
+        Mapping:
+          type: string
+        Tag:
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiMergeFields:
+      type: object
+      properties:
+        MergeTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiMergeTag'
+        SpecialLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiSpecialLink'
+    FileReference:
       type: string
-      description: The type of field for the invitee.
-      enum:
-      - signature
-      - signatureDate
-      - initials
-      - text
-      - textarea
-      - label
-      - checkbox
-      - radio
-      - stamp
+      format: uuid
+      description: A unique reference number for this file.
       examples:
-      - signature
+      - 8d817359-7eb8-4b6e-9030-17ac286b7dc0
     FieldLocation:
       type: object
       properties:
@@ -715,12 +690,6 @@ components:
             - invitee
       required:
       - name
-    FileReference:
-      type: string
-      format: uuid
-      description: A unique reference number for this file.
-      examples:
-      - 8d817359-7eb8-4b6e-9030-17ac286b7dc0
     ErrorResponse:
       title: Error Response
       type: object
@@ -732,6 +701,21 @@ components:
         message:
           type: string
           description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    FieldType:
+      type: string
+      description: The type of field for the invitee.
+      enum:
+      - signature
+      - signatureDate
+      - initials
+      - text
+      - textarea
+      - label
+      - checkbox
+      - radio
+      - stamp
+      examples:
+      - signature
     Template:
       type: object
       properties:
@@ -822,15 +806,31 @@ components:
           description: The date the template was created, in ISO 8601 format.
           examples:
           - '2026-01-01T00:00:00+00:00'
+  requestBodies:
+    CM.Tooling.BulkEmail.Api.Models.ApiTemplate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiTemplate'
+      required: true
   responses:
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: The specified resource was not found
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:

@@ -1,11 +1,11 @@
 openapi: 3.2.0
 info:
-  title: Cm Com Connect API
-  version: 1.0.0
+  title: Connect API
+  description: API description for the internal API of CM.com's Connect product. The Connect product aims to provide an out-of-the-box no-code integration platform between CM.com's solutions and third-party SaaS products.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: 'Operations tagged Connect across 2 of this provider''s published API definitions: cm-com-conversational-router-v1-openapi.yml, cm-com-conversational-router-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 1.0.0
 servers:
 - url: https://core-node-h3cjyx4jzq-ez.a.run.app
 tags:
@@ -51,8 +51,6 @@ paths:
       security:
       - apiKey: []
       x-codegen-request-body-name: Request body
-    servers:
-    - url: https://core-node-h3cjyx4jzq-ez.a.run.app
 components:
   schemas:
     ConnectCustom:
@@ -94,6 +92,6 @@ components:
       description: Connect API key
       type: http
       scheme: bearer
-x-refined-from:
-- cm-com-conversational-router-v1-openapi.yml
-- cm-com-conversational-router-v2-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

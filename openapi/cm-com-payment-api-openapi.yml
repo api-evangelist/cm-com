@@ -45,8 +45,8 @@ paths:
           $ref: '#/components/responses/NotAvailable'
 components:
   responses:
-    NotAvailable:
-      description: The request cannot be made because the feature is not available for your account.
+    NotFound:
+      description: The specified resource was not found
       content:
         application/json:
           schema:
@@ -57,13 +57,37 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
+    NotAvailable:
+      description: The request cannot be made because the feature is not available for your account.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    PaymentResult:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        properties:
+          status:
+            type: string
+            enum:
+            - pending
+            - success
+            - expired
+            description: The payment status
+            examples:
+            - success
+          paymentMethod:
+            type: string
+            description: The payment method
+            examples:
+            - IDEAL
+          paymentReference:
+            type: string
+            description: The payment reference
+            examples:
+            - ch-9a0a32bc-bb25-4f5f-8aeb-681276a738fe
     Payment:
       title: Payment
       type: object
@@ -93,30 +117,6 @@ components:
         message:
           type: string
           description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
-    PaymentResult:
-      allOf:
-      - $ref: '#/components/schemas/Payment'
-      - type: object
-        properties:
-          status:
-            type: string
-            enum:
-            - pending
-            - success
-            - expired
-            description: The payment status
-            examples:
-            - success
-          paymentMethod:
-            type: string
-            description: The payment method
-            examples:
-            - IDEAL
-          paymentReference:
-            type: string
-            description: The payment reference
-            examples:
-            - ch-9a0a32bc-bb25-4f5f-8aeb-681276a738fe
   parameters:
     DossierId:
       name: dossierId

@@ -206,6 +206,26 @@ components:
           example: 00000000-0000-0000-0000-000000000000
         inputValue:
           type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
     CM.Platform.Channels.Models.ChannelTypes.Viber.ApiViberAccount:
       required:
       - id
@@ -272,26 +292,6 @@ components:
           - REJECTED
           - CANCELLED
           - DELETED
-          type: string
-    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelCategoryRequestID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-        createdOnUtc:
-          format: date-time
           type: string
   securitySchemes:
     ProductToken:

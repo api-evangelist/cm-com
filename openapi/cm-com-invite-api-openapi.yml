@@ -112,8 +112,8 @@ paths:
           $ref: '#/components/responses/InvalidState'
 components:
   responses:
-    InvalidState:
-      description: The request cannot be made because the state of the dossier does not match the state that is expected for this operation.
+    NotFound:
+      description: The specified resource was not found
       content:
         application/json:
           schema:
@@ -124,35 +124,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
+    InvalidState:
+      description: The request cannot be made because the state of the dossier does not match the state that is expected for this operation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-  parameters:
-    InviteId:
-      name: inviteId
-      in: path
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: 'a uuid string that identifies a single invite
-
-        '
-      example: 6f840cea-796e-4d5d-97ce-20114af5f51c
-    DossierId:
-      name: dossierId
-      in: path
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: 'a uuid string that identifies a dossier
-
-        '
-      example: 22470767-904e-4553-9586-d7ed4f2b330e
   schemas:
     ChannelType:
       type: string
@@ -160,17 +137,6 @@ components:
       - email
       - sms
       - whatsapp
-    ErrorResponse:
-      title: Error Response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code
-        message:
-          type: string
-          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
     Invite:
       type: object
       properties:
@@ -243,6 +209,40 @@ components:
           format: date-time
           description: The date the invite was created
           readOnly: true
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+  parameters:
+    InviteId:
+      name: inviteId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a single invite
+
+        '
+      example: 6f840cea-796e-4d5d-97ce-20114af5f51c
+    DossierId:
+      name: dossierId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: 'a uuid string that identifies a dossier
+
+        '
+      example: 22470767-904e-4553-9586-d7ed4f2b330e
   securitySchemes:
     JWT:
       type: http

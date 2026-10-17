@@ -375,75 +375,6 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    DeleteImportsDto:
-      type: object
-      properties:
-        uuids:
-          description: Array of import uuids
-          type: array
-          items:
-            type: array
-      required:
-      - uuids
-    Import:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Import name
-        importedRecords:
-          type: number
-          readOnly: true
-        failedRecords:
-          type: number
-          readOnly: true
-        errorDetails:
-          readOnly: true
-          type: array
-          items:
-            type: string
-        completedAt:
-          format: date-time
-          type: string
-          readOnly: true
-        status:
-          type: string
-          readOnly: true
-          enum:
-          - SCHEDULED
-          - RUNNING
-          - COMPLETED
-          - COMPLETED_WITH_FAILURES
-          - FAILED
-          example: COMPLETED
-        type:
-          type: string
-          readOnly: true
-          enum:
-          - TICKET
-          - EVENT
-          - VENUE
-          - PRODUCT
-          example: TICKET
-        isVisible:
-          type: boolean
-          description: If set to true the upload will be displayed under imports in the dashboard.
-          default: false
-      required:
-      - uuid
-      - name
-      - importedRecords
-      - failedRecords
-      - errorDetails
-      - completedAt
-      - status
-      - type
-      - isVisible
     ErrorDto:
       type: object
       properties:
@@ -518,6 +449,75 @@ components:
       - errorCode
       - description
       - httpStatus
+    Import:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Import name
+        importedRecords:
+          type: number
+          readOnly: true
+        failedRecords:
+          type: number
+          readOnly: true
+        errorDetails:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        completedAt:
+          format: date-time
+          type: string
+          readOnly: true
+        status:
+          type: string
+          readOnly: true
+          enum:
+          - SCHEDULED
+          - RUNNING
+          - COMPLETED
+          - COMPLETED_WITH_FAILURES
+          - FAILED
+          example: COMPLETED
+        type:
+          type: string
+          readOnly: true
+          enum:
+          - TICKET
+          - EVENT
+          - VENUE
+          - PRODUCT
+          example: TICKET
+        isVisible:
+          type: boolean
+          description: If set to true the upload will be displayed under imports in the dashboard.
+          default: false
+      required:
+      - uuid
+      - name
+      - importedRecords
+      - failedRecords
+      - errorDetails
+      - completedAt
+      - status
+      - type
+      - isVisible
+    DeleteImportsDto:
+      type: object
+      properties:
+        uuids:
+          description: Array of import uuids
+          type: array
+          items:
+            type: array
+      required:
+      - uuids
   securitySchemes:
     cookie:
       type: apiKey

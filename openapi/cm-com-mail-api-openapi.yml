@@ -127,19 +127,12 @@ paths:
                 $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail'
 components:
   schemas:
-    CM.Tooling.BulkEmail.Api.Models.ApiAttachment:
+    CM.Tooling.BulkEmail.Api.Models.ApiCustomValue:
       type: object
       properties:
-        FileName:
+        Field:
           type: string
-        Content:
-          type: string
-        ContentID:
-          type: string
-    CM.Tooling.BulkEmail.Api.Models.ApiEmailAddress:
-      type: object
-      properties:
-        EmailAddress:
+        Value:
           type: string
     CM.Tooling.BulkEmail.Api.Models.ApiSingleMail:
       type: object
@@ -202,40 +195,6 @@ components:
         ModifiedOnUtc:
           format: date-time
           type: string
-    CM.Tooling.BulkEmail.Api.Models.ApiCustomValue:
-      type: object
-      properties:
-        Field:
-          type: string
-        Value:
-          type: string
-    CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail:
-      type: object
-      properties:
-        ID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        AccountID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        CampaignID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        ToAddress:
-          type: string
-        ToName:
-          type: string
-        CustomValues:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCustomValue'
-        Attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiAttachment'
     CM.Tooling.BulkEmail.Api.Models.ApiMail:
       type: object
       properties:
@@ -272,4 +231,45 @@ components:
           type: string
         ModifiedOnUtc:
           format: date-time
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiCampaignMail:
+      type: object
+      properties:
+        ID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        AccountID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        CampaignID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        ToAddress:
+          type: string
+        ToName:
+          type: string
+        CustomValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiCustomValue'
+        Attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Tooling.BulkEmail.Api.Models.ApiAttachment'
+    CM.Tooling.BulkEmail.Api.Models.ApiAttachment:
+      type: object
+      properties:
+        FileName:
+          type: string
+        Content:
+          type: string
+        ContentID:
+          type: string
+    CM.Tooling.BulkEmail.Api.Models.ApiEmailAddress:
+      type: object
+      properties:
+        EmailAddress:
           type: string

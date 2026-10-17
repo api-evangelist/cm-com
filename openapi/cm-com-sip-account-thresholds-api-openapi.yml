@@ -202,13 +202,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    NoContentResult:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
-      additionalProperties: false
     ErrorCollection:
       title: Error Collection
       type: object
@@ -223,6 +216,23 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Error'
+      additionalProperties: false
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
       additionalProperties: false
     ApiSipAccountThresholdRule:
       title: Sip Account Threshold Rule
@@ -284,22 +294,12 @@ components:
           format: date-time
       additionalProperties: false
       description: Represents a sip account threshold rule request
-    Error:
-      title: Error
+    NoContentResult:
       type: object
       properties:
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        source:
-          type:
-          - string
-          - 'null'
+        statusCode:
+          type: integer
+          format: int32
       additionalProperties: false
   securitySchemes:
     X-CM-PRODUCTTOKEN:

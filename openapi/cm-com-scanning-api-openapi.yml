@@ -3501,70 +3501,34 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    ScanLog:
+    AnalyticsWidgetResponseDto:
       type: object
       properties:
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        scannedValue:
-          type: string
-          maxLength: 255
-          example: CMLQLGRPA
-        scannedAt:
-          format: date-time
-          type: string
-        scanStatusCode:
+        currentVisitors:
           type: number
-          description: Result of the scan
-          enum:
-          - 100
-          - 200
-          - 201
-          - 300
-          - 301
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          example: 200
-        errorDetails:
-          type: string
           readOnly: true
-        deviceId:
-          type: string
+        totalVisitors:
+          type: number
           readOnly: true
-          example: 9UY8G
-        deviceLabel:
-          type: string
+        totalCheckouts:
+          type: number
           readOnly: true
-          example: Scanner Entrance 1
-        mdmDeviceInfo:
-          type: object
+        showUpPercentage:
+          type: number
           readOnly: true
-        ticket:
-          $ref: '#/components/schemas/Ticket'
+        totalTickets:
+          type: number
+          readOnly: true
+        otherTickets:
+          type: number
+          readOnly: true
       required:
-      - externalId
-      - scannedValue
-      - scannedAt
-      - scanStatusCode
-      - errorDetails
-      - deviceId
-      - deviceLabel
-      - mdmDeviceInfo
-      - ticket
+      - currentVisitors
+      - totalVisitors
+      - totalCheckouts
+      - showUpPercentage
+      - totalTickets
+      - otherTickets
     OrderScanResultTicketDto:
       type: object
       properties:
@@ -3636,28 +3600,85 @@ components:
       - name
       - productName
       - venueSectionName
-    CheckInOrderDto:
+    OrderScanResultSummaryDto:
       type: object
       properties:
-        scans:
-          maxItems: 250
-          description: The selected tickets to check in, each with its own ulid and scannedValue (barcode).
+        total:
+          type: number
+          example: 4
+        committed:
+          type: number
+          example: 3
+        skipped:
+          type: number
+          example: 1
+        failed:
+          type: number
+          example: 0
+      required:
+      - total
+      - committed
+      - skipped
+      - failed
+    OrderScanPreviewDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          readOnly: true
+          example: ORDER-12345
+        tickets:
           type: array
           items:
-            $ref: '#/components/schemas/CreateScanDto'
+            $ref: '#/components/schemas/OrderScanTicketDto'
+        summary:
+          $ref: '#/components/schemas/OrderScanSummaryDto'
       required:
-      - scans
-    PageDto:
+      - orderId
+      - tickets
+      - summary
+    PageMetaDto:
       type: object
       properties:
-        data:
-          type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PageMetaDto'
+        page:
+          type: number
+        take:
+          type: number
+        skip:
+          type: number
+        itemCount:
+          type: number
+        pageCount:
+          type: number
+        hasPreviousPage:
+          type: boolean
+        hasNextPage:
+          type: boolean
       required:
-      - data
-      - meta
+      - page
+      - take
+      - skip
+      - itemCount
+      - pageCount
+      - hasPreviousPage
+      - hasNextPage
+    OrderScanResultDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          readOnly: true
+          example: ORDER-12345
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderScanResultTicketDto'
+        summary:
+          $ref: '#/components/schemas/OrderScanResultSummaryDto'
+      required:
+      - orderId
+      - tickets
+      - summary
     Condition:
       type: object
       properties:
@@ -3716,6 +3737,401 @@ components:
       - subject
       - operator
       - value
+    CreateCheckOutDto:
+      type: object
+      properties:
+        ulid:
+          type: string
+          maxLength: 26
+          example: 01J96A3A77SVXJKRZNGV386Q7G
+          description: Unique (ULID) identifier of a scan
+        scannedValue:
+          type: string
+          maxLength: 255
+          example: CMLQFLGRPA
+          description: Value (barcode) to be validated in the scan api
+        deviceId:
+          type: string
+          maxLength: 5
+          example: 9UY8H
+          description: Generated identifier of the device
+        deviceLabel:
+          type: string
+          maxLength: 25
+          example: Entrance Scanner 1
+          description: Custom label of the device
+        revalidate:
+          type: boolean
+          example: true
+          default: false
+          description: Boolean to determine whether the barcode is valid again after checkout (default false).
+      required:
+      - ulid
+      - scannedValue
+      - deviceId
+      - deviceLabel
+      - revalidate
+    EntrancePlan:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Main Entrance
+        description:
+          type: string
+          maxLength: 255
+          example: Entrance plan for main entrance
+        isDefault:
+          type: boolean
+          description: Marks an entrancePlan as default plan.
+        isActive:
+          type: boolean
+          description: Sets an entrancePlan as active/inactive.
+        startAt:
+          format: date-time
+          type: string
+        endAt:
+          format: date-time
+          type: string
+        scanMode:
+          type: string
+          enum:
+          - OFFLINE_SYNC
+          - ONLINE
+          example: OFFLINE_SYNC
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - NO_RULES
+          example: ACTIVE
+        children:
+          type: array
+          items:
+            type: object
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        venues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Venue'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        organisation:
+          type: object
+      required:
+      - uuid
+      - name
+      - isDefault
+      - isActive
+      - scanMode
+    Product:
+      type: object
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Entrance Ticket
+        productType:
+          type: string
+          enum:
+          - REGULAR
+          - BOX_OFFICE
+          - GUEST_LIST
+          - NON_ENTRY_PRODUCT
+          example: REGULAR
+      required:
+      - uuid
+      - externalId
+      - name
+      - productType
+    ScanResultDto:
+      type: object
+      properties:
+        ulid:
+          type: string
+          readOnly: true
+          example: 01J96GHPJP8TKGTHCYP6V6HVAR
+        scannedValue:
+          type: string
+          readOnly: true
+          example: CMLQFLGRPA
+        scannedAt:
+          format: date-time
+          type: string
+          readOnly: true
+        scanStatusCode:
+          type: number
+          description: Result of the scan
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        scanMessage:
+          type: string
+          readOnly: true
+          example: Barcode successfully checked in
+        errorDetails:
+          type: object
+          readOnly: true
+        scanColour:
+          type: string
+          description: Hex colour code to be used for the checkin
+          example: '#3ddc97'
+        deviceId:
+          type: string
+          description: Generated identifier of the device
+          example: 9UY8G
+        deviceLabel:
+          type: string
+          description: Custom label of the device
+          example: Scanner Entrance 1
+        name:
+          type: string
+          readOnly: true
+          example: Jane Doe
+        productName:
+          type: string
+          readOnly: true
+          example: VIP Ticket
+        venueSectionName:
+          type: string
+          readOnly: true
+          example: Northside Stand
+        ticketDetails:
+          type: string
+          readOnly: true
+          example: Row 8, seat 15
+        timeSlotMomentAt:
+          format: date-time
+          type: string
+          readOnly: true
+        validationStep:
+          description: Present when scanStatusCode is VERIFICATION_REQUIRED. Describes the manual verification the scanner must perform before the check-in can be confirmed or denied.
+          allOf:
+          - $ref: '#/components/schemas/ScanValidationStepDto'
+      required:
+      - ulid
+      - scannedValue
+      - scannedAt
+      - scanStatusCode
+      - scanMessage
+      - errorDetails
+      - scanColour
+      - deviceId
+      - deviceLabel
+      - name
+      - productName
+      - venueSectionName
+      - ticketDetails
+      - timeSlotMomentAt
+    OrderScanTicketDto:
+      type: object
+      properties:
+        barcode:
+          type: string
+          readOnly: true
+          example: CMLQFLGRPA
+        externalBarcode:
+          type: string
+          example: EXT-CMLQFLGRPA
+        ticketUuid:
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          readOnly: true
+          example: Jane Doe
+        productName:
+          type: string
+          readOnly: true
+          example: VIP Ticket
+        venueSectionName:
+          type: string
+          readOnly: true
+          example: Northside Stand
+        timeSlotMomentAt:
+          format: date-time
+          type: string
+          readOnly: true
+        checkedInAt:
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2025-06-16T11:34:51.000Z'
+        scanStatusCode:
+          type: number
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        scanMessage:
+          type: string
+          readOnly: true
+          example: Successfully checked in.
+        scanColour:
+          type: string
+          readOnly: true
+          example: '#3ddc97'
+        group:
+          type: string
+          enum:
+          - VALID_HERE
+          - ALREADY_CHECKED_IN
+          - NOT_VALID_HERE
+          - OTHER_DENIED
+          example: VALID_HERE
+        requiresVerification:
+          type: boolean
+          example: false
+        isScannedTicket:
+          type: boolean
+          description: True for the ticket whose barcode was actually scanned
+          example: true
+      required:
+      - barcode
+      - name
+      - productName
+      - venueSectionName
+      - timeSlotMomentAt
+      - checkedInAt
+      - scanStatusCode
+      - scanMessage
+      - scanColour
+      - group
+      - requiresVerification
+      - isScannedTicket
+    CheckInOrderDto:
+      type: object
+      properties:
+        scans:
+          maxItems: 250
+          description: The selected tickets to check in, each with its own ulid and scannedValue (barcode).
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateScanDto'
+      required:
+      - scans
+    ScanLog:
+      type: object
+      properties:
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        scannedValue:
+          type: string
+          maxLength: 255
+          example: CMLQLGRPA
+        scannedAt:
+          format: date-time
+          type: string
+        scanStatusCode:
+          type: number
+          description: Result of the scan
+          enum:
+          - 100
+          - 200
+          - 201
+          - 300
+          - 301
+          - 400
+          - 401
+          - 402
+          - 403
+          - 404
+          - 405
+          - 406
+          - 407
+          - 408
+          - 409
+          - 410
+          - 411
+          - 412
+          - 413
+          example: 200
+        errorDetails:
+          type: string
+          readOnly: true
+        deviceId:
+          type: string
+          readOnly: true
+          example: 9UY8G
+        deviceLabel:
+          type: string
+          readOnly: true
+          example: Scanner Entrance 1
+        mdmDeviceInfo:
+          type: object
+          readOnly: true
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+      required:
+      - externalId
+      - scannedValue
+      - scannedAt
+      - scanStatusCode
+      - errorDetails
+      - deviceId
+      - deviceLabel
+      - mdmDeviceInfo
+      - ticket
     Rule:
       type: object
       properties:
@@ -3825,9 +4241,25 @@ components:
       - shouldValidateOnParent
       - requiresPhotoVerification
       - requiresConfirmationQuestion
-    ScansByProductItemDto:
+    VenueSection:
       type: object
-      properties: {}
+      properties:
+        uuid:
+          type: string
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
+          type: string
+          maxLength: 255
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+          maxLength: 255
+          example: Northside Stand
+      required:
+      - uuid
+      - externalId
+      - name
     Ticket:
       type: object
       properties:
@@ -3969,172 +4401,56 @@ components:
       - status
       - productId
       - upstreamPlatform
-    Product:
+    GenericResponseDto:
       type: object
       properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Entrance Ticket
-        productType:
-          type: string
-          enum:
-          - REGULAR
-          - BOX_OFFICE
-          - GUEST_LIST
-          - NON_ENTRY_PRODUCT
-          example: REGULAR
-      required:
-      - uuid
-      - externalId
-      - name
-      - productType
-    OrderScanPreviewDto:
-      type: object
-      properties:
-        orderId:
+        message:
           type: string
           readOnly: true
-          example: ORDER-12345
-        tickets:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrderScanTicketDto'
-        summary:
-          $ref: '#/components/schemas/OrderScanSummaryDto'
-      required:
-      - orderId
-      - tickets
-      - summary
-    ValidateScanDto:
-      type: object
-      properties:
-        ulid:
-          type: string
-          maxLength: 26
-          example: 01J96A3A77SVXJKRZNGV386Q7G
-          description: Unique (ULID) identifier of a scan
-        scannedValue:
-          type: string
-          maxLength: 255
-          example: CMLQFLGRPA
-          description: Value (barcode) to be validated in the scan api
-        deviceId:
-          type: string
-          maxLength: 5
-          example: 9UY8H
-          description: Generated identifier of the device
-        deviceLabel:
-          type: string
-          maxLength: 25
-          example: Entrance Scanner 1
-          description: Custom label of the device
-        shouldValidateScans:
-          type: boolean
-          example: true
-          default: true
-          description: Boolean to determine whether the validation should consider previous scans.
-      required:
-      - ulid
-      - scannedValue
-      - deviceId
-      - deviceLabel
-      - shouldValidateScans
-    EntrancePlan:
-      type: object
-      properties:
-        uuid:
-          type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Main Entrance
-        description:
-          type: string
-          maxLength: 255
-          example: Entrance plan for main entrance
-        isDefault:
-          type: boolean
-          description: Marks an entrancePlan as default plan.
-        isActive:
-          type: boolean
-          description: Sets an entrancePlan as active/inactive.
-        startAt:
-          format: date-time
-          type: string
-        endAt:
-          format: date-time
-          type: string
-        scanMode:
-          type: string
-          enum:
-          - OFFLINE_SYNC
-          - ONLINE
-          example: OFFLINE_SYNC
-        status:
-          type: string
-          enum:
-          - ACTIVE
-          - INACTIVE
-          - NO_RULES
-          example: ACTIVE
-        children:
+          example: Successfully uploaded file.
+        details:
           type: array
           items:
             type: object
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/Event'
-        venues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Venue'
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/Rule'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-        organisation:
-          type: object
+          example:
+          - file: filename.csv
       required:
-      - uuid
-      - name
-      - isDefault
-      - isActive
-      - scanMode
-    Constraint:
+      - message
+      - details
+    ScanProgressResponseDto:
       type: object
       properties:
-        uuid:
+        checkins:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        errors:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        checkouts:
+          readOnly: true
+          type: array
+          items:
+            type: string
+        groupIntervalMs:
+          type: number
+          readOnly: true
+        effectiveEndAt:
+          format: date-time
           type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
-          type: string
-          maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-          maxLength: 255
-          example: Special access group
+          readOnly: true
       required:
-      - uuid
-      - externalId
-      - name
+      - checkins
+      - errors
+      - checkouts
+      - groupIntervalMs
+      - effectiveEndAt
+    ScansByVenueItemDto:
+      type: object
+      properties: {}
     ErrorDto:
       type: object
       properties:
@@ -4209,100 +4525,40 @@ components:
       - errorCode
       - description
       - httpStatus
-    Venue:
+    ValidateScanDto:
       type: object
       properties:
-        uuid:
+        ulid:
           type: string
-          maxLength: 36
-          example: 00000000-0000-0000-0000-000000000000
-        externalId:
+          maxLength: 26
+          example: 01J96A3A77SVXJKRZNGV386Q7G
+          description: Unique (ULID) identifier of a scan
+        scannedValue:
           type: string
           maxLength: 255
-          example: 00000000-0000-0000-0000-000000000000
-        name:
+          example: CMLQFLGRPA
+          description: Value (barcode) to be validated in the scan api
+        deviceId:
           type: string
-          maxLength: 255
-          example: CM.com Arena
-        venueSections:
-          type: array
-          items:
-            $ref: '#/components/schemas/VenueSection'
-      required:
-      - uuid
-      - externalId
-      - name
-      - venueSections
-    ScansByVenueItemDto:
-      type: object
-      properties: {}
-    OrderScanResultSummaryDto:
-      type: object
-      properties:
-        total:
-          type: number
-          example: 4
-        committed:
-          type: number
-          example: 3
-        skipped:
-          type: number
-          example: 1
-        failed:
-          type: number
-          example: 0
-      required:
-      - total
-      - committed
-      - skipped
-      - failed
-    ScanProgressResponseDto:
-      type: object
-      properties:
-        checkins:
-          readOnly: true
-          type: array
-          items:
-            type: string
-        errors:
-          readOnly: true
-          type: array
-          items:
-            type: string
-        checkouts:
-          readOnly: true
-          type: array
-          items:
-            type: string
-        groupIntervalMs:
-          type: number
-          readOnly: true
-        effectiveEndAt:
-          format: date-time
+          maxLength: 5
+          example: 9UY8H
+          description: Generated identifier of the device
+        deviceLabel:
           type: string
-          readOnly: true
+          maxLength: 25
+          example: Entrance Scanner 1
+          description: Custom label of the device
+        shouldValidateScans:
+          type: boolean
+          example: true
+          default: true
+          description: Boolean to determine whether the validation should consider previous scans.
       required:
-      - checkins
-      - errors
-      - checkouts
-      - groupIntervalMs
-      - effectiveEndAt
-    GenericResponseDto:
-      type: object
-      properties:
-        message:
-          type: string
-          readOnly: true
-          example: Successfully uploaded file.
-        details:
-          type: array
-          items:
-            type: object
-          example:
-          - file: filename.csv
-      required:
-      - message
-      - details
+      - ulid
+      - scannedValue
+      - deviceId
+      - deviceLabel
+      - shouldValidateScans
     Event:
       type: object
       properties:
@@ -4358,6 +4614,39 @@ components:
       - notValidHere
       - otherDenied
       - requiresVerification
+    PageDto:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        meta:
+          $ref: '#/components/schemas/PageMetaDto'
+      required:
+      - data
+      - meta
+    ScanValidationStepDto:
+      type: object
+      properties:
+        requiresPhotoVerification:
+          type: boolean
+          description: Staff must verify the visitor against a photo (e.g. Museumpass Belgium).
+        requiresConfirmationQuestion:
+          type: boolean
+          description: Staff must answer a confirmation question.
+        confirmationQuestion:
+          type: string
+          readOnly: true
+          example: Does this visitor meet the 18+ age requirement?
+        photo:
+          type: string
+          readOnly: true
+          example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ...
+      required:
+      - requiresPhotoVerification
+      - requiresConfirmationQuestion
+      - confirmationQuestion
+      - photo
     CreateScanDto:
       type: object
       properties:
@@ -4386,54 +4675,10 @@ components:
       - scannedValue
       - deviceId
       - deviceLabel
-    PageMetaDto:
+    ScansByProductItemDto:
       type: object
-      properties:
-        page:
-          type: number
-        take:
-          type: number
-        skip:
-          type: number
-        itemCount:
-          type: number
-        pageCount:
-          type: number
-        hasPreviousPage:
-          type: boolean
-        hasNextPage:
-          type: boolean
-      required:
-      - page
-      - take
-      - skip
-      - itemCount
-      - pageCount
-      - hasPreviousPage
-      - hasNextPage
-    ScanValidationStepDto:
-      type: object
-      properties:
-        requiresPhotoVerification:
-          type: boolean
-          description: Staff must verify the visitor against a photo (e.g. Museumpass Belgium).
-        requiresConfirmationQuestion:
-          type: boolean
-          description: Staff must answer a confirmation question.
-        confirmationQuestion:
-          type: string
-          readOnly: true
-          example: Does this visitor meet the 18+ age requirement?
-        photo:
-          type: string
-          readOnly: true
-          example: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ...
-      required:
-      - requiresPhotoVerification
-      - requiresConfirmationQuestion
-      - confirmationQuestion
-      - photo
-    VenueSection:
+      properties: {}
+    Venue:
       type: object
       properties:
         uuid:
@@ -4447,280 +4692,35 @@ components:
         name:
           type: string
           maxLength: 255
-          example: Northside Stand
+          example: CM.com Arena
+        venueSections:
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueSection'
       required:
       - uuid
       - externalId
       - name
-    ScanResultDto:
+      - venueSections
+    Constraint:
       type: object
       properties:
-        ulid:
+        uuid:
           type: string
-          readOnly: true
-          example: 01J96GHPJP8TKGTHCYP6V6HVAR
-        scannedValue:
-          type: string
-          readOnly: true
-          example: CMLQFLGRPA
-        scannedAt:
-          format: date-time
-          type: string
-          readOnly: true
-        scanStatusCode:
-          type: number
-          description: Result of the scan
-          enum:
-          - 100
-          - 200
-          - 201
-          - 300
-          - 301
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          example: 200
-        scanMessage:
-          type: string
-          readOnly: true
-          example: Barcode successfully checked in
-        errorDetails:
-          type: object
-          readOnly: true
-        scanColour:
-          type: string
-          description: Hex colour code to be used for the checkin
-          example: '#3ddc97'
-        deviceId:
-          type: string
-          description: Generated identifier of the device
-          example: 9UY8G
-        deviceLabel:
-          type: string
-          description: Custom label of the device
-          example: Scanner Entrance 1
-        name:
-          type: string
-          readOnly: true
-          example: Jane Doe
-        productName:
-          type: string
-          readOnly: true
-          example: VIP Ticket
-        venueSectionName:
-          type: string
-          readOnly: true
-          example: Northside Stand
-        ticketDetails:
-          type: string
-          readOnly: true
-          example: Row 8, seat 15
-        timeSlotMomentAt:
-          format: date-time
-          type: string
-          readOnly: true
-        validationStep:
-          description: Present when scanStatusCode is VERIFICATION_REQUIRED. Describes the manual verification the scanner must perform before the check-in can be confirmed or denied.
-          allOf:
-          - $ref: '#/components/schemas/ScanValidationStepDto'
-      required:
-      - ulid
-      - scannedValue
-      - scannedAt
-      - scanStatusCode
-      - scanMessage
-      - errorDetails
-      - scanColour
-      - deviceId
-      - deviceLabel
-      - name
-      - productName
-      - venueSectionName
-      - ticketDetails
-      - timeSlotMomentAt
-    AnalyticsWidgetResponseDto:
-      type: object
-      properties:
-        currentVisitors:
-          type: number
-          readOnly: true
-        totalVisitors:
-          type: number
-          readOnly: true
-        totalCheckouts:
-          type: number
-          readOnly: true
-        showUpPercentage:
-          type: number
-          readOnly: true
-        totalTickets:
-          type: number
-          readOnly: true
-        otherTickets:
-          type: number
-          readOnly: true
-      required:
-      - currentVisitors
-      - totalVisitors
-      - totalCheckouts
-      - showUpPercentage
-      - totalTickets
-      - otherTickets
-    OrderScanResultDto:
-      type: object
-      properties:
-        orderId:
-          type: string
-          readOnly: true
-          example: ORDER-12345
-        tickets:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrderScanResultTicketDto'
-        summary:
-          $ref: '#/components/schemas/OrderScanResultSummaryDto'
-      required:
-      - orderId
-      - tickets
-      - summary
-    CreateCheckOutDto:
-      type: object
-      properties:
-        ulid:
-          type: string
-          maxLength: 26
-          example: 01J96A3A77SVXJKRZNGV386Q7G
-          description: Unique (ULID) identifier of a scan
-        scannedValue:
+          maxLength: 36
+          example: 00000000-0000-0000-0000-000000000000
+        externalId:
           type: string
           maxLength: 255
-          example: CMLQFLGRPA
-          description: Value (barcode) to be validated in the scan api
-        deviceId:
-          type: string
-          maxLength: 5
-          example: 9UY8H
-          description: Generated identifier of the device
-        deviceLabel:
-          type: string
-          maxLength: 25
-          example: Entrance Scanner 1
-          description: Custom label of the device
-        revalidate:
-          type: boolean
-          example: true
-          default: false
-          description: Boolean to determine whether the barcode is valid again after checkout (default false).
-      required:
-      - ulid
-      - scannedValue
-      - deviceId
-      - deviceLabel
-      - revalidate
-    OrderScanTicketDto:
-      type: object
-      properties:
-        barcode:
-          type: string
-          readOnly: true
-          example: CMLQFLGRPA
-        externalBarcode:
-          type: string
-          example: EXT-CMLQFLGRPA
-        ticketUuid:
-          type: string
           example: 00000000-0000-0000-0000-000000000000
         name:
           type: string
-          readOnly: true
-          example: Jane Doe
-        productName:
-          type: string
-          readOnly: true
-          example: VIP Ticket
-        venueSectionName:
-          type: string
-          readOnly: true
-          example: Northside Stand
-        timeSlotMomentAt:
-          format: date-time
-          type: string
-          readOnly: true
-        checkedInAt:
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2025-06-16T11:34:51.000Z'
-        scanStatusCode:
-          type: number
-          enum:
-          - 100
-          - 200
-          - 201
-          - 300
-          - 301
-          - 400
-          - 401
-          - 402
-          - 403
-          - 404
-          - 405
-          - 406
-          - 407
-          - 408
-          - 409
-          - 410
-          - 411
-          - 412
-          - 413
-          example: 200
-        scanMessage:
-          type: string
-          readOnly: true
-          example: Successfully checked in.
-        scanColour:
-          type: string
-          readOnly: true
-          example: '#3ddc97'
-        group:
-          type: string
-          enum:
-          - VALID_HERE
-          - ALREADY_CHECKED_IN
-          - NOT_VALID_HERE
-          - OTHER_DENIED
-          example: VALID_HERE
-        requiresVerification:
-          type: boolean
-          example: false
-        isScannedTicket:
-          type: boolean
-          description: True for the ticket whose barcode was actually scanned
-          example: true
+          maxLength: 255
+          example: Special access group
       required:
-      - barcode
+      - uuid
+      - externalId
       - name
-      - productName
-      - venueSectionName
-      - timeSlotMomentAt
-      - checkedInAt
-      - scanStatusCode
-      - scanMessage
-      - scanColour
-      - group
-      - requiresVerification
-      - isScannedTicket
   securitySchemes:
     cookie:
       type: apiKey

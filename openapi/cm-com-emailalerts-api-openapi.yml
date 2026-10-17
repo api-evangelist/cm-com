@@ -163,21 +163,19 @@ paths:
       - ProductToken: []
 components:
   schemas:
-    Configuration_Int32ControllerResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        status:
-          $ref: '#/components/schemas/Configuration_StatusCode'
-        message:
-          type:
-          - string
-          - 'null'
-        data:
-          type: integer
-          format: int32
-      additionalProperties: false
+    Configuration_StatusCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 429
+      - 500
+      - 999
+      type: integer
+      format: int32
     Configuration_EmailAlertDto:
       type: object
       properties:
@@ -248,19 +246,21 @@ components:
           items:
             $ref: '#/components/schemas/Configuration_EmailAlert'
       additionalProperties: false
-    Configuration_StatusCode:
-      enum:
-      - 200
-      - 400
-      - 401
-      - 403
-      - 404
-      - 409
-      - 429
-      - 500
-      - 999
-      type: integer
-      format: int32
+    Configuration_Int32ControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type: integer
+          format: int32
+      additionalProperties: false
   securitySchemes:
     ProductToken:
       type: apiKey

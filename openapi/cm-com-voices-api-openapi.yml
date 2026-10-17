@@ -86,14 +86,35 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Encoding:
-      title: Encoding
-      enum:
-      - Mp3
-      - Ogg
-      - Pcm
-      type: string
-      description: The encoding of the audio.
+    ApiTtsVoice:
+      title: Tts Voice
+      type: object
+      properties:
+        language:
+          type:
+          - string
+          - 'null'
+          description: ISO-639 language code and ISO-3166 country code.
+          example: en-GB
+        gender:
+          $ref: '#/components/schemas/ApiGender'
+        voiceNumber:
+          type: integer
+          description: The voice number, used to indentify this voice.
+          format: int32
+          example: 2
+        name:
+          type:
+          - string
+          - 'null'
+          description: The display name of the current TTS voice.
+          example: Amy
+        isPremium:
+          type: boolean
+          description: Whether or not this is a premium TTS voice, meaning extra surcharges will be invoices for it's use.
+          example: true
+      additionalProperties: false
+      description: Model describing a TTS voice that's supported by the Voice TTS server.
     ApiTtsPreviewRequest:
       required:
       - gender
@@ -124,35 +145,6 @@ components:
           $ref: '#/components/schemas/Encoding'
       additionalProperties: false
       description: Model describing a TTS voice to fetch the preview audio file for.
-    ApiTtsVoice:
-      title: Tts Voice
-      type: object
-      properties:
-        language:
-          type:
-          - string
-          - 'null'
-          description: ISO-639 language code and ISO-3166 country code.
-          example: en-GB
-        gender:
-          $ref: '#/components/schemas/ApiGender'
-        voiceNumber:
-          type: integer
-          description: The voice number, used to indentify this voice.
-          format: int32
-          example: 2
-        name:
-          type:
-          - string
-          - 'null'
-          description: The display name of the current TTS voice.
-          example: Amy
-        isPremium:
-          type: boolean
-          description: Whether or not this is a premium TTS voice, meaning extra surcharges will be invoices for it's use.
-          example: true
-      additionalProperties: false
-      description: Model describing a TTS voice that's supported by the Voice TTS server.
     ApiGender:
       title: Gender
       enum:
@@ -160,6 +152,14 @@ components:
       - Female
       type: string
       description: Available genders for TTS voices.
+    Encoding:
+      title: Encoding
+      enum:
+      - Mp3
+      - Ogg
+      - Pcm
+      type: string
+      description: The encoding of the audio.
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

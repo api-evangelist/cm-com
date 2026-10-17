@@ -79,105 +79,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    InviteeId:
-      $ref: '#/components/schemas/InviteeReference'
-      readOnly: true
-    Pagination:
+    ArchiveInvitee:
       type: object
       properties:
-        total:
-          type: integer
-          description: The total number of items
-          minimum: 1
-          examples:
-          - 1
-        perPage:
-          type: integer
-          description: The number of items per page
-          examples:
-          - 10
-        currentPage:
-          type: integer
-          description: The current page number
-          examples:
-          - 1
-        lastPage:
-          type: integer
-          description: The page number of the last available page
-          examples:
-          - 1
-        from:
-          type: integer
-          description: The number of the first item in the current page
-          examples:
-          - 1
-        to:
-          type: integer
-          description: The number of the last item in the current page
-          examples:
-          - 1
-    Archive:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          data:
-            type: array
-            items:
-              type: object
-              properties:
-                id:
-                  $ref: '#/components/schemas/DossierId'
-                name:
-                  type: string
-                  description: Name of the dossier
-                  examples:
-                  - Purchase contract
-                invitees:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ArchiveInvitee'
-                files:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ArchiveFile'
-                updatedAt:
-                  type: string
-                  format: date-time
-                  description: The date the dossier was updated
-                  readOnly: true
-                createdAt:
-                  type: string
-                  format: date-time
-                  description: The date the dossier was created
-                  readOnly: true
-    ErrorResponse:
-      title: Error Response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code
-        message:
+        id:
+          $ref: '#/components/schemas/InviteeId'
+        name:
           type: string
-          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
-    DossierReference:
-      type: string
-      format: uuid
-      description: Id of the dossier
-      examples:
-      - 22470767-904e-4553-9586-d7ed4f2b330e
+          description: Name of the person invited to read and/or sign the document
+          maxLength: 255
+          examples:
+          - Peter Invitee
+        email:
+          type: string
+          format: email
+          description: A valid email address
+          maxLength: 255
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date the invitee was updated
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date the invitee was created
+          readOnly: true
     DossierId:
       $ref: '#/components/schemas/DossierReference'
       readOnly: true
-    InviteeReference:
-      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
-      type: string
-      format: uuid
-      examples:
-      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
+    InviteeId:
+      $ref: '#/components/schemas/InviteeReference'
+      readOnly: true
     ArchiveFile:
       type: object
       properties:
@@ -215,32 +162,98 @@ components:
           format: date-time
           description: The date the file was created
           readOnly: true
-    ArchiveInvitee:
+    DossierReference:
+      type: string
+      format: uuid
+      description: Id of the dossier
+      examples:
+      - 22470767-904e-4553-9586-d7ed4f2b330e
+    Pagination:
       type: object
       properties:
-        id:
-          $ref: '#/components/schemas/InviteeId'
-        name:
-          type: string
-          description: Name of the person invited to read and/or sign the document
-          maxLength: 255
+        total:
+          type: integer
+          description: The total number of items
+          minimum: 1
           examples:
-          - Peter Invitee
-        email:
+          - 1
+        perPage:
+          type: integer
+          description: The number of items per page
+          examples:
+          - 10
+        currentPage:
+          type: integer
+          description: The current page number
+          examples:
+          - 1
+        lastPage:
+          type: integer
+          description: The page number of the last available page
+          examples:
+          - 1
+        from:
+          type: integer
+          description: The number of the first item in the current page
+          examples:
+          - 1
+        to:
+          type: integer
+          description: The number of the last item in the current page
+          examples:
+          - 1
+    InviteeReference:
+      description: Optional. Indicates that only a particular invitee is allowed/required to use a field.
+      type: string
+      format: uuid
+      examples:
+      - c6f7eb6f-7414-4f5e-9096-85c6c5a48f84
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
           type: string
-          format: email
-          description: A valid email address
-          maxLength: 255
-        updatedAt:
-          type: string
-          format: date-time
-          description: The date the invitee was updated
-          readOnly: true
-        createdAt:
-          type: string
-          format: date-time
-          description: The date the invitee was created
-          readOnly: true
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
+    Archive:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  $ref: '#/components/schemas/DossierId'
+                name:
+                  type: string
+                  description: Name of the dossier
+                  examples:
+                  - Purchase contract
+                invitees:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ArchiveInvitee'
+                files:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ArchiveFile'
+                updatedAt:
+                  type: string
+                  format: date-time
+                  description: The date the dossier was updated
+                  readOnly: true
+                createdAt:
+                  type: string
+                  format: date-time
+                  description: The date the dossier was created
+                  readOnly: true
   parameters:
     ArchiveId:
       name: archiveId
@@ -264,19 +277,6 @@ components:
 
         '
       example: 22470767-904e-4553-9586-d7ed4f2b331f
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     JWT:
       type: http

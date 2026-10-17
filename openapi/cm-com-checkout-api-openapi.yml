@@ -152,96 +152,118 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
-    KlarnaDescription:
-      maxLength: 100
-    RefundsList:
-      description: Details of all refunds belonging to a transaction.
-      type: object
-      required:
-      - refunds
-      properties:
-        refunds:
-          type: array
-          items:
-            $ref: '#/components/schemas/RefundDetails'
-    Refund:
-      description: Refund an already successfully processed payment.
-      type: object
-      properties:
-        amount:
-          $ref: '#/components/schemas/Amount'
-          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
-
-            '
-        reason:
-          $ref: '#/components/schemas/RefundReason'
-    OrderItems:
-      $ref: '#/components/schemas/Items'
-      description: 'Items included in the order. Required field for the following payment methods: Klarna, Riverty. We request both values ''vatAmount'' and ''vatRate'' to prevent errors.'
-    RefundStatus:
-      description: '* `SUCCESS`    - Refund has succeeded.
-
-        * `PENDING`    - Refund is waiting to be processed.
-
-        * `FAILURE`    - Refund has failed.
-
-        * `CANCELLED`  - Refund has been cancelled.
-
-        '
-      type: string
-      enum:
-      - SUCCESS
-      - PENDING
-      - FAILURE
-      - CANCELLED
-      example: SUCCESS
-    TransactionWebhooks:
-      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
-
-        '
-      type: array
-      items:
-        $ref: '#/components/schemas/TransactionWebhook'
-      example:
-      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
-        events:
-        - STATUS_CHANGE
-    RefundReason:
-      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
-
-        '
-      type: string
-      example: Refund required by consumer.
-      maxLength: 255
-    PaymentWithoutDescriptionAndExpiresAt:
+    TransactionWithoutOrderIdLanguageRefundsAndExpiresAt:
       allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt'
+      - type: object
+        required:
+        - createdAt
+        properties:
+          createdAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time when the transaction was created.
+    TransactionWebhook:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
       - type: object
         properties:
-          webhooks:
-            $ref: '#/components/schemas/TransactionWebhooks'
-    Gender:
-      description: The consumers gender.
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    KlarnaDescription:
+      maxLength: 100
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
       type: string
-      format: enum
-      enum:
-      - m
-      - f
-      - 'null'
-      default: null
-    Language:
-      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    CheckoutConsumer:
+      allOf:
+      - $ref: '#/components/schemas/Consumer'
+      - type: object
+        properties:
+          givenName:
+            type: string
+            maxLength: 35
+            description: First name of the consumer.
+          middleName:
+            type: string
+            maxLength: 35
+            description: Middle name of the consumer.
+          familyName:
+            type: string
+            maxLength: 35
+            description: Last name of the consumer.
+          address:
+            $ref: '#/components/schemas/AddressWithStateAndAdditionalData'
+    Country:
+      description: Country of the consumer (ISO-3166)
       type: string
-      default: nl
-      example: nl
+      example: NL
       minLength: 2
       maxLength: 2
-    Datetime:
-      type: string
-      format: date-time
-      minLength: 20
-      example: '2006-01-02T15:04:05Z'
-      description: ISO 8601 date and time.
+    ChargebacksList:
+      description: Details of all chargebacks belonging to a transaction.
+      type: object
+      required:
+      - chargebacks
+      properties:
+        chargebacks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargebackDetails'
+    CreateCheckout-2:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderId'
+      - type: object
+        required:
+        - status
+        - action
+        - expiresAt
+        - merchantOrderReference
+        properties:
+          merchantOrderReference:
+            $ref: '#/components/schemas/MerchantOrderReference'
+          consumer:
+            $ref: '#/components/schemas/CheckoutConsumer'
+          status:
+            description: The status of the transaction.
+            oneOf:
+            - $ref: '#/components/schemas/StatusOpen'
+            - $ref: '#/components/schemas/StatusSuccess'
+            - $ref: '#/components/schemas/StatusCancelled'
+            - $ref: '#/components/schemas/StatusExpired'
+            - $ref: '#/components/schemas/StatusFailure'
+            - $ref: '#/components/schemas/StatusAuthorized'
+            - $ref: '#/components/schemas/StatusPending'
+          action:
+            type: object
+            description: Next action to be performed by merchant (or consumer) to complete the payment.
+            properties:
+              redirect:
+                $ref: '#/components/schemas/RedirectAction'
+              qrcode:
+                $ref: '#/components/schemas/CheckoutQRCodeAction'
+          paymentMethods:
+            $ref: '#/components/schemas/PaymentMethods'
+          orderItems:
+            $ref: '#/components/schemas/OrderItems'
+          maxRetries:
+            $ref: '#/components/schemas/MaxRetries'
+          refunds:
+            $ref: '#/components/schemas/Refunds'
     GenderlessConsumer:
       type: object
       properties:
@@ -255,103 +277,32 @@ components:
           pattern: ^\d{4}-\d{2}-\d{2}$
           example: '1990-05-23'
           description: Date of birth in ISO 8601 format (YYYY-MM-DD).
-    TransactionWebhookWithChargeback:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                * `CHARGEBACK_STATUS` - Triggered when a transaction receives an update on one of its chargebacks.
-
-                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              - $ref: '#/components/schemas/ChargebackStatusEvent'
-              - $ref: '#/components/schemas/FinalStatusEvent'
-              example: STATUS_CHANGE
-    Amount:
-      description: Denomination in the smallest currency subunit, as for example euro cents.
-      type: integer
-      minimum: 1
-      maximum: 99999999
-      example: 1200
-    Refunds:
-      description: Details of refunds for a transaction
+    CheckoutQRCodeAction:
       type: object
       required:
-      - refundedAmount
-      - refundedPendingAmount
+      - url
+      description: Action to be performed by the consumer to complete the payment by scanning a QR code that leads to the same hosted checkout session as the redirect action.
       properties:
-        refundedAmount:
-          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
-          type: integer
-          minimum: 0
-          maximum: 99999999
-          example: 300
-        refundedPendingAmount:
-          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
-          type: integer
-          minimum: 1
-          maximum: 99999999
-          example: 100
-    FinalStatusEvent:
-      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+        url:
+          description: URL to a QR code image encoding the hosted checkout session URL, to be scanned by the consumer. Append a `.png`, `.jpg`, or `.svg` extension to select the image output format; if omitted or unrecognized, `png` is returned.
+          type: string
+          format: url
+          example: https://checkout.gateway.acceptance.cmpayments.nl/checkout/qr/1da50859-59ad-4d7d-a6ac-8554a2f981bc
+    ChargebackStatus:
+      description: '* `CHARGED` - The transaction has been charged back by the issuing bank.
 
         '
       type: string
       enum:
-      - FINALSTATUS
-      example: FINALSTATUS
-    RedirectAction:
-      description: URL where consumer should be redirected to by the merchant to perform the payment.
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          description: URL where consumer should be redirected to by the merchant to perform the payment.
-          type: string
-          format: url
-          example: https://issuer.tld/ideal/start?trxid=213981209381209390821&random=wreq0dq90vgq0ew923123
-    CreateCheckout:
-      allOf:
-      - $ref: '#/components/schemas/Payment'
-      - type: object
-        required:
-        - description
-        - merchantOrderReference
-        - language
-        properties:
-          expiresAt:
-            allOf:
-            - $ref: '#/components/schemas/Datetime'
-            - description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes EXPIRED. If left empty, the value defaults to 30 mins.
-          amount:
-            description: 'Denomination in the smallest currency subunit, as for example eurocents.
-
-              Ignored (although required) for requests that include items (e.g. Klarna). In this cases the total amount is calculated internally using item prices.'
-          merchantOrderReference:
-            $ref: '#/components/schemas/MerchantOrderReference'
-          consumer:
-            $ref: '#/components/schemas/CheckoutConsumer'
-          maxRetries:
-            $ref: '#/components/schemas/MaxRetries'
-          paymentMethods:
-            $ref: '#/components/schemas/PaymentMethods'
-          orderItems:
-            $ref: '#/components/schemas/OrderItems'
-          webhooks:
-            $ref: '#/components/schemas/TransactionWebhooksWithChargeback'
-          description:
-            maxLength: 35
+      - CHARGED
+      example: CHARGED
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
     ReturnUrls:
       type: object
       description: 'URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
@@ -384,35 +335,29 @@ components:
           format: url
           maxLength: 2000
           example: https://yourdomain.tld/order/payment-failed.html
-    BaseWebhook:
+    ItemName:
+      description: A human readable name of the item.
+      type: string
+      maxLength: 50
+      example: Kingston microSD 32GB
+    StatusFailure:
+      description: The transaction has failed.
+      type: string
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
+    Refund:
+      description: Refund an already successfully processed payment.
       type: object
-      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
-      required:
-      - url
-      - events
       properties:
-        url:
-          description: The URL the request must be send to.
-          type: string
-          format: url
-          example: https://yourdomain.tld/webhooks?purchaseId=order123
-        events:
-          description: Type of events that will trigger a webhook.
-          type: array
-          minItems: 1
-          items:
-            type: string
-    TransactionWebhooksWithChargeback:
-      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+        amount:
+          $ref: '#/components/schemas/Amount'
+          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
 
-        '
-      type: array
-      items:
-        $ref: '#/components/schemas/TransactionWebhookWithChargeback'
-      example:
-      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
-        events:
-        - STATUS_CHANGE
+            '
+        reason:
+          $ref: '#/components/schemas/RefundReason'
     PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
       allOf:
       - $ref: '#/components/schemas/ReturnURLOneOf'
@@ -427,95 +372,74 @@ components:
             $ref: '#/components/schemas/Amount'
           currency:
             $ref: '#/components/schemas/Currency'
-    Reference:
-      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
-      type: string
-      minLength: 1
-      maxLength: 255
-      example: '20210623130413'
-    StatusChangeEvent:
-      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+    RefundStatusEvent:
+      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
 
         '
       type: string
       enum:
-      - STATUS_CHANGE
-      example: STATUS_CHANGE
-    ChargebackDetails:
-      description: Details of a chargeback.
-      type: object
-      required:
-      - id
-      - transactionId
-      - amount
-      - currency
-      - status
-      - chargebackDate
-      - created
-      - updated
-      properties:
-        id:
-          $ref: '#/components/schemas/Uuid'
-        transactionId:
-          $ref: '#/components/schemas/Uuid'
-        amount:
-          $ref: '#/components/schemas/Amount'
-        currency:
-          $ref: '#/components/schemas/Currency'
-        reason:
-          description: The reason for the chargeback as reported by the issuing bank.
-          type: string
-          example: Fraudulent transaction
-        status:
-          $ref: '#/components/schemas/ChargebackStatus'
-        chargebackDate:
-          $ref: '#/components/schemas/Datetime'
-          description: Date and time when the chargeback was registered by the issuing bank.
-        created:
-          $ref: '#/components/schemas/Datetime'
-        updated:
-          $ref: '#/components/schemas/Datetime'
-    Currency:
-      description: ISO 4217 currency code.
-      type: string
-      minLength: 3
-      maxLength: 3
-      default: EUR
-      example: EUR
-    StatusCancelled:
-      description: The transaction has been cancelled by the consumer.
-      type: string
-      format: enum
-      enum:
-      - CANCELLED
-      example: CANCELLED
-    TransactionId:
-      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    ItemName:
-      description: A human readable name of the item.
-      type: string
-      maxLength: 50
-      example: Kingston microSD 32GB
-    Description:
-      description: Description of the underlying value or reason of the payment.
-      type: string
-      maxLength: 255
-      example: Order at yourdomain.tld
-    ChargebacksList:
-      description: Details of all chargebacks belonging to a transaction.
-      type: object
-      required:
-      - chargebacks
-      properties:
-        chargebacks:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChargebackDetails'
+      - REFUND_STATUS
+      example: REFUND_STATUS
+    CreateCheckout:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        required:
+        - description
+        - merchantOrderReference
+        - language
+        properties:
+          expiresAt:
+            allOf:
+            - $ref: '#/components/schemas/Datetime'
+            - description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes EXPIRED. If left empty, the value defaults to 30 mins.
+          amount:
+            description: 'Denomination in the smallest currency subunit, as for example eurocents.
+
+              Ignored (although required) for requests that include items (e.g. Klarna). In this cases the total amount is calculated internally using item prices.'
+          merchantOrderReference:
+            $ref: '#/components/schemas/MerchantOrderReference'
+          consumer:
+            $ref: '#/components/schemas/CheckoutConsumer'
+          maxRetries:
+            $ref: '#/components/schemas/MaxRetries'
+          paymentMethods:
+            $ref: '#/components/schemas/PaymentMethods'
+          orderItems:
+            $ref: '#/components/schemas/OrderItems'
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooksWithChargeback'
+          description:
+            maxLength: 35
+    TransactionWithoutOrderId:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
+      - type: object
+        required:
+        - language
+        - expiresAt
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+          refunds:
+            $ref: '#/components/schemas/Refunds'
+    ReturnURLOneOf:
+      oneOf:
+      - type: object
+        required:
+        - returnUrls
+        properties:
+          returnUrls:
+            $ref: '#/components/schemas/ReturnUrls'
+      - type: object
+        required:
+        - returnUrl
+        properties:
+          returnUrl:
+            $ref: '#/components/schemas/ReturnUrl'
     CheckoutPayments:
       type: object
       properties:
@@ -558,186 +482,11 @@ components:
                 - $ref: '#/components/schemas/StatusPending'
               createdAt:
                 $ref: '#/components/schemas/Datetime'
-    AddressWithoutMandatoryCountry:
-      type: object
-      description: The consumers address.
-      properties:
-        street:
-          description: The consumers street name.
-          type: string
-          maxLength: 100
-          example: Rustenburgerlaan
-        houseNumber:
-          description: The consumers house number.
-          type: string
-          maxLength: 35
-          example: '25'
-        postalCode:
-          description: The consumers postal code.
-          type: string
-          maxLength: 35
-          example: 2012AL
-        city:
-          description: The consumers city.
-          type: string
-          maxLength: 35
-          example: Haarlem
-        countryCode:
-          $ref: '#/components/schemas/Country'
-    Consumer:
-      allOf:
-      - $ref: '#/components/schemas/GenderlessConsumer'
-      - type: object
-        properties:
-          gender:
-            $ref: '#/components/schemas/Gender'
-    ChargebackStatusEvent:
-      description: '* `CHARGEBACK_STATUS` - Triggered when a transaction receives an update on one of its chargebacks.
-
-        '
+    Phone:
+      description: The phonenumber of the consumer (E.164 format).
       type: string
-      enum:
-      - CHARGEBACK_STATUS
-      example: CHARGEBACK_STATUS
-    StatusExpired:
-      description: The transaction has expired.
-      type: string
-      format: enum
-      enum:
-      - EXPIRED
-      example: EXPIRED
-    Items:
-      description: 'Items included in the order. We request both values ''vatAmount'' and ''vatRate'' to prevent errors.
-
-        '
-      type: array
-      minItems: 1
-      maxItems: 512
-      items:
-        allOf:
-        - $ref: '#/components/schemas/Item'
-        - type: object
-          properties:
-            name:
-              $ref: '#/components/schemas/ItemName'
-            description:
-              $ref: '#/components/schemas/KlarnaDescription'
-            type:
-              description: 'The type of order line item. Used by Klarna to classify the order line.
-
-                '
-              type: string
-              format: enum
-              enum:
-              - PHYSICAL
-              - DIGITAL
-              - DISCOUNT
-              - GIFT_CARD
-              - STORE_CREDIT
-              - SHIPPING_FEE
-              - SALES_TAX
-              - SURCHARGE
-              example: PHYSICAL
-    Payment:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
-      - type: object
-        required:
-        - description
-        properties:
-          description:
-            $ref: '#/components/schemas/Description'
-          expiresAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
-    StatusOpen:
-      description: The transaction is open and can be paid.
-      type: string
-      format: enum
-      enum:
-      - OPEN
-      example: OPEN
-    CreateCheckout-2:
-      allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderId'
-      - type: object
-        required:
-        - status
-        - action
-        - expiresAt
-        - merchantOrderReference
-        properties:
-          merchantOrderReference:
-            $ref: '#/components/schemas/MerchantOrderReference'
-          consumer:
-            $ref: '#/components/schemas/CheckoutConsumer'
-          status:
-            description: The status of the transaction.
-            oneOf:
-            - $ref: '#/components/schemas/StatusOpen'
-            - $ref: '#/components/schemas/StatusSuccess'
-            - $ref: '#/components/schemas/StatusCancelled'
-            - $ref: '#/components/schemas/StatusExpired'
-            - $ref: '#/components/schemas/StatusFailure'
-            - $ref: '#/components/schemas/StatusAuthorized'
-            - $ref: '#/components/schemas/StatusPending'
-          action:
-            type: object
-            description: Next action to be performed by merchant (or consumer) to complete the payment.
-            properties:
-              redirect:
-                $ref: '#/components/schemas/RedirectAction'
-              qrcode:
-                $ref: '#/components/schemas/CheckoutQRCodeAction'
-          paymentMethods:
-            $ref: '#/components/schemas/PaymentMethods'
-          orderItems:
-            $ref: '#/components/schemas/OrderItems'
-          maxRetries:
-            $ref: '#/components/schemas/MaxRetries'
-          refunds:
-            $ref: '#/components/schemas/Refunds'
-    PaymentMethods:
-      type: array
-      description: List of payment methods used in the checkout. If not provided all available payment methods will be shown.
-      items:
-        type: string
-        enum:
-        - apple_pay
-        - bancontact
-        - bank_transfer
-        - creditcard
-        - google_pay
-        - ideal
-        - klarna
-        - paypal
-        - in3
-    TransactionWebhook:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              - $ref: '#/components/schemas/FinalStatusEvent'
-              example: STATUS_CHANGE
-    PaymentWithoutDescriptionExpiresAtAndWebhooks:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
-      - type: object
-        properties:
-          language:
-            $ref: '#/components/schemas/Language'
+      maxLength: 16
+      example: '+31695613259'
     Item:
       description: 'Item object that can be used to provide details of the items in the order.
 
@@ -784,13 +533,140 @@ components:
           maximum: 99.9
           example: 20
           multipleOf: 0.1
-    StatusPending:
-      description: The transaction is pending, meaning it could not be completed yet; waiting for something.
+    Items:
+      description: 'Items included in the order. We request both values ''vatAmount'' and ''vatRate'' to prevent errors.
+
+        '
+      type: array
+      minItems: 1
+      maxItems: 512
+      items:
+        allOf:
+        - $ref: '#/components/schemas/Item'
+        - type: object
+          properties:
+            name:
+              $ref: '#/components/schemas/ItemName'
+            description:
+              $ref: '#/components/schemas/KlarnaDescription'
+            type:
+              description: 'The type of order line item. Used by Klarna to classify the order line.
+
+                '
+              type: string
+              format: enum
+              enum:
+              - PHYSICAL
+              - DIGITAL
+              - DISCOUNT
+              - GIFT_CARD
+              - STORE_CREDIT
+              - SHIPPING_FEE
+              - SALES_TAX
+              - SURCHARGE
+              example: PHYSICAL
+    RefundStatus:
+      description: '* `SUCCESS`    - Refund has succeeded.
+
+        * `PENDING`    - Refund is waiting to be processed.
+
+        * `FAILURE`    - Refund has failed.
+
+        * `CANCELLED`  - Refund has been cancelled.
+
+        '
+      type: string
+      enum:
+      - SUCCESS
+      - PENDING
+      - FAILURE
+      - CANCELLED
+      example: SUCCESS
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
       type: string
       format: enum
       enum:
-      - PENDING
-      example: PENDING
+      - CANCELLED
+      example: CANCELLED
+    ChargebackDetails:
+      description: Details of a chargeback.
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - currency
+      - status
+      - chargebackDate
+      - created
+      - updated
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/Uuid'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        reason:
+          description: The reason for the chargeback as reported by the issuing bank.
+          type: string
+          example: Fraudulent transaction
+        status:
+          $ref: '#/components/schemas/ChargebackStatus'
+        chargebackDate:
+          $ref: '#/components/schemas/Datetime'
+          description: Date and time when the chargeback was registered by the issuing bank.
+        created:
+          $ref: '#/components/schemas/Datetime'
+        updated:
+          $ref: '#/components/schemas/Datetime'
+    TransactionWebhookWithChargeback:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `CHARGEBACK_STATUS` - Triggered when a transaction receives an update on one of its chargebacks.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/ChargebackStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    PaymentMethods:
+      type: array
+      description: List of payment methods used in the checkout. If not provided all available payment methods will be shown.
+      items:
+        type: string
+        enum:
+        - apple_pay
+        - bancontact
+        - bank_transfer
+        - creditcard
+        - google_pay
+        - ideal
+        - klarna
+        - paypal
+        - in3
     AddressWithStateAndAdditionalData:
       allOf:
       - $ref: '#/components/schemas/AddressWithoutMandatoryCountry'
@@ -806,61 +682,104 @@ components:
             type: string
             maxLength: 35
             example: Right-hand portal
-    Phone:
-      description: The phonenumber of the consumer (E.164 format).
+    Payment:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
+      - type: object
+        required:
+        - description
+        properties:
+          description:
+            $ref: '#/components/schemas/Description'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
       type: string
-      maxLength: 16
-      example: '+31695613259'
-    Email:
-      description: The email address of the consumer.
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
+    ChargebackStatusEvent:
+      description: '* `CHARGEBACK_STATUS` - Triggered when a transaction receives an update on one of its chargebacks.
+
+        '
       type: string
-      format: email
-      example: john.doe@email.tld
-    StatusAuthorized:
-      description: The transaction has been authorized.
+      enum:
+      - CHARGEBACK_STATUS
+      example: CHARGEBACK_STATUS
+    Description:
+      description: Description of the underlying value or reason of the payment.
+      type: string
+      maxLength: 255
+      example: Order at yourdomain.tld
+    StatusExpired:
+      description: The transaction has expired.
       type: string
       format: enum
       enum:
-      - AUTHORIZED
-      example: AUTHORIZED
-    TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt:
+      - EXPIRED
+      example: EXPIRED
+    AddressWithoutMandatoryCountry:
+      type: object
+      description: The consumers address.
+      properties:
+        street:
+          description: The consumers street name.
+          type: string
+          maxLength: 100
+          example: Rustenburgerlaan
+        houseNumber:
+          description: The consumers house number.
+          type: string
+          maxLength: 35
+          example: '25'
+        postalCode:
+          description: The consumers postal code.
+          type: string
+          maxLength: 35
+          example: 2012AL
+        city:
+          description: The consumers city.
+          type: string
+          maxLength: 35
+          example: Haarlem
+        countryCode:
+          $ref: '#/components/schemas/Country'
+    PaymentWithoutDescriptionAndExpiresAt:
       allOf:
-      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
       - type: object
-        required:
-        - id
-        - reference
-        - amount
-        - currency
-        - status
-        - description
         properties:
-          id:
-            $ref: '#/components/schemas/TransactionId'
-          reference:
-            $ref: '#/components/schemas/Reference'
-          amount:
-            $ref: '#/components/schemas/Amount'
-          currency:
-            $ref: '#/components/schemas/Currency'
           webhooks:
             $ref: '#/components/schemas/TransactionWebhooks'
-          description:
-            $ref: '#/components/schemas/Description'
-    ReturnURLOneOf:
-      oneOf:
-      - type: object
-        required:
-        - returnUrls
-        properties:
-          returnUrls:
-            $ref: '#/components/schemas/ReturnUrls'
-      - type: object
-        required:
-        - returnUrl
-        properties:
-          returnUrl:
-            $ref: '#/components/schemas/ReturnUrl'
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
     MaxRetries:
       description: 'Maximum number of payment attempts allowed for this checkout order.
 
@@ -889,108 +808,69 @@ components:
       minimum: 0
       maximum: 255
       example: 10
-    Country:
-      description: Country of the consumer (ISO-3166)
-      type: string
-      example: NL
-      minLength: 2
-      maxLength: 2
-    StatusFailure:
-      description: The transaction has failed.
-      type: string
-      format: enum
-      enum:
-      - FAILURE
-      example: FAILURE
-    TransactionWithoutOrderIdLanguageRefundsAndExpiresAt:
+    TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt:
       allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt'
+      - $ref: '#/components/schemas/ReturnURLOneOf'
       - type: object
         required:
-        - createdAt
+        - id
+        - reference
+        - amount
+        - currency
+        - status
+        - description
         properties:
-          createdAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time when the transaction was created.
-    Uuid:
-      description: Unique identifier
+          id:
+            $ref: '#/components/schemas/TransactionId'
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
+          description:
+            $ref: '#/components/schemas/Description'
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
+
+        '
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    RefundsList:
+      description: Details of all refunds belonging to a transaction.
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundDetails'
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
       type: string
       format: uuid
       minLength: 36
       maxLength: 36
       example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    CheckoutConsumer:
-      allOf:
-      - $ref: '#/components/schemas/Consumer'
-      - type: object
-        properties:
-          givenName:
-            type: string
-            maxLength: 35
-            description: First name of the consumer.
-          middleName:
-            type: string
-            maxLength: 35
-            description: Middle name of the consumer.
-          familyName:
-            type: string
-            maxLength: 35
-            description: Last name of the consumer.
-          address:
-            $ref: '#/components/schemas/AddressWithStateAndAdditionalData'
-    RefundStatusEvent:
-      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-        '
-      type: string
-      enum:
-      - REFUND_STATUS
-      example: REFUND_STATUS
-    StatusSuccess:
-      description: The transaction has been successfully paid.
+    StatusPending:
+      description: The transaction is pending, meaning it could not be completed yet; waiting for something.
       type: string
       format: enum
       enum:
-      - SUCCESS
-      example: SUCCESS
-    CheckoutQRCodeAction:
-      type: object
-      required:
-      - url
-      description: Action to be performed by the consumer to complete the payment by scanning a QR code that leads to the same hosted checkout session as the redirect action.
-      properties:
-        url:
-          description: URL to a QR code image encoding the hosted checkout session URL, to be scanned by the consumer. Append a `.png`, `.jpg`, or `.svg` extension to select the image output format; if omitted or unrecognized, `png` is returned.
-          type: string
-          format: url
-          example: https://checkout.gateway.acceptance.cmpayments.nl/checkout/qr/1da50859-59ad-4d7d-a6ac-8554a2f981bc
-    ChargebackStatus:
-      description: '* `CHARGED` - The transaction has been charged back by the issuing bank.
+      - PENDING
+      example: PENDING
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
 
         '
       type: string
       enum:
-      - CHARGED
-      example: CHARGED
-    TransactionWithoutOrderId:
-      allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
-      - type: object
-        required:
-        - language
-        - expiresAt
-        properties:
-          language:
-            $ref: '#/components/schemas/Language'
-          expiresAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
-          refunds:
-            $ref: '#/components/schemas/Refunds'
-    MerchantOrderReference:
-      type: string
-      maxLength: 35
-      description: Unique identifier, as known by the merchant. This value will end up in the payments portal.
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
     RefundDetails:
       description: Details of a refund.
       type: object
@@ -1017,240 +897,179 @@ components:
           $ref: '#/components/schemas/Datetime'
         updated:
           $ref: '#/components/schemas/Datetime'
-    ReturnUrl:
-      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
-
-
-        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+    OrderItems:
+      $ref: '#/components/schemas/Items'
+      description: 'Items included in the order. Required field for the following payment methods: Klarna, Riverty. We request both values ''vatAmount'' and ''vatRate'' to prevent errors.'
+    Uuid:
+      description: Unique identifier
       type: string
-      format: url
-      maxLength: 2000
-      example: https://yourdomain.tld/order/return?orderID=order123
-  headers:
-    Digest:
-      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
-      schema:
-        type: string
-        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    PaymentWithoutDescriptionExpiresAtAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
+      - type: object
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+    FinalStatusEvent:
+      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - FINALSTATUS
+      example: FINALSTATUS
+    Gender:
+      description: The consumers gender.
+      type: string
+      format: enum
+      enum:
+      - m
+      - f
+      - 'null'
+      default: null
+    TransactionWebhooksWithChargeback:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhookWithChargeback'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    RedirectAction:
+      description: URL where consumer should be redirected to by the merchant to perform the payment.
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          description: URL where consumer should be redirected to by the merchant to perform the payment.
+          type: string
+          format: url
+          example: https://issuer.tld/ideal/start?trxid=213981209381209390821&random=wreq0dq90vgq0ew923123
+    StatusOpen:
+      description: The transaction is open and can be paid.
+      type: string
+      format: enum
+      enum:
+      - OPEN
+      example: OPEN
+    StatusAuthorized:
+      description: The transaction has been authorized.
+      type: string
+      format: enum
+      enum:
+      - AUTHORIZED
+      example: AUTHORIZED
+    Currency:
+      description: ISO 4217 currency code.
+      type: string
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    TransactionWebhooks:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhook'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    Email:
+      description: The email address of the consumer.
+      type: string
+      format: email
+      example: john.doe@email.tld
+    Consumer:
+      allOf:
+      - $ref: '#/components/schemas/GenderlessConsumer'
+      - type: object
+        properties:
+          gender:
+            $ref: '#/components/schemas/Gender'
+    MerchantOrderReference:
+      type: string
+      maxLength: 35
+      description: Unique identifier, as known by the merchant. This value will end up in the payments portal.
+    Refunds:
+      description: Details of refunds for a transaction
+      type: object
+      required:
+      - refundedAmount
+      - refundedPendingAmount
+      properties:
+        refundedAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
+          type: integer
+          minimum: 0
+          maximum: 99999999
+          example: 300
+        refundedPendingAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
+          type: integer
+          minimum: 1
+          maximum: 99999999
+          example: 100
+  responses:
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+    ChargebacksResponse:
+      description: Details of all chargebacks belonging to a transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ChargebacksList'
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+    RefundsResponse:
+      description: Details of all refunds belonging to a transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundsList'
   examples:
-    checkoutSinglePaymentmethod:
-      summary: Checkout for dedicated payment method
-      value:
-        reference: '20210623130413'
-        amount: 1200
-        merchantOrderReference: order123
-        description: Order at yourdomain.tld
-        expiresAt: '2026-01-02T15:04:05Z'
-        language: nl
-        returnUrl: https://yourdomain.tld/order/payment-result.html
-        consumer:
-          email: john.doe@email.tld
-          address:
-            countryCode: NL
-        maxRetries: 10
-        paymentMethods:
-        - creditcard
-    standardCheckout:
-      summary: Standard checkout
-      value:
-        reference: '20210623130413'
-        amount: 1200
-        merchantOrderReference: order123
-        description: Order at yourdomain.tld
-        expiresAt: '2026-01-02T15:04:05Z'
-        returnUrl: https://yourdomain.tld/order/payment-result.html
-        maxRetries: 10
-    klarnaCheckout-2:
-      summary: Checkout with Klarna enabled
-      value:
-        id: 2a55928c-4b9b-4b1f-88ae-94bd9470b815
-        reference: '20210623130413'
-        amount: 1200
-        currency: EUR
-        consumer:
-          givenName: John
-          familyName: Doe
-          email: john.doe@gmail.com
-          gender: m
-          phone: 31685478569
-          address:
-            street: Rustenburglaan
-            houseNumber: 25
-            postalCode: 2012AL
-            city: Haarlem
-            countryCode: NL
-            state: Noord-Holland
-        merchantOrderReference: 6
-        description: Order at yourdomain.tld
-        paymentMethods:
-        - klarna
-        orderItems:
-        - code: SDC4/32GB-2ADP
-          unitPrice: 600
-          quantity: 2
-          vatAmount: 100
-          vatRate: 20
-        expiresAt: '2026-01-02T15:04:05Z'
-        language: nl
-        status: OPEN
-        action:
-          redirect:
-            url: https://checkout.gateway.acceptance.cmpayments.nl/?hostedCheckoutId=2a55928c-4b9b-4b1f-88ae-94bd9470b815
-          qrcode:
-            url: https://checkout.gateway.acceptance.cmpayments.nl/checkout/qr/2a55928c-4b9b-4b1f-88ae-94bd9470b815
-        createdAt: '2025-09-23T11:18:05Z'
-        returnUrl: https://yourdomain.tld/order/payment-result.html
-        maxRetries: 255
-    klarnaCheckout:
-      summary: Checkout with Klarna enabled
-      value:
-        reference: '20210623130413'
-        amount: 1200
-        merchantOrderReference: order123
-        description: Order at yourdomain.tld
-        expiresAt: '2026-01-02T15:04:05Z'
-        language: nl
-        returnUrl: https://yourdomain.tld/order/payment-result.html
-        paymentMethods:
-        - klarna
-        orderItems:
-        - vatRate: 20
-          vatAmount: 100
-          quantity: 2
-          unitPrice: 600
-          code: SDC4/32GB-2ADP
-        maxRetries: 10
-        consumer:
-          gender: m
-          address:
-            street: Rustenburglaan
-            houseNumber: '25'
-            postalCode: 2012AL
-            city: Haarlem
-            countryCode: NL
-            state: Noord-Holland
-          givenName: John
-          familyName: Doe
-          email: john.doe@gmail.com
-          phone: '+31685478569'
-    standardCheckout-2:
-      summary: Standard checkout
-      value:
-        id: 1da50859-59ad-4d7d-a6ac-8554a2f981bc
-        reference: '20210623130413'
-        amount: 1200
-        currency: EUR
-        merchantOrderReference: order123
-        description: Order at yourdomain.tld
-        paymentMethods:
-        - bancontact
-        - creditcard
-        - ideal
-        - riverty
-        expiresAt: '2026-01-02T15:04:05Z'
-        status: OPEN
-        action:
-          redirect:
-            url: https://checkout.gateway.acceptance.cmpayments.nl/?hostedCheckoutId=1da50859-59ad-4d7d-a6ac-8554a2f981bc
-          qrcode:
-            url: https://checkout.gateway.acceptance.cmpayments.nl/checkout/qr/1da50859-59ad-4d7d-a6ac-8554a2f981bc
-        createdAt: '2025-09-23T11:14:22Z'
-        returnUrl: https://yourdomain.tld/order/payment-result.html
-        maxRetries: 255
-    standardCheckoutMultipleAttempts:
-      summary: Standard checkout with multiple payment attempts
-      value:
-        id: 45be7c8b-e654-4d96-9d23-64d5d66ddfa9
-        reference: '20210623130413'
-        amount: 1200
-        currency: EUR
-        consumer:
-          email: john.doe@cm.com
-          address:
-            countryCode: NL
-        merchantOrderReference: protocol
-        description: Order at yourdomain.tld
-        paymentMethods:
-        - bancontact
-        - creditcard
-        - ideal
-        - riverty
-        expiresAt: '2026-01-02T15:04:05Z'
-        status: SUCCESS
-        action: null
-        createdAt: '2025-09-23T12:25:35Z'
-        returnUrl: https://yourdomain.tld/order/payment-result.html
-        maxRetries: 255
-        payments:
-        - id: 2c900dc9-5956-4315-8277-2183d79279f2
-          type: ideal
-          status: SUCCESS
-          createdAt: '2025-09-23T12:30:31Z'
-        - id: 92f99bed-07ff-49b6-992c-df6789c5e106
-          type: ideal
-          status: FAILURE
-          createdAt: '2025-09-23T12:25:48Z'
-        - id: da4a6322-8c0c-4c1b-b603-a3c183231247
-          type: creditcard
-          status: CANCELLED
-          createdAt: '2025-09-23T12:26:12Z'
-    standardCheckoutWithWebhook:
-      summary: Standard checkout with webhook
-      value:
-        reference: '20210623130413'
-        amount: 1200
-        maxRetries: 10
-        merchantOrderReference: order123
-        description: Order at yourdomain.tld
-        expiresAt: '2026-01-02T15:04:05Z'
-        returnUrl: https://yourdomain.tld/order/payment-result.html
-        webhooks:
-        - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
-          events:
-          - STATUS_CHANGE
-          - REFUND_STATUS
-    klarnaSuccessCheckout:
-      summary: Klarna checkout with success status
-      value:
-        id: 2a55928c-4b9b-4b1f-88ae-94bd9470b815
-        reference: 20210623130413
-        amount: 1200
-        currency: EUR
-        consumer:
-          givenName: John
-          familyName: Doe
-          email: john.doe@gmail.com
-          gender: m
-          phone: 31685478569
-          address:
-            street: Rustenburglaan
-            houseNumber: 25
-            postalCode: 2012AL
-            city: Haarlem
-            countryCode: NL
-            state: Noord-Holland
-        merchantOrderReference: 6
-        description: Order at yourdomain.tld
-        paymentMethods:
-        - klarna
-        orderItems:
-        - code: SDC4/32GB-2ADP
-          unitPrice: 600
-          quantity: 2
-          vatAmount: 100
-          vatRate: 20
-        expiresAt: '2026-01-02T15:04:05Z'
-        language: nl
-        status: SUCCESS
-        action: null
-        createdAt: '2025-09-23T11:18:05Z'
-        returnUrl: https://yourdomain.tld/order/payment-result.html
-        maxRetries: 255
-        payments:
-        - id: 193ef231-15c9-4b2e-baf5-b898a4abe574
-          type: klarna
-          status: SUCCESS
-          createdAt: '2025-09-23T11:29:33Z'
     refundCheckout:
       summary: Checkout with a refund
       value:
@@ -1310,6 +1129,230 @@ components:
         createdAt: '2025-09-23T11:15:01Z'
         returnUrl: https://yourdomain.tld/order/payment-result.html
         maxRetries: 255
+    standardCheckout-2:
+      summary: Standard checkout
+      value:
+        id: 1da50859-59ad-4d7d-a6ac-8554a2f981bc
+        reference: '20210623130413'
+        amount: 1200
+        currency: EUR
+        merchantOrderReference: order123
+        description: Order at yourdomain.tld
+        paymentMethods:
+        - bancontact
+        - creditcard
+        - ideal
+        - riverty
+        expiresAt: '2026-01-02T15:04:05Z'
+        status: OPEN
+        action:
+          redirect:
+            url: https://checkout.gateway.acceptance.cmpayments.nl/?hostedCheckoutId=1da50859-59ad-4d7d-a6ac-8554a2f981bc
+          qrcode:
+            url: https://checkout.gateway.acceptance.cmpayments.nl/checkout/qr/1da50859-59ad-4d7d-a6ac-8554a2f981bc
+        createdAt: '2025-09-23T11:14:22Z'
+        returnUrl: https://yourdomain.tld/order/payment-result.html
+        maxRetries: 255
+    klarnaSuccessCheckout:
+      summary: Klarna checkout with success status
+      value:
+        id: 2a55928c-4b9b-4b1f-88ae-94bd9470b815
+        reference: 20210623130413
+        amount: 1200
+        currency: EUR
+        consumer:
+          givenName: John
+          familyName: Doe
+          email: john.doe@gmail.com
+          gender: m
+          phone: 31685478569
+          address:
+            street: Rustenburglaan
+            houseNumber: 25
+            postalCode: 2012AL
+            city: Haarlem
+            countryCode: NL
+            state: Noord-Holland
+        merchantOrderReference: 6
+        description: Order at yourdomain.tld
+        paymentMethods:
+        - klarna
+        orderItems:
+        - code: SDC4/32GB-2ADP
+          unitPrice: 600
+          quantity: 2
+          vatAmount: 100
+          vatRate: 20
+        expiresAt: '2026-01-02T15:04:05Z'
+        language: nl
+        status: SUCCESS
+        action: null
+        createdAt: '2025-09-23T11:18:05Z'
+        returnUrl: https://yourdomain.tld/order/payment-result.html
+        maxRetries: 255
+        payments:
+        - id: 193ef231-15c9-4b2e-baf5-b898a4abe574
+          type: klarna
+          status: SUCCESS
+          createdAt: '2025-09-23T11:29:33Z'
+    standardCheckout:
+      summary: Standard checkout
+      value:
+        reference: '20210623130413'
+        amount: 1200
+        merchantOrderReference: order123
+        description: Order at yourdomain.tld
+        expiresAt: '2026-01-02T15:04:05Z'
+        returnUrl: https://yourdomain.tld/order/payment-result.html
+        maxRetries: 10
+    checkoutSinglePaymentmethod:
+      summary: Checkout for dedicated payment method
+      value:
+        reference: '20210623130413'
+        amount: 1200
+        merchantOrderReference: order123
+        description: Order at yourdomain.tld
+        expiresAt: '2026-01-02T15:04:05Z'
+        language: nl
+        returnUrl: https://yourdomain.tld/order/payment-result.html
+        consumer:
+          email: john.doe@email.tld
+          address:
+            countryCode: NL
+        maxRetries: 10
+        paymentMethods:
+        - creditcard
+    klarnaCheckout:
+      summary: Checkout with Klarna enabled
+      value:
+        reference: '20210623130413'
+        amount: 1200
+        merchantOrderReference: order123
+        description: Order at yourdomain.tld
+        expiresAt: '2026-01-02T15:04:05Z'
+        language: nl
+        returnUrl: https://yourdomain.tld/order/payment-result.html
+        paymentMethods:
+        - klarna
+        orderItems:
+        - vatRate: 20
+          vatAmount: 100
+          quantity: 2
+          unitPrice: 600
+          code: SDC4/32GB-2ADP
+        maxRetries: 10
+        consumer:
+          gender: m
+          address:
+            street: Rustenburglaan
+            houseNumber: '25'
+            postalCode: 2012AL
+            city: Haarlem
+            countryCode: NL
+            state: Noord-Holland
+          givenName: John
+          familyName: Doe
+          email: john.doe@gmail.com
+          phone: '+31685478569'
+    standardCheckoutWithWebhook:
+      summary: Standard checkout with webhook
+      value:
+        reference: '20210623130413'
+        amount: 1200
+        maxRetries: 10
+        merchantOrderReference: order123
+        description: Order at yourdomain.tld
+        expiresAt: '2026-01-02T15:04:05Z'
+        returnUrl: https://yourdomain.tld/order/payment-result.html
+        webhooks:
+        - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+          - REFUND_STATUS
+    klarnaCheckout-2:
+      summary: Checkout with Klarna enabled
+      value:
+        id: 2a55928c-4b9b-4b1f-88ae-94bd9470b815
+        reference: '20210623130413'
+        amount: 1200
+        currency: EUR
+        consumer:
+          givenName: John
+          familyName: Doe
+          email: john.doe@gmail.com
+          gender: m
+          phone: 31685478569
+          address:
+            street: Rustenburglaan
+            houseNumber: 25
+            postalCode: 2012AL
+            city: Haarlem
+            countryCode: NL
+            state: Noord-Holland
+        merchantOrderReference: 6
+        description: Order at yourdomain.tld
+        paymentMethods:
+        - klarna
+        orderItems:
+        - code: SDC4/32GB-2ADP
+          unitPrice: 600
+          quantity: 2
+          vatAmount: 100
+          vatRate: 20
+        expiresAt: '2026-01-02T15:04:05Z'
+        language: nl
+        status: OPEN
+        action:
+          redirect:
+            url: https://checkout.gateway.acceptance.cmpayments.nl/?hostedCheckoutId=2a55928c-4b9b-4b1f-88ae-94bd9470b815
+          qrcode:
+            url: https://checkout.gateway.acceptance.cmpayments.nl/checkout/qr/2a55928c-4b9b-4b1f-88ae-94bd9470b815
+        createdAt: '2025-09-23T11:18:05Z'
+        returnUrl: https://yourdomain.tld/order/payment-result.html
+        maxRetries: 255
+    standardCheckoutMultipleAttempts:
+      summary: Standard checkout with multiple payment attempts
+      value:
+        id: 45be7c8b-e654-4d96-9d23-64d5d66ddfa9
+        reference: '20210623130413'
+        amount: 1200
+        currency: EUR
+        consumer:
+          email: john.doe@cm.com
+          address:
+            countryCode: NL
+        merchantOrderReference: protocol
+        description: Order at yourdomain.tld
+        paymentMethods:
+        - bancontact
+        - creditcard
+        - ideal
+        - riverty
+        expiresAt: '2026-01-02T15:04:05Z'
+        status: SUCCESS
+        action: null
+        createdAt: '2025-09-23T12:25:35Z'
+        returnUrl: https://yourdomain.tld/order/payment-result.html
+        maxRetries: 255
+        payments:
+        - id: 2c900dc9-5956-4315-8277-2183d79279f2
+          type: ideal
+          status: SUCCESS
+          createdAt: '2025-09-23T12:30:31Z'
+        - id: 92f99bed-07ff-49b6-992c-df6789c5e106
+          type: ideal
+          status: FAILURE
+          createdAt: '2025-09-23T12:25:48Z'
+        - id: da4a6322-8c0c-4c1b-b603-a3c183231247
+          type: creditcard
+          status: CANCELLED
+          createdAt: '2025-09-23T12:26:12Z'
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
   parameters:
     TransactionId:
       name: transactionId
@@ -1318,49 +1361,6 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/TransactionId'
-  responses:
-    RefundsResponse:
-      description: Details of all refunds belonging to a transaction.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RefundsList'
-    ChargebacksResponse:
-      description: Details of all chargebacks belonging to a transaction.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ChargebacksList'
-    InternalError:
-      description: Internal server error. This can be caused by an unresponsive backend
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - id
-            - message
-            properties:
-              id:
-                $ref: '#/components/schemas/Uuid'
-              message:
-                type: string
-                example: Service Unavailable
-    UserError:
-      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - id
-            - message
-            properties:
-              id:
-                $ref: '#/components/schemas/Uuid'
-              message:
-                type: string
-                example: no authorization methods provided
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

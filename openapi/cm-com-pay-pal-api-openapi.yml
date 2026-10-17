@@ -209,24 +209,231 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
-    FinalStatusEvent:
-      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    TransactionWithoutOrderIdLanguageRefundsAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt'
+      - type: object
+        required:
+        - createdAt
+        properties:
+          createdAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time when the transaction was created.
+    TransactionWebhook:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    PayPalV2Payment:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
+      - type: object
+        required:
+        - description
+        - currency
+        properties:
+          description:
+            $ref: '#/components/schemas/Description'
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/PayPalV2Item'
+          consumer:
+            $ref: '#/components/schemas/PayPalV2Consumer'
+          webhooks:
+            type: array
+            items:
+              $ref: '#/components/schemas/PayPalV2Webhooks'
+    Gender:
+      description: The consumers gender.
+      type: string
+      format: enum
+      enum:
+      - m
+      - f
+      - 'null'
+      default: null
+    AddressWithStateAndAdditionalData:
+      allOf:
+      - $ref: '#/components/schemas/AddressWithoutMandatoryCountry'
+      - type: object
+        properties:
+          state:
+            description: The state or province of the consumer's billing address associated with the card used for this purchase. The value must be the country subdivision code (e.g., 'NH') or the official state/province name (e.g., 'Noord Holland') as defined in ISO 3166-2.
+            type: string
+            maxLength: 40
+            example: Noord-Holland
+          additionalData:
+            description: The consumers house number addition.
+            type: string
+            maxLength: 35
+            example: Right-hand portal
+    Payment:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
+      - type: object
+        required:
+        - description
+        properties:
+          description:
+            $ref: '#/components/schemas/Description'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+    Refund:
+      description: Refund an already successfully processed payment.
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
+
+            '
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+      type: string
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - reference
+        - amount
+        properties:
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+    RefundStatusEvent:
+      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
 
         '
       type: string
       enum:
-      - FINALSTATUS
-      example: FINALSTATUS
-    Email:
-      description: The email address of the consumer.
-      type: string
-      format: email
-      example: john.doe@email.tld
-    Description:
-      description: Description of the underlying value or reason of the payment.
-      type: string
-      maxLength: 255
-      example: Order at yourdomain.tld
+      - REFUND_STATUS
+      example: REFUND_STATUS
+    TransactionWithoutOrderId:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
+      - type: object
+        required:
+        - language
+        - expiresAt
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+          refunds:
+            $ref: '#/components/schemas/Refunds'
+    PayPalV2Refund:
+      allOf:
+      - $ref: '#/components/schemas/Refund'
+      - type: object
+        required:
+        - amount
+    PayPalV2Webhooks:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              example: STATUS_CHANGE
+    ReturnURLOneOf:
+      oneOf:
+      - type: object
+        required:
+        - returnUrls
+        properties:
+          returnUrls:
+            $ref: '#/components/schemas/ReturnUrls'
+      - type: object
+        required:
+        - returnUrl
+        properties:
+          returnUrl:
+            $ref: '#/components/schemas/ReturnUrl'
+    PayPalV2Transaction:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/PayPalV2Item'
+          consumer:
+            $ref: '#/components/schemas/PayPalV2Consumer'
+          action:
+            type: object
+            properties:
+              redirect:
+                $ref: '#/components/schemas/RedirectAction'
+          status:
+            oneOf:
+            - $ref: '#/components/schemas/StatusOpen'
+            - $ref: '#/components/schemas/StatusSuccess'
+            - $ref: '#/components/schemas/StatusCancelled'
+            - $ref: '#/components/schemas/StatusExpired'
+            - $ref: '#/components/schemas/StatusFailure'
+            - $ref: '#/components/schemas/StatusPending'
+          webhooks:
+            type: array
+            items:
+              $ref: '#/components/schemas/PayPalV2Webhooks'
     RedirectAction:
       description: URL where consumer should be redirected to by the merchant to perform the payment.
       type: object
@@ -238,6 +445,89 @@ components:
           type: string
           format: url
           example: https://issuer.tld/ideal/start?trxid=213981209381209390821&random=wreq0dq90vgq0ew923123
+    Description:
+      description: Description of the underlying value or reason of the payment.
+      type: string
+      maxLength: 255
+      example: Order at yourdomain.tld
+    Phone:
+      description: The phonenumber of the consumer (E.164 format).
+      type: string
+      maxLength: 16
+      example: '+31695613259'
+    Country:
+      description: Country of the consumer (ISO-3166)
+      type: string
+      example: NL
+      minLength: 2
+      maxLength: 2
+    StatusOpen:
+      description: The transaction is open and can be paid.
+      type: string
+      format: enum
+      enum:
+      - OPEN
+      example: OPEN
+    GenderlessConsumer:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+        phone:
+          $ref: '#/components/schemas/Phone'
+        dateOfBirth:
+          type: string
+          format: date
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          example: '1990-05-23'
+          description: Date of birth in ISO 8601 format (YYYY-MM-DD).
+    StatusAuthorized:
+      description: The transaction has been authorized.
+      type: string
+      format: enum
+      enum:
+      - AUTHORIZED
+      example: AUTHORIZED
+    StatusExpired:
+      description: The transaction has expired.
+      type: string
+      format: enum
+      enum:
+      - EXPIRED
+      example: EXPIRED
+    AddressWithoutMandatoryCountry:
+      type: object
+      description: The consumers address.
+      properties:
+        street:
+          description: The consumers street name.
+          type: string
+          maxLength: 100
+          example: Rustenburgerlaan
+        houseNumber:
+          description: The consumers house number.
+          type: string
+          maxLength: 35
+          example: '25'
+        postalCode:
+          description: The consumers postal code.
+          type: string
+          maxLength: 35
+          example: 2012AL
+        city:
+          description: The consumers city.
+          type: string
+          maxLength: 35
+          example: Haarlem
+        countryCode:
+          $ref: '#/components/schemas/Country'
+    PaymentWithoutDescriptionAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - type: object
+        properties:
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
     ConsumerBase:
       allOf:
       - $ref: '#/components/schemas/Consumer'
@@ -252,6 +542,186 @@ components:
             type: string
             maxLength: 35
             example: CM
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
+    LastName:
+      description: Consumer's last name.
+      type: string
+      maxLength: 35
+      example: Doe
+    PayPalV2Item:
+      description: Item object that can be used to provide details of the items in the order.
+      type: object
+      required:
+      - name
+      - unitPrice
+      - quantity
+      properties:
+        name:
+          $ref: '#/components/schemas/ItemName'
+        unitPrice:
+          description: Unit price (including VAT) of the item, specified in the smallest currency subunit, as for example euro cents.
+          $ref: '#/components/schemas/Amount'
+        quantity:
+          description: The number of items of this type.
+          type: integer
+          minimum: 1
+          maximum: 1000000000
+          example: 2
+        description:
+          description: A human readable description of the item.
+          $ref: '#/components/schemas/Description'
+    Name:
+      description: Consumer's name.
+      type: object
+      required:
+      - firstName
+      - lastName
+      properties:
+        firstName:
+          description: Consumer's first name.
+          type: string
+          maxLength: 35
+          example: John
+        lastName:
+          $ref: '#/components/schemas/LastName'
+        middleName:
+          description: Consumer's middle name.
+          type: string
+          maxLength: 35
+          example: A
+    Transaction:
+      allOf:
+      - $ref: '#/components/schemas/TransactionWithoutOrderId'
+      - type: object
+        required:
+        - orderId
+        properties:
+          orderId:
+            allOf:
+            - deprecated: true
+            - $ref: '#/components/schemas/Uuid'
+    TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - id
+        - reference
+        - amount
+        - currency
+        - status
+        - description
+        properties:
+          id:
+            $ref: '#/components/schemas/TransactionId'
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
+          description:
+            $ref: '#/components/schemas/Description'
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
+
+        '
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    RefundsList:
+      description: Details of all refunds belonging to a transaction.
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundDetails'
+    RefundStatus:
+      description: '* `SUCCESS`    - Refund has succeeded.
+
+        * `PENDING`    - Refund is waiting to be processed.
+
+        * `FAILURE`    - Refund has failed.
+
+        * `CANCELLED`  - Refund has been cancelled.
+
+        '
+      type: string
+      enum:
+      - SUCCESS
+      - PENDING
+      - FAILURE
+      - CANCELLED
+      example: SUCCESS
+    Address:
+      allOf:
+      - $ref: '#/components/schemas/AddressWithStateAndAdditionalData'
+      - type: object
+        required:
+        - countryCode
+    Currency:
+      description: ISO 4217 currency code.
+      type: string
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
+    PayPalV2Consumer:
+      allOf:
+      - type: object
+        required:
+        - email
+        properties:
+          email:
+            $ref: '#/components/schemas/Email'
+          address:
+            allOf:
+            - $ref: '#/components/schemas/Address'
+            - type: object
+              required:
+              - countryCode
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
+      type: string
+      format: enum
+      enum:
+      - CANCELLED
+      example: CANCELLED
     ReturnUrls:
       type: object
       description: 'URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
@@ -284,96 +754,6 @@ components:
           format: url
           maxLength: 2000
           example: https://yourdomain.tld/order/payment-failed.html
-    PayPalPayment:
-      allOf:
-      - $ref: '#/components/schemas/Payment'
-      - type: object
-        required:
-        - consumer
-        properties:
-          expiresAt:
-            allOf:
-            - $ref: '#/components/schemas/Datetime'
-            - description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes EXPIRED. If left empty, the value defaults to 6 hours.
-          consumer:
-            allOf:
-            - $ref: '#/components/schemas/ConsumerBase'
-            - type: object
-              required:
-              - email
-              - address
-              properties:
-                address:
-                  allOf:
-                  - $ref: '#/components/schemas/Address'
-                  - type: object
-                    required:
-                    - countryCode
-    RefundsList:
-      description: Details of all refunds belonging to a transaction.
-      type: object
-      required:
-      - refunds
-      properties:
-        refunds:
-          type: array
-          items:
-            $ref: '#/components/schemas/RefundDetails'
-    BaseWebhook:
-      type: object
-      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
-      required:
-      - url
-      - events
-      properties:
-        url:
-          description: The URL the request must be send to.
-          type: string
-          format: url
-          example: https://yourdomain.tld/webhooks?purchaseId=order123
-        events:
-          description: Type of events that will trigger a webhook.
-          type: array
-          minItems: 1
-          items:
-            type: string
-    ReturnUrl:
-      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
-
-
-        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
-      type: string
-      format: url
-      maxLength: 2000
-      example: https://yourdomain.tld/order/return?orderID=order123
-    Refund:
-      description: Refund an already successfully processed payment.
-      type: object
-      properties:
-        amount:
-          $ref: '#/components/schemas/Amount'
-          description: 'Denomination in the smallest currency subunit, as for example euro cents. If empty, the refund amount will be the remaining available amount of the transaction (i.e., total payment amount minus already refunded amounts minus the amounts of the pending refund requests).
-
-            '
-        reason:
-          $ref: '#/components/schemas/RefundReason'
-    RefundStatus:
-      description: '* `SUCCESS`    - Refund has succeeded.
-
-        * `PENDING`    - Refund is waiting to be processed.
-
-        * `FAILURE`    - Refund has failed.
-
-        * `CANCELLED`  - Refund has been cancelled.
-
-        '
-      type: string
-      enum:
-      - SUCCESS
-      - PENDING
-      - FAILURE
-      - CANCELLED
-      example: SUCCESS
     TransactionWebhooks:
       description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
 
@@ -385,334 +765,6 @@ components:
       - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
         events:
         - STATUS_CHANGE
-    Refunds:
-      description: Details of refunds for a transaction
-      type: object
-      required:
-      - refundedAmount
-      - refundedPendingAmount
-      properties:
-        refundedAmount:
-          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
-          type: integer
-          minimum: 0
-          maximum: 99999999
-          example: 300
-        refundedPendingAmount:
-          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
-          type: integer
-          minimum: 1
-          maximum: 99999999
-          example: 100
-    AddressWithoutMandatoryCountry:
-      type: object
-      description: The consumers address.
-      properties:
-        street:
-          description: The consumers street name.
-          type: string
-          maxLength: 100
-          example: Rustenburgerlaan
-        houseNumber:
-          description: The consumers house number.
-          type: string
-          maxLength: 35
-          example: '25'
-        postalCode:
-          description: The consumers postal code.
-          type: string
-          maxLength: 35
-          example: 2012AL
-        city:
-          description: The consumers city.
-          type: string
-          maxLength: 35
-          example: Haarlem
-        countryCode:
-          $ref: '#/components/schemas/Country'
-    Consumer:
-      allOf:
-      - $ref: '#/components/schemas/GenderlessConsumer'
-      - type: object
-        properties:
-          gender:
-            $ref: '#/components/schemas/Gender'
-    PayPalV2Item:
-      description: Item object that can be used to provide details of the items in the order.
-      type: object
-      required:
-      - name
-      - unitPrice
-      - quantity
-      properties:
-        name:
-          $ref: '#/components/schemas/ItemName'
-        unitPrice:
-          description: Unit price (including VAT) of the item, specified in the smallest currency subunit, as for example euro cents.
-          $ref: '#/components/schemas/Amount'
-        quantity:
-          description: The number of items of this type.
-          type: integer
-          minimum: 1
-          maximum: 1000000000
-          example: 2
-        description:
-          description: A human readable description of the item.
-          $ref: '#/components/schemas/Description'
-    RefundReason:
-      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
-
-        '
-      type: string
-      example: Refund required by consumer.
-      maxLength: 255
-    ReturnURLOneOf:
-      oneOf:
-      - type: object
-        required:
-        - returnUrls
-        properties:
-          returnUrls:
-            $ref: '#/components/schemas/ReturnUrls'
-      - type: object
-        required:
-        - returnUrl
-        properties:
-          returnUrl:
-            $ref: '#/components/schemas/ReturnUrl'
-    TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt:
-      allOf:
-      - $ref: '#/components/schemas/ReturnURLOneOf'
-      - type: object
-        required:
-        - id
-        - reference
-        - amount
-        - currency
-        - status
-        - description
-        properties:
-          id:
-            $ref: '#/components/schemas/TransactionId'
-          reference:
-            $ref: '#/components/schemas/Reference'
-          amount:
-            $ref: '#/components/schemas/Amount'
-          currency:
-            $ref: '#/components/schemas/Currency'
-          webhooks:
-            $ref: '#/components/schemas/TransactionWebhooks'
-          description:
-            $ref: '#/components/schemas/Description'
-    PaymentWithoutDescriptionAndExpiresAt:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
-      - type: object
-        properties:
-          webhooks:
-            $ref: '#/components/schemas/TransactionWebhooks'
-    StatusAuthorized:
-      description: The transaction has been authorized.
-      type: string
-      format: enum
-      enum:
-      - AUTHORIZED
-      example: AUTHORIZED
-    StatusFailure:
-      description: The transaction has failed.
-      type: string
-      format: enum
-      enum:
-      - FAILURE
-      example: FAILURE
-    Country:
-      description: Country of the consumer (ISO-3166)
-      type: string
-      example: NL
-      minLength: 2
-      maxLength: 2
-    TransactionWithoutOrderIdLanguageRefundsAndExpiresAt:
-      allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsCreatedAtAndExpiresAt'
-      - type: object
-        required:
-        - createdAt
-        properties:
-          createdAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time when the transaction was created.
-    PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
-      allOf:
-      - $ref: '#/components/schemas/ReturnURLOneOf'
-      - type: object
-        required:
-        - reference
-        - amount
-        properties:
-          reference:
-            $ref: '#/components/schemas/Reference'
-          amount:
-            $ref: '#/components/schemas/Amount'
-          currency:
-            $ref: '#/components/schemas/Currency'
-    Uuid:
-      description: Unique identifier
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    Reference:
-      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
-      type: string
-      minLength: 1
-      maxLength: 255
-      example: '20210623130413'
-    PayPalV2Transaction:
-      allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
-      - type: object
-        properties:
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/PayPalV2Item'
-          consumer:
-            $ref: '#/components/schemas/PayPalV2Consumer'
-          action:
-            type: object
-            properties:
-              redirect:
-                $ref: '#/components/schemas/RedirectAction'
-          status:
-            oneOf:
-            - $ref: '#/components/schemas/StatusOpen'
-            - $ref: '#/components/schemas/StatusSuccess'
-            - $ref: '#/components/schemas/StatusCancelled'
-            - $ref: '#/components/schemas/StatusExpired'
-            - $ref: '#/components/schemas/StatusFailure'
-            - $ref: '#/components/schemas/StatusPending'
-          webhooks:
-            type: array
-            items:
-              $ref: '#/components/schemas/PayPalV2Webhooks'
-    StatusChangeEvent:
-      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-        '
-      type: string
-      enum:
-      - STATUS_CHANGE
-      example: STATUS_CHANGE
-    StatusExpired:
-      description: The transaction has expired.
-      type: string
-      format: enum
-      enum:
-      - EXPIRED
-      example: EXPIRED
-    RefundStatusEvent:
-      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-        '
-      type: string
-      enum:
-      - REFUND_STATUS
-      example: REFUND_STATUS
-    PayPalV2Payment:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
-      - type: object
-        required:
-        - description
-        - currency
-        properties:
-          description:
-            $ref: '#/components/schemas/Description'
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/PayPalV2Item'
-          consumer:
-            $ref: '#/components/schemas/PayPalV2Consumer'
-          webhooks:
-            type: array
-            items:
-              $ref: '#/components/schemas/PayPalV2Webhooks'
-    Currency:
-      description: ISO 4217 currency code.
-      type: string
-      minLength: 3
-      maxLength: 3
-      default: EUR
-      example: EUR
-    LastName:
-      description: Consumer's last name.
-      type: string
-      maxLength: 35
-      example: Doe
-    StatusSuccess:
-      description: The transaction has been successfully paid.
-      type: string
-      format: enum
-      enum:
-      - SUCCESS
-      example: SUCCESS
-    Gender:
-      description: The consumers gender.
-      type: string
-      format: enum
-      enum:
-      - m
-      - f
-      - 'null'
-      default: null
-    Language:
-      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
-      type: string
-      default: nl
-      example: nl
-      minLength: 2
-      maxLength: 2
-    PayPalV2Consumer:
-      allOf:
-      - type: object
-        required:
-        - email
-        properties:
-          email:
-            $ref: '#/components/schemas/Email'
-          address:
-            allOf:
-            - $ref: '#/components/schemas/Address'
-            - type: object
-              required:
-              - countryCode
-    StatusCancelled:
-      description: The transaction has been cancelled by the consumer.
-      type: string
-      format: enum
-      enum:
-      - CANCELLED
-      example: CANCELLED
-    Datetime:
-      type: string
-      format: date-time
-      minLength: 20
-      example: '2006-01-02T15:04:05Z'
-      description: ISO 8601 date and time.
-    Payment:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
-      - type: object
-        required:
-        - description
-        properties:
-          description:
-            $ref: '#/components/schemas/Description'
-          expiresAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
     TransactionId:
       description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
       type: string
@@ -720,111 +772,6 @@ components:
       minLength: 36
       maxLength: 36
       example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    StatusOpen:
-      description: The transaction is open and can be paid.
-      type: string
-      format: enum
-      enum:
-      - OPEN
-      example: OPEN
-    PayPalV2Refund:
-      allOf:
-      - $ref: '#/components/schemas/Refund'
-      - type: object
-        required:
-        - amount
-    PayPalV2Webhooks:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              example: STATUS_CHANGE
-    TransactionWithoutOrderId:
-      allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderIdLanguageRefundsAndExpiresAt'
-      - type: object
-        required:
-        - language
-        - expiresAt
-        properties:
-          language:
-            $ref: '#/components/schemas/Language'
-          expiresAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
-          refunds:
-            $ref: '#/components/schemas/Refunds'
-    TransactionWebhook:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              - $ref: '#/components/schemas/FinalStatusEvent'
-              example: STATUS_CHANGE
-    GenderlessConsumer:
-      type: object
-      properties:
-        email:
-          $ref: '#/components/schemas/Email'
-        phone:
-          $ref: '#/components/schemas/Phone'
-        dateOfBirth:
-          type: string
-          format: date
-          pattern: ^\d{4}-\d{2}-\d{2}$
-          example: '1990-05-23'
-          description: Date of birth in ISO 8601 format (YYYY-MM-DD).
-    Phone:
-      description: The phonenumber of the consumer (E.164 format).
-      type: string
-      maxLength: 16
-      example: '+31695613259'
-    Transaction:
-      allOf:
-      - $ref: '#/components/schemas/TransactionWithoutOrderId'
-      - type: object
-        required:
-        - orderId
-        properties:
-          orderId:
-            allOf:
-            - deprecated: true
-            - $ref: '#/components/schemas/Uuid'
-    PaymentWithoutDescriptionExpiresAtAndWebhooks:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
-      - type: object
-        properties:
-          language:
-            $ref: '#/components/schemas/Language'
-    Address:
-      allOf:
-      - $ref: '#/components/schemas/AddressWithStateAndAdditionalData'
-      - type: object
-        required:
-        - countryCode
     PayPalTransaction:
       allOf:
       - $ref: '#/components/schemas/Transaction'
@@ -849,12 +796,35 @@ components:
             - $ref: '#/components/schemas/StatusAuthorized'
           country:
             $ref: '#/components/schemas/Country'
-    Amount:
-      description: Denomination in the smallest currency subunit, as for example euro cents.
-      type: integer
-      minimum: 1
-      maximum: 99999999
-      example: 1200
+    Refunds:
+      description: Details of refunds for a transaction
+      type: object
+      required:
+      - refundedAmount
+      - refundedPendingAmount
+      properties:
+        refundedAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
+          type: integer
+          minimum: 0
+          maximum: 99999999
+          example: 300
+        refundedPendingAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
+          type: integer
+          minimum: 1
+          maximum: 99999999
+          example: 100
+    ItemName:
+      description: A human readable name of the item.
+      type: string
+      maxLength: 50
+      example: Kingston microSD 32GB
+    Email:
+      description: The email address of the consumer.
+      type: string
+      format: email
+      example: john.doe@email.tld
     StatusPending:
       description: The transaction is pending, meaning it could not be completed yet; waiting for something.
       type: string
@@ -862,6 +832,21 @@ components:
       enum:
       - PENDING
       example: PENDING
+    Consumer:
+      allOf:
+      - $ref: '#/components/schemas/GenderlessConsumer'
+      - type: object
+        properties:
+          gender:
+            $ref: '#/components/schemas/Gender'
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
     RefundDetails:
       description: Details of a refund.
       type: object
@@ -888,69 +873,119 @@ components:
           $ref: '#/components/schemas/Datetime'
         updated:
           $ref: '#/components/schemas/Datetime'
-    ItemName:
-      description: A human readable name of the item.
+    Uuid:
+      description: Unique identifier
       type: string
-      maxLength: 50
-      example: Kingston microSD 32GB
-    AddressWithStateAndAdditionalData:
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    PaymentWithoutDescriptionExpiresAtAndWebhooks:
       allOf:
-      - $ref: '#/components/schemas/AddressWithoutMandatoryCountry'
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
       - type: object
         properties:
-          state:
-            description: The state or province of the consumer's billing address associated with the card used for this purchase. The value must be the country subdivision code (e.g., 'NH') or the official state/province name (e.g., 'Noord Holland') as defined in ISO 3166-2.
-            type: string
-            maxLength: 40
-            example: Noord-Holland
-          additionalData:
-            description: The consumers house number addition.
-            type: string
-            maxLength: 35
-            example: Right-hand portal
-    Name:
-      description: Consumer's name.
-      type: object
-      required:
-      - firstName
-      - lastName
-      properties:
-        firstName:
-          description: Consumer's first name.
-          type: string
-          maxLength: 35
-          example: John
-        lastName:
-          $ref: '#/components/schemas/LastName'
-        middleName:
-          description: Consumer's middle name.
-          type: string
-          maxLength: 35
-          example: A
-  headers:
-    Digest:
-      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
-      schema:
-        type: string
-        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
+          language:
+            $ref: '#/components/schemas/Language'
+    PayPalPayment:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        required:
+        - consumer
+        properties:
+          expiresAt:
+            allOf:
+            - $ref: '#/components/schemas/Datetime'
+            - description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes EXPIRED. If left empty, the value defaults to 6 hours.
+          consumer:
+            allOf:
+            - $ref: '#/components/schemas/ConsumerBase'
+            - type: object
+              required:
+              - email
+              - address
+              properties:
+                address:
+                  allOf:
+                  - $ref: '#/components/schemas/Address'
+                  - type: object
+                    required:
+                    - countryCode
+    FinalStatusEvent:
+      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - FINALSTATUS
+      example: FINALSTATUS
+    StatusFailure:
+      description: The transaction has failed.
+      type: string
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
+  responses:
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+    RefundsResponse:
+      description: Details of all refunds belonging to a transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundsList'
+    RefundResponse:
+      description: Refund details
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundDetails'
   examples:
-    openPayPal-2:
+    openPayPal:
       summary: Open PayPal payment
       value:
-        id: da7c80bb-a09b-438d-87fa-dfdf27456286
-        orderId: bdee1b20-6bca-4018-b4f9-d92cae8fe026
         reference: b5910552-7344-4c9c-a0e8-3657d8bc1897
         amount: 89999
-        currency: EUR
         description: Your order at My Web Shop.
         expiresAt: '2025-06-24T12:48:21Z'
         language: nl
-        country: NL
-        status: OPEN
-        action:
-          redirect:
-            url: https://www.sandbox.paypal.com/checkoutnow?token=EXAMPLE_ORDER_TOKEN
-        createdAt: '2025-06-23T12:48:24Z'
+        consumer:
+          email: tes_1322578370_per@docdatapayments.com
+          address:
+            countryCode: NL
         returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
     openPayPalV2:
       summary: Open PayPal payment
@@ -968,6 +1003,24 @@ components:
           description: Kingston microSD 32GB Class 10
           unitPrice: 123
           quantity: 1
+        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
+    openPayPal-2:
+      summary: Open PayPal payment
+      value:
+        id: da7c80bb-a09b-438d-87fa-dfdf27456286
+        orderId: bdee1b20-6bca-4018-b4f9-d92cae8fe026
+        reference: b5910552-7344-4c9c-a0e8-3657d8bc1897
+        amount: 89999
+        currency: EUR
+        description: Your order at My Web Shop.
+        expiresAt: '2025-06-24T12:48:21Z'
+        language: nl
+        country: NL
+        status: OPEN
+        action:
+          redirect:
+            url: https://www.sandbox.paypal.com/checkoutnow?token=EXAMPLE_ORDER_TOKEN
+        createdAt: '2025-06-23T12:48:24Z'
         returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
     openPayPalV2-2:
       summary: Open PayPal payment
@@ -992,65 +1045,12 @@ components:
           quantity: 1
         returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
         createdAt: '2025-06-23T12:48:24Z'
-    openPayPal:
-      summary: Open PayPal payment
-      value:
-        reference: b5910552-7344-4c9c-a0e8-3657d8bc1897
-        amount: 89999
-        description: Your order at My Web Shop.
-        expiresAt: '2025-06-24T12:48:21Z'
-        language: nl
-        consumer:
-          email: tes_1322578370_per@docdatapayments.com
-          address:
-            countryCode: NL
-        returnUrl: https://tradename.tld/shop/return/?purchase=PO1234567
-  responses:
-    RefundResponse:
-      description: Refund details
-      headers:
-        Digest:
-          $ref: '#/components/headers/Digest'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RefundDetails'
-    InternalError:
-      description: Internal server error. This can be caused by an unresponsive backend
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - id
-            - message
-            properties:
-              id:
-                $ref: '#/components/schemas/Uuid'
-              message:
-                type: string
-                example: Service Unavailable
-    UserError:
-      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - id
-            - message
-            properties:
-              id:
-                $ref: '#/components/schemas/Uuid'
-              message:
-                type: string
-                example: no authorization methods provided
-    RefundsResponse:
-      description: Details of all refunds belonging to a transaction.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RefundsList'
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
   parameters:
     TransactionId:
       name: transactionId

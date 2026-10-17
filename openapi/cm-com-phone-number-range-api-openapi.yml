@@ -99,23 +99,6 @@ components:
           example: Breda Office Front Desk
       additionalProperties: false
       description: Details of an customerAlias request.
-    Error:
-      title: Error
-      type: object
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        source:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     ApiCustomerAliasPhoneNumber:
       title: Customer Alias Phone Number
       type: object
@@ -140,6 +123,23 @@ components:
           example: Breda office front desk
       additionalProperties: false
       description: Details of a phone number.
+    Error:
+      title: Error
+      type: object
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        source:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

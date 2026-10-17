@@ -72,24 +72,6 @@ components:
           description: This requirement ONLY applies to resellers.
       additionalProperties: false
       description: Requirement for requests (under a number type and country combination)
-    ApiRequirementsPerNumberType:
-      title: Requirements Per Number Type
-      type: object
-      properties:
-        numberType:
-          type:
-          - string
-          - 'null'
-          description: The phone number type (Local, National, TollFree).
-        requirements:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ApiCountryRequirement'
-          description: List of requirements for this phone number type.
-      additionalProperties: false
-      description: All requirements for a specific number type. (under a specific country)
     ApiRequirementsPerCountry:
       title: Requirements Per Country
       type: object
@@ -113,6 +95,24 @@ components:
           description: List of requirements, ordered by phone number type.
       additionalProperties: false
       description: All requirements for a single country, ordered by number type.
+    ApiRequirementsPerNumberType:
+      title: Requirements Per Number Type
+      type: object
+      properties:
+        numberType:
+          type:
+          - string
+          - 'null'
+          description: The phone number type (Local, National, TollFree).
+        requirements:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ApiCountryRequirement'
+          description: List of requirements for this phone number type.
+      additionalProperties: false
+      description: All requirements for a specific number type. (under a specific country)
   securitySchemes:
     X-CM-PRODUCTTOKEN:
       type: apiKey

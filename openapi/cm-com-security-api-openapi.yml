@@ -91,6 +91,34 @@ components:
       format: date-time
       type: string
       example: '2022-03-10T12:15:50-04:00'
+    CreateAPIKeyRequest:
+      required:
+      - label
+      type: object
+      properties:
+        label:
+          type: string
+        validity:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/Validity'
+    Validity:
+      type: object
+      properties:
+        from:
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/ZonedDateTime'
+        until:
+          type:
+          - string
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/ZonedDateTime'
     CreateAPIKeyResponse:
       required:
       - id
@@ -129,34 +157,6 @@ components:
           type:
           - string
           - 'null'
-        validity:
-          type:
-          - object
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/Validity'
-    Validity:
-      type: object
-      properties:
-        from:
-          type:
-          - string
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/ZonedDateTime'
-        until:
-          type:
-          - string
-          - 'null'
-          allOf:
-          - $ref: '#/components/schemas/ZonedDateTime'
-    CreateAPIKeyRequest:
-      required:
-      - label
-      type: object
-      properties:
-        label:
-          type: string
         validity:
           type:
           - object

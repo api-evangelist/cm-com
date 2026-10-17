@@ -764,6 +764,15 @@ components:
         expiresOnUtc:
           format: date-time
           type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
     CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationBase:
       required:
       - id
@@ -832,6 +841,88 @@ components:
           type: string
         iosExpiresOnUtc:
           format: date-time
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAndroidApplication:
+      type: object
+      properties:
+        certificate:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest:
+      type: object
+      properties:
+        applicationID:
+          type: string
+        applicationOtpSender:
+          type: string
+        applicationName:
+          type: string
+        androidSettings:
+          type: string
+        iosSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount:
+      required:
+      - id
+      - accountId
+      - channelRequestId
+      - isPending
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
           type: string
     CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplication:
       required:
@@ -911,117 +1002,7 @@ components:
           type: string
         rejectionReason:
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest:
-      type: object
-      properties:
-        applicationID:
-          type: string
-        applicationOtpSender:
-          type: string
-        applicationName:
-          type: string
-        androidSettings:
-          type: string
-        iosSettings:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushIosApplication'
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
-      type: object
-      properties:
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelCategoryRequestID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAndroidApplication:
-      type: object
-      properties:
-        certificate:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushAccount:
-      required:
-      - id
-      - accountId
-      - channelRequestId
-      - isPending
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelRequestId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        isPending:
-          type: boolean
-        cancelledOnUtc:
-          format: date-time
-          type: string
-        fulfilledOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-        entityStatus:
-          enum:
-          - ACTIVE
-          - PENDING
-          - ELIGIBLE
-          - NOT_VALIDATED
-          - CUSTOMER_ACTION_REQUIRED
-          - EXPIRED
-          - REJECTED
-          - CANCELLED
-          - DELETED
-          type: string
   requestBodies:
-    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
-        text/json:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
-        text/xml:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
-        multipart/form-data:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
-        application/x-www-form-urlencoded:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
-      description: The mobile push application.
-      required: true
     CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
       content:
         application/json:
@@ -1050,6 +1031,25 @@ components:
             items:
               $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
       description: The form input.
+      required: true
+    CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.MobilePush.ApiMobilePushApplicationRequest'
+      description: The mobile push application.
       required: true
   securitySchemes:
     ProductToken:

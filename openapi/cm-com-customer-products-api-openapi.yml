@@ -358,12 +358,49 @@ paths:
       - Customer products
 components:
   schemas:
-    rest.HttpError:
+    handler.customerProductListItem:
       properties:
-        error_code:
+        event_id:
           type: string
-        error_msg:
+        id:
           type: string
+        order_id:
+          type: string
+        product_id:
+          type: string
+        status:
+          type: string
+      type: object
+    handler.viewCustomerProductProduct:
+      properties:
+        external_id_1:
+          type: string
+        external_id_2:
+          type: string
+        external_id_3:
+          type: string
+        is_checkin_allowed:
+          type: boolean
+        name:
+          additionalProperties:
+            type: string
+          type: object
+        price_incl_vat:
+          type: number
+        product_type:
+          type: string
+        sales_from:
+          type: string
+        sales_until:
+          type: string
+        uuid:
+          type: string
+        valid_from:
+          type: string
+        valid_until:
+          type: string
+        validation_max_checkins:
+          type: integer
       type: object
     handler.viewCustomerProductResponse:
       properties:
@@ -417,37 +454,6 @@ components:
         venue:
           $ref: '#/components/schemas/handler.viewCustomerProductVenue'
       type: object
-    handler.viewCustomerProductProduct:
-      properties:
-        external_id_1:
-          type: string
-        external_id_2:
-          type: string
-        external_id_3:
-          type: string
-        is_checkin_allowed:
-          type: boolean
-        name:
-          additionalProperties:
-            type: string
-          type: object
-        price_incl_vat:
-          type: number
-        product_type:
-          type: string
-        sales_from:
-          type: string
-        sales_until:
-          type: string
-        uuid:
-          type: string
-        valid_from:
-          type: string
-        valid_until:
-          type: string
-        validation_max_checkins:
-          type: integer
-      type: object
     handler.viewCustomerProductSeat:
       properties:
         entrance:
@@ -463,6 +469,27 @@ components:
         secondary_type:
           type: string
         section:
+          type: string
+      type: object
+    handler.viewCustomerProductVenue:
+      properties:
+        name:
+          type: string
+        uuid:
+          type: string
+      type: object
+    handler.viewCustomerProductTrackingParameter:
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      type: object
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
           type: string
       type: object
     handler.listResponse-handler_customerProductListItem:
@@ -489,33 +516,6 @@ components:
           type: integer
         total_items:
           type: integer
-      type: object
-    handler.viewCustomerProductVenue:
-      properties:
-        name:
-          type: string
-        uuid:
-          type: string
-      type: object
-    handler.customerProductListItem:
-      properties:
-        event_id:
-          type: string
-        id:
-          type: string
-        order_id:
-          type: string
-        product_id:
-          type: string
-        status:
-          type: string
-      type: object
-    handler.viewCustomerProductTrackingParameter:
-      properties:
-        name:
-          type: string
-        value:
-          type: string
       type: object
     handler.viewCustomerProductEvent:
       properties:

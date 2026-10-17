@@ -1140,13 +1140,6 @@ components:
         uuid:
           type: string
       type: object
-    rest.HttpError:
-      properties:
-        error_code:
-          type: string
-        error_msg:
-          type: string
-      type: object
     handler.listResponse-handler_channelListItem:
       properties:
         items:
@@ -1172,166 +1165,86 @@ components:
         total_items:
           type: integer
       type: object
-    CM.Platform.Channels.Models.Channels.ApiChannelTypeRequest:
-      required:
-      - id
-      - channelTypeId
-      - isPending
-      - isActive
-      - isGenerated
-      - createdOnUtc
-      - requestState
+    rest.HttpError:
+      properties:
+        error_code:
+          type: string
+        error_msg:
+          type: string
+      type: object
+    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
       type: object
       properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelTypeId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        isPending:
-          type: boolean
-        isActive:
-          type: boolean
-        isGenerated:
-          type: boolean
-        fulfilledOnUtc:
-          format: date-time
-          type: string
-        cancelledOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-        requestState:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormElement:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputKey:
-          type: string
-        inputDescriptionKey:
-          type: string
-        inputPosition:
-          type: string
-        inputProperties:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormElementProperties'
-        inputType:
-          type: string
-        isRequired:
-          type: boolean
-        isAdminElement:
-          type: boolean
-    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
-      type: object
-      properties:
-        type:
-          enum:
-          - UNKNOWN
-          - PROCESSING
-          - ACTION_REQUIRED
-          type: string
-        descriptionKey:
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiChannelOverviewTypeRequestCategoryRequest:
-      required:
-      - categoryName
-      - isPending
-      - isSandbox
-      type: object
-      properties:
-        categoryId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        categoryName:
-          type: string
-        categoryIconClass:
-          type: string
-        isPending:
-          type: boolean
-        isSandbox:
-          type: boolean
-        requestState:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
-    CM.Platform.Channels.Models.Channels.ApiAnalyticsOttMessagesBundle:
-      required:
-      - bundleType
-      - bundleSpecifics
-      - effectiveOnUtc
-      type: object
-      properties:
-        bundleType:
-          enum:
-          - MAU
-          - CONVERSATIONS
-          - MESSAGES
-          type: string
-        bundleSpecifics:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Internal.Analytics.ApiInternalAnalyticsOttMessagesBundleSpecifics'
-        effectiveOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.EventLogging.ApiBaseEvent:
-      required:
-      - id
-      - eventType
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        ssoAccountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        eventType:
-          type: string
-        eventSubType:
-          type: string
-        eventData:
-          type: object
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiChannelAnalyticsBaseResponse:
-      type: object
-      properties:
-        activeBundle:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiAnalyticsOttMessagesBundle'
-        ottMetrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiOttMetrics'
-        ottMetricsRetrievalException:
-          enum:
-          - API_UNAVAILABLE
-          - API_NO_RESULTS
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiConversationalProfileSenderIdConfig:
-      type: object
-      properties:
-        senderId:
-          type: string
-        medium:
-          type: string
-        capabilities:
+        stages:
           type: array
           items:
             type: string
+        current:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelTypeResponse:
+      required:
+      - id
+      - currency
+      - startupCost
+      - monthlyCost
+      - noticePeriodDays
+      - channelRequestProcessingDays
+      - categories
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        currency:
+          type: string
+        description:
+          type: string
+        prettyName:
+          type: string
+        iconClass:
+          type: string
+        startupCost:
+          format: double
+          type: number
+        monthlyCost:
+          format: double
+          type: number
+        noticePeriodDays:
+          format: int32
+          type: integer
+        channelRequestProcessingDays:
+          format: int32
+          type: integer
+        requiredCapability:
+          type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
+    CM.Platform.Channels.Models.Channels.ApiChannelOverview:
+      required:
+      - active
+      - pending
+      - unused
+      type: object
+      properties:
+        active:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
+        pending:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
+        unused:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
+        isDemoAccount:
+          type: boolean
+        isOnTrial:
+          type: boolean
     CM.Platform.Channels.Models.Channels.ApiChannelsAvailable:
       type: object
       properties:
@@ -1425,6 +1338,89 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+    CM.Platform.Channels.Models.Channels.ApiChannels:
+      required:
+      - available
+      - sandbox
+      - comingSoon
+      - sandboxAvailable
+      type: object
+      properties:
+        available:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelsAvailable'
+        sandbox:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelsAvailable'
+        comingSoon:
+          type: array
+          items:
+            type: string
+        sandboxAvailable:
+          type: array
+          items:
+            type: string
+        isDemoAccount:
+          type: boolean
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormElementProperties:
+      type: object
+      properties:
+        cssClass:
+          type: string
+        cssGridClass:
+          type: string
+        cssStyle:
+          type: string
+        fileSizeMax:
+          format: int32
+          type: integer
+        fileType:
+          type: string
+        lengthMax:
+          format: int32
+          type: integer
+        lengthMin:
+          format: int32
+          type: integer
+        regex:
+          type: string
+        resolutionMax:
+          type: string
+        resolutionMin:
+          type: string
+        selectable:
+          type: array
+          items:
+            type: string
+        showAs:
+          type: string
+        showInputDescriptionKey:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ApiChannelTypeRequestBase:
+      required:
+      - id
+      - channelTypeId
+      - isPending
+      - isActive
+      - createdOnUtc
+      - requestState
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelTypeId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        isActive:
+          type: boolean
+        createdOnUtc:
+          format: date-time
+          type: string
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
     CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
       type: object
       properties:
@@ -1477,194 +1473,13 @@ components:
           type: string
         requestState:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
-    CM.Platform.Channels.Models.Channels.ApiChannelOverview:
-      required:
-      - active
-      - pending
-      - unused
-      type: object
-      properties:
-        active:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
-        pending:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
-        unused:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewType'
-        isDemoAccount:
-          type: boolean
-        isOnTrial:
-          type: boolean
-    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
-      type: object
-      properties:
-        stages:
-          type: array
-          items:
-            type: string
-        current:
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiChannelCategory:
-      required:
-      - id
-      - name
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        iconClass:
-          type: string
-        name:
-          type: string
-        channelLimit:
-          format: int32
-          type: integer
-    CM.Platform.Channels.Models.Channels.ApiRequestState:
-      type: object
-      properties:
-        completeness:
-          format: int32
-          type: integer
-        nextStage:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
-        progression:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
-        hasPendingOrder:
-          type: boolean
-        hasEligibleOrder:
-          type: boolean
-        hasMissingOrder:
-          type: boolean
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormElementProperties:
-      type: object
-      properties:
-        cssClass:
-          type: string
-        cssGridClass:
-          type: string
-        cssStyle:
-          type: string
-        fileSizeMax:
-          format: int32
-          type: integer
-        fileType:
-          type: string
-        lengthMax:
-          format: int32
-          type: integer
-        lengthMin:
-          format: int32
-          type: integer
-        regex:
-          type: string
-        resolutionMax:
-          type: string
-        resolutionMin:
-          type: string
-        selectable:
-          type: array
-          items:
-            type: string
-        showAs:
-          type: string
-        showInputDescriptionKey:
-          type: boolean
-    CM.Platform.Channels.Models.Channels.ApiChannelTypeResponse:
-      required:
-      - id
-      - currency
-      - startupCost
-      - monthlyCost
-      - noticePeriodDays
-      - channelRequestProcessingDays
-      - categories
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        currency:
-          type: string
-        description:
-          type: string
-        prettyName:
-          type: string
-        iconClass:
-          type: string
-        startupCost:
-          format: double
-          type: number
-        monthlyCost:
-          format: double
-          type: number
-        noticePeriodDays:
-          format: int32
-          type: integer
-        channelRequestProcessingDays:
-          format: int32
-          type: integer
-        requiredCapability:
-          type: string
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelCategory'
-    CM.Platform.Channels.Models.Channels.ApiChannels:
-      required:
-      - available
-      - sandbox
-      - comingSoon
-      - sandboxAvailable
-      type: object
-      properties:
-        available:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelsAvailable'
-        sandbox:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelsAvailable'
-        comingSoon:
-          type: array
-          items:
-            type: string
-        sandboxAvailable:
-          type: array
-          items:
-            type: string
-        isDemoAccount:
-          type: boolean
-    CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiChannelTypeRequestBase:
+    CM.Platform.Channels.Models.Channels.ApiChannelTypeRequest:
       required:
       - id
       - channelTypeId
       - isPending
       - isActive
+      - isGenerated
       - createdOnUtc
       - requestState
       type: object
@@ -1681,75 +1496,72 @@ components:
           type: boolean
         isActive:
           type: boolean
+        isGenerated:
+          type: boolean
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
         createdOnUtc:
           format: date-time
           type: string
         requestState:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
-    CM.Platform.Channels.Models.Channels.ApiOttMetrics:
-      required:
-      - type
-      - typeName
-      - typePrettyName
-      - typeIconClass
+    CM.Platform.Channels.Models.Internal.Analytics.ApiInternalAnalyticsOttMessagesBundleSpecifics:
       type: object
       properties:
-        type:
-          format: uuid
+        dimension:
+          enum:
+          - PAYASYOUGO
+          - BUNDLE
           type: string
-          example: 00000000-0000-0000-0000-000000000000
-        typeName:
+        dimensionValue:
           type: string
-        typePrettyName:
+    CM.Platform.Channels.Models.Channels.ApiConversationalProfileSenderIdConfig:
+      type: object
+      properties:
+        senderId:
           type: string
-        typeIconClass:
+        medium:
           type: string
-        requestId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        amount:
-          format: int32
-          type: integer
-    CM.Platform.Channels.Models.Channels.ApiChannelTypeBaseResponse:
-      required:
-      - id
-      - currency
-      - startupCost
-      - monthlyCost
-      - channelRequestProcessingDays
+        capabilities:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormElement:
       type: object
       properties:
         id:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
-        currency:
+        inputKey:
           type: string
-        description:
+        inputDescriptionKey:
           type: string
-        prettyName:
+        inputPosition:
           type: string
-        iconClass:
+        inputProperties:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormElementProperties'
+        inputType:
           type: string
-        startupCost:
-          format: double
-          type: number
-        monthlyCost:
-          format: double
-          type: number
-        channelRequestProcessingDays:
-          format: int32
-          type: integer
-    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestForm:
+        isRequired:
+          type: boolean
+        isAdminElement:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
       type: object
       properties:
-        channelType:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeBaseResponse'
-        formElements:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormElement'
+        type:
+          enum:
+          - UNKNOWN
+          - PROCESSING
+          - ACTION_REQUIRED
+          type: string
+        descriptionKey:
+          type: string
     CM.Platform.Channels.Models.RequestForms.ApiCustomRequestForm:
       type: object
       properties:
@@ -1765,16 +1577,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormElement'
-    CM.Platform.Channels.Models.Internal.Analytics.ApiInternalAnalyticsOttMessagesBundleSpecifics:
-      type: object
-      properties:
-        dimension:
-          enum:
-          - PAYASYOUGO
-          - BUNDLE
-          type: string
-        dimensionValue:
-          type: string
     CM.Platform.Channels.Models.Channels.ApiChannelOverviewType:
       required:
       - type
@@ -1806,6 +1608,149 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelOverviewTypeRequestCategoryRequest'
+    CM.Platform.Channels.Models.RequestForms.ApiCustomRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelAnalyticsBaseResponse:
+      type: object
+      properties:
+        activeBundle:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiAnalyticsOttMessagesBundle'
+        ottMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiOttMetrics'
+        ottMetricsRetrievalException:
+          enum:
+          - API_UNAVAILABLE
+          - API_NO_RESULTS
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiOttMetrics:
+      required:
+      - type
+      - typeName
+      - typePrettyName
+      - typeIconClass
+      type: object
+      properties:
+        type:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        typeName:
+          type: string
+        typePrettyName:
+          type: string
+        typeIconClass:
+          type: string
+        requestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        amount:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.Channels.ApiChannelOverviewTypeRequestCategoryRequest:
+      required:
+      - categoryName
+      - isPending
+      - isSandbox
+      type: object
+      properties:
+        categoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        categoryName:
+          type: string
+        categoryIconClass:
+          type: string
+        isPending:
+          type: boolean
+        isSandbox:
+          type: boolean
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.Channels.ApiChannelTypeBaseResponse:
+      required:
+      - id
+      - currency
+      - startupCost
+      - monthlyCost
+      - channelRequestProcessingDays
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        currency:
+          type: string
+        description:
+          type: string
+        prettyName:
+          type: string
+        iconClass:
+          type: string
+        startupCost:
+          format: double
+          type: number
+        monthlyCost:
+          format: double
+          type: number
+        channelRequestProcessingDays:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.Channels.ApiRequestState:
+      type: object
+      properties:
+        completeness:
+          format: int32
+          type: integer
+        nextStage:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
+        progression:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
+        hasPendingOrder:
+          type: boolean
+        hasEligibleOrder:
+          type: boolean
+        hasMissingOrder:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ApiChannelCategory:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        iconClass:
+          type: string
+        name:
+          type: string
+        channelLimit:
+          format: int32
+          type: integer
     CM.Platform.Channels.Models.Channels.ApiConversationalProfile:
       type: object
       properties:
@@ -1832,29 +1777,61 @@ components:
         createdOnUtc:
           format: date-time
           type: string
-    CM.Platform.Messages.Models.ApiMessageChannel:
+    CM.Platform.Channels.Models.EventLogging.ApiBaseEvent:
+      required:
+      - id
+      - eventType
+      - createdOnUtc
       type: object
       properties:
-        profileImage:
-          type: string
         id:
-          type: string
-        allowImages:
-          type: boolean
-        name:
-          type: string
-        phoneNumber:
-          type: string
-        whatsAppRequestId:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
-        requestId:
+        accountId:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
-        type:
+        ssoAccountId:
+          format: uuid
           type: string
+          example: 00000000-0000-0000-0000-000000000000
+        eventType:
+          type: string
+        eventSubType:
+          type: string
+        eventData:
+          type: object
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiAnalyticsOttMessagesBundle:
+      required:
+      - bundleType
+      - bundleSpecifics
+      - effectiveOnUtc
+      type: object
+      properties:
+        bundleType:
+          enum:
+          - MAU
+          - CONVERSATIONS
+          - MESSAGES
+          type: string
+        bundleSpecifics:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Internal.Analytics.ApiInternalAnalyticsOttMessagesBundleSpecifics'
+        effectiveOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestForm:
+      type: object
+      properties:
+        channelType:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelTypeBaseResponse'
+        formElements:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormElement'
     CM.Platform.Messages.Models.ApiChannelInfo:
       type: object
       properties:
@@ -1881,23 +1858,35 @@ components:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
+    CM.Platform.Messages.Models.ApiMessageChannel:
+      type: object
+      properties:
+        profileImage:
+          type: string
+        id:
+          type: string
+        allowImages:
+          type: boolean
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        whatsAppRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        requestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          type: string
     ChannelType:
       type: string
       enum:
       - email
       - sms
       - whatsapp
-    ErrorResponse:
-      title: Error Response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code
-        message:
-          type: string
-          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
     Channel:
       title: Channel
       type: object
@@ -1913,6 +1902,17 @@ components:
           examples:
           - false
           readOnly: true
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code
+        message:
+          type: string
+          description: High level description of the error that occurred. This description, when present, can be shown to the end user. It might describe that the system is not available, or that an unexpected error occurred. In test mode, the API will return more information (targeted at the developer) here than in production mode.
   requestBodies:
     CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
       content:
@@ -1943,6 +1943,13 @@ components:
               $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
       description: The form input.
       required: true
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   parameters:
     KeyId:
       name: kid
@@ -1955,13 +1962,6 @@ components:
 
         '
       example: 1d1c8b3f-d33f-412c-8a57-e259d3bc5e05
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     SystemTokenAuth:
       description: Send your organisation's system token in this header.

@@ -257,6 +257,21 @@ paths:
           description: NoContent
 components:
   schemas:
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutSettings:
+      type: object
+      properties:
+        countries:
+          type: array
+          items:
+            type: string
+        languages:
+          type: array
+          items:
+            type: string
+        templates:
+          type: array
+          items:
+            type: string
     CM.Platform.Channels.Models.ChannelTypes.Payments.ApiIdealPlatformAttributes:
       required:
       - accessToken
@@ -265,6 +280,28 @@ components:
         accessToken:
           type: string
         isMock:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest:
+      required:
+      - name
+      - isActive
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          enum:
+          - CMPAYMENTS
+          - WEBCHECKOUT
+          - IDEALPLATFORM
+          type: string
+        cmPaymentsAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiCmPaymentsAttributes'
+        webCheckoutAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutAttributes'
+        idealPlatformAttributes:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiIdealPlatformAttributes'
+        isActive:
           type: boolean
     CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutAttributes:
       required:
@@ -285,6 +322,11 @@ components:
           type: string
         settings:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutSettings'
+        isMock:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsAttributes:
+      type: object
+      properties:
         isMock:
           type: boolean
     CM.Platform.Channels.Models.ChannelTypes.Payments.ApiCmPaymentsAttributes:
@@ -347,48 +389,6 @@ components:
           - CANCELLED
           - DELETED
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsAttributes:
-      type: object
-      properties:
-        isMock:
-          type: boolean
-    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutSettings:
-      type: object
-      properties:
-        countries:
-          type: array
-          items:
-            type: string
-        languages:
-          type: array
-          items:
-            type: string
-        templates:
-          type: array
-          items:
-            type: string
-    CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest:
-      required:
-      - name
-      - isActive
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          enum:
-          - CMPAYMENTS
-          - WEBCHECKOUT
-          - IDEALPLATFORM
-          type: string
-        cmPaymentsAttributes:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiCmPaymentsAttributes'
-        webCheckoutAttributes:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiWebCheckoutAttributes'
-        idealPlatformAttributes:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Payments.ApiIdealPlatformAttributes'
-        isActive:
-          type: boolean
   requestBodies:
     CM.Platform.Channels.Models.ChannelTypes.Payments.ApiPaymentsCredentialsRequest:
       content:

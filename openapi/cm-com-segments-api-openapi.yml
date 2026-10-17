@@ -211,22 +211,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CM.Data.QueryLanguage.Tree:
-      type: object
-      properties:
-        root:
-          $ref: '#/components/schemas/CM.Data.QueryLanguage.Nodes.Node'
-      additionalProperties: false
-    CM.Data.QueryLanguage.Nodes.Node:
-      type: object
-      additionalProperties: false
-    CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus:
-      enum:
-      - 0
-      - 1
-      - 2
-      type: integer
-      format: int32
     CM.Data.Core.Profiles.Api.Models.ApiSegment:
       type: object
       properties:
@@ -254,4 +238,20 @@ components:
           type: boolean
         addressBookStatus:
           $ref: '#/components/schemas/CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus'
+      additionalProperties: false
+    CM.Data.Core.Profiles.Api.Models.Enums.ApiSegmentAddressBookStatus:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    CM.Data.QueryLanguage.Tree:
+      type: object
+      properties:
+        root:
+          $ref: '#/components/schemas/CM.Data.QueryLanguage.Nodes.Node'
+      additionalProperties: false
+    CM.Data.QueryLanguage.Nodes.Node:
+      type: object
       additionalProperties: false

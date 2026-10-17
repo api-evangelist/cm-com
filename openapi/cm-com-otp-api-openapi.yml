@@ -179,14 +179,19 @@ paths:
     - url: https://api.cm.com
 components:
   schemas:
-    VerifyResponse:
+    VerifyRequest:
       type: object
-      title: Verify response
+      title: Verify request
       properties:
-        valid:
-          type: boolean
-          description: Indicates if the code was valid. Once a code has been successfully validated, it cannot be validated again.
-          readOnly: true
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the code.
+        code:
+          type: string
+          description: The code received via SMS/Push or Voice.
+          examples:
+          - '12345'
     GenerateRequest:
       type: object
       title: Generate request
@@ -248,34 +253,6 @@ components:
       examples:
       - recipient: '0031601234567'
         sender: My company
-    VerifyRequest:
-      type: object
-      title: Verify request
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier for the code.
-        code:
-          type: string
-          description: The code received via SMS/Push or Voice.
-          examples:
-          - '12345'
-    ErrorResponse:
-      title: Error response
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code.
-          examples:
-          - 400
-        message:
-          type: string
-          description: High level description of the error that occurred.
-          examples:
-          - The request is invalid
     GenerateResponse:
       type: object
       title: Generate response
@@ -295,6 +272,29 @@ components:
           description: The date the code will expire.
           format: date-time
           readOnly: true
+    VerifyResponse:
+      type: object
+      title: Verify response
+      properties:
+        valid:
+          type: boolean
+          description: Indicates if the code was valid. Once a code has been successfully validated, it cannot be validated again.
+          readOnly: true
+    ErrorResponse:
+      title: Error response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
+        message:
+          type: string
+          description: High level description of the error that occurred.
+          examples:
+          - The request is invalid
     CreateOtpBase:
       type: object
       properties:
@@ -315,17 +315,6 @@ components:
           default: 60
       required:
       - channel
-    CreateOtpSms:
-      type: object
-      title: Create OTP (SMS)
-      allOf:
-      - $ref: '#/components/schemas/CreateOtpMessage'
-      properties:
-        channel:
-          examples:
-          - sms
-          enum:
-          - sms
     CreateOtpMessage:
       type: object
       allOf:
@@ -350,17 +339,37 @@ components:
       required:
       - from
       - to
-    OtpVerify:
+    CreateOtpWhatsApp:
+      title: Create OTP (WhatsApp)
       type: object
-      title: OTP Verification Request
+      allOf:
+      - $ref: '#/components/schemas/CreateOtpBase'
       properties:
-        code:
-          type: string
-          description: The code received via the specified channel.
+        channel:
           examples:
-          - '12345'
+          - whatsapp
+          enum:
+          - whatsapp
+        from:
+          type: string
+          description: The number of the sender. This must be a valid phone number in E.164 format.
+          examples:
+          - '+31601234567'
+        to:
+          type: string
+          description: The number of the receiver. This must be a valid phone number in E.164 format.
+          examples:
+          - '+31602345678'
+        message:
+          type: string
+          description: Set a custom message. You can use the placeholder {code}, this will be replaced by the actual code.
+          maxLength: 160
+        locale:
+          type: string
+          description: The locale of the message. This must match with configured locales for the template.
       required:
-      - code
+      - from
+      - to
     CreateOtpVoice:
       type: object
       title: Create OTP (Voice)
@@ -426,65 +435,43 @@ components:
       required:
       - from
       - to
-    ErrorCode:
-      type: integer
-      description: "Error code description:\n\n * 1000 - Unknown error\n * 1001 - Invalid request\n * 2000 - Validation error\n * 2001 - Invalid `channel` field\n * 2002 - Invalid `from` field\n * 2003 - Invalid `to` field\n * 2004 - Invalid `message` field\n * 2005 - Invalid `digits` field\n * 2006 - Invalid `expiry` field\n * 2007 - Invalid `locale` field\n * 2008 - Invalid `pushAppKey` field\n * 2009 - Invalid `anonymous` field\n * 3001 - OTP was not found\n * 3002 - OTP has expired\n * 3003 - OTP is already verified\n * 3004 - Too many attempts\n * 3005 - Channel is not configured\n * 3006 - Subscription is required\n * 4001 - Failed to send message\n"
-      enum:
-      - 1000
-      - 1001
-      - 2000
-      - 2001
-      - 2002
-      - 2003
-      - 2004
-      - 2005
-      - 2006
-      - 2007
-      - 2008
-      - 2009
-      - 3001
-      - 3002
-      - 3003
-      - 3004
-      - 3005
-      - 3006
-      - 4001
-      examples:
-      - 1000
-    ErrorResponse_2:
-      title: Error response
+    CreateOtpSms:
       type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-          description: Response status code, should match HTTP error code.
-          examples:
-          - 400
-        message:
-          type: string
-          description: High level description of the error that occurred.
-          examples:
-          - The request is invalid
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-    CreateOtpPush:
-      type: object
-      title: Create OTP (Push)
+      title: Create OTP (SMS)
       allOf:
       - $ref: '#/components/schemas/CreateOtpMessage'
       properties:
         channel:
           examples:
-          - push
+          - sms
           enum:
-          - push
-        pushAppKey:
+          - sms
+    CreateOtpEmail:
+      title: Create OTP (Email)
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/CreateOtpBase'
+      properties:
+        channel:
+          examples:
+          - email
+          enum:
+          - email
+        to:
           type: string
-          description: The app key.
-          format: uuid
+          description: The email address of the receiver.
+          format: email
+          examples:
+          - example@example.com
+        locale:
+          type: string
+          description: The locale for the email template.
+        message:
+          type: string
+          description: Set a custom message to be used in the email message.
+          maxLength: 500
       required:
-      - pushAppKey
+      - to
     OtpResponse:
       type: object
       title: OTP Response
@@ -532,194 +519,76 @@ components:
           - rcs
           enum:
           - rcs
-    CreateOtpEmail:
-      title: Create OTP (Email)
+    OtpVerify:
       type: object
-      allOf:
-      - $ref: '#/components/schemas/CreateOtpBase'
+      title: OTP Verification Request
       properties:
-        channel:
-          examples:
-          - email
-          enum:
-          - email
-        to:
-          type: string
-          description: The email address of the receiver.
-          format: email
-          examples:
-          - example@example.com
-        locale:
-          type: string
-          description: The locale for the email template.
-        message:
-          type: string
-          description: Set a custom message to be used in the email message.
-          maxLength: 500
-      required:
-      - to
-    CreateOtpWhatsApp:
-      title: Create OTP (WhatsApp)
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/CreateOtpBase'
-      properties:
-        channel:
-          examples:
-          - whatsapp
-          enum:
-          - whatsapp
-        from:
-          type: string
-          description: The number of the sender. This must be a valid phone number in E.164 format.
-          examples:
-          - '+31601234567'
-        to:
-          type: string
-          description: The number of the receiver. This must be a valid phone number in E.164 format.
-          examples:
-          - '+31602345678'
-        message:
-          type: string
-          description: Set a custom message. You can use the placeholder {code}, this will be replaced by the actual code.
-          maxLength: 160
-        locale:
-          type: string
-          description: The locale of the message. This must match with configured locales for the template.
-      required:
-      - from
-      - to
-    CallQueuedEvent:
-      title: Call Queued Event
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          description: The Type of event.
-          readOnly: true
-        call-id:
-          type: string
-          description: The ID of the call this event belongs to.
-          format: uuid
-        instruction-id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the instruction the event is a result of.
-        queue-id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the queue.
-        caller:
-          type:
-          - string
-          - 'null'
-          description: The id (e.g. number) of the caller.
-        callee:
-          type:
-          - string
-          - 'null'
-          description: The id (e.g. number) of the callee.
-        success:
-          type: boolean
-          description: True if the PlaceCallInstruction was accepted.
-        error:
-          type:
-          - string
-          - 'null'
-          description: True if the PlaceCallInstruction was accepted.
-      additionalProperties: false
-      description: 'Event that is a result (basically a direct response) to the PlaceCallInstruction.
-
-        This one is generally used in the async versions of the calls.'
-    ExceptionEvent:
-      title: Exception Event
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          description: The Type of event.
-          readOnly: true
-        call-id:
-          type: string
-          description: The ID of the call this event belongs to.
-          format: uuid
-        instruction-id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the instruction the event is a result of.
-        queue-id:
-          type:
-          - string
-          - 'null'
-          description: The ID of the queue.
         code:
-          $ref: '#/components/schemas/ExceptionEventCode'
-        title:
-          type:
-          - string
-          - 'null'
-          description: The title of the exception.
-          readOnly: true
+          type: string
+          description: The code received via the specified channel.
+          examples:
+          - '12345'
+      required:
+      - code
+    CreateOtpPush:
+      type: object
+      title: Create OTP (Push)
+      allOf:
+      - $ref: '#/components/schemas/CreateOtpMessage'
+      properties:
+        channel:
+          examples:
+          - push
+          enum:
+          - push
+        pushAppKey:
+          type: string
+          description: The app key.
+          format: uuid
+      required:
+      - pushAppKey
+    ErrorResponse_2:
+      title: Error response
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: Response status code, should match HTTP error code.
+          examples:
+          - 400
         message:
-          type:
-          - string
-          - 'null'
-          description: Some explanatory text on the exception.
-      additionalProperties: false
-      description: And event containing an exception.
-    VoicemailResponse:
-      title: Voicemail Response
+          type: string
+          description: High level description of the error that occurred.
+          examples:
+          - The request is invalid
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+    ErrorCode:
+      type: integer
+      description: "Error code description:\n\n * 1000 - Unknown error\n * 1001 - Invalid request\n * 2000 - Validation error\n * 2001 - Invalid `channel` field\n * 2002 - Invalid `from` field\n * 2003 - Invalid `to` field\n * 2004 - Invalid `message` field\n * 2005 - Invalid `digits` field\n * 2006 - Invalid `expiry` field\n * 2007 - Invalid `locale` field\n * 2008 - Invalid `pushAppKey` field\n * 2009 - Invalid `anonymous` field\n * 3001 - OTP was not found\n * 3002 - OTP has expired\n * 3003 - OTP is already verified\n * 3004 - Too many attempts\n * 3005 - Channel is not configured\n * 3006 - Subscription is required\n * 4001 - Failed to send message\n"
       enum:
-      - Ignore
-      - Restart
-      - Stop
-      - Disconnect
-      type: string
-      description: The type that determines the flow of Voicemail detection.
-    PromptType:
-      title: Prompt Type
-      enum:
-      - File
-      - TTS
-      - TTS_SSML
-      type: string
-      description: The type of the prompt, to distinguish between a filename and a string that needs to be tts-ed.
-    Gender:
-      title: Gender
-      enum:
-      - Male
-      - Female
-      type: string
-      description: Genders supported by TTS.
-    ExceptionEventCode:
-      title: Exception Event Code
-      enum:
-      - InvalidJson
-      - SignatureError
-      - FileNotFound
-      - InvalidInstruction
-      - InvalidParameter
-      - InsufficientBalance
-      - PremiumNotAllowed
-      - CallLimitReached
-      - TooManyNumbers
-      type: string
-      description: Enum of the different codes of exceptions.
-    CodeType:
-      title: Code Type
-      enum:
-      - Default
-      - TTS
-      - Custom
-      type: string
-      description: The type of the OTP code
+      - 1000
+      - 1001
+      - 2000
+      - 2001
+      - 2002
+      - 2003
+      - 2004
+      - 2005
+      - 2006
+      - 2007
+      - 2008
+      - 2009
+      - 3001
+      - 3002
+      - 3003
+      - 3004
+      - 3005
+      - 3006
+      - 4001
+      examples:
+      - 1000
     Voice:
       title: Voice
       required:
@@ -763,6 +632,77 @@ components:
           example: true
       additionalProperties: false
       description: The properties in this class are used to select the required TTS voice.
+    ExceptionEvent:
+      title: Exception Event
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: The Type of event.
+          readOnly: true
+        call-id:
+          type: string
+          description: The ID of the call this event belongs to.
+          format: uuid
+        instruction-id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the instruction the event is a result of.
+        queue-id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the queue.
+        code:
+          $ref: '#/components/schemas/ExceptionEventCode'
+        title:
+          type:
+          - string
+          - 'null'
+          description: The title of the exception.
+          readOnly: true
+        message:
+          type:
+          - string
+          - 'null'
+          description: Some explanatory text on the exception.
+      additionalProperties: false
+      description: And event containing an exception.
+    Gender:
+      title: Gender
+      enum:
+      - Male
+      - Female
+      type: string
+      description: Genders supported by TTS.
+    VoicemailResponse:
+      title: Voicemail Response
+      enum:
+      - Ignore
+      - Restart
+      - Stop
+      - Disconnect
+      type: string
+      description: The type that determines the flow of Voicemail detection.
+    CodeType:
+      title: Code Type
+      enum:
+      - Default
+      - TTS
+      - Custom
+      type: string
+      description: The type of the OTP code
+    PromptType:
+      title: Prompt Type
+      enum:
+      - File
+      - TTS
+      - TTS_SSML
+      type: string
+      description: The type of the prompt, to distinguish between a filename and a string that needs to be tts-ed.
     OtpInstruction:
       required:
       - caller
@@ -905,7 +845,76 @@ components:
           $ref: '#/components/schemas/VoicemailResponse'
       additionalProperties: false
       description: Instruction to send an OTP (One Time Password) to the callee.
+    ExceptionEventCode:
+      title: Exception Event Code
+      enum:
+      - InvalidJson
+      - SignatureError
+      - FileNotFound
+      - InvalidInstruction
+      - InvalidParameter
+      - InsufficientBalance
+      - PremiumNotAllowed
+      - CallLimitReached
+      - TooManyNumbers
+      type: string
+      description: Enum of the different codes of exceptions.
+    CallQueuedEvent:
+      title: Call Queued Event
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: The Type of event.
+          readOnly: true
+        call-id:
+          type: string
+          description: The ID of the call this event belongs to.
+          format: uuid
+        instruction-id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the instruction the event is a result of.
+        queue-id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the queue.
+        caller:
+          type:
+          - string
+          - 'null'
+          description: The id (e.g. number) of the caller.
+        callee:
+          type:
+          - string
+          - 'null'
+          description: The id (e.g. number) of the callee.
+        success:
+          type: boolean
+          description: True if the PlaceCallInstruction was accepted.
+        error:
+          type:
+          - string
+          - 'null'
+          description: True if the PlaceCallInstruction was accepted.
+      additionalProperties: false
+      description: 'Event that is a result (basically a direct response) to the PlaceCallInstruction.
+
+        This one is generally used in the async versions of the calls.'
   responses:
+    UnknownError:
+      description: Unknown error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: An unknown error occurred.
     Unauthorized:
       description: Unauthorized
       content:
@@ -924,15 +933,16 @@ components:
           example:
             status: 400
             message: The request is invalid
-    UnknownError:
+    UnknownError_2:
       description: Unknown error
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: '#/components/schemas/ErrorResponse_2'
           example:
             status: 500
             message: An unknown error occurred.
+            code: 1000
     Unauthorized_2:
       description: Unauthorized
       content:
@@ -953,16 +963,6 @@ components:
             status: 400
             message: The request is invalid
             code: 2000
-    UnknownError_2:
-      description: Unknown error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse_2'
-          example:
-            status: 500
-            message: An unknown error occurred.
-            code: 1000
   parameters:
     id:
       name: id

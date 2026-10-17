@@ -392,6 +392,106 @@ paths:
           description: NoContent
 components:
   schemas:
+    CM.Platform.Channels.Models.ChannelTypes.Line.ApiLineNotifyServiceBase:
+      required:
+      - id
+      - accountId
+      - gmoStoreId
+      - isActive
+      - isPending
+      - approvedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        notifyServiceID:
+          format: int32
+          type: integer
+        notifyServiceName:
+          type: string
+        gmoStoreId:
+          format: int32
+          type: integer
+        isActive:
+          type: boolean
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        isPending:
+          type: boolean
+        approvedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Line.ApiLineNotifyServiceRequest:
+      required:
+      - gmoStoreId
+      type: object
+      properties:
+        notifyServiceID:
+          format: int32
+          type: integer
+        notifyServiceName:
+          type: string
+        gmoStoreId:
+          format: int32
+          type: integer
     CM.Platform.Channels.Models.ChannelTypes.Line.ApiLineNotifyService:
       required:
       - id
@@ -456,93 +556,6 @@ components:
           type: string
         rejectionReason:
           type: string
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
-      type: object
-      properties:
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.Line.ApiLineNotifyServiceBase:
-      required:
-      - id
-      - accountId
-      - gmoStoreId
-      - isActive
-      - isPending
-      - approvedOnUtc
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        notifyServiceID:
-          format: int32
-          type: integer
-        notifyServiceName:
-          type: string
-        gmoStoreId:
-          format: int32
-          type: integer
-        isActive:
-          type: boolean
-        entityStatus:
-          enum:
-          - ACTIVE
-          - PENDING
-          - ELIGIBLE
-          - NOT_VALIDATED
-          - CUSTOMER_ACTION_REQUIRED
-          - EXPIRED
-          - REJECTED
-          - CANCELLED
-          - DELETED
-          type: string
-        isPending:
-          type: boolean
-        approvedOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-        rejectedOnUtc:
-          format: date-time
-          type: string
-        cancelledOnUtc:
-          format: date-time
-          type: string
-        deletedOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelCategoryRequestID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
     CM.Platform.Channels.Models.ChannelTypes.Line.ApiLineAccount:
       required:
       - id
@@ -587,19 +600,6 @@ components:
           - CANCELLED
           - DELETED
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.Line.ApiLineNotifyServiceRequest:
-      required:
-      - gmoStoreId
-      type: object
-      properties:
-        notifyServiceID:
-          format: int32
-          type: integer
-        notifyServiceName:
-          type: string
-        gmoStoreId:
-          format: int32
-          type: integer
   requestBodies:
     CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
       content:

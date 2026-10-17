@@ -239,64 +239,6 @@ paths:
           description: NoContent
 components:
   schemas:
-    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimBase:
-      required:
-      - id
-      - phoneNumberId
-      - country
-      - keyword
-      - subscriptionPeriodicity
-      - isPending
-      type: object
-      properties:
-        id:
-          type: string
-        channelId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        phoneNumberId:
-          type: string
-        country:
-          type: string
-        keyword:
-          type: string
-        subscriptionPeriodicity:
-          enum:
-          - MONTHLY
-          - YEARLY
-          - NONE
-          type: string
-        isPending:
-          type: boolean
-        claimedOnUtc:
-          format: date-time
-          type: string
-        entityStatus:
-          enum:
-          - ACTIVE
-          - PENDING
-          - ELIGIBLE
-          - NOT_VALIDATED
-          - CUSTOMER_ACTION_REQUIRED
-          - EXPIRED
-          - REJECTED
-          - CANCELLED
-          - DELETED
-          type: string
-        channelState:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelState'
-    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
-      type: object
-      properties:
-        type:
-          enum:
-          - UNKNOWN
-          - PROCESSING
-          - ACTION_REQUIRED
-          type: string
-        descriptionKey:
-          type: string
     CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimResponse:
       required:
       - id
@@ -362,6 +304,85 @@ components:
           type: string
         keyword:
           type: string
+    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
+      type: object
+      properties:
+        type:
+          enum:
+          - UNKNOWN
+          - PROCESSING
+          - ACTION_REQUIRED
+          type: string
+        descriptionKey:
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelState:
+      required:
+      - isPending
+      - requestState
+      type: object
+      properties:
+        customRequestFormIsPending:
+          type: boolean
+        isPending:
+          type: boolean
+        requestState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
+    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
+      type: object
+      properties:
+        stages:
+          type: array
+          items:
+            type: string
+        current:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.Sms.ApiKeywordClaimBase:
+      required:
+      - id
+      - phoneNumberId
+      - country
+      - keyword
+      - subscriptionPeriodicity
+      - isPending
+      type: object
+      properties:
+        id:
+          type: string
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        phoneNumberId:
+          type: string
+        country:
+          type: string
+        keyword:
+          type: string
+        subscriptionPeriodicity:
+          enum:
+          - MONTHLY
+          - YEARLY
+          - NONE
+          type: string
+        isPending:
+          type: boolean
+        claimedOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+        channelState:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelState'
     CM.Platform.Channels.Models.Pricing.ApiSubscriptionPrice:
       required:
       - currency
@@ -392,27 +413,6 @@ components:
           - MONTHLY
           - YEARLY
           - NONE
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiChannelState:
-      required:
-      - isPending
-      - requestState
-      type: object
-      properties:
-        customRequestFormIsPending:
-          type: boolean
-        isPending:
-          type: boolean
-        requestState:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
-    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
-      type: object
-      properties:
-        stages:
-          type: array
-          items:
-            type: string
-        current:
           type: string
     CM.Platform.Channels.Models.Channels.ApiRequestState:
       type: object

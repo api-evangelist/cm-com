@@ -204,157 +204,7 @@ webhooks:
         '200':
           description: The webhook has been received.
 components:
-  headers:
-    Digest:
-      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
-      schema:
-        type: string
-        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
   schemas:
-    iDEALQRPaymentEvent:
-      allOf:
-      - $ref: '#/components/schemas/TransactionEvent'
-      - type: object
-        properties:
-          event:
-            $ref: '#/components/schemas/TransactionWebhookQREvents'
-          payment:
-            $ref: '#/components/schemas/Uuid'
-            description: Unique identifier for an iDEAL-QR payment.
-      description: Event send by CM.com after a change on an iDEAL-QR transaction.
-    Datetime:
-      type: string
-      format: date-time
-      minLength: 20
-      example: '2006-01-02T15:04:05Z'
-      description: ISO 8601 date and time.
-    ClientSideEncryption:
-      description: Client side encryption libraries per payment method.
-      type: object
-      properties:
-        bancontact:
-          $ref: '#/components/schemas/ClientSideEncryptionElement'
-        creditcard:
-          $ref: '#/components/schemas/ClientSideEncryptionElement'
-    TransactionWebhookBancontactEvents:
-      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
-
-        * `PAYMENT_CREATED` - When a new payment is created for the BanContact order.
-
-        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
-
-        * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-        '
-      type: string
-      enum:
-      - STATUS_CHANGE
-      - PAYMENT_CREATED
-      - REFUND_STATUS
-      - FINALSTATUS
-      example: STATUS_CHANGE
-    TransactionWebhookQREvents:
-      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
-
-        * `QR_PAYMENT_CREATED` - When a new payment is created using the qr code.
-
-        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
-
-        '
-      type: string
-      enum:
-      - STATUS_CHANGE
-      - QR_PAYMENT_CREATED
-      - REFUND_STATUS
-      example: STATUS_CHANGE
-    TransactionId:
-      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    TransactionWebhookEvent:
-      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
-
-        * `PAYMENT_CREATED` - When a new payment is created for the transaction.
-
-        * `TRANSACTION_CREATED` - When a new transaction is created for a session (used by Google Pay and Apple Pay).
-
-        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
-
-        * `CHARGEBACK_STATUS` - Invoke webhook when a transaction receives an update on one of its chargebacks.
-
-        * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-        '
-      type: string
-      enum:
-      - STATUS_CHANGE
-      - PAYMENT_CREATED
-      - TRANSACTION_CREATED
-      - REFUND_STATUS
-      - CHARGEBACK_STATUS
-      - FINALSTATUS
-      example: STATUS_CHANGE
-    Reference:
-      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
-      type: string
-      minLength: 1
-      maxLength: 255
-      example: '20210623130413'
-    Uuid:
-      description: Unique identifier
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    BancontactPaymentEvent:
-      allOf:
-      - $ref: '#/components/schemas/TransactionEvent'
-      - type: object
-        properties:
-          event:
-            $ref: '#/components/schemas/TransactionWebhookBancontactEvents'
-          payment:
-            $ref: '#/components/schemas/Uuid'
-            description: Unique identifier for a BanContact payment.
-      description: Event sent by CM.com after a payment is created on a BanContact transaction.
-    ClientSideEncryptionElement:
-      type: object
-      properties:
-        cseUrl:
-          description: The URL that contains the script to encrypt the user payment data in your site.
-          type: string
-          example: https://app-domain.tld/libraries/ps/cse/80117cdb-be80-425f-954d-9696102efa60
-        upstream:
-          type: string
-          example: ps
-    SessionEvent:
-      description: 'Event sent by CM.com for session-based payment flows (Google Pay, Apple Pay). In this model a session groups one or more payment transactions: `sessionID` identifies the checkout session (order) and `transactionID` identifies the individual payment within it.'
-      type: object
-      required:
-      - sessionID
-      - event
-      - reference
-      - createdAt
-      properties:
-        sessionID:
-          allOf:
-          - $ref: '#/components/schemas/Uuid'
-          description: Unique identifier for the session. Present for `TRANSACTION_CREATED`, `STATUS_CHANGE`, and `PAYMENT_CREATED` events.
-        event:
-          $ref: '#/components/schemas/TransactionWebhookEvent'
-        reference:
-          $ref: '#/components/schemas/Reference'
-        createdAt:
-          $ref: '#/components/schemas/Datetime'
-          description: Time when the event occurred.
-        transactionID:
-          allOf:
-          - $ref: '#/components/schemas/Uuid'
-          description: 'Unique identifier for the payment transaction within the session. Present for `TRANSACTION_CREATED`, `STATUS_CHANGE`, and `PAYMENT_CREATED` events.        '
     TransactionEvent:
       description: Event send by CM.com after a change on a transaction.
       type: object
@@ -379,6 +229,150 @@ components:
         chargebackID:
           $ref: '#/components/schemas/Uuid'
           description: Unique identifier of the chargeback the event relates to. Only present on `CHARGEBACK_STATUS` events.
+    iDEALQRPaymentEvent:
+      allOf:
+      - $ref: '#/components/schemas/TransactionEvent'
+      - type: object
+        properties:
+          event:
+            $ref: '#/components/schemas/TransactionWebhookQREvents'
+          payment:
+            $ref: '#/components/schemas/Uuid'
+            description: Unique identifier for an iDEAL-QR payment.
+      description: Event send by CM.com after a change on an iDEAL-QR transaction.
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    TransactionWebhookQREvents:
+      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
+
+        * `QR_PAYMENT_CREATED` - When a new payment is created using the qr code.
+
+        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      - QR_PAYMENT_CREATED
+      - REFUND_STATUS
+      example: STATUS_CHANGE
+    BancontactPaymentEvent:
+      allOf:
+      - $ref: '#/components/schemas/TransactionEvent'
+      - type: object
+        properties:
+          event:
+            $ref: '#/components/schemas/TransactionWebhookBancontactEvents'
+          payment:
+            $ref: '#/components/schemas/Uuid'
+            description: Unique identifier for a BanContact payment.
+      description: Event sent by CM.com after a payment is created on a BanContact transaction.
+    ClientSideEncryption:
+      description: Client side encryption libraries per payment method.
+      type: object
+      properties:
+        bancontact:
+          $ref: '#/components/schemas/ClientSideEncryptionElement'
+        creditcard:
+          $ref: '#/components/schemas/ClientSideEncryptionElement'
+    Datetime:
+      type: string
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    ClientSideEncryptionElement:
+      type: object
+      properties:
+        cseUrl:
+          description: The URL that contains the script to encrypt the user payment data in your site.
+          type: string
+          example: https://app-domain.tld/libraries/ps/cse/80117cdb-be80-425f-954d-9696102efa60
+        upstream:
+          type: string
+          example: ps
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    SessionEvent:
+      description: 'Event sent by CM.com for session-based payment flows (Google Pay, Apple Pay). In this model a session groups one or more payment transactions: `sessionID` identifies the checkout session (order) and `transactionID` identifies the individual payment within it.'
+      type: object
+      required:
+      - sessionID
+      - event
+      - reference
+      - createdAt
+      properties:
+        sessionID:
+          allOf:
+          - $ref: '#/components/schemas/Uuid'
+          description: Unique identifier for the session. Present for `TRANSACTION_CREATED`, `STATUS_CHANGE`, and `PAYMENT_CREATED` events.
+        event:
+          $ref: '#/components/schemas/TransactionWebhookEvent'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        createdAt:
+          $ref: '#/components/schemas/Datetime'
+          description: Time when the event occurred.
+        transactionID:
+          allOf:
+          - $ref: '#/components/schemas/Uuid'
+          description: 'Unique identifier for the payment transaction within the session. Present for `TRANSACTION_CREATED`, `STATUS_CHANGE`, and `PAYMENT_CREATED` events.        '
+    TransactionWebhookBancontactEvents:
+      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
+
+        * `PAYMENT_CREATED` - When a new payment is created for the BanContact order.
+
+        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
+
+        * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      - PAYMENT_CREATED
+      - REFUND_STATUS
+      - FINALSTATUS
+      example: STATUS_CHANGE
+    TransactionWebhookEvent:
+      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
+
+        * `PAYMENT_CREATED` - When a new payment is created for the transaction.
+
+        * `TRANSACTION_CREATED` - When a new transaction is created for a session (used by Google Pay and Apple Pay).
+
+        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
+
+        * `CHARGEBACK_STATUS` - Invoke webhook when a transaction receives an update on one of its chargebacks.
+
+        * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      - PAYMENT_CREATED
+      - TRANSACTION_CREATED
+      - REFUND_STATUS
+      - CHARGEBACK_STATUS
+      - FINALSTATUS
+      example: STATUS_CHANGE
   responses:
     UserError:
       description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
@@ -410,6 +404,12 @@ components:
               message:
                 type: string
                 example: Service Unavailable
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

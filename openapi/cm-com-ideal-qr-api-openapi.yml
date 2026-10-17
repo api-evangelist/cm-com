@@ -263,23 +263,237 @@ paths:
         '500':
           $ref: '#/components/responses/BulkIdealQRResponse'
 components:
-  headers:
-    Digest:
-      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
-      schema:
-        type: string
-        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
-  schemas:
-    RefundsList:
+  responses:
+    UserError:
+      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: no authorization methods provided
+    BulkIdealQRResponse:
+      description: iDEAL-QR details when created in bulk. Depending on the scenario, the response might include an error or the array of Qr codes indicating details regarding which qr codes have been successfully created and which ones not. **A 200 response status code does not guarantee that all Qr codes have been created, the client must check the response body**.
+      headers:
+        Digest:
+          $ref: '#/components/headers/Digest'
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/BulkIdealQRCodesResponseItem'
+            - $ref: '#/components/schemas/BulkIdealQRCodeErrorResponseItem'
+          examples:
+            IDEALQRBulkOperation:
+              $ref: '#/components/examples/IDEALQRBulkOperation'
+    InternalError:
+      description: Internal server error. This can be caused by an unresponsive backend
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - id
+            - message
+            properties:
+              id:
+                $ref: '#/components/schemas/Uuid'
+              message:
+                type: string
+                example: Service Unavailable
+    RefundsResponse:
       description: Details of all refunds belonging to a transaction.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundsList'
+  schemas:
+    TransactionWebhook:
+      allOf:
+      - $ref: '#/components/schemas/BaseWebhook'
+      - type: object
+        properties:
+          events:
+            items:
+              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+                '
+              oneOf:
+              - $ref: '#/components/schemas/StatusChangeEvent'
+              - $ref: '#/components/schemas/RefundStatusEvent'
+              - $ref: '#/components/schemas/FinalStatusEvent'
+              example: STATUS_CHANGE
+    Reference:
+      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: '20210623130413'
+    IDEALQRReusable:
+      description: Indicates the QR code's ability to accept multiple successful payments.
+      type: boolean
+      default: false
+      example: false
+    QRCodeTransactionInBulkResponseItem:
+      description: Details of the created iDEAL-QR transaction
       type: object
-      required:
-      - refunds
       properties:
-        refunds:
-          type: array
-          items:
-            $ref: '#/components/schemas/RefundDetails'
+        created:
+          type: boolean
+          default: true
+        transaction:
+          type: object
+          required:
+          - id
+          - action
+          properties:
+            id:
+              $ref: '#/components/schemas/Uuid'
+              description: ID of the transaction. It can be used to retrieve the details of an iDEAL-QR transaction by using it in combination with other endpoints provided in this API.
+            action:
+              description: Next action to be performed by merchant (or consumer) to complete the payment.
+              type: object
+              properties:
+                qrcode:
+                  type: object
+                  properties:
+                    id:
+                      description: ID of the QR Code known by the iDEAL-QR backend of CM.com.
+                      type: string
+                    url:
+                      description: URL to the iDEAL-QR code image to be scanned by the consumer to perform the payment.
+                      type: string
+                      format: url
+                      example: https://qrbackend.tld/images/213981209381209390821.png
+    IdealQRPayment:
+      allOf:
+      - $ref: '#/components/schemas/Payment'
+      - type: object
+        required:
+        - size
+        properties:
+          amountChangeable:
+            $ref: '#/components/schemas/AmountChangeable'
+          purchaseId:
+            $ref: '#/components/schemas/PurchaseID'
+          description:
+            $ref: '#/components/schemas/IDEALDescription'
+          reusable:
+            $ref: '#/components/schemas/IDEALQRReusable'
+          size:
+            $ref: '#/components/schemas/DefaultPageSize'
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooksQR'
+    DefaultPageSize:
+      $ref: '#/components/schemas/PaymentPageSize'
+      minimum: 100
+      maximum: 2000
+      example: 200
+    IdealQRPaymentRefund:
+      allOf:
+      - $ref: '#/components/schemas/IdealQRPayment-2'
+      - type: object
+        properties:
+          refunds:
+            $ref: '#/components/schemas/Refunds'
+    StatusSuccess:
+      description: The transaction has been successfully paid.
+      type: string
+      format: enum
+      enum:
+      - SUCCESS
+      example: SUCCESS
+    ReturnUrls:
+      type: object
+      description: 'URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this object we can redirect consumer to a dedicated page per payment result status. Either this object or the returnUrl field is mandatory.'
+      required:
+      - success
+      - cancelled
+      - expired
+      - failed
+      properties:
+        success:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-success.html
+        cancelled:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-cancelled.html
+        expired:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-expired.html
+        failed:
+          type: string
+          format: url
+          maxLength: 2000
+          example: https://yourdomain.tld/order/payment-failed.html
+    BulkQrCodesRequest:
+      description: Array of qr code objects with values to overwrite defaults
+      maximum: 100
+      minimum: 1
+      type: array
+      items:
+        $ref: '#/components/schemas/BulkQrCodeItemInRequest'
+    TransactionWebhookQREvents:
+      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
+
+        * `QR_PAYMENT_CREATED` - When a new payment is created using the qr code.
+
+        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      - QR_PAYMENT_CREATED
+      - REFUND_STATUS
+      example: STATUS_CHANGE
+    StatusFailure:
+      description: The transaction has failed.
+      type: string
+      format: enum
+      enum:
+      - FAILURE
+      example: FAILURE
+    TransactionWebhooksQR:
+      $ref: '#/components/schemas/TransactionWebhooks'
+      items:
+        allOf:
+        - type: object
+          required:
+          - url
+          - events
+          properties:
+            url:
+              description: The URL the request must be send to.
+              type: string
+              format: url
+              example: https://yourdomain.tld/webhooks?purchaseId=order123
+            events:
+              description: The events when this URL must be requested.
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/TransactionWebhookQREvents'
     Refund:
       description: Refund an already successfully processed payment.
       type: object
@@ -291,6 +505,65 @@ components:
             '
         reason:
           $ref: '#/components/schemas/RefundReason'
+    PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/ReturnURLOneOf'
+      - type: object
+        required:
+        - reference
+        - amount
+        properties:
+          reference:
+            $ref: '#/components/schemas/Reference'
+          amount:
+            $ref: '#/components/schemas/Amount'
+          currency:
+            $ref: '#/components/schemas/Currency'
+    RefundStatusEvent:
+      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
+
+        '
+      type: string
+      enum:
+      - REFUND_STATUS
+      example: REFUND_STATUS
+    After:
+      allOf:
+      - $ref: '#/components/schemas/Datetime'
+      - description: Return the elements that were created after this date
+      - example: '2022-10-13T14:21:30.478935Z'
+    ReturnURLOneOf:
+      oneOf:
+      - type: object
+        required:
+        - returnUrls
+        properties:
+          returnUrls:
+            $ref: '#/components/schemas/ReturnUrls'
+      - type: object
+        required:
+        - returnUrl
+        properties:
+          returnUrl:
+            $ref: '#/components/schemas/ReturnUrl'
+    IdealQRTransactionPaymentsPaginated:
+      type: object
+      required:
+      - total
+      - pageSize
+      - payments
+      properties:
+        total:
+          description: The total of payments that the order has
+          type: integer
+          example: 150
+        pageSize:
+          $ref: '#/components/schemas/PaymentPageSize'
+        payments:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/IdealQRPayment-2'
     RefundStatus:
       description: '* `SUCCESS`    - Refund has succeeded.
 
@@ -308,17 +581,254 @@ components:
       - FAILURE
       - CANCELLED
       example: SUCCESS
-    TransactionWebhooks:
-      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+    StatusCancelled:
+      description: The transaction has been cancelled by the consumer.
+      type: string
+      format: enum
+      enum:
+      - CANCELLED
+      example: CANCELLED
+    Language:
+      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
+      type: string
+      default: nl
+      example: nl
+      minLength: 2
+      maxLength: 2
+    BulkIdealQRCodeErrorResponseItem:
+      description: provides details on errors while creating qr codes in bulk
+      type: object
+      properties:
+        error:
+          description: contains the details of an error
+          type: object
+          required:
+          - id
+          - message
+          properties:
+            id:
+              type: string
+              description: ID of the error
+              example: 51365d8a-d3c1-4c5f-9556-e8d7ff383eee
+            message:
+              type: string
+              description: message indicating details of the error
+              example: Invalid request message
+    Payment:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
+      - type: object
+        required:
+        - description
+        properties:
+          description:
+            $ref: '#/components/schemas/Description'
+          expiresAt:
+            $ref: '#/components/schemas/Datetime'
+            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+    Amount:
+      description: Denomination in the smallest currency subunit, as for example euro cents.
+      type: integer
+      minimum: 1
+      maximum: 99999999
+      example: 1200
+    ReturnUrl:
+      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
+
+
+        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
+      type: string
+      format: url
+      maxLength: 2000
+      example: https://yourdomain.tld/order/return?orderID=order123
+    AmountChangeable:
+      description: Contains the minimum and maximum values for the amount of a QR code that a consumer can set themselves after scanning the code.
+      type: object
+      properties:
+        min:
+          description: Minimum of the amount. Must be higher than 0
+          type: integer
+          example: 1
+        max:
+          description: Maximum of the amount. Must be higher than the minimum and lower than 5000000.
+          type: integer
+          example: 50000
+    Description:
+      description: Description of the underlying value or reason of the payment.
+      type: string
+      maxLength: 255
+      example: Order at yourdomain.tld
+    StatusExpired:
+      description: The transaction has expired.
+      type: string
+      format: enum
+      enum:
+      - EXPIRED
+      example: EXPIRED
+    PaymentWithoutDescriptionAndExpiresAt:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
+      - type: object
+        properties:
+          webhooks:
+            $ref: '#/components/schemas/TransactionWebhooks'
+    BaseWebhook:
+      type: object
+      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
+      required:
+      - url
+      - events
+      properties:
+        url:
+          description: The URL the request must be send to.
+          type: string
+          format: url
+          example: https://yourdomain.tld/webhooks?purchaseId=order123
+        events:
+          description: Type of events that will trigger a webhook.
+          type: array
+          minItems: 1
+          items:
+            type: string
+    RefundReason:
+      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
 
         '
-      type: array
-      items:
-        $ref: '#/components/schemas/TransactionWebhook'
-      example:
-      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
-        events:
-        - STATUS_CHANGE
+      type: string
+      example: Refund required by consumer.
+      maxLength: 255
+    RefundsList:
+      description: Details of all refunds belonging to a transaction.
+      type: object
+      required:
+      - refunds
+      properties:
+        refunds:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundDetails'
+    IDEALDescription:
+      maxLength: 35
+      description: 'Description of the underlying value or reason of the payment.
+
+
+        Ultimately appears on the payment statement and confirmation screen.
+
+        '
+    TransactionId:
+      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    IdealQRPayment-2:
+      type: object
+      required:
+      - payment
+      - transaction
+      - idealTransactionId
+      - status
+      - createdAt
+      properties:
+        payment:
+          $ref: '#/components/schemas/Uuid'
+        transaction:
+          $ref: '#/components/schemas/Uuid'
+        idealTransactionId:
+          $ref: '#/components/schemas/IdealTransactionId'
+          description: "The 16-digit transaction ID within the iDEAL-QR scheme as known by the acquirer and issuing bank, and \nused in the credit transfer. The value can have leading zeros.\nThis value is `null` if the status `FAILURE`."
+        status:
+          oneOf:
+          - $ref: '#/components/schemas/StatusFailure'
+          - $ref: '#/components/schemas/StatusExpired'
+          - $ref: '#/components/schemas/StatusCancelled'
+          - $ref: '#/components/schemas/StatusSuccess'
+        createdAt:
+          $ref: '#/components/schemas/Datetime'
+        amount:
+          allOf:
+          - $ref: '#/components/schemas/Amount'
+          - description: 'Denomination in the smallest currency subunit, as for example eurocents.
+
+              Only present in successful payments.
+
+              '
+        consumerName:
+          description: Name of the consumer. Only present in successful payments.
+          type: string
+          example: John
+        consumerBic:
+          allOf:
+          - $ref: '#/components/schemas/BIC'
+          - description: Bank Identification Code. Only present in successful payments.
+        consumerIban:
+          description: IBAN of the consumer. Only present in successful payments.
+          type: string
+          example: NL24RABO8487376045
+    BIC:
+      description: Bank Identification Code
+      deprecated: true
+      type: string
+      minLength: 8
+      maxLength: 11
+      example: RABONL2U
+    StatusChangeEvent:
+      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
+
+        '
+      type: string
+      enum:
+      - STATUS_CHANGE
+      example: STATUS_CHANGE
+    RefundDetails:
+      description: Details of a refund.
+      type: object
+      required:
+      - id
+      - transactionId
+      - amount
+      - reason
+      - status
+      - created
+      - updated
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        transactionId:
+          $ref: '#/components/schemas/Uuid'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        reason:
+          $ref: '#/components/schemas/RefundReason'
+        status:
+          $ref: '#/components/schemas/RefundStatus'
+        created:
+          $ref: '#/components/schemas/Datetime'
+        updated:
+          $ref: '#/components/schemas/Datetime'
+    Uuid:
+      description: Unique identifier
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+    PaymentWithoutDescriptionExpiresAtAndWebhooks:
+      allOf:
+      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
+      - type: object
+        properties:
+          language:
+            $ref: '#/components/schemas/Language'
+    FinalStatusEvent:
+      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
+
+        '
+      type: string
+      enum:
+      - FINALSTATUS
+      example: FINALSTATUS
     IdealQRTransaction:
       allOf:
       - type: object
@@ -389,363 +899,11 @@ components:
           createdAt:
             $ref: '#/components/schemas/Datetime'
       - $ref: '#/components/schemas/ReturnURLOneOf'
-    RefundReason:
-      description: 'The description for the refund for administrative purpose only. This reason will be visible in the portal.
-
-        '
-      type: string
-      example: Refund required by consumer.
-      maxLength: 255
-    PaymentWithoutDescriptionAndExpiresAt:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtAndWebhooks'
-      - type: object
-        properties:
-          webhooks:
-            $ref: '#/components/schemas/TransactionWebhooks'
-    Language:
-      description: Preferred language for the user interface as ISO 639-1 code. If the provided language is not supported the default will be used. Commonly supported languages are Dutch (nl) and English (en).
-      type: string
-      default: nl
-      example: nl
-      minLength: 2
-      maxLength: 2
-    Datetime:
-      type: string
-      format: date-time
-      minLength: 20
-      example: '2006-01-02T15:04:05Z'
-      description: ISO 8601 date and time.
-    BIC:
-      description: Bank Identification Code
-      deprecated: true
-      type: string
-      minLength: 8
-      maxLength: 11
-      example: RABONL2U
-    TransactionWebhooksQR:
-      $ref: '#/components/schemas/TransactionWebhooks'
-      items:
-        allOf:
-        - type: object
-          required:
-          - url
-          - events
-          properties:
-            url:
-              description: The URL the request must be send to.
-              type: string
-              format: url
-              example: https://yourdomain.tld/webhooks?purchaseId=order123
-            events:
-              description: The events when this URL must be requested.
-              type: array
-              minItems: 1
-              items:
-                $ref: '#/components/schemas/TransactionWebhookQREvents'
-    Amount:
-      description: Denomination in the smallest currency subunit, as for example euro cents.
-      type: integer
-      minimum: 1
-      maximum: 99999999
-      example: 1200
-    IdealQRPaymentRefund:
-      allOf:
-      - $ref: '#/components/schemas/IdealQRPayment-2'
-      - type: object
-        properties:
-          refunds:
-            $ref: '#/components/schemas/Refunds'
-    Refunds:
-      description: Details of refunds for a transaction
-      type: object
-      required:
-      - refundedAmount
-      - refundedPendingAmount
-      properties:
-        refundedAmount:
-          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
-          type: integer
-          minimum: 0
-          maximum: 99999999
-          example: 300
-        refundedPendingAmount:
-          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
-          type: integer
-          minimum: 1
-          maximum: 99999999
-          example: 100
-    FinalStatusEvent:
-      description: '* `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-        '
-      type: string
-      enum:
-      - FINALSTATUS
-      example: FINALSTATUS
-    ReturnUrls:
-      type: object
-      description: 'URLs where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
-
-
-        With this object we can redirect consumer to a dedicated page per payment result status. Either this object or the returnUrl field is mandatory.'
-      required:
-      - success
-      - cancelled
-      - expired
-      - failed
-      properties:
-        success:
-          type: string
-          format: url
-          maxLength: 2000
-          example: https://yourdomain.tld/order/payment-success.html
-        cancelled:
-          type: string
-          format: url
-          maxLength: 2000
-          example: https://yourdomain.tld/order/payment-cancelled.html
-        expired:
-          type: string
-          format: url
-          maxLength: 2000
-          example: https://yourdomain.tld/order/payment-expired.html
-        failed:
-          type: string
-          format: url
-          maxLength: 2000
-          example: https://yourdomain.tld/order/payment-failed.html
-    BulkDefaults:
-      $ref: '#/components/schemas/IdealQRPayment'
-      description: Contains default values to create an iDEAL-QR transaction in a bulk operation.
-    BaseWebhook:
-      type: object
-      description: A single webhook object consists out of an URL to which we need to send the occurred event together with the event that needs to trigger the webhook call.
-      required:
-      - url
-      - events
-      properties:
-        url:
-          description: The URL the request must be send to.
-          type: string
-          format: url
-          example: https://yourdomain.tld/webhooks?purchaseId=order123
-        events:
-          description: Type of events that will trigger a webhook.
-          type: array
-          minItems: 1
-          items:
-            type: string
-    IdealQRPayment:
-      allOf:
-      - $ref: '#/components/schemas/Payment'
-      - type: object
-        required:
-        - size
-        properties:
-          amountChangeable:
-            $ref: '#/components/schemas/AmountChangeable'
-          purchaseId:
-            $ref: '#/components/schemas/PurchaseID'
-          description:
-            $ref: '#/components/schemas/IDEALDescription'
-          reusable:
-            $ref: '#/components/schemas/IDEALQRReusable'
-          size:
-            $ref: '#/components/schemas/DefaultPageSize'
-          webhooks:
-            $ref: '#/components/schemas/TransactionWebhooksQR'
-    PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks:
-      allOf:
-      - $ref: '#/components/schemas/ReturnURLOneOf'
-      - type: object
-        required:
-        - reference
-        - amount
-        properties:
-          reference:
-            $ref: '#/components/schemas/Reference'
-          amount:
-            $ref: '#/components/schemas/Amount'
-          currency:
-            $ref: '#/components/schemas/Currency'
-    Reference:
-      description: The clients identifier. This value will be sent in the webhook payload alongside the ID you receive as part of the response of a transaction.
-      type: string
-      minLength: 1
-      maxLength: 255
-      example: '20210623130413'
-    StatusChangeEvent:
-      description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-        '
-      type: string
-      enum:
-      - STATUS_CHANGE
-      example: STATUS_CHANGE
-    Currency:
-      description: ISO 4217 currency code.
-      type: string
-      minLength: 3
-      maxLength: 3
-      default: EUR
-      example: EUR
-    DefaultPageSize:
-      $ref: '#/components/schemas/PaymentPageSize'
-      minimum: 100
-      maximum: 2000
-      example: 200
-    StatusCancelled:
-      description: The transaction has been cancelled by the consumer.
-      type: string
-      format: enum
-      enum:
-      - CANCELLED
-      example: CANCELLED
-    TransactionId:
-      description: ID received in the POST transaction response root object, which can be used in up following calls like refunds or cancellations as transactionId.
-      type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
-    ErrorInBulkResponseItem:
-      allOf:
-      - $ref: '#/components/schemas/BulkIdealQRCodeErrorResponseItem'
-      - description: Details of the error about why the requested iDEAL-QR transaction could not be created in the bulk operation.
-      - type: object
-        properties:
-          created:
-            type: boolean
-            default: false
-    IdealQRPayment-2:
-      type: object
-      required:
-      - payment
-      - transaction
-      - idealTransactionId
-      - status
-      - createdAt
-      properties:
-        payment:
-          $ref: '#/components/schemas/Uuid'
-        transaction:
-          $ref: '#/components/schemas/Uuid'
-        idealTransactionId:
-          $ref: '#/components/schemas/IdealTransactionId'
-          description: "The 16-digit transaction ID within the iDEAL-QR scheme as known by the acquirer and issuing bank, and \nused in the credit transfer. The value can have leading zeros.\nThis value is `null` if the status `FAILURE`."
-        status:
-          oneOf:
-          - $ref: '#/components/schemas/StatusFailure'
-          - $ref: '#/components/schemas/StatusExpired'
-          - $ref: '#/components/schemas/StatusCancelled'
-          - $ref: '#/components/schemas/StatusSuccess'
-        createdAt:
-          $ref: '#/components/schemas/Datetime'
-        amount:
-          allOf:
-          - $ref: '#/components/schemas/Amount'
-          - description: 'Denomination in the smallest currency subunit, as for example eurocents.
-
-              Only present in successful payments.
-
-              '
-        consumerName:
-          description: Name of the consumer. Only present in successful payments.
-          type: string
-          example: John
-        consumerBic:
-          allOf:
-          - $ref: '#/components/schemas/BIC'
-          - description: Bank Identification Code. Only present in successful payments.
-        consumerIban:
-          description: IBAN of the consumer. Only present in successful payments.
-          type: string
-          example: NL24RABO8487376045
-    PaymentPageSize:
-      description: The number of elements to be returned in the response
-      type: integer
-      minimum: 10
-      maximum: 100
-      example: 20
-    Description:
-      description: Description of the underlying value or reason of the payment.
-      type: string
-      maxLength: 255
-      example: Order at yourdomain.tld
-    AmountChangeable:
-      description: Contains the minimum and maximum values for the amount of a QR code that a consumer can set themselves after scanning the code.
-      type: object
-      properties:
-        min:
-          description: Minimum of the amount. Must be higher than 0
-          type: integer
-          example: 1
-        max:
-          description: Maximum of the amount. Must be higher than the minimum and lower than 5000000.
-          type: integer
-          example: 50000
-    IDEALQRReusable:
-      description: Indicates the QR code's ability to accept multiple successful payments.
-      type: boolean
-      default: false
-      example: false
-    BulkIdealQRCodeErrorResponseItem:
-      description: provides details on errors while creating qr codes in bulk
-      type: object
-      properties:
-        error:
-          description: contains the details of an error
-          type: object
-          required:
-          - id
-          - message
-          properties:
-            id:
-              type: string
-              description: ID of the error
-              example: 51365d8a-d3c1-4c5f-9556-e8d7ff383eee
-            message:
-              type: string
-              description: message indicating details of the error
-              example: Invalid request message
-    IDEALDescription:
-      maxLength: 35
-      description: 'Description of the underlying value or reason of the payment.
-
-
-        Ultimately appears on the payment statement and confirmation screen.
-
-        '
-    StatusExpired:
-      description: The transaction has expired.
-      type: string
-      format: enum
-      enum:
-      - EXPIRED
-      example: EXPIRED
-    PurchaseID:
-      description: 'Unique identification of the order within the Merchant''s system. This value
-
-        appears on the bank statement of the Consumer.
-
-
-        The purchaseID can only contain letters and numbers.'
-      type: string
-      minLength: 1
-      maxLength: 35
-      pattern: ^[A-Za-z0-9]{1,35}$
-      example: PO1234567
-    BulkIdealQRCodesResponseItem:
-      description: provides details qr codes (created or not) in bulk
-      type: object
-      properties:
-        qrcodes:
-          description: Array that contains the details of the iDEAL-QR transactions in a bulk operation (created or not).
-          type: array
-          items:
-            allOf:
-            - $ref: '#/components/schemas/BulkIdealQRCodesInResponseItem'
+    BulkIdealQRCodesInResponseItem:
+      description: Contains details of an iDEAL-QR transaction created in bulk. In case of an error, in case of an error, it contains details of the error that prevented it from being created correctly.
+      anyOf:
+      - $ref: '#/components/schemas/QRCodeTransactionInBulkResponseItem'
+      - $ref: '#/components/schemas/ErrorInBulkResponseItem'
     IdealTransactionId:
       description: 'The 16-digit transaction ID within the iDEAL scheme as known by the acquirer and issuing bank, and
 
@@ -758,25 +916,15 @@ components:
       minLength: 16
       maxLength: 16
       example: '1234567890123456'
-    BulkQrCodesRequest:
-      description: Array of qr code objects with values to overwrite defaults
-      maximum: 100
-      minimum: 1
-      type: array
-      items:
-        $ref: '#/components/schemas/BulkQrCodeItemInRequest'
-    Payment:
+    ErrorInBulkResponseItem:
       allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionAndExpiresAt'
+      - $ref: '#/components/schemas/BulkIdealQRCodeErrorResponseItem'
+      - description: Details of the error about why the requested iDEAL-QR transaction could not be created in the bulk operation.
       - type: object
-        required:
-        - description
         properties:
-          description:
-            $ref: '#/components/schemas/Description'
-          expiresAt:
-            $ref: '#/components/schemas/Datetime'
-            description: ISO 8601 date and time. If a transaction is not finalized before this time the status becomes **EXPIRED**.
+          created:
+            type: boolean
+            default: false
     StatusOpen:
       description: The transaction is open and can be paid.
       type: string
@@ -784,122 +932,61 @@ components:
       enum:
       - OPEN
       example: OPEN
-    QRCodeTransactionInBulkResponseItem:
-      description: Details of the created iDEAL-QR transaction
+    BulkIdealQRCodesResponseItem:
+      description: provides details qr codes (created or not) in bulk
       type: object
       properties:
-        created:
-          type: boolean
-          default: true
-        transaction:
-          type: object
-          required:
-          - id
-          - action
-          properties:
-            id:
-              $ref: '#/components/schemas/Uuid'
-              description: ID of the transaction. It can be used to retrieve the details of an iDEAL-QR transaction by using it in combination with other endpoints provided in this API.
-            action:
-              description: Next action to be performed by merchant (or consumer) to complete the payment.
-              type: object
-              properties:
-                qrcode:
-                  type: object
-                  properties:
-                    id:
-                      description: ID of the QR Code known by the iDEAL-QR backend of CM.com.
-                      type: string
-                    url:
-                      description: URL to the iDEAL-QR code image to be scanned by the consumer to perform the payment.
-                      type: string
-                      format: url
-                      example: https://qrbackend.tld/images/213981209381209390821.png
-    TransactionWebhook:
-      allOf:
-      - $ref: '#/components/schemas/BaseWebhook'
-      - type: object
-        properties:
-          events:
-            items:
-              description: '* `STATUS_CHANGE` - Triggered when the status of a transaction changes.
-
-                * `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-                * `FINALSTATUS` - This value is deprecated and shouldn''t be used anymore. Use `STATUS_CHANGE` instead.
-
-                '
-              oneOf:
-              - $ref: '#/components/schemas/StatusChangeEvent'
-              - $ref: '#/components/schemas/RefundStatusEvent'
-              - $ref: '#/components/schemas/FinalStatusEvent'
-              example: STATUS_CHANGE
-    BulkQrCodeItemInRequest:
-      $ref: '#/components/schemas/IdealQRPayment'
-      description: Contains values that will overwrite defaults when creating a set of iDEAL-QR transactions in a bulk operation.
-    After:
-      allOf:
-      - $ref: '#/components/schemas/Datetime'
-      - description: Return the elements that were created after this date
-      - example: '2022-10-13T14:21:30.478935Z'
-    PaymentWithoutDescriptionExpiresAtAndWebhooks:
-      allOf:
-      - $ref: '#/components/schemas/PaymentWithoutDescriptionExpiresAtLanguageAndWebhooks'
-      - type: object
-        properties:
-          language:
-            $ref: '#/components/schemas/Language'
-    BulkIdealQRCodesInResponseItem:
-      description: Contains details of an iDEAL-QR transaction created in bulk. In case of an error, in case of an error, it contains details of the error that prevented it from being created correctly.
-      anyOf:
-      - $ref: '#/components/schemas/QRCodeTransactionInBulkResponseItem'
-      - $ref: '#/components/schemas/ErrorInBulkResponseItem'
-    IdealQRTransactionPaymentsPaginated:
-      type: object
-      required:
-      - total
-      - pageSize
-      - payments
-      properties:
-        total:
-          description: The total of payments that the order has
-          type: integer
-          example: 150
-        pageSize:
-          $ref: '#/components/schemas/PaymentPageSize'
-        payments:
+        qrcodes:
+          description: Array that contains the details of the iDEAL-QR transactions in a bulk operation (created or not).
           type: array
           items:
             allOf:
-            - $ref: '#/components/schemas/IdealQRPayment-2'
-    ReturnURLOneOf:
-      oneOf:
-      - type: object
-        required:
-        - returnUrls
-        properties:
-          returnUrls:
-            $ref: '#/components/schemas/ReturnUrls'
-      - type: object
-        required:
-        - returnUrl
-        properties:
-          returnUrl:
-            $ref: '#/components/schemas/ReturnUrl'
-    StatusFailure:
-      description: The transaction has failed.
+            - $ref: '#/components/schemas/BulkIdealQRCodesInResponseItem'
+    PaymentPageSize:
+      description: The number of elements to be returned in the response
+      type: integer
+      minimum: 10
+      maximum: 100
+      example: 20
+    BulkQrCodeItemInRequest:
+      $ref: '#/components/schemas/IdealQRPayment'
+      description: Contains values that will overwrite defaults when creating a set of iDEAL-QR transactions in a bulk operation.
+    Currency:
+      description: ISO 4217 currency code.
       type: string
-      format: enum
-      enum:
-      - FAILURE
-      example: FAILURE
-    Uuid:
-      description: Unique identifier
+      minLength: 3
+      maxLength: 3
+      default: EUR
+      example: EUR
+    Datetime:
       type: string
-      format: uuid
-      minLength: 36
-      maxLength: 36
-      example: 8db1e7fa-ba8a-4189-92fd-67a20217443d
+      format: date-time
+      minLength: 20
+      example: '2006-01-02T15:04:05Z'
+      description: ISO 8601 date and time.
+    TransactionWebhooks:
+      description: 'Array of webhooks that enables receiving a web request once a given event occurs. We won''t do preventive rate-limiting in order to have the highest throughput possible. However, we will honor 429 (Too-many-requests) responses per callback. We use the Retry-After header to retry after a certain period. If the header was not set we use our default exponential delay implementation.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/TransactionWebhook'
+      example:
+      - url: https://yourdomain.tld/payment-webhooks?purchaseId=order123
+        events:
+        - STATUS_CHANGE
+    PurchaseID:
+      description: 'Unique identification of the order within the Merchant''s system. This value
+
+        appears on the bank statement of the Consumer.
+
+
+        The purchaseID can only contain letters and numbers.'
+      type: string
+      minLength: 1
+      maxLength: 35
+      pattern: ^[A-Za-z0-9]{1,35}$
+      example: PO1234567
     IdealQRTransactionPaymentsSummary:
       description: iDEAL-QR payments summary
       type: object
@@ -924,230 +1011,31 @@ components:
 
               '
           - example: 1200
-    RefundStatusEvent:
-      description: '* `REFUND_STATUS` - Triggered when a transaction receives an update on one of its requested refunds.
-
-        '
-      type: string
-      enum:
-      - REFUND_STATUS
-      example: REFUND_STATUS
-    StatusSuccess:
-      description: The transaction has been successfully paid.
-      type: string
-      format: enum
-      enum:
-      - SUCCESS
-      example: SUCCESS
-    TransactionWebhookQREvents:
-      description: '* `STATUS_CHANGE` - When the status of the transaction changes to any other value.
-
-        * `QR_PAYMENT_CREATED` - When a new payment is created using the qr code.
-
-        * `REFUND_STATUS` - Invoke webhook when a transaction receives an update on one of its requested refunds.
-
-        '
-      type: string
-      enum:
-      - STATUS_CHANGE
-      - QR_PAYMENT_CREATED
-      - REFUND_STATUS
-      example: STATUS_CHANGE
-    RefundDetails:
-      description: Details of a refund.
+    BulkDefaults:
+      $ref: '#/components/schemas/IdealQRPayment'
+      description: Contains default values to create an iDEAL-QR transaction in a bulk operation.
+    Refunds:
+      description: Details of refunds for a transaction
       type: object
       required:
-      - id
-      - transactionId
-      - amount
-      - reason
-      - status
-      - created
-      - updated
+      - refundedAmount
+      - refundedPendingAmount
       properties:
-        id:
-          $ref: '#/components/schemas/Uuid'
-        transactionId:
-          $ref: '#/components/schemas/Uuid'
-        amount:
-          $ref: '#/components/schemas/Amount'
-        reason:
-          $ref: '#/components/schemas/RefundReason'
-        status:
-          $ref: '#/components/schemas/RefundStatus'
-        created:
-          $ref: '#/components/schemas/Datetime'
-        updated:
-          $ref: '#/components/schemas/Datetime'
-    ReturnUrl:
-      description: 'URL where the Consumer is redirected to after completing the transaction at its issuing bank or at the chosen payment method.
-
-
-        With this implementation you are responsible to fetch the payment status and incorporated into your site.'
-      type: string
-      format: url
-      maxLength: 2000
-      example: https://yourdomain.tld/order/return?orderID=order123
-  responses:
-    BulkIdealQRResponse:
-      description: iDEAL-QR details when created in bulk. Depending on the scenario, the response might include an error or the array of Qr codes indicating details regarding which qr codes have been successfully created and which ones not. **A 200 response status code does not guarantee that all Qr codes have been created, the client must check the response body**.
-      headers:
-        Digest:
-          $ref: '#/components/headers/Digest'
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - $ref: '#/components/schemas/BulkIdealQRCodesResponseItem'
-            - $ref: '#/components/schemas/BulkIdealQRCodeErrorResponseItem'
-          examples:
-            IDEALQRBulkOperation:
-              $ref: '#/components/examples/IDEALQRBulkOperation'
-    RefundsResponse:
-      description: Details of all refunds belonging to a transaction.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RefundsList'
-    InternalError:
-      description: Internal server error. This can be caused by an unresponsive backend
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - id
-            - message
-            properties:
-              id:
-                $ref: '#/components/schemas/Uuid'
-              message:
-                type: string
-                example: Service Unavailable
-    UserError:
-      description: The user input was incorrect or something illegal was attempted (eg. using a service without having that service configured for the user, or not being authorized)
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - id
-            - message
-            properties:
-              id:
-                $ref: '#/components/schemas/Uuid'
-              message:
-                type: string
-                example: no authorization methods provided
+        refundedAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has already been refunded.
+          type: integer
+          minimum: 0
+          maximum: 99999999
+          example: 300
+        refundedPendingAmount:
+          description: Amount in the smallest currency subunit, as for example euro cents, that has been requested to be refunded.
+          type: integer
+          minimum: 1
+          maximum: 99999999
+          example: 100
   examples:
-    openIdealQRWithChangeableAmount:
-      summary: Open iDEAL-QR transaction with changeable amount
-      value:
-        id: 145d2793-0b63-4900-8186-3c38ebb1495a
-        reference: '20250904080978'
-        amountChangeable:
-          min: 100
-          max: 998
-        amount: 998
-        currency: EUR
-        purchaseId: order123
-        description: Order at yourdomain.tld
-        size: 200
-        expiresAt: '2025-09-04T07:53:41Z'
-        reusable: false
-        language: nl
-        webhooks:
-        - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
-          events:
-          - STATUS_CHANGE
-        - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
-          events:
-          - QR_PAYMENT_CREATED
-        status: OPEN
-        action:
-          qrcode:
-            id: c38f0fff-50c1-44e4-896f-72d3d2925a3b
-            url: https://ideal-qr3.acceptance.cmpayments.nl/qrcode/c38f0fff-50c1-44e4-896f-72d3d2925a3b
-            href: https://ideal-qr3.acceptance.cmpayments.nl/c38f0fff-50c1-44e4-896f-72d3d2925a3b
-        createdAt: '2025-09-04T06:53:42Z'
-        returnUrls:
-          success: https://yourdomain.tld/order/payment-success.html
-          cancelled: https://yourdomain.tld/order/payment-cancelled.html
-          expired: https://yourdomain.tld/order/payment-expired.html
-          failed: https://yourdomain.tld/order/payment-failed.html
-    standardIdealQRSingleReturnUrl:
-      summary: Standard non-reusable QR transaction with a single return URL
-      value:
-        amount: 998
-        currency: EUR
-        description: Order at yourdomain.tld
-        expiresAt: '2025-09-03T11:30:39.560Z'
-        language: nl
-        reference: '20250903120956'
-        returnUrl: https://yourdomain.tld/order/order-complete.html
-        size: 200
-        purchaseId: order123
-        reusable: false
-    IDEALQRPaymentsSummaryByStatus:
-      summary: iDEAL-QR transaction payments filtered by status
-      value:
-      - status: SUCCESS
-        count: 4
-        amount: 3992
-    standardIdealQRNonReusable:
-      summary: Standard non-reusable QR transaction
-      value:
-        amount: 998
-        currency: EUR
-        description: Order at yourdomain.tld
-        expiresAt: '2025-09-03T11:30:39.560Z'
-        language: nl
-        reference: '20250903120956'
-        returnUrls:
-          success: https://yourdomain.tld/order/payment-success.html
-          cancelled: https://yourdomain.tld/order/payment-cancelled.html
-          expired: https://yourdomain.tld/order/payment-expired.html
-          failed: https://yourdomain.tld/order/payment-failed.html
-        size: 200
-        purchaseId: order123
-        reusable: false
-    standardIdealQRReusable:
-      summary: Standard reusable QR transaction
-      value:
-        amount: 998
-        currency: EUR
-        description: Order at yourdomain.tld
-        expiresAt: '2025-09-03T11:30:39.560Z'
-        language: nl
-        reference: '20250903120956'
-        returnUrls:
-          success: https://yourdomain.tld/order/payment-success.html
-          cancelled: https://yourdomain.tld/order/payment-cancelled.html
-          expired: https://yourdomain.tld/order/payment-expired.html
-          failed: https://yourdomain.tld/order/payment-failed.html
-        size: 200
-        purchaseId: order123
-        reusable: true
-    IDEALQRAllPaymentsSummary:
-      summary: iDEAL-QR transaction payments without filtering by status
-      value:
-      - status: EXPIRED
-        count: 0
-        amount: 0
-      - status: CANCELLED
-        count: 1
-        amount: 998
-      - status: SUCCESS
-        count: 4
-        amount: 3992
-      - status: OPEN
-        count: 0
-        amount: 0
-      - status: FAILURE
-        count: 1
-        amount: 998
-    successIdealQR:
-      summary: Successful iDEAL-QR transaction (also applicable for FAILED, EXPIRED or CANCELLED)
+    openIdealQR:
+      summary: Open iDEAL-QR transaction
       value:
         id: 3bfb2b3f-add7-438d-8769-a17acb78cb9c
         reference: '20250903130947'
@@ -1166,9 +1054,13 @@ components:
         - url: https://cm.com/order-webhooks?purchaseId=order123
           events:
           - QR_PAYMENT_CREATED
-        status: SUCCESS
-        action: null
-        createdAt: '2025-09-03T11:44:12Z'
+        status: OPEN
+        action:
+          qrcode:
+            id: 4696ae57-73b7-4577-b866-9f55108cf06a
+            url: https://ideal-qr3.acceptance.cmpayments.nl/qrcode/4696ae57-73b7-4577-b866-9f55108cf06a
+            href: https://ideal-qr3.acceptance.cmpayments.nl/4696ae57-73b7-4577-b866-9f55108cf06a
+        createdAt: '2025-09-03T11:44:11Z'
         returnUrls:
           success: https://yourdomain.tld/order/payment-success.html
           cancelled: https://yourdomain.tld/order/payment-cancelled.html
@@ -1229,38 +1121,6 @@ components:
             cancelled: https://yourdomain.tld/order/payment-cancelled.html
             expired: https://yourdomain.tld/order/payment-expired.html
             failed: https://yourdomain.tld/order/payment-failed.html
-    openIdealQR:
-      summary: Open iDEAL-QR transaction
-      value:
-        id: 3bfb2b3f-add7-438d-8769-a17acb78cb9c
-        reference: '20250903130947'
-        amount: 998
-        currency: EUR
-        purchaseId: order123
-        description: Order at yourdomain.tld
-        size: 200
-        expiresAt: '2025-09-03T12:44:11Z'
-        reusable: false
-        language: nl
-        webhooks:
-        - url: https://cm.com/order-webhooks?purchaseId=order123
-          events:
-          - STATUS_CHANGE
-        - url: https://cm.com/order-webhooks?purchaseId=order123
-          events:
-          - QR_PAYMENT_CREATED
-        status: OPEN
-        action:
-          qrcode:
-            id: 4696ae57-73b7-4577-b866-9f55108cf06a
-            url: https://ideal-qr3.acceptance.cmpayments.nl/qrcode/4696ae57-73b7-4577-b866-9f55108cf06a
-            href: https://ideal-qr3.acceptance.cmpayments.nl/4696ae57-73b7-4577-b866-9f55108cf06a
-        createdAt: '2025-09-03T11:44:11Z'
-        returnUrls:
-          success: https://yourdomain.tld/order/payment-success.html
-          cancelled: https://yourdomain.tld/order/payment-cancelled.html
-          expired: https://yourdomain.tld/order/payment-expired.html
-          failed: https://yourdomain.tld/order/payment-failed.html
     standardIdealQRNonReusableWithWebhook:
       summary: Standard non-reusable QR transaction with webhook subscription
       value:
@@ -1285,6 +1145,64 @@ components:
         - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
           events:
           - QR_PAYMENT_CREATED
+    IDEALQRPaymentsSummaryByStatus:
+      summary: iDEAL-QR transaction payments filtered by status
+      value:
+      - status: SUCCESS
+        count: 4
+        amount: 3992
+    standardIdealQRNonReusable:
+      summary: Standard non-reusable QR transaction
+      value:
+        amount: 998
+        currency: EUR
+        description: Order at yourdomain.tld
+        expiresAt: '2025-09-03T11:30:39.560Z'
+        language: nl
+        reference: '20250903120956'
+        returnUrls:
+          success: https://yourdomain.tld/order/payment-success.html
+          cancelled: https://yourdomain.tld/order/payment-cancelled.html
+          expired: https://yourdomain.tld/order/payment-expired.html
+          failed: https://yourdomain.tld/order/payment-failed.html
+        size: 200
+        purchaseId: order123
+        reusable: false
+    standardIdealQRReusable:
+      summary: Standard reusable QR transaction
+      value:
+        amount: 998
+        currency: EUR
+        description: Order at yourdomain.tld
+        expiresAt: '2025-09-03T11:30:39.560Z'
+        language: nl
+        reference: '20250903120956'
+        returnUrls:
+          success: https://yourdomain.tld/order/payment-success.html
+          cancelled: https://yourdomain.tld/order/payment-cancelled.html
+          expired: https://yourdomain.tld/order/payment-expired.html
+          failed: https://yourdomain.tld/order/payment-failed.html
+        size: 200
+        purchaseId: order123
+        reusable: true
+    IDEALQRAllPaymentsSummary:
+      summary: iDEAL-QR transaction payments without filtering by status
+      value:
+      - status: EXPIRED
+        count: 0
+        amount: 0
+      - status: CANCELLED
+        count: 1
+        amount: 998
+      - status: SUCCESS
+        count: 4
+        amount: 3992
+      - status: OPEN
+        count: 0
+        amount: 0
+      - status: FAILURE
+        count: 1
+        amount: 998
     IdealQRTransactionPaymentsPaginated:
       summary: iDEAL-QR transaction payments with pagination
       value:
@@ -1382,6 +1300,88 @@ components:
               qrcode:
                 id: 48ea462c-5721-48e2-b50d-2eb29d7128dc
                 url: https://ideal-qr3.acceptance.cmpayments.nl/qrcode/48ea462c-5721-48e2-b50d-2eb29d7128dc
+    openIdealQRWithChangeableAmount:
+      summary: Open iDEAL-QR transaction with changeable amount
+      value:
+        id: 145d2793-0b63-4900-8186-3c38ebb1495a
+        reference: '20250904080978'
+        amountChangeable:
+          min: 100
+          max: 998
+        amount: 998
+        currency: EUR
+        purchaseId: order123
+        description: Order at yourdomain.tld
+        size: 200
+        expiresAt: '2025-09-04T07:53:41Z'
+        reusable: false
+        language: nl
+        webhooks:
+        - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+        - url: https://yourdomain.tld/order-webhooks?purchaseId=order123
+          events:
+          - QR_PAYMENT_CREATED
+        status: OPEN
+        action:
+          qrcode:
+            id: c38f0fff-50c1-44e4-896f-72d3d2925a3b
+            url: https://ideal-qr3.acceptance.cmpayments.nl/qrcode/c38f0fff-50c1-44e4-896f-72d3d2925a3b
+            href: https://ideal-qr3.acceptance.cmpayments.nl/c38f0fff-50c1-44e4-896f-72d3d2925a3b
+        createdAt: '2025-09-04T06:53:42Z'
+        returnUrls:
+          success: https://yourdomain.tld/order/payment-success.html
+          cancelled: https://yourdomain.tld/order/payment-cancelled.html
+          expired: https://yourdomain.tld/order/payment-expired.html
+          failed: https://yourdomain.tld/order/payment-failed.html
+    standardIdealQRSingleReturnUrl:
+      summary: Standard non-reusable QR transaction with a single return URL
+      value:
+        amount: 998
+        currency: EUR
+        description: Order at yourdomain.tld
+        expiresAt: '2025-09-03T11:30:39.560Z'
+        language: nl
+        reference: '20250903120956'
+        returnUrl: https://yourdomain.tld/order/order-complete.html
+        size: 200
+        purchaseId: order123
+        reusable: false
+    successIdealQR:
+      summary: Successful iDEAL-QR transaction (also applicable for FAILED, EXPIRED or CANCELLED)
+      value:
+        id: 3bfb2b3f-add7-438d-8769-a17acb78cb9c
+        reference: '20250903130947'
+        amount: 998
+        currency: EUR
+        purchaseId: order123
+        description: Order at yourdomain.tld
+        size: 200
+        expiresAt: '2025-09-03T12:44:11Z'
+        reusable: false
+        language: nl
+        webhooks:
+        - url: https://cm.com/order-webhooks?purchaseId=order123
+          events:
+          - STATUS_CHANGE
+        - url: https://cm.com/order-webhooks?purchaseId=order123
+          events:
+          - QR_PAYMENT_CREATED
+        status: SUCCESS
+        action: null
+        createdAt: '2025-09-03T11:44:12Z'
+        returnUrls:
+          success: https://yourdomain.tld/order/payment-success.html
+          cancelled: https://yourdomain.tld/order/payment-cancelled.html
+          expired: https://yourdomain.tld/order/payment-expired.html
+          failed: https://yourdomain.tld/order/payment-failed.html
+  headers:
+    Digest:
+      description: Digest of the whole message body. Follow [RFC 3230](https://datatracker.ietf.org/doc/html/rfc3230) for more information.
+      schema:
+        type: string
+        example: sha-256=OWM5MDc3ODYwNzdjYjE5NjU0Y2NjMDM4MzEyYzMxZTA5MTAzMDBjYWM1Y2I1ODM4NTdlMDU2MzhiMzE1ZDhjNw==
   parameters:
     TransactionId:
       name: transactionId

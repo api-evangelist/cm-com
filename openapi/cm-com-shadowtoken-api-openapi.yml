@@ -113,6 +113,201 @@ paths:
                 type: integer
 components:
   schemas:
+    CM.Platform.Messages.Models.ApiMessageRequest:
+      type: object
+      properties:
+        isArchived:
+          type: boolean
+        body:
+          type: string
+        channels:
+          type: array
+          items:
+            type: string
+        countrySpecificSenders:
+          type: object
+          additionalProperties:
+            type: string
+        grouping:
+          type: string
+        ignoreUnsubscribes:
+          type: boolean
+        name:
+          type: string
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiRecipient'
+        recurrence:
+          type: string
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.Conversation'
+        scheduledAtUtc:
+          format: date-time
+          type: string
+        senderPreset:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        senders:
+          type: array
+          items:
+            type: string
+        spread:
+          $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSpreadSettings'
+        status:
+          type: string
+        tariff:
+          format: int32
+          type: integer
+        modifiedAtUtc:
+          format: date-time
+          type: string
+        updatedAtUtc:
+          type: string
+    CM.Platform.Messages.Models.ApiCountryErrorStats:
+      type: object
+      properties:
+        country:
+          type: string
+        count:
+          format: int32
+          type: integer
+        errorCode:
+          format: int32
+          type: integer
+    CM.Platform.Messages.Models.ApiMessagePreviewSuggestion:
+      type: object
+      properties:
+        type:
+          type: string
+        content:
+          type: string
+    CM.Platform.Messages.Models.ApiCountryStats:
+      type: object
+      properties:
+        country:
+          type: string
+        accepted:
+          format: int32
+          type: integer
+        converted:
+          format: int32
+          type: integer
+        delivered:
+          format: int32
+          type: integer
+        deliveryTime:
+          format: double
+          type: number
+        dispatched:
+          format: int32
+          type: integer
+        failed:
+          format: int32
+          type: integer
+        messages:
+          format: int32
+          type: integer
+        optedOut:
+          format: int32
+          type: integer
+        optOutReceived:
+          format: int32
+          type: integer
+        isRead:
+          format: int32
+          type: integer
+        recipients:
+          format: int32
+          type: integer
+    CM.Platform.Messages.Models.Viewlocation:
+      type: object
+      properties:
+        latitude:
+          type: string
+        longitude:
+          type: string
+        label:
+          type: string
+    CM.Platform.Messages.Models.ApiMessagePreview:
+      type: object
+      properties:
+        previews:
+          type: array
+          items:
+            type: string
+        footerPreview:
+          type: string
+        mediaPreviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.Media'
+        titlePreviews:
+          type: array
+          items:
+            type: string
+        suggestionsPreview:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiMessagePreviewSuggestion'
+        previewCode:
+          type: string
+        profileImage:
+          type: string
+        sender:
+          type: string
+        recipientsPerCountry:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiRecipientsPerCountry'
+        languages:
+          type: array
+          items:
+            type: string
+    CM.Platform.Messages.Models.ApiRecipient:
+      type: object
+      properties:
+        contact:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        data:
+          type: object
+          additionalProperties:
+            type: string
+        group:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        msisdn:
+          type: string
+        pushId:
+          type: string
+    CM.Platform.Messages.Models.WATemplateComponentParameter:
+      type: object
+      properties:
+        type:
+          type: string
+        media:
+          $ref: '#/components/schemas/CM.Platform.Messages.Models.Media'
+        text:
+          type: string
+    CM.Platform.Messages.Models.WhatsAppTemplate:
+      type: object
+      properties:
+        templateId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        languageCode:
+          type: string
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.WATemplateComponent'
     CM.Platform.Messages.Models.Suggestion:
       type: object
       properties:
@@ -135,78 +330,6 @@ components:
           type: string
         viewLocation:
           $ref: '#/components/schemas/CM.Platform.Messages.Models.Viewlocation'
-    CM.Platform.Messages.Models.Media:
-      type: object
-      properties:
-        mediaName:
-          type: string
-        mediaUri:
-          type: string
-        mimeType:
-          type: string
-        mediaType:
-          type: string
-    CM.Platform.Messages.Models.ApiMessageAnalytics:
-      type: object
-      properties:
-        accepted:
-          format: int32
-          type: integer
-        converted:
-          format: int32
-          type: integer
-        countryErrorStats:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiCountryErrorStats'
-        countryStats:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiCountryStats'
-        deduplicated:
-          format: int32
-          type: integer
-        delivered:
-          format: int32
-          type: integer
-        deliveryTime:
-          format: double
-          type: number
-        dispatched:
-          format: int32
-          type: integer
-        euroPrice:
-          format: double
-          type: number
-        failed:
-          format: int32
-          type: integer
-        localCurrency:
-          type: string
-        localPrice:
-          format: double
-          type: number
-        messages:
-          format: int32
-          type: integer
-        optedOut:
-          format: int32
-          type: integer
-        isRead:
-          format: int32
-          type: integer
-        optOutReceived:
-          format: int32
-          type: integer
-        recipients:
-          format: int32
-          type: integer
-        test:
-          format: int32
-          type: integer
-        updatedAtUtc:
-          format: date-time
-          type: string
     CM.Platform.Messages.Models.ApiMessageResponse:
       type: object
       properties:
@@ -278,14 +401,18 @@ components:
           example: 00000000-0000-0000-0000-000000000000
         updatedAtUtc:
           type: string
-    CM.Platform.Messages.Models.WATemplateComponentParameter:
+    CM.Platform.Messages.Models.ApiSpreadSettings:
       type: object
       properties:
-        type:
-          type: string
-        media:
-          $ref: '#/components/schemas/CM.Platform.Messages.Models.Media'
-        text:
+        durationMinutes:
+          format: int32
+          type: integer
+        timeFrames:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiTimeFrame'
+        until:
+          format: date-time
           type: string
     CM.Platform.Messages.Models.WATemplateComponent:
       type: object
@@ -300,15 +427,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CM.Platform.Messages.Models.WATemplateComponentParameter'
-    CM.Platform.Messages.Models.ApiCountryStats:
+    CM.Platform.Messages.Models.ApiMessageAnalytics:
       type: object
       properties:
-        country:
-          type: string
         accepted:
           format: int32
           type: integer
         converted:
+          format: int32
+          type: integer
+        countryErrorStats:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiCountryErrorStats'
+        countryStats:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiCountryStats'
+        deduplicated:
           format: int32
           type: integer
         delivered:
@@ -320,90 +456,38 @@ components:
         dispatched:
           format: int32
           type: integer
+        euroPrice:
+          format: double
+          type: number
         failed:
           format: int32
           type: integer
+        localCurrency:
+          type: string
+        localPrice:
+          format: double
+          type: number
         messages:
           format: int32
           type: integer
         optedOut:
           format: int32
           type: integer
-        optOutReceived:
+        isRead:
           format: int32
           type: integer
-        isRead:
+        optOutReceived:
           format: int32
           type: integer
         recipients:
           format: int32
           type: integer
-    CM.Platform.Messages.Models.WhatsAppTemplate:
-      type: object
-      properties:
-        templateId:
-          format: uuid
+        test:
+          format: int32
+          type: integer
+        updatedAtUtc:
+          format: date-time
           type: string
-          example: 00000000-0000-0000-0000-000000000000
-        languageCode:
-          type: string
-        components:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.WATemplateComponent'
-    CM.Platform.Messages.Models.ApiTimeFrame:
-      type: object
-      properties:
-        days:
-          type: array
-          items:
-            type: string
-        startTime:
-          type: string
-        endTime:
-          type: string
-    CM.Platform.Messages.Models.ApiMessagePreviewSuggestion:
-      type: object
-      properties:
-        type:
-          type: string
-        content:
-          type: string
-    CM.Platform.Messages.Models.ApiMessagePreview:
-      type: object
-      properties:
-        previews:
-          type: array
-          items:
-            type: string
-        footerPreview:
-          type: string
-        mediaPreviews:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.Media'
-        titlePreviews:
-          type: array
-          items:
-            type: string
-        suggestionsPreview:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiMessagePreviewSuggestion'
-        previewCode:
-          type: string
-        profileImage:
-          type: string
-        sender:
-          type: string
-        recipientsPerCountry:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiRecipientsPerCountry'
-        languages:
-          type: array
-          items:
-            type: string
     CM.Platform.Messages.Models.Conversation:
       type: object
       properties:
@@ -421,102 +505,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CM.Platform.Messages.Models.Suggestion'
-    CM.Platform.Messages.Models.ApiMessageRequest:
+    CM.Platform.Messages.Models.ApiTimeFrame:
       type: object
       properties:
-        isArchived:
-          type: boolean
-        body:
-          type: string
-        channels:
+        days:
           type: array
           items:
             type: string
-        countrySpecificSenders:
-          type: object
-          additionalProperties:
-            type: string
-        grouping:
+        startTime:
           type: string
-        ignoreUnsubscribes:
-          type: boolean
-        name:
+        endTime:
           type: string
-        recipients:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiRecipient'
-        recurrence:
-          type: string
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.Conversation'
-        scheduledAtUtc:
-          format: date-time
-          type: string
-        senderPreset:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        senders:
-          type: array
-          items:
-            type: string
-        spread:
-          $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiSpreadSettings'
-        status:
-          type: string
-        tariff:
-          format: int32
-          type: integer
-        modifiedAtUtc:
-          format: date-time
-          type: string
-        updatedAtUtc:
-          type: string
-    CM.Platform.Messages.Models.ApiCountryErrorStats:
+    CM.Platform.Messages.Models.Media:
       type: object
       properties:
-        country:
+        mediaName:
           type: string
-        count:
-          format: int32
-          type: integer
-        errorCode:
-          format: int32
-          type: integer
-    CM.Platform.Messages.Models.ApiSpreadSettings:
-      type: object
-      properties:
-        durationMinutes:
-          format: int32
-          type: integer
-        timeFrames:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Messages.Models.ApiTimeFrame'
-        until:
-          format: date-time
+        mediaUri:
           type: string
-    CM.Platform.Messages.Models.ApiRecipient:
-      type: object
-      properties:
-        contact:
-          format: uuid
+        mimeType:
           type: string
-          example: 00000000-0000-0000-0000-000000000000
-        data:
-          type: object
-          additionalProperties:
-            type: string
-        group:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        msisdn:
-          type: string
-        pushId:
+        mediaType:
           type: string
     CM.Platform.Messages.Models.ApiRecipientsPerCountry:
       type: object
@@ -525,15 +534,6 @@ components:
           format: int32
           type: integer
         countryCode:
-          type: string
-    CM.Platform.Messages.Models.Viewlocation:
-      type: object
-      properties:
-        latitude:
-          type: string
-        longitude:
-          type: string
-        label:
           type: string
   requestBodies:
     CM.Platform.Messages.Models.ApiMessageRequest2:

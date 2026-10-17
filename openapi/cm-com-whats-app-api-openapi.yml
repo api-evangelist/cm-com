@@ -2470,310 +2470,6 @@ paths:
                   $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatus'
 components:
   schemas:
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutResponse:
-      type: object
-      properties:
-        isGeneratedLayout:
-          type: boolean
-        generatedLayoutExampleValue:
-          type: string
-        content:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsResponse:
-      type: object
-      properties:
-        buttonGrouping:
-          type: object
-          properties:
-            QUICK_REPLY:
-              type: array
-              items:
-                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
-            CALL_TO_ACTION:
-              type: array
-              items:
-                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
-            OTHER:
-              type: array
-              items:
-                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
-        isGeneratedLayout:
-          type: boolean
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageStatus:
-      required:
-      - total
-      - active
-      - languageCategoryOverrideActive
-      type: object
-      properties:
-        total:
-          format: int32
-          type: integer
-        active:
-          format: int32
-          type: integer
-        languageCategoryOverrideActive:
-          type: boolean
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileBase:
-      required:
-      - id
-      - accountId
-      - isActive
-      - isOtpProcessed
-      - isOtpSent
-      - isPending
-      - isSandbox
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        isFacebookEmbeddedSignUpImport:
-          type: boolean
-        phoneNumber:
-          type: string
-        name:
-          type: string
-        isActive:
-          type: boolean
-        isOtpProcessed:
-          type: boolean
-        isOtpSent:
-          type: boolean
-        isPending:
-          type: boolean
-        isSandbox:
-          type: boolean
-        metaQualityRating:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating'
-        fulfilledOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-        rejectedOnUtc:
-          format: date-time
-          type: string
-        cancelledOnUtc:
-          format: date-time
-          type: string
-        deletedOnUtc:
-          format: date-time
-          type: string
-        entityStatus:
-          enum:
-          - ACTIVE
-          - PENDING
-          - ELIGIBLE
-          - NOT_VALIDATED
-          - CUSTOMER_ACTION_REQUIRED
-          - EXPIRED
-          - REJECTED
-          - CANCELLED
-          - DELETED
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaAnalytics:
-      type: object
-      properties:
-        responseRaw:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateSettingsResponse:
-      type: object
-      properties:
-        isGeneratedLayout:
-          type: boolean
-        replacementFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsRequest:
-      type: object
-      properties:
-        buttons:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest:
-      type: object
-      properties:
-        oneTap:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTap'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutResponse:
-      type: object
-      properties:
-        carouselSettings:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsResponse'
-        cards:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardResponse'
-        isGeneratedLayout:
-          type: boolean
-        generatedLayoutExampleValue:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageMetaCallbackHistory:
-      required:
-      - languageId
-      - events
-      type: object
-      properties:
-        languageId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        events:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutRequest:
-      type: object
-      properties:
-        content:
-          type: string
-        hasExpiration:
-          type: boolean
-    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateOtherInfo:
-      type: object
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaSupplierInfo:
-      type: object
-      properties:
-        id:
-          type: string
-        accountMode:
-          type: string
-        codeVerificationStatus:
-          enum:
-          - NOT_VERIFIED
-          - VERIFIED
-          - EXPIRED
-          type: string
-        displayPhonenumber:
-          type: string
-        isOfficialBusinessAccount:
-          type: boolean
-        isPinEnabled:
-          type: boolean
-        isPreVerifiedNumber:
-          type: boolean
-        nameStatus:
-          type: string
-        newNameStatus:
-          type: string
-        platformType:
-          type: string
-        qualityRating:
-          type: string
-        qualityScore:
-          type: object
-        searchVisibility:
-          type: string
-        status:
-          type: string
-        throughput:
-          type: object
-        verifiedName:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest:
-      type: object
-      properties:
-        format:
-          enum:
-          - none
-          - text
-          - image
-          - document
-          - video
-          type: string
-        replacementFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest:
-      type: object
-      properties:
-        buttons:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutRequest:
-      type: object
-      properties:
-        content:
-          type: string
-        otpSettings:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest:
-      type: object
-      properties:
-        header:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
-        buttonSettings:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTapSupportedApps:
-      type: object
-      properties:
-        packageName:
-          type: string
-        signatureHash:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountEmbeddedSignupSessionCodeResponse:
-      required:
-      - metaWhatsAppBusinessAccountId
-      - metaBusinessIntegrationAccessToken
-      type: object
-      properties:
-        metaWhatsAppBusinessAccountId:
-          type: string
-        metaBusinessIntegrationAccessToken:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutRequest:
-      type: object
-      properties:
-        cards:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardRequest'
-        carouselSettings:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRatingLimit:
-      type: object
-      properties:
-        fallbackLimit:
-          type: string
-        officialLimit:
-          enum:
-          - TIER_50
-          - TIER_250
-          - TIER_1K
-          - TIER_10K
-          - TIER_100K
-          - TIER_UNLIMITED
-          type: string
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
-      type: object
-      properties:
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
     CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageResponse:
       required:
       - id
@@ -2855,95 +2551,73 @@ components:
           - CANCELLED
           - DELETED
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsResponse:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTapSupportedApps:
+      type: object
+      properties:
+        packageName:
+          type: string
+        signatureHash:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutResponse:
       type: object
       properties:
         isGeneratedLayout:
           type: boolean
         generatedLayoutExampleValue:
           type: string
-        format:
-          enum:
-          - none
-          - text
-          - image
-          - document
-          - video
+        content:
           type: string
-        replacementFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCategory:
-      required:
-      - id
-      - name
-      - metaOverride
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-        metaOverride:
-          type: boolean
-        metaOverrideOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse:
-      type: object
-      properties:
-        isGeneratedLayout:
-          type: boolean
-        generatedLayoutExampleValue:
-          type: string
-        generatedLayoutButtonText:
-          type: string
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        type:
-          enum:
-          - PHONENUMBER
-          - URL
-          - QUICK_REPLY
-          - OTP_COPY
-          - OTP_ONE_TAP
-          - CODE_COPY
-          type: string
-        urlType:
-          enum:
-          - STATIC
-          - DYNAMIC
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTap:
-      type: object
-      properties:
-        autofillText:
-          type: string
-        supportedApps:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTapSupportedApps'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsResponse:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardRequest:
       type: object
       properties:
         buttons:
           type: array
           items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse'
-        isGeneratedLayout:
-          type: boolean
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest'
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
+        body:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating:
       type: object
       properties:
-        copyCodeExpirationMinutes:
-          format: int32
+        rating:
+          type: string
+        currentLimit:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRatingLimit'
+        dailyConversationLimit:
+          format: int64
           type: integer
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutResponse:
+        restrictionHistory:
+          type: array
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppBusinessAccountUpdateRestriction'
+    CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatus:
+      type: object
+      properties:
+        status:
+          enum:
+          - GREEN
+          - RED
+          - UNKNOWN
+          type: string
+        requiresAttention:
+          type: boolean
+          readOnly: true
+        iconClass:
+          type: string
+        supplierStatus:
+          type: string
+        eventId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        receivedAtUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutResponse:
       type: object
       properties:
         isGeneratedLayout:
@@ -2981,94 +2655,23 @@ components:
         messageSendTimeToLiveSeconds:
           format: int32
           type: integer
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating:
-      type: object
-      properties:
-        rating:
-          type: string
-        currentLimit:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRatingLimit'
-        dailyConversationLimit:
-          format: int64
-          type: integer
-        restrictionHistory:
-          type: array
-          items:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppBusinessAccountUpdateRestriction'
-    CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusiness:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountEmbeddedSignupSessionCodeResponse:
       required:
-      - id
-      - metaBusinessId
+      - metaWhatsAppBusinessAccountId
+      - metaBusinessIntegrationAccessToken
       type: object
       properties:
-        id:
-          format: uuid
+        metaWhatsAppBusinessAccountId:
           type: string
-          example: 00000000-0000-0000-0000-000000000000
-        metaBusinessId:
+        metaBusinessIntegrationAccessToken:
           type: string
-        marketingMessagesLiteApiOnboardingStatus:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusinessMarketingLiteApiOnboardingStatus'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents:
-      type: object
-      properties:
-        enableWelcomeMessage:
-          type: boolean
-        prompts:
-          type: array
-          items:
-            type: string
-        commands:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponentsCommand'
-    CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatus:
-      type: object
-      properties:
-        status:
-          enum:
-          - GREEN
-          - RED
-          - UNKNOWN
-          type: string
-        requiresAttention:
-          type: boolean
-          readOnly: true
-        iconClass:
-          type: string
-        supplierStatus:
-          type: string
-        eventId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        receivedAtUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseRequest:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageMetaCallbackHistory:
       required:
-      - enabledLanguages
-      type: object
-      properties:
-        name:
-          type: string
-        enabledLanguages:
-          type: array
-          items:
-            format: uuid
-            type: string
-            example: 00000000-0000-0000-0000-000000000000
-        assistedMode:
-          type: boolean
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaCallbackHistory:
-      required:
-      - templateId
+      - languageId
       - events
       type: object
       properties:
-        templateId:
+        languageId:
           format: uuid
           type: string
           example: 00000000-0000-0000-0000-000000000000
@@ -3078,63 +2681,28 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutResponse:
       type: object
       properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        index:
-          format: int32
-          type: integer
-        name:
-          type: string
-        type:
-          type: string
+        carouselSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsResponse'
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardResponse'
         isGeneratedLayout:
           type: boolean
         generatedLayoutExampleValue:
           type: string
-    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse:
       type: object
       properties:
-        message_template_id:
-          format: int64
-          type: integer
-        message_template_name:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
           type: string
-        message_template_language:
+        generatedLayoutButtonText:
           type: string
-        previous_category:
-          type: string
-        new_category:
-          type: string
-        reason:
-          type: string
-        previous_quality_score:
-          type: string
-        new_quality_score:
-          type: string
-        disable_info:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateDisableInfo'
-        other_info:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateOtherInfo'
-        event:
-          type: string
-        requester:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest:
-      type: object
-      properties:
-        buttonText:
-          type: string
-        url:
-          type: string
-        phoneNumber:
-          type: string
-        otp:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest'
         id:
           format: uuid
           type: string
@@ -3153,29 +2721,26 @@ components:
           - STATIC
           - DYNAMIC
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest:
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsResponse:
       type: object
       properties:
-        content:
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatusBase:
-      type: object
-      properties:
-        status:
-          enum:
-          - GREEN
-          - RED
-          - UNKNOWN
-          type: string
-        requiresAttention:
+        isGeneratedLayout:
           type: boolean
-          readOnly: true
-        iconClass:
+        generatedLayoutExampleValue:
           type: string
-        receivedAtUtc:
-          format: date-time
+        format:
+          enum:
+          - none
+          - text
+          - image
+          - document
+          - video
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsResponse:
+        replacementFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest:
       type: object
       properties:
         header:
@@ -3183,233 +2748,28 @@ components:
         buttonSettings:
           type: array
           items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
-    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelCategoryRequestID:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        formElementId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        inputValue:
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateCategory:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiEligibility:
       required:
-      - id
-      - name
-      - isDeprecated
-      - supportsBlankLayout
+      - status
       type: object
       properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        name:
-          type: string
-        isDeprecated:
-          type: boolean
-        supportsBlankLayout:
-          type: boolean
-        generatedLayouts:
-          type: array
-          items:
-            enum:
-            - AUTHENTICATION_OTP_COPY
-            - AUTHENTICATION_OTP_ONE_TAP
-            - MARKETING_CAROUSEL
-            - MARKETING_COUPONS
-            - MARKETING_LIMITED_TIME_OFFER
-            - UTILITY_CAROUSEL
-            type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiNumberEligibility:
-      required:
-      - onboardedNumbers
-      - eligibleNumbers
-      - unknownNumbers
-      type: object
-      properties:
-        onboardedNumbers:
-          type: array
-          items:
-            type: string
-        eligibleNumbers:
-          type: array
-          items:
-            type: string
-        unknownNumbers:
-          type: array
-          items:
-            type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        type:
+        status:
           enum:
-          - PHONENUMBER
-          - URL
-          - QUICK_REPLY
-          - OTP_COPY
-          - OTP_ONE_TAP
-          - CODE_COPY
-          type: string
-        urlType:
-          enum:
-          - STATIC
-          - DYNAMIC
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile:
-      required:
-      - id
-      - accountId
-      - isActive
-      - isOtpProcessed
-      - isOtpSent
-      - isPending
-      - isSandbox
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        isFacebookEmbeddedSignUpOwnershipVerified:
-          type: boolean
-        isFacebookEmbeddedSignUpImport:
-          type: boolean
-        phoneNumber:
-          type: string
-        image:
-          type: string
-        imageUrl:
-          type: string
-        rejectionReason:
-          type: string
-        name:
-          type: string
-        isActive:
-          type: boolean
-        isOtpProcessed:
-          type: boolean
-        isOtpSent:
-          type: boolean
-        isPending:
-          type: boolean
-        isSandbox:
-          type: boolean
-        metaSupplierInfo:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaSupplierInfo'
-        metaQualityRating:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating'
-        fulfilledOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-        rejectedOnUtc:
-          format: date-time
-          type: string
-        cancelledOnUtc:
-          format: date-time
-          type: string
-        deletedOnUtc:
-          format: date-time
-          type: string
-        entityStatus:
-          enum:
-          - ACTIVE
-          - PENDING
+          - UNKNOWN
+          - NONE
+          - PENDING_ONBOARDING_INITIATED
+          - INELIGIBLE_ON_BEHALF_OF_WABA
+          - INELIGIBLE_INACTIVE_OR_RESTRICTED
+          - INELIGIBLE_COUNTRY_NOT_SUPPORTED
+          - INELIGIBLE_USING_WHATSAPP_BUSINESS_APP
           - ELIGIBLE
-          - NOT_VALIDATED
-          - CUSTOMER_ACTION_REQUIRED
-          - EXPIRED
-          - REJECTED
-          - CANCELLED
-          - DELETED
+          - PENDING_VALID_PAYMENT_METHOD
+          - PENDING_INTERNAL_SETUP
+          - ONBOARDED
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount:
-      required:
-      - id
-      - accountId
-      - channelRequestId
-      - isPending
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        accountId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channelRequestId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        isPending:
-          type: boolean
-        isFacebookEmbeddedSignUp:
-          type: boolean
-        facebookId:
-          type: string
-        cancelledOnUtc:
-          format: date-time
-          type: string
-        fulfilledOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-        entityStatus:
-          enum:
-          - ACTIVE
-          - PENDING
-          - ELIGIBLE
-          - NOT_VALIDATED
-          - CUSTOMER_ACTION_REQUIRED
-          - EXPIRED
-          - REJECTED
-          - CANCELLED
-          - DELETED
-          type: string
-    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateDisableInfo:
-      type: object
-      properties:
-        disable_date:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutRequest:
-      type: object
-      properties:
-        content:
-          type: string
+        metaBusinessInfo:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusiness'
     CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateResponse:
       required:
       - id
@@ -3519,6 +2879,822 @@ components:
           - CANCELLED
           - DELETED
           type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          enum:
+          - PHONENUMBER
+          - URL
+          - QUICK_REPLY
+          - OTP_COPY
+          - OTP_ONE_TAP
+          - CODE_COPY
+          type: string
+        urlType:
+          enum:
+          - STATIC
+          - DYNAMIC
+          type: string
+    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate:
+      type: object
+      properties:
+        message_template_id:
+          format: int64
+          type: integer
+        message_template_name:
+          type: string
+        message_template_language:
+          type: string
+        previous_category:
+          type: string
+        new_category:
+          type: string
+        reason:
+          type: string
+        previous_quality_score:
+          type: string
+        new_quality_score:
+          type: string
+        disable_info:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateDisableInfo'
+        other_info:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateOtherInfo'
+        event:
+          type: string
+        requester:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        content:
+          type: string
+        hasExpiration:
+          type: boolean
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest:
+      type: object
+      properties:
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseRequest:
+      required:
+      - enabledLanguages
+      type: object
+      properties:
+        name:
+          type: string
+        enabledLanguages:
+          type: array
+          items:
+            format: uuid
+            type: string
+            example: 00000000-0000-0000-0000-000000000000
+        assistedMode:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
+        buttonSettings:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
+    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppBusinessAccountUpdateRestriction:
+      type: object
+      properties:
+        restriction_type:
+          type: string
+        expiration:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaSupplierInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        accountMode:
+          type: string
+        codeVerificationStatus:
+          enum:
+          - NOT_VERIFIED
+          - VERIFIED
+          - EXPIRED
+          type: string
+        displayPhonenumber:
+          type: string
+        isOfficialBusinessAccount:
+          type: boolean
+        isPinEnabled:
+          type: boolean
+        isPreVerifiedNumber:
+          type: boolean
+        nameStatus:
+          type: string
+        newNameStatus:
+          type: string
+        platformType:
+          type: string
+        qualityRating:
+          type: string
+        qualityScore:
+          type: object
+        searchVisibility:
+          type: string
+        status:
+          type: string
+        throughput:
+          type: object
+        verifiedName:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiNumberEligibility:
+      required:
+      - onboardedNumbers
+      - eligibleNumbers
+      - unknownNumbers
+      type: object
+      properties:
+        onboardedNumbers:
+          type: array
+          items:
+            type: string
+        eligibleNumbers:
+          type: array
+          items:
+            type: string
+        unknownNumbers:
+          type: array
+          items:
+            type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        index:
+          format: int32
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest:
+      type: object
+      properties:
+        buttonText:
+          type: string
+        url:
+          type: string
+        phoneNumber:
+          type: string
+        otp:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest'
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          enum:
+          - PHONENUMBER
+          - URL
+          - QUICK_REPLY
+          - OTP_COPY
+          - OTP_ONE_TAP
+          - CODE_COPY
+          type: string
+        urlType:
+          enum:
+          - STATIC
+          - DYNAMIC
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponentsCommand:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileBase:
+      required:
+      - id
+      - accountId
+      - isActive
+      - isOtpProcessed
+      - isOtpSent
+      - isPending
+      - isSandbox
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isFacebookEmbeddedSignUpImport:
+          type: boolean
+        phoneNumber:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+        isOtpProcessed:
+          type: boolean
+        isOtpSent:
+          type: boolean
+        isPending:
+          type: boolean
+        isSandbox:
+          type: boolean
+        metaQualityRating:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating'
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateOtherInfo:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateCategory:
+      required:
+      - id
+      - name
+      - isDeprecated
+      - supportsBlankLayout
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        isDeprecated:
+          type: boolean
+        supportsBlankLayout:
+          type: boolean
+        generatedLayouts:
+          type: array
+          items:
+            enum:
+            - AUTHENTICATION_OTP_COPY
+            - AUTHENTICATION_OTP_ONE_TAP
+            - MARKETING_CAROUSEL
+            - MARKETING_COUPONS
+            - MARKETING_LIMITED_TIME_OFFER
+            - UTILITY_CAROUSEL
+            type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaAnalytics:
+      type: object
+      properties:
+        responseRaw:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateUpdateRequest:
+      required:
+      - enabledLanguages
+      type: object
+      properties:
+        name:
+          type: string
+        generatedLayout:
+          enum:
+          - AUTHENTICATION_OTP_COPY
+          - AUTHENTICATION_OTP_ONE_TAP
+          - MARKETING_CAROUSEL
+          - MARKETING_COUPONS
+          - MARKETING_LIMITED_TIME_OFFER
+          - UTILITY_CAROUSEL
+          type: string
+        templateCategoryId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabledLanguages:
+          type: array
+          items:
+            format: uuid
+            type: string
+            example: 00000000-0000-0000-0000-000000000000
+        assistedMode:
+          type: boolean
+        languages:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageRequest'
+    CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusiness:
+      required:
+      - id
+      - metaBusinessId
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        metaBusinessId:
+          type: string
+        marketingMessagesLiteApiOnboardingStatus:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusinessMarketingLiteApiOnboardingStatus'
+    CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusinessMarketingLiteApiOnboardingStatus:
+      required:
+      - isOnboarded
+      type: object
+      properties:
+        isOnboarded:
+          type: boolean
+        isOnboardingRequested:
+          type: boolean
+        onboardingRequestId:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsRequest:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        otpSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        hasExpiration:
+          type: boolean
+    CM.Platform.Channels.Models.RequestForms.ApiChannelRequestFormInputResponse:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelCategoryRequestID:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        formElementId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        inputValue:
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdateDisableInfo:
+      type: object
+      properties:
+        disable_date:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader:
+      type: object
+      properties:
+        format:
+          enum:
+          - IMAGE
+          - VIDEO
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveSettingsResponse:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse'
+        isGeneratedLayout:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateMetaCallbackHistory:
+      required:
+      - templateId
+      - events
+      type: object
+      properties:
+        templateId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        events:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppTemplateLanguageUpdate'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccount:
+      required:
+      - id
+      - accountId
+      - channelRequestId
+      - isPending
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelRequestId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isPending:
+          type: boolean
+        isFacebookEmbeddedSignUp:
+          type: boolean
+        facebookId:
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCategory:
+      required:
+      - id
+      - name
+      - metaOverride
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        metaOverride:
+          type: boolean
+        metaOverrideOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest:
+      type: object
+      properties:
+        oneTap:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTap'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        generatedLayoutButtonText:
+          type: string
+        buttonText:
+          type: string
+        url:
+          type: string
+        phoneNumber:
+          type: string
+        otp:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest'
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        type:
+          enum:
+          - PHONENUMBER
+          - URL
+          - QUICK_REPLY
+          - OTP_COPY
+          - OTP_ONE_TAP
+          - CODE_COPY
+          type: string
+        urlType:
+          enum:
+          - STATIC
+          - DYNAMIC
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiChannelSupplierStatusBase:
+      type: object
+      properties:
+        status:
+          enum:
+          - GREEN
+          - RED
+          - UNKNOWN
+          type: string
+        requiresAttention:
+          type: boolean
+          readOnly: true
+        iconClass:
+          type: string
+        receivedAtUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponents:
+      type: object
+      properties:
+        enableWelcomeMessage:
+          type: boolean
+        prompts:
+          type: array
+          items:
+            type: string
+        commands:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponentsCommand'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        code:
+          type: string
+        name:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsRequest:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselLayoutRequest:
+      type: object
+      properties:
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardRequest'
+        carouselSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselSettingsRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateHeaderSettingsRequest:
+      type: object
+      properties:
+        format:
+          enum:
+          - none
+          - text
+          - image
+          - document
+          - video
+          type: string
+        replacementFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings:
+      type: object
+      properties:
+        copyCodeExpirationMinutes:
+          format: int32
+          type: integer
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTap:
+      type: object
+      properties:
+        autofillText:
+          type: string
+        supportedApps:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpOneTapSupportedApps'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateSettingsResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        replacementFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateReplacementField'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRatingLimit:
+      type: object
+      properties:
+        fallbackLimit:
+          type: string
+        officialLimit:
+          enum:
+          - TIER_50
+          - TIER_250
+          - TIER_1K
+          - TIER_10K
+          - TIER_100K
+          - TIER_UNLIMITED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfile:
+      required:
+      - id
+      - accountId
+      - isActive
+      - isOtpProcessed
+      - isOtpSent
+      - isPending
+      - isSandbox
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channelId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        accountId:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        isFacebookEmbeddedSignUpOwnershipVerified:
+          type: boolean
+        isFacebookEmbeddedSignUpImport:
+          type: boolean
+        phoneNumber:
+          type: string
+        image:
+          type: string
+        imageUrl:
+          type: string
+        rejectionReason:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+        isOtpProcessed:
+          type: boolean
+        isOtpSent:
+          type: boolean
+        isPending:
+          type: boolean
+        isSandbox:
+          type: boolean
+        metaSupplierInfo:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaSupplierInfo'
+        metaQualityRating:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileMetaQualityRating'
+        fulfilledOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+        rejectedOnUtc:
+          format: date-time
+          type: string
+        cancelledOnUtc:
+          format: date-time
+          type: string
+        deletedOnUtc:
+          format: date-time
+          type: string
+        entityStatus:
+          enum:
+          - ACTIVE
+          - PENDING
+          - ELIGIBLE
+          - NOT_VALIDATED
+          - CUSTOMER_ACTION_REQUIRED
+          - EXPIRED
+          - REJECTED
+          - CANCELLED
+          - DELETED
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardResponse:
+      type: object
+      properties:
+        buttons:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse'
+        header:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
+        body:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutResponse:
+      type: object
+      properties:
+        isGeneratedLayout:
+          type: boolean
+        generatedLayoutExampleValue:
+          type: string
+        content:
+          type: string
+        otpSettings:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings'
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageStatus:
+      required:
+      - total
+      - active
+      - languageCategoryOverrideActive
+      type: object
+      properties:
+        total:
+          format: int32
+          type: integer
+        active:
+          format: int32
+          type: integer
+        languageCategoryOverrideActive:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest:
+      type: object
+      properties:
+        content:
+          type: string
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsResponse:
+      type: object
+      properties:
+        buttonGrouping:
+          type: object
+          properties:
+            QUICK_REPLY:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
+            CALL_TO_ACTION:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
+            OTHER:
+              type: array
+              items:
+                $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateInteractiveSettingsButtonResponse'
+        isGeneratedLayout:
+          type: boolean
+    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageHeaderLayoutRequest:
+      type: object
+      properties:
+        content:
+          type: string
     CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateBaseResponse:
       required:
       - id
@@ -3614,182 +3790,6 @@ components:
           - CANCELLED
           - DELETED
           type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader:
-      type: object
-      properties:
-        format:
-          enum:
-          - IMAGE
-          - VIDEO
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardResponse:
-      type: object
-      properties:
-        buttons:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse'
-        header:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
-        body:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppProfileConversationalComponentsCommand:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppBusinessAccountMarketingLiteApiEligibility:
-      required:
-      - status
-      type: object
-      properties:
-        status:
-          enum:
-          - UNKNOWN
-          - NONE
-          - PENDING_ONBOARDING_INITIATED
-          - INELIGIBLE_ON_BEHALF_OF_WABA
-          - INELIGIBLE_INACTIVE_OR_RESTRICTED
-          - INELIGIBLE_COUNTRY_NOT_SUPPORTED
-          - INELIGIBLE_USING_WHATSAPP_BUSINESS_APP
-          - ELIGIBLE
-          - PENDING_VALID_PAYMENT_METHOD
-          - PENDING_INTERNAL_SETUP
-          - ONBOARDED
-          type: string
-        metaBusinessInfo:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusiness'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonResponse:
-      type: object
-      properties:
-        isGeneratedLayout:
-          type: boolean
-        generatedLayoutExampleValue:
-          type: string
-        generatedLayoutButtonText:
-          type: string
-        buttonText:
-          type: string
-        url:
-          type: string
-        phoneNumber:
-          type: string
-        otp:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonOtpRequest'
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        type:
-          enum:
-          - PHONENUMBER
-          - URL
-          - QUICK_REPLY
-          - OTP_COPY
-          - OTP_ONE_TAP
-          - CODE_COPY
-          type: string
-        urlType:
-          enum:
-          - STATIC
-          - DYNAMIC
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterLayoutResponse:
-      type: object
-      properties:
-        isGeneratedLayout:
-          type: boolean
-        generatedLayoutExampleValue:
-          type: string
-        content:
-          type: string
-        otpSettings:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageFooterOtpSettings'
-    CM.Platform.Channels.Models.External.MetaCallbacks.ApiMetaCallbackWhatsAppBusinessAccountUpdateRestriction:
-      type: object
-      properties:
-        restriction_type:
-          type: string
-        expiration:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppSupportedLanguage:
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        code:
-          type: string
-        name:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateUpdateRequest:
-      required:
-      - enabledLanguages
-      type: object
-      properties:
-        name:
-          type: string
-        generatedLayout:
-          enum:
-          - AUTHENTICATION_OTP_COPY
-          - AUTHENTICATION_OTP_ONE_TAP
-          - MARKETING_CAROUSEL
-          - MARKETING_COUPONS
-          - MARKETING_LIMITED_TIME_OFFER
-          - UTILITY_CAROUSEL
-          type: string
-        templateCategoryId:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        enabledLanguages:
-          type: array
-          items:
-            format: uuid
-            type: string
-            example: 00000000-0000-0000-0000-000000000000
-        assistedMode:
-          type: boolean
-        languages:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageRequest'
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageLimitedTimeOfferLayoutResponse:
-      type: object
-      properties:
-        isGeneratedLayout:
-          type: boolean
-        generatedLayoutExampleValue:
-          type: string
-        content:
-          type: string
-        hasExpiration:
-          type: boolean
-    CM.Platform.Channels.Models.ChannelTypes.Meta.ApiMetaBusinessMarketingLiteApiOnboardingStatus:
-      required:
-      - isOnboarded
-      type: object
-      properties:
-        isOnboarded:
-          type: boolean
-        isOnboardingRequested:
-          type: boolean
-        onboardingRequestId:
-          type: string
-    CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardRequest:
-      type: object
-      properties:
-        buttons:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageInteractiveButtonRequest'
-        header:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageCarouselCardHeader'
-        body:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.WhatsApp.ApiWhatsAppTemplateLanguageBodyLayoutRequest'
   requestBodies:
     CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
       content:

@@ -547,36 +547,12 @@ paths:
                 $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse'
 components:
   schemas:
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse:
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressRequest:
       required:
-      - id
-      - enabled
-      - updatedOnUtc
-      - createdOnUtc
+      - address
       type: object
       properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        enabled:
-          type: boolean
-        updatedOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
-      type: object
-      properties:
-        type:
-          enum:
-          - UNKNOWN
-          - PROCESSING
-          - ACTION_REQUIRED
-          type: string
-        descriptionKey:
+        address:
           type: string
     CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointResponse:
       required:
@@ -612,11 +588,88 @@ components:
         createdOnUtc:
           format: date-time
           type: string
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConversationalRouterConfigurationResponse:
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse:
       required:
       - id
       - enabled
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest:
+      required:
       - endpoint
+      type: object
+      properties:
+        endpoint:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointRequest'
+    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
+      type: object
+      properties:
+        stages:
+          type: array
+          items:
+            type: string
+        current:
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointRequest:
+      required:
+      - method
+      - url
+      - type
+      type: object
+      properties:
+        method:
+          enum:
+          - POST
+          type: string
+        url:
+          type: string
+        type:
+          enum:
+          - Json
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - endpoints
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointResponse'
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse:
+      required:
+      - id
+      - enabled
       - updatedOnUtc
       - createdOnUtc
       type: object
@@ -628,7 +681,7 @@ components:
         enabled:
           type: boolean
         endpoint:
-          type: string
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointResponse'
         updatedOnUtc:
           format: date-time
           type: string
@@ -698,220 +751,6 @@ components:
           type: string
         requestState:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestState'
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest:
-      required:
-      - endpoint
-      type: object
-      properties:
-        endpoint:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointRequest'
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse:
-      required:
-      - id
-      - enabled
-      - addresses
-      - updatedOnUtc
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        enabled:
-          type: boolean
-        addresses:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressResponse'
-        updatedOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationsInbound:
-      type: object
-      properties:
-        messagingLog:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse'
-        email:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
-        webhook:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
-        eventWebhook:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
-        conversationalRouter:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConversationalRouterConfigurationResponse'
-    CM.Platform.Channels.Models.Channels.ApiRequestProgression:
-      type: object
-      properties:
-        stages:
-          type: array
-          items:
-            type: string
-        current:
-          type: string
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse:
-      required:
-      - id
-      - enabled
-      - updatedOnUtc
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        enabled:
-          type: boolean
-        updatedOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.Channels.ApiRequestState:
-      type: object
-      properties:
-        completeness:
-          format: int32
-          type: integer
-        nextStage:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
-        progression:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
-        hasPendingOrder:
-          type: boolean
-        hasEligibleOrder:
-          type: boolean
-        hasMissingOrder:
-          type: boolean
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest:
-      required:
-      - email
-      type: object
-      properties:
-        email:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressRequest'
-    CM.Platform.Channels.Models.Channels.ApiChannelGroupBase:
-      required:
-      - id
-      - channels
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        channels:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointRequest:
-      required:
-      - method
-      - url
-      - type
-      type: object
-      properties:
-        method:
-          enum:
-          - POST
-          - GET
-          - PUT
-          - UNKNOWN
-          type: string
-        url:
-          type: string
-        type:
-          enum:
-          - Json
-          - Xml
-          - Custom
-          type: string
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse:
-      required:
-      - id
-      - enabled
-      - endpoints
-      - updatedOnUtc
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        enabled:
-          type: boolean
-        endpoints:
-          type: array
-          items:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointResponse'
-        updatedOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest:
-      required:
-      - endpoint
-      type: object
-      properties:
-        endpoint:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointRequest'
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationRequest:
-      type: object
-      properties: {}
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse:
-      required:
-      - id
-      - enabled
-      - updatedOnUtc
-      - createdOnUtc
-      type: object
-      properties:
-        id:
-          format: uuid
-          type: string
-          example: 00000000-0000-0000-0000-000000000000
-        enabled:
-          type: boolean
-        endpoint:
-          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointResponse'
-        updatedOnUtc:
-          format: date-time
-          type: string
-        createdOnUtc:
-          format: date-time
-          type: string
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointRequest:
-      required:
-      - method
-      - url
-      - type
-      type: object
-      properties:
-        method:
-          enum:
-          - POST
-          type: string
-        url:
-          type: string
-        type:
-          enum:
-          - Json
-          type: string
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressRequest:
-      required:
-      - address
-      type: object
-      properties:
-        address:
-          type: string
     CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointResponse:
       required:
       - id
@@ -947,6 +786,167 @@ components:
         createdOnUtc:
           format: date-time
           type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - addresses
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressResponse'
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ApiRequestNextStage:
+      type: object
+      properties:
+        type:
+          enum:
+          - UNKNOWN
+          - PROCESSING
+          - ACTION_REQUIRED
+          type: string
+        descriptionKey:
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookEndpointRequest:
+      required:
+      - method
+      - url
+      - type
+      type: object
+      properties:
+        method:
+          enum:
+          - POST
+          - GET
+          - PUT
+          - UNKNOWN
+          type: string
+        url:
+          type: string
+        type:
+          enum:
+          - Json
+          - Xml
+          - Custom
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConversationalRouterConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - endpoint
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        endpoint:
+          type: string
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationRequest:
+      type: object
+      properties: {}
+    CM.Platform.Channels.Models.Channels.ApiRequestState:
+      type: object
+      properties:
+        completeness:
+          format: int32
+          type: integer
+        nextStage:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestNextStage'
+        progression:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiRequestProgression'
+        hasPendingOrder:
+          type: boolean
+        hasEligibleOrder:
+          type: boolean
+        hasMissingOrder:
+          type: boolean
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationResponse:
+      required:
+      - id
+      - enabled
+      - updatedOnUtc
+      - createdOnUtc
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        enabled:
+          type: boolean
+        updatedOnUtc:
+          format: date-time
+          type: string
+        createdOnUtc:
+          format: date-time
+          type: string
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailAddressRequest'
+    CM.Platform.Channels.Models.Channels.ApiChannelGroupBase:
+      required:
+      - id
+      - channels
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ApiChannelBase'
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest:
+      required:
+      - endpoint
+      type: object
+      properties:
+        endpoint:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookEndpointRequest'
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationsInbound:
+      type: object
+      properties:
+        messagingLog:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelMessagingLogConfigurationResponse'
+        email:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationResponse'
+        webhook:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationResponse'
+        eventWebhook:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationResponse'
+        conversationalRouter:
+          $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConversationalRouterConfigurationResponse'
     CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurations:
       type: object
       properties:
@@ -955,6 +955,25 @@ components:
         inbound:
           $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelConfigurationsInbound'
   requestBodies:
+    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+        text/json:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+        text/xml:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
+      description: The configuration.
+      required: true
     CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEventWebHookConfigurationRequest:
       content:
         application/json:
@@ -991,25 +1010,6 @@ components:
         application/x-www-form-urlencoded:
           schema:
             $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelEmailConfigurationRequest'
-      description: The configuration.
-      required: true
-    CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
-        text/json:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
-        text/xml:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
-        multipart/form-data:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
-        application/x-www-form-urlencoded:
-          schema:
-            $ref: '#/components/schemas/CM.Platform.Channels.Models.Channels.ChannelConfiguration.ApiChannelWebHookConfigurationRequest'
       description: The configuration.
       required: true
   securitySchemes:

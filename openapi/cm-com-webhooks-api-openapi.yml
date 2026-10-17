@@ -343,6 +343,47 @@ webhooks:
     - url: /ticketing/v1
 components:
   schemas:
+    Configuration_StatusCode:
+      enum:
+      - 200
+      - 400
+      - 401
+      - 403
+      - 404
+      - 409
+      - 429
+      - 500
+      - 999
+      type: integer
+      format: int32
+    Configuration_WebhookPostDto:
+      type: object
+      properties:
+        webhookType:
+          type:
+          - string
+          - 'null'
+        webhookUrl:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Configuration_ObjectControllerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/Configuration_StatusCode'
+        message:
+          type:
+          - string
+          - 'null'
+        data:
+          type:
+          - object
+          - 'null'
+      additionalProperties: false
     Configuration_ConfigResponse:
       required:
       - message
@@ -373,47 +414,6 @@ components:
           type: integer
           format: int32
       additionalProperties: false
-    Configuration_WebhookPostDto:
-      type: object
-      properties:
-        webhookType:
-          type:
-          - string
-          - 'null'
-        webhookUrl:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Configuration_ObjectControllerResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        status:
-          $ref: '#/components/schemas/Configuration_StatusCode'
-        message:
-          type:
-          - string
-          - 'null'
-        data:
-          type:
-          - object
-          - 'null'
-      additionalProperties: false
-    Configuration_StatusCode:
-      enum:
-      - 200
-      - 400
-      - 401
-      - 403
-      - 404
-      - 409
-      - 429
-      - 500
-      - 999
-      type: integer
-      format: int32
     handler.webhookMessagePayload:
       properties:
         customer_product_id:
@@ -433,6 +433,12 @@ components:
           example: a76d9c1c-1bd6-4f6b-8a3e-5a9d9c8a1b54
           type: string
       type: object
+    WebhookType:
+      type: string
+      enum:
+      - transaction.state.updated
+      - task.state.updated
+      description: Webhook event type
     Webhook:
       type: object
       properties:
@@ -474,12 +480,6 @@ components:
           readOnly: true
       required:
       - url
-    WebhookType:
-      type: string
-      enum:
-      - transaction.state.updated
-      - task.state.updated
-      description: Webhook event type
     ErrorResponse:
       title: Error Response
       type: object
@@ -493,25 +493,7 @@ components:
           type: string
           description: High level description of the error that occurred.
           example: The request is invalid
-  parameters:
-    WebhookId:
-      name: webhookId
-      in: path
-      schema:
-        type: string
-        format: uuid
-      required: true
-      description: A unique identifier for the webhook.
   responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            status: 401
-            message: Unauthorized
     NotFound:
       description: The specified resource was not found.
       content:
@@ -521,6 +503,24 @@ components:
           example:
             status: 404
             message: Not found
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 401
+            message: Unauthorized
+  parameters:
+    WebhookId:
+      name: webhookId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: A unique identifier for the webhook.
   securitySchemes:
     ProductToken:
       type: apiKey

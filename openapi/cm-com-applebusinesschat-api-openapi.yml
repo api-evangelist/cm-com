@@ -166,6 +166,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount'
 components:
+  requestBodies:
+    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        text/xml:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+        application/x-www-form-urlencoded:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
+      description: The form input.
+      required: true
   schemas:
     CM.Platform.Channels.Models.ChannelTypes.Abc.ApiAbcAccount:
       required:
@@ -244,36 +274,6 @@ components:
         createdOnUtc:
           format: date-time
           type: string
-  requestBodies:
-    CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequestArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-        text/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-        text/xml:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-        multipart/form-data:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-        application/x-www-form-urlencoded:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CM.Platform.Channels.Models.RequestForms.ApiRequestFormInputRequest'
-      description: The form input.
-      required: true
   securitySchemes:
     ProductToken:
       type: apiKey
