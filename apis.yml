@@ -1781,6 +1781,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - API Settings
+  tags_raw:
   - ApiSettings
   properties:
   - type: OpenAPI
@@ -2607,6 +2609,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Archives
+  tags_raw:
   - Archive
   properties:
   - type: OpenAPI
@@ -3020,6 +3024,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Authentication
+  tags_raw:
   - Auth
   properties:
   - type: OpenAPI
@@ -4676,6 +4682,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Bank Transfers
+  tags_raw:
   - BankTransfer
   properties:
   - type: OpenAPI
@@ -10463,6 +10471,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Clients
+  tags_raw:
   - Client
   properties:
   - type: OpenAPI
@@ -14182,6 +14192,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Customer Products
+  tags_raw:
   - Customer products
   properties:
   - type: OpenAPI
@@ -14595,6 +14607,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Customer Data
+  tags_raw:
   - Customerdata
   properties:
   - type: OpenAPI
@@ -16660,6 +16674,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Documents
+  tags_raw:
   - Document
   properties:
   - type: OpenAPI
@@ -18312,6 +18328,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - DTMF
+  tags_raw:
   - Dtmf
   properties:
   - type: OpenAPI
@@ -19551,7 +19569,8 @@ apis:
   description: The Endpoints API from CM.com — 2 operation(s) for endpoints.
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
-  tags:
+  tags: []
+  tags_raw:
   - Endpoints
   properties:
   - type: OpenAPI
@@ -20378,6 +20397,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -20791,6 +20812,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Export
+  tags_raw:
   - Exports
   properties:
   - type: OpenAPI
@@ -25336,6 +25359,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Google Pay
+  tags_raw:
   - GooglePay
   properties:
   - type: OpenAPI
@@ -28232,6 +28257,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Import
+  tags_raw:
   - Imports
   properties:
   - type: OpenAPI
@@ -29887,6 +29914,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - invite
+  tags_raw:
   - Invite
   properties:
   - type: OpenAPI
@@ -33193,6 +33222,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Merchants
+  tags_raw:
   - Merchant
   properties:
   - type: OpenAPI
@@ -33606,6 +33637,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Message
+  tags_raw:
   - Messages
   properties:
   - type: OpenAPI
@@ -34019,6 +34052,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Mobile Push
+  tags_raw:
   - MobilePush
   properties:
   - type: OpenAPI
@@ -36497,6 +36532,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Order
+  tags_raw:
   - Orders
   properties:
   - type: OpenAPI
@@ -37323,6 +37360,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -38149,6 +38188,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Payments
+  tags_raw:
   - Payment
   properties:
   - type: OpenAPI
@@ -38562,6 +38603,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Payment Methods
+  tags_raw:
   - Payment methods
   properties:
   - type: OpenAPI
@@ -39388,6 +39431,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Phone Numbers
+  tags_raw:
   - Phone Number
   properties:
   - type: OpenAPI
@@ -40627,6 +40672,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
@@ -50128,6 +50175,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - SEND EMAIL
+  tags_raw:
   - Send Email
   properties:
   - type: OpenAPI
@@ -50956,6 +51005,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - SEPA Direct Debit
+  tags_raw:
   - SepaDirectDebit
   properties:
   - type: OpenAPI
@@ -51369,6 +51420,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Service Tokens
+  tags_raw:
   - Service tokens
   properties:
   - type: OpenAPI
@@ -54673,6 +54726,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - SIP Endpoints
+  tags_raw:
   - Sip Endpoints
   properties:
   - type: OpenAPI
@@ -57151,6 +57206,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Templates
+  tags_raw:
   - Template
   properties:
   - type: OpenAPI
@@ -57977,6 +58034,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Terminal
+  tags_raw:
   - Terminals
   properties:
   - type: OpenAPI
@@ -58390,6 +58449,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Ticketing
+  tags_raw:
   - Tickets
   properties:
   - type: OpenAPI
@@ -59216,6 +59277,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
@@ -60042,6 +60105,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - twitter
+  tags_raw:
   - Twitter
   properties:
   - type: OpenAPI
@@ -61694,6 +61759,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -64585,6 +64652,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Voice
+  tags_raw:
   - Voices
   properties:
   - type: OpenAPI
@@ -65830,6 +65899,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
@@ -67900,6 +67971,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - PayPal
+  tags_raw:
   - Pay Pal
   properties:
   - type: OpenAPI
@@ -68726,6 +68799,8 @@ apis:
   humanURL: https://docs.cm.com/conversational-ai/v1/api-reference
   baseURL: https://api.cm.com
   tags:
+  - WhatsApp
+  tags_raw:
   - Whats App
   properties:
   - type: OpenAPI
