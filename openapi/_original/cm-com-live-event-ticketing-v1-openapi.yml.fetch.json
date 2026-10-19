@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.cm.com/live/event-ticketing/v1/openapi.yaml",
+ "requested_url": "https://docs.cm.com/live/event-ticketing/v1/openapi.yaml",
+ "status": 200,
+ "content_type": "text/yaml; charset=utf-8",
+ "bytes": 91721,
+ "sha256": "87ecf0922693b342ced7f0e99fec96fef7e3549d7bc43fe18a759e5722db64d5",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}

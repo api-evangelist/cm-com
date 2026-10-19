@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.cm.com/conversational-router/v1/openapi.yaml",
+ "requested_url": "https://docs.cm.com/conversational-router/v1/openapi.yaml",
+ "status": 200,
+ "content_type": "text/yaml; charset=utf-8",
+ "bytes": 3487,
+ "sha256": "0c8506c0a8df4b7e3c928853bd7e3d193b5e7b6f183a6d8453769714fca649fb",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
