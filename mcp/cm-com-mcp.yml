@@ -10,7 +10,9 @@ server:
   url: https://docs.cm.com/mcp
   protocolVersion: '2025-06-18'
   authentication: none
-note: Documentation MCP server (search/read docs and OpenAPI specs) advertised in https://docs.cm.com/llms.txt. tools/list answered without auth on 2026-10-13. api.cm.com/mcp and developers.cm.com/mcp answer 401 (gated) and were not enumerated.
+note: Documentation MCP server (search/read docs and OpenAPI specs) advertised in https://docs.cm.com/llms.txt.
+  tools/list answered without auth on 2026-10-13. api.cm.com/mcp and developers.cm.com/mcp answer 401
+  (gated) and were not enumerated.
 gated_servers:
 - url: https://api.cm.com/mcp
   status: 401
@@ -18,7 +20,9 @@ gated_servers:
   status: 401
 tools:
 - name: search_docs
-  description: Search CM.com product documentation (messaging, payments, voice, verification, signing, ticketing and more) by keywords. Returns page titles, Markdown URLs and summaries; read a page with get_page.
+  description: Search CM.com product documentation (messaging, payments, voice, verification, signing,
+    ticketing and more) by keywords. Returns page titles, Markdown URLs and summaries; read a page with
+    get_page.
   inputSchema:
     type: object
     properties:
@@ -46,17 +50,20 @@ tools:
     - url
     additionalProperties: false
 - name: list_apis
-  description: List published CM.com APIs with their reference documentation and OpenAPI specification URL. Lists every API unless a query narrows it.
+  description: List published CM.com APIs with their reference documentation and OpenAPI specification
+    URL. Lists every API unless a query narrows it.
   inputSchema:
     type: object
     properties:
       query:
         type: string
-        description: Optional words to narrow the list by API title or product, e.g. "messaging" or "payments v1".
+        description: Optional words to narrow the list by API title or product, e.g. "messaging" or "payments
+          v1".
         maxLength: 200
     additionalProperties: false
 - name: get_openapi_spec
-  description: Get the OpenAPI (YAML) specification of a CM.com API. Pass a spec or reference URL from list_apis.
+  description: Get the OpenAPI (YAML) specification of a CM.com API. Pass a spec or reference URL from
+    list_apis.
   inputSchema:
     type: object
     properties:
@@ -73,3 +80,28 @@ deployment:
   package: null
   auth: none
   verified: probed
+tool_quality:
+  tool_count: 4
+  tokens_total: 467
+  tokens_per_tool_median: 109
+  heavy_tools: []
+  heavy_tool_count: 0
+  params_total: 5
+  params_undescribed: 1
+  params_described_pct: 80.0
+  tools_with_undescribed_params: 1
+  tools_annotated: 4
+  annotated_pct: 100.0
+  state_changing_unhinted: []
+  tools_missing_schema: 0
+  short_descriptions: 0
+  duplicate_descriptions: 0
+  duplicate_names: 0
+  nonportable_names: []
+  output_schema_count: 0
+  token_estimate: chars/3.6 of each compact tool definition
+  source: mcp/cm-com-mcp-tools.json
+  measured: '2026-10-20'
+  scored: false
+  note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
+    from Glimind's agent-readiness audit.

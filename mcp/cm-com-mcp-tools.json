@@ -1,0 +1,116 @@
+{
+  "endpoint": "https://docs.cm.com/mcp",
+  "captured": "2026-10-20",
+  "method": "initialize + tools/list (anonymous, no tool called; roadmap#992)",
+  "protocol_version": "2025-06-18",
+  "server_info": {
+    "name": "docs.cm.com/mcp",
+    "title": "CM.com Documentation",
+    "version": "1.1.0"
+  },
+  "result": {
+    "tools": [
+      {
+        "name": "search_docs",
+        "title": "Search CM.com documentation",
+        "description": "Search CM.com product documentation (messaging, payments, voice, verification, signing, ticketing and more) by keywords. Returns page titles, Markdown URLs and summaries; read a page with get_page.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Keywords, e.g. \"whatsapp template message\".",
+              "maxLength": 200
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 25,
+              "default": 10
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get_page",
+        "title": "Read a documentation page",
+        "description": "Read one CM.com documentation page as Markdown. Accepts a page URL or path from this site.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "e.g. \"/payments/online-payments/guides/ideal-wero\"."
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "list_apis",
+        "title": "List CM.com APIs",
+        "description": "List published CM.com APIs with their reference documentation and OpenAPI specification URL. Lists every API unless a query narrows it.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Optional words to narrow the list by API title or product, e.g. \"messaging\" or \"payments v1\".",
+              "maxLength": 200
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get_openapi_spec",
+        "title": "Get an OpenAPI specification",
+        "description": "Get the OpenAPI (YAML) specification of a CM.com API. Pass a spec or reference URL from list_apis.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "Spec or API reference URL from list_apis."
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      }
+    ]
+  }
+}
