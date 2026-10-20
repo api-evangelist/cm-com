@@ -15,6 +15,7 @@
   evidence: https://zapier.com/apps/cm/integrations/schedule/28563/have-cmcom-call-you-with-the-weather-forecast-for-tomorrow
   template: https://zapier.com/apps/cm/integrations/schedule/28563/have-cmcom-call-you-with-the-weather-forecast-for-tomorrow
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-send-cm-com-text-sms-push-messages-for-new-github-mentions
@@ -29,6 +30,7 @@
   evidence: https://zapier.com/apps/cm/integrations/github/27357/send-cmcom-text-smspush-messages-for-new-github-mentions
   template: https://zapier.com/apps/cm/integrations/github/27357/send-cmcom-text-smspush-messages-for-new-github-mentions
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-send-cm-com-sms-messages-for-google-calendar-events
@@ -43,6 +45,7 @@
   evidence: https://zapier.com/apps/cm/integrations/google-calendar/28182/send-cmcom-sms-messages-for-google-calendar-events
   template: https://zapier.com/apps/cm/integrations/google-calendar/28182/send-cmcom-sms-messages-for-google-calendar-events
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-make-cm-com-calls-when-google-calendar-events-are-about-to-start
@@ -57,6 +60,7 @@
   evidence: https://zapier.com/apps/cm/integrations/google-calendar/28235/make-cmcom-calls-when-google-calendar-events-are-about-to-start
   template: https://zapier.com/apps/cm/integrations/google-calendar/28235/make-cmcom-calls-when-google-calendar-events-are-about-to-start
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-send-cm-com-sms-for-new-gmail-emails-matching-a-search-business-gmail-accounts-only
@@ -71,6 +75,7 @@
   evidence: https://zapier.com/apps/cm/integrations/gmail/28238/send-cmcom-sms-for-new-gmail-emails-matching-a-search-business-gmail-accounts-only
   template: https://zapier.com/apps/cm/integrations/gmail/28238/send-cmcom-sms-for-new-gmail-emails-matching-a-search-business-gmail-accounts-only
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: cm-com-send-cm-com-sms-for-new-rows-in-google-sheets
@@ -85,6 +90,7 @@
   evidence: https://zapier.com/apps/cm/integrations/google-sheets/28243/send-cmcom-sms-for-new-rows-in-google-sheets
   template: https://zapier.com/apps/cm/integrations/google-sheets/28243/send-cmcom-sms-for-new-rows-in-google-sheets
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-send-cm-com-sms-for-new-deskpro-tickets
@@ -99,6 +105,7 @@
   evidence: https://zapier.com/apps/cm/integrations/deskpro/28247/send-cmcom-sms-for-new-deskpro-tickets
   template: https://zapier.com/apps/cm/integrations/deskpro/28247/send-cmcom-sms-for-new-deskpro-tickets
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-receive-cm-com-sms-for-new-teachable-registrations
@@ -113,6 +120,7 @@
   evidence: https://zapier.com/apps/cm/integrations/teachable/28379/receive-cmcom-sms-for-new-teachable-registrations
   template: https://zapier.com/apps/cm/integrations/teachable/28379/receive-cmcom-sms-for-new-teachable-registrations
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-receive-cm-com-sms-notifications-for-new-webinargeek-registrations
@@ -127,6 +135,7 @@
   evidence: https://zapier.com/apps/cm/integrations/webinargeek/28382/receive-cmcom-sms-notifications-for-new-webinargeek-registrations
   template: https://zapier.com/apps/cm/integrations/webinargeek/28382/receive-cmcom-sms-notifications-for-new-webinargeek-registrations
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-receive-cm-com-sms-notifications-when-new-calendly-invitees-are-created
@@ -141,6 +150,7 @@
   evidence: https://zapier.com/apps/calendly/integrations/cm/28391/receive-cmcom-sms-notifications-when-new-calendly-invitees-are-created
   template: https://zapier.com/apps/calendly/integrations/cm/28391/receive-cmcom-sms-notifications-when-new-calendly-invitees-are-created
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-receive-cm-com-sms-for-new-aweber-subscribers
@@ -155,6 +165,7 @@
   evidence: https://zapier.com/apps/aweber/integrations/cm/31238/receive-cmcom-sms-for-new-aweber-subscribers
   template: https://zapier.com/apps/aweber/integrations/cm/31238/receive-cmcom-sms-for-new-aweber-subscribers
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-send-text-messages-in-cm-com-when-new-customers-are-added-to-yoobi
@@ -169,133 +180,7 @@
   evidence: https://zapier.com/apps/cm/integrations/yoobi-software/1051151/send-text-messages-in-cmcom-when-new-customers-are-added-to-yoobi
   template: https://zapier.com/apps/cm/integrations/yoobi-software/1051151/send-text-messages-in-cmcom-when-new-customers-are-added-to-yoobi
   source: template
-  status: pending-generation
-  arazzo: null
-- slug: cm-com-facebook-lead-ads-for-business-admins
-  label: Facebook Lead Ads (for Business admins)
-  partner_name: Facebook Lead Ads (for Business admins)
-  category: Ads & Conversion
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/facebook-lead-ads-beta
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: cm-com-shopify
-  label: Shopify
-  partner: shopify
-  partner_name: Shopify
-  category: eCommerce
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/shopify
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: cm-com-facebook-conversions
-  label: Facebook Conversions
-  partner_name: Facebook Conversions
-  category: Ads & Conversion
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/facebook-conversions
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: cm-com-stripe-legacy
-  label: Stripe (Legacy)
-  partner: stripe
-  partner_name: Stripe (Legacy)
-  category: Payment Processing
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/stripe-legacy
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: cm-com-customer-io
-  label: Customer.io
-  partner: customer-io
-  partner_name: Customer.io
-  category: Email
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/customerio
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: cm-com-odoo-erp-self-hosted
-  label: Odoo ERP Self Hosted
-  partner: odoo
-  partner_name: Odoo ERP Self Hosted
-  category: CRM (Customer Relationship Management)
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/openerp
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: cm-com-zoho-analytics
-  label: Zoho Analytics
-  partner: zoho-analytics
-  partner_name: Zoho Analytics
-  category: Analytics
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/zoho-analytics
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: cm-com-tookan
-  label: Tookan
-  partner_name: Tookan
-  category: Scheduling & Booking
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/tookan
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: cm-com-procurementexpress-com
-  label: ProcurementExpress.com
-  partner_name: ProcurementExpress.com
-  category: Proposal & Invoice Management
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/procurementexpresscom
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: cm-com-google-forms-legacy
-  label: Google Forms (Legacy)
-  partner_name: Google Forms (Legacy)
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/google-forms-legacy
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: cm-com-magento
-  label: Magento
-  partner: magento
-  partner_name: Magento
-  category: eCommerce
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/cm/integrations/magento
-  source: edge
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: cm-com-instagram
@@ -436,4 +321,145 @@
     beta: false
     builder: unknown (not in the directory record)
   status: not-a-workflow
+  arazzo: null
+- slug: cm-com-facebook-lead-ads-for-business-admins
+  label: Facebook Lead Ads (for Business admins)
+  partner: facebook-lead-ads
+  partner_name: Facebook Lead Ads (for Business admins)
+  category: Ads & Conversion
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/facebook-lead-ads-beta
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: cm-com-shopify
+  label: Shopify
+  partner: shopify
+  partner_name: Shopify
+  category: eCommerce
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/shopify
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: cm-com-facebook-conversions
+  label: Facebook Conversions
+  partner: facebook
+  partner_name: Facebook Conversions
+  category: Ads & Conversion
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/facebook-conversions
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: cm-com-stripe-legacy
+  label: Stripe (Legacy)
+  partner: stripe
+  partner_name: Stripe (Legacy)
+  category: Payment Processing
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/stripe-legacy
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: cm-com-customer-io
+  label: Customer.io
+  partner: customer-io
+  partner_name: Customer.io
+  category: Email
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/customerio
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: cm-com-odoo-erp-self-hosted
+  label: Odoo ERP Self Hosted
+  partner: odoo
+  partner_name: Odoo ERP Self Hosted
+  category: CRM (Customer Relationship Management)
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/openerp
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: cm-com-zoho-analytics
+  label: Zoho Analytics
+  partner: zoho-analytics
+  partner_name: Zoho Analytics
+  category: Analytics
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/zoho-analytics
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: cm-com-tookan
+  label: Tookan
+  partner_name: Tookan
+  category: Scheduling & Booking
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/tookan
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: cm-com-procurementexpress-com
+  label: ProcurementExpress.com
+  partner_name: ProcurementExpress.com
+  category: Proposal & Invoice Management
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/procurementexpresscom
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: cm-com-google-forms-legacy
+  label: Google Forms (Legacy)
+  partner: google-forms
+  partner_name: Google Forms (Legacy)
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/google-forms-legacy
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: cm-com-magento
+  label: Magento
+  partner: magento
+  partner_name: Magento
+  category: eCommerce
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/cm/integrations/magento
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
   arazzo: null
