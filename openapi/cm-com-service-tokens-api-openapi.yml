@@ -286,3 +286,9 @@ components:
       type: apiKey
       in: cookie
       name: connect.sid
+x-provenance:
+  method: harvested
+  publisher: CM.com
+  source: https://docs.cm.com/live/entrance-management/v2/openapi.yaml
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
